@@ -16,7 +16,7 @@ EXPORT built_in_module_s module =
   curl_classes,         // Classes
 
   0,                    // Error base index
-  16,                   // Error count
+  18,                   // Error count
   curl_error_strings,   // Error strings
 
   curl_initialize,      // Initialize function
@@ -36,6 +36,8 @@ built_in_class_s *curl_classes[] =
 const char *curl_error_strings[] =
 {/*{{{*/
   "error_CURL_CANNOT_CREATE_SESSION",
+  "error_CURL_URL_ESCAPE_ERROR",
+  "error_CURL_URL_UNESCAPE_ERROR",
   "error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST",
   "error_CURL_HTTP_HEADER_EXPECTED_STRING",
   "error_CURL_MULTI_WRONG_CALLBACK_DELEGATE",
@@ -86,6 +88,20 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot create curl session\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CURL_URL_ESCAPE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCurl, URL escape error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CURL_URL_UNESCAPE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCurl, URL unescape error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST:
@@ -205,7 +221,7 @@ built_in_class_s curl_class =
 {/*{{{*/
   "Curl",
   c_modifier_public | c_modifier_final,
-  7, curl_methods,
+  9, curl_methods,
   13 + 10 + 3, curl_variables,
   bic_curl_consts,
   bic_curl_init,
@@ -249,6 +265,16 @@ built_in_method_s curl_methods[] =
     "HEAD#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_curl_method_HEAD_1
+  },
+  {
+    "url_escape#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curl_method_url_escape_1
+  },
+  {
+    "url_unescape#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curl_method_url_unescape_1
   },
   {
     "to_string#0",
@@ -560,6 +586,79 @@ bool bic_curl_method_HEAD_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     curl_easy_setopt(curl_ptr,CURLOPT_HEADER,1);
     curl_easy_setopt(curl_ptr,CURLOPT_NOBODY,1);
   );
+}/*}}}*/
+
+bool bic_curl_method_url_escape_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+input:retrieve_data_buffer
+>
+class c_bi_class_curl
+method url_escape
+static_method
+; @end
+
+  char *output = nullptr;
+
+  CURL *curl = curl_easy_init();
+  if (curl != nullptr)
+  {
+    output = curl_easy_escape(curl,(const char *)input_ptr,input_size);
+    curl_easy_cleanup(curl);
+  }
+
+  // - ERROR -
+  if (output == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_URL_ESCAPE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(strlen(output),output);
+  curl_free(output);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_curl_method_url_unescape_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+input:retrieve_data_buffer
+>
+class c_bi_class_curl
+method url_unescape
+static_method
+; @end
+
+  int output_len = 0;
+  char *output = nullptr;
+
+  CURL *curl = curl_easy_init();
+  if (curl != nullptr)
+  {
+    output = curl_easy_unescape(curl,(const char *)input_ptr,input_size,&output_len);
+    curl_easy_cleanup(curl);
+  }
+
+  // - ERROR -
+  if (output == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CURL_URL_UNESCAPE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(output_len,output);
+  curl_free(output);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
 }/*}}}*/
 
 bool bic_curl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

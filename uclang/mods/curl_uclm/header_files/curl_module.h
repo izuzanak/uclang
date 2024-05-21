@@ -23,6 +23,8 @@ enum
 {
   c_error_CURL_CANNOT_CREATE_SESSION = 0,
   c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST,
+  c_error_CURL_URL_ESCAPE_ERROR,
+  c_error_CURL_URL_UNESCAPE_ERROR,
   c_error_CURL_HTTP_HEADER_EXPECTED_STRING,
   c_error_CURL_MULTI_WRONG_CALLBACK_DELEGATE,
   c_error_CURL_MULTI_CANNOT_CREATE_SESSION,
@@ -62,6 +64,8 @@ bool bic_curl_method_PUT_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
 bool bic_curl_method_POST_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_method_DELETE_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_method_HEAD_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curl_method_url_escape_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_curl_method_url_unescape_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_curl_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
