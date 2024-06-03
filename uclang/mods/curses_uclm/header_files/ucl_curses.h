@@ -34,7 +34,10 @@ inline curses_c::~curses_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"libcurses_exit()\n"););
 
-  endwin();
+  if (!isendwin())
+  {
+    endwin();
+  }
 }/*}}}*/
 
 #endif

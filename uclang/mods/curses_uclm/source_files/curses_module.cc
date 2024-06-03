@@ -86,7 +86,7 @@ built_in_class_s curses_class =
 {/*{{{*/
   "Curses",
   c_modifier_public | c_modifier_final,
-  21, curses_methods,
+  22, curses_methods,
   103 + 13, curses_variables,
   bic_curses_consts,
   bic_curses_init,
@@ -200,6 +200,11 @@ built_in_method_s curses_methods[] =
     "refresh#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_curses_method_refresh_0
+  },
+  {
+    "endwin#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_curses_method_endwin_0
   },
   {
     "to_string#0",
@@ -932,6 +937,21 @@ bool bic_curses_method_refresh_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   // - ERROR -
   if (refresh() == ERR)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+bool bic_curses_method_endwin_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+
+  // - ERROR -
+  if (endwin() == ERR)
   {
     exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
