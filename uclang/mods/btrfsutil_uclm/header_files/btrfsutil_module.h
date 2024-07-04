@@ -8,6 +8,7 @@ include "ucl_btrfsutil.h"
 
 // - BTRFS_UTIL indexes of built in classes -
 extern unsigned c_bi_class_btrfs;
+extern unsigned c_bi_class_btrfs_sub;
 
 // - BTRFS_UTIL module -
 extern "C" EXPORT built_in_module_s module;
@@ -43,8 +44,28 @@ bool bic_btrfs_method_is_sub_1(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_btrfs_method_sub_id_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_method_sub_ro_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_method_sub_ro_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_method_sub_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_method_sub_delete_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class BTRFS_SUB -
+extern built_in_variable_s btrfs_sub_variables[];
+extern built_in_method_s btrfs_sub_methods[];
+extern built_in_class_s btrfs_sub_class;
+
+void bic_btrfs_sub_consts(location_array_s &const_locations);
+void bic_btrfs_sub_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_btrfs_sub_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_btrfs_sub_method_BtrfsSub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_sub_method_is_sub_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_sub_method_id_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_sub_method_read_only_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_sub_method_read_only_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_sub_method_delete_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_sub_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_sub_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 #endif
 
