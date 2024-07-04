@@ -19,7 +19,15 @@ extern built_in_class_s *btrfs_util_classes[];
 // - BTRFS_UTIL error identifiers -
 enum
 {
-  c_error_BTRFS_UTIL_DUMMY_ERROR = 0,
+  c_error_BTRFS_UTIL_REALPATH_ERROR = 0,
+  c_error_BTRFS_UTIL_CREATE_SUBVOLUME_ERROR,
+  c_error_BTRFS_UTIL_DELETE_SUBVOLUME_ERROR,
+  c_error_BTRFS_UTIL_SUB_IS_NOT_SUBVOLUME,
+  c_error_BTRFS_UTIL_SUB_GET_ID_ERROR,
+  c_error_BTRFS_UTIL_SUB_GET_READ_ONLY_ERROR,
+  c_error_BTRFS_UTIL_SUB_SET_READ_ONLY_ERROR,
+  c_error_BTRFS_UTIL_SUB_SNAPSHOT_ERROR,
+  c_error_BTRFS_UTIL_SUB_DELETE_ERROR,
 };
 
 // - BTRFS_UTIL error strings -
@@ -41,11 +49,8 @@ void bic_btrfs_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_btrfs_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_btrfs_method_is_sub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_btrfs_method_sub_id_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_btrfs_method_sub_ro_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_btrfs_method_sub_ro_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_btrfs_method_sub_create_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_btrfs_method_sub_delete_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_method_create_sub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_method_delete_sub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -63,6 +68,7 @@ bool bic_btrfs_sub_method_is_sub_0(interpreter_thread_s &it,unsigned stack_base,
 bool bic_btrfs_sub_method_id_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_read_only_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_read_only_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_sub_method_snapshot_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_delete_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
