@@ -343,7 +343,7 @@ built_in_class_s btrfs_sub_class =
   "BtrfsSub",
   c_modifier_public | c_modifier_final,
   9, btrfs_sub_methods,
-  0, btrfs_sub_variables,
+  2, btrfs_sub_variables,
   bic_btrfs_sub_consts,
   bic_btrfs_sub_init,
   bic_btrfs_sub_clear,
@@ -411,11 +411,31 @@ built_in_method_s btrfs_sub_methods[] =
 
 built_in_variable_s btrfs_sub_variables[] =
 {/*{{{*/
-  BIC_CLASS_EMPTY_VARIABLES
+
+  // - btrfs sub create snapshot flags -
+  { "CREATE_SNAPSHOT_RECURSIVE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "CREATE_SNAPSHOT_READ_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_btrfs_sub_consts(location_array_s &const_locations)
 {/*{{{*/
+
+  // - insert btrfs sub create snapshot flags -
+  {
+    const_locations.push_blanks(2);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+
+#define CREATE_BTRFS_SUB_CREATE_SNAPSHOT_FLAG_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_BTRFS_SUB_CREATE_SNAPSHOT_FLAG_BIC_STATIC(BTRFS_UTIL_CREATE_SNAPSHOT_RECURSIVE);
+    CREATE_BTRFS_SUB_CREATE_SNAPSHOT_FLAG_BIC_STATIC(BTRFS_UTIL_CREATE_SNAPSHOT_READ_ONLY);
+  }
+
 }/*}}}*/
 
 void bic_btrfs_sub_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -569,7 +589,7 @@ bool bic_btrfs_sub_method_snapshot_2(interpreter_thread_s &it,unsigned stack_bas
 path:c_bi_class_string
 flags:retrieve_integer
 >
-method read_only
+method snapshot
 ; @end
 
   string_s *path_str = (string_s *)src_0_location->v_data_ptr;
