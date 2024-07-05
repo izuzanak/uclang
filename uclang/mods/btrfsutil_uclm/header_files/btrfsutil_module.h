@@ -50,7 +50,7 @@ void bic_btrfs_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_btrfs_method_is_sub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_method_create_sub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_btrfs_method_delete_sub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_method_delete_sub_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -69,7 +69,7 @@ bool bic_btrfs_sub_method_id_0(interpreter_thread_s &it,unsigned stack_base,uli 
 bool bic_btrfs_sub_method_read_only_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_read_only_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_snapshot_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_btrfs_sub_method_delete_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_btrfs_sub_method_delete_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

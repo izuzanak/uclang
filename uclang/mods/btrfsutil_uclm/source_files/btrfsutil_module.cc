@@ -177,9 +177,9 @@ built_in_method_s btrfs_methods[] =
     bic_btrfs_method_create_sub_1
   },
   {
-    "delete_sub#1",
+    "delete_sub#2",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    bic_btrfs_method_delete_sub_1
+    bic_btrfs_method_delete_sub_2
   },
   {
     "to_string#0",
@@ -291,11 +291,12 @@ static_method
   return true;
 }/*}}}*/
 
-bool bic_btrfs_method_delete_sub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_btrfs_method_delete_sub_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 path:c_bi_class_string
+flags:retrieve_integer
 >
 class c_bi_class_btrfs
 method delete_sub
@@ -306,7 +307,7 @@ static_method
 
   // - ERROR -
   enum btrfs_util_error err;
-  if ((err = btrfs_util_delete_subvolume(path_str->data,0)) != BTRFS_UTIL_OK)
+  if ((err = btrfs_util_delete_subvolume(path_str->data,flags)) != BTRFS_UTIL_OK)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BTRFS_UTIL_DELETE_SUBVOLUME_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(err);
@@ -343,7 +344,7 @@ built_in_class_s btrfs_sub_class =
   "BtrfsSub",
   c_modifier_public | c_modifier_final,
   9, btrfs_sub_methods,
-  2, btrfs_sub_variables,
+  3, btrfs_sub_variables,
   bic_btrfs_sub_consts,
   bic_btrfs_sub_init,
   bic_btrfs_sub_clear,
@@ -393,9 +394,9 @@ built_in_method_s btrfs_sub_methods[] =
     bic_btrfs_sub_method_snapshot_2
   },
   {
-    "delete#0",
+    "delete#1",
     c_modifier_public | c_modifier_final,
-    bic_btrfs_sub_method_delete_0
+    bic_btrfs_sub_method_delete_1
   },
   {
     "to_string#0",
@@ -416,6 +417,9 @@ built_in_variable_s btrfs_sub_variables[] =
   { "CREATE_SNAPSHOT_RECURSIVE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "CREATE_SNAPSHOT_READ_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
+  // - btrfs sub delete subvolume flags -
+  { "DELETE_SUBVOLUME_RECURSIVE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_btrfs_sub_consts(location_array_s &const_locations)
@@ -434,6 +438,20 @@ void bic_btrfs_sub_consts(location_array_s &const_locations)
 
     CREATE_BTRFS_SUB_CREATE_SNAPSHOT_FLAG_BIC_STATIC(BTRFS_UTIL_CREATE_SNAPSHOT_RECURSIVE);
     CREATE_BTRFS_SUB_CREATE_SNAPSHOT_FLAG_BIC_STATIC(BTRFS_UTIL_CREATE_SNAPSHOT_READ_ONLY);
+  }
+
+  // - insert btrfs sub delete subvolume flags -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_BTRFS_SUB_DELETE_SUBVOLUME_FLAG_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_BTRFS_SUB_DELETE_SUBVOLUME_FLAG_BIC_STATIC(BTRFS_UTIL_DELETE_SUBVOLUME_RECURSIVE);
   }
 
 }/*}}}*/
@@ -628,15 +646,20 @@ method snapshot
   return true;
 }/*}}}*/
 
-bool bic_btrfs_sub_method_delete_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_btrfs_sub_method_delete_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+@begin ucl_params
+<
+flags:retrieve_integer
+>
+method delete
+; @end
 
   btrfs_sub_s *bs_ptr = (btrfs_sub_s *)dst_location->v_data_ptr;
 
   // - ERROR -
   enum btrfs_util_error err;
-  if ((err = btrfs_util_delete_subvolume(bs_ptr->path.data,0)) != BTRFS_UTIL_OK)
+  if ((err = btrfs_util_delete_subvolume(bs_ptr->path.data,flags)) != BTRFS_UTIL_OK)
   {
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_BTRFS_UTIL_SUB_DELETE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     new_exception->params.push(err);
