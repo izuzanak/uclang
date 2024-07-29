@@ -13,7 +13,7 @@ EXPORT built_in_module_s module =
   2,                       // Class count
   tcp_classes,         // Classes
   0,                       // Error base index
-  18,                      // Error count
+  20,                      // Error count
   tcp_error_strings,   // Error strings
   tcp_initialize,      // Initialize function
   tcp_print_exception, // Print exceptions function
@@ -34,12 +34,14 @@ const char *tcp_error_strings[] =
   "error_TCP_SERVER_CREATE_ERROR",
   "error_TCP_SERVER_ACCEPT_ERROR",
   "error_TCP_SERVER_PROCESS_INVALID_FD",
-  "error_TCP_SERVER_MESSAGE_INVALID_CONNECTION_INDEX",
+  "error_TCP_SERVER_INVALID_CONNECTION_INDEX",
   "error_TCP_SERVER_SSL_ALREADY_INITIALIZED",
+  "error_TCP_SERVER_SSL_NOT_INITIALIZED",
   "error_TCP_SERVER_SSL_INIT_ERROR",
   "error_TCP_SERVER_SSL_CERTIFICATE_FILE_ERROR",
   "error_TCP_SERVER_SSL_PRIVATE_KEY_FILE_ERROR",
   "error_TCP_SERVER_SSL_ACCEPT_ERROR",
+  "error_TCP_SERVER_CONN_SSL_ALREADY_INITIALIZED",
   "error_TCP_CLIENT_WRONG_DELEGATE_PARAMETER_COUNT",
   "error_TCP_CLIENT_INVALID_IP_ADDRESS",
   "error_TCP_CLIENT_CREATE_ERROR",
@@ -109,7 +111,7 @@ bool tcp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nTcpServer, invalid file descriptor to process\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_TCP_SERVER_MESSAGE_INVALID_CONNECTION_INDEX:
+  case c_error_TCP_SERVER_INVALID_CONNECTION_INDEX:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
@@ -121,6 +123,13 @@ bool tcp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nTcpServer, SSL is already initialized\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCP_SERVER_SSL_NOT_INITIALIZED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTcpServer, SSL is not initialized\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TCP_SERVER_SSL_INIT_ERROR:
@@ -149,6 +158,13 @@ bool tcp_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nTcpServer, error while accepting SSL connection\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TCP_SERVER_CONN_SSL_ALREADY_INITIALIZED:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTcpServer, connection SSL is already initialized\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TCP_CLIENT_WRONG_DELEGATE_PARAMETER_COUNT:
@@ -215,15 +231,15 @@ built_in_class_s tcp_server_class =
 {/*{{{*/
   "TcpServer",
   c_modifier_public | c_modifier_final,
-  8
+  9
 #ifdef UCL_WITH_OPENSSL
-  + 1
+  + 2
 #endif
   , tcp_server_methods,
   3, tcp_server_variables,
-  gbic_tcp_server_consts,
-  gbic_tcp_server_init,
-  gbic_tcp_server_clear,
+  bic_tcp_server_consts,
+  bic_tcp_server_init,
+  bic_tcp_server_clear,
   nullptr,
   nullptr,
   nullptr,
@@ -242,49 +258,59 @@ built_in_method_s tcp_server_methods[] =
   {
     "operator_binary_equal#1",
     c_modifier_public | c_modifier_final,
-    gbic_tcp_server_operator_binary_equal
+    bic_tcp_server_operator_binary_equal
   },
   {
     "TcpServer#5",
     c_modifier_public | c_modifier_final,
-    gbic_tcp_server_method_TcpServer_5
+    bic_tcp_server_method_TcpServer_5
   },
 #ifdef UCL_WITH_OPENSSL
   {
     "init_ssl#2",
     c_modifier_public | c_modifier_final,
-    gbic_tcp_server_method_init_ssl_2
+    bic_tcp_server_method_init_ssl_2
+  },
+  {
+    "conn_ssl#1",
+    c_modifier_public | c_modifier_final,
+    bic_tcp_server_method_conn_ssl_1
   },
 #endif
   {
+    "conn_fd#1",
+    c_modifier_public | c_modifier_final,
+    bic_tcp_server_method_conn_fd_1
+  },
+  {
     "get_fds#0",
     c_modifier_public | c_modifier_final,
-    gbic_tcp_server_method_get_fds_0
+    bic_tcp_server_method_get_fds_0
   },
   {
     "process#2",
     c_modifier_public | c_modifier_final,
-    gbic_tcp_server_method_process_2
+    bic_tcp_server_method_process_2
   },
   {
     "message#2",
     c_modifier_public | c_modifier_final,
-    gbic_tcp_server_method_message_2
+    bic_tcp_server_method_message_2
   },
   {
     "user_data#0",
     c_modifier_public | c_modifier_final,
-    gbic_tcp_server_method_user_data_0
+    bic_tcp_server_method_user_data_0
   },
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    gbic_tcp_server_method_to_string_0
+    bic_tcp_server_method_to_string_0
   },
   {
     "print#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
-    gbic_tcp_server_method_print_0
+    bic_tcp_server_method_print_0
   },
 };/*}}}*/
 
@@ -300,7 +326,7 @@ built_in_variable_s tcp_server_variables[] =
 
 };/*}}}*/
 
-void gbic_tcp_server_consts(location_array_s &const_locations)
+void bic_tcp_server_consts(location_array_s &const_locations)
 {/*{{{*/
 
   // - insert tcp server event type constants -
@@ -334,12 +360,12 @@ void gbic_tcp_server_consts(location_array_s &const_locations)
 
 }/*}}}*/
 
-void gbic_tcp_server_init(interpreter_thread_s &it,location_s *location_ptr)
+void bic_tcp_server_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   location_ptr->v_data_ptr = (tcp_server_s *)nullptr;
 }/*}}}*/
 
-void gbic_tcp_server_clear(interpreter_thread_s &it,location_s *location_ptr)
+void bic_tcp_server_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   tcp_server_s *cs_ptr = (tcp_server_s *)location_ptr->v_data_ptr;
 
@@ -350,7 +376,7 @@ void gbic_tcp_server_clear(interpreter_thread_s &it,location_s *location_ptr)
   }
 }/*}}}*/
 
-bool gbic_tcp_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcp_server_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
@@ -362,7 +388,7 @@ bool gbic_tcp_server_operator_binary_equal(interpreter_thread_s &it,unsigned sta
   return true;
 }/*}}}*/
 
-bool gbic_tcp_server_method_TcpServer_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcp_server_method_TcpServer_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
@@ -462,7 +488,7 @@ method TcpServer
 }/*}}}*/
 
 #ifdef UCL_WITH_OPENSSL
-bool gbic_tcp_server_method_init_ssl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcp_server_method_init_ssl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
@@ -522,9 +548,103 @@ method init_ssl
 
   return true;
 }/*}}}*/
+
+bool bic_tcp_server_method_conn_ssl_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+conn_index:retrieve_integer_init
+>
+method conn_ssl
+; @end
+
+  tcp_server_s *cs_ptr = (tcp_server_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (cs_ptr->ssl_ctx == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_NOT_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (conn_index < 0 || conn_index >= cs_ptr->conn_list.used ||
+      !cs_ptr->conn_list.data[conn_index].valid)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  tcp_conn_s &conn = cs_ptr->conn_list[conn_index];
+
+  // - ERROR -
+  if (conn.ssl != nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_CONN_SSL_ALREADY_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  int nonblock_io = 1;
+  if (ioctl(conn.conn_fd,FIONBIO,&nonblock_io))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  SSL *ssl = SSL_new(cs_ptr->ssl_ctx);
+
+  // - ERROR -
+  if (ssl == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (SSL_set_fd(ssl,conn.conn_fd) != 1)
+  {
+    SSL_free(ssl);
+
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  SSL_set_accept_state(ssl);
+  conn.ssl = ssl;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
 #endif
 
-bool gbic_tcp_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcp_server_method_conn_fd_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+conn_index:retrieve_integer_init
+>
+method conn_fd
+; @end
+
+  tcp_server_s *cs_ptr = (tcp_server_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (conn_index < 0 || conn_index >= cs_ptr->conn_list.used ||
+      !cs_ptr->conn_list.data[conn_index].valid)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result = cs_ptr->conn_list[conn_index].conn_fd;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcp_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
@@ -569,7 +689,7 @@ bool gbic_tcp_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
-bool gbic_tcp_server_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcp_server_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
@@ -608,44 +728,6 @@ method process
 
     tcp_conn_s &conn = cs_ptr->conn_list[conn_index];
     conn.init_static();
-
-#ifdef UCL_WITH_OPENSSL
-    if (cs_ptr->ssl_ctx != nullptr)
-    {
-      int nonblock_io = 1;
-      if (ioctl(conn_fd,FIONBIO,&nonblock_io))
-      {
-        close(conn_fd);
-
-        exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-
-      SSL *ssl = SSL_new(cs_ptr->ssl_ctx);
-
-      // - ERROR -
-      if (ssl == nullptr)
-      {
-        close(conn_fd);
-
-        exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-
-      // - ERROR -
-      if (SSL_set_fd(ssl,conn_fd) != 1)
-      {
-        SSL_free(ssl);
-        close(conn_fd);
-
-        exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
-      }
-
-      SSL_set_accept_state(ssl);
-      conn.ssl = ssl;
-    }
-#endif
 
     conn.conn_fd = conn_fd;
     conn.events = POLLIN | POLLPRI;
@@ -784,7 +866,7 @@ method process
   return true;
 }/*}}}*/
 
-bool gbic_tcp_server_method_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcp_server_method_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
@@ -814,14 +896,14 @@ method message
         // - ERROR -
         if (!it.retrieve_integer(item_location,conn_index))
         {
-          exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
 
         // - ERROR -
         if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
         {
-          exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
 
@@ -864,7 +946,7 @@ method message
       if (conn_index < 0 || conn_index >= cs_ptr->conn_list.used ||
           !cs_ptr->conn_list.data[conn_index].valid)
       {
-        exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
@@ -884,7 +966,7 @@ method message
   return true;
 }/*}}}*/
 
-bool gbic_tcp_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcp_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
@@ -897,7 +979,7 @@ bool gbic_tcp_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
-bool gbic_tcp_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcp_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
     string_ptr->set(strlen("TcpServer"),"TcpServer")
@@ -906,7 +988,7 @@ bool gbic_tcp_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_
   return true;
 }/*}}}*/
 
-bool gbic_tcp_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_tcp_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("TcpServer");
 

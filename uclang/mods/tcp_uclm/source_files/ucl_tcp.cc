@@ -180,6 +180,13 @@ bool tcp_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,unsi
     }
 #ifdef UCL_WITH_OPENSSL
   }
+  else
+  {
+    if (in_msg.used == 0)
+    {
+      return true;
+    }
+  }
 #endif
 
   // - call message callback -
