@@ -5,12 +5,13 @@ include "tcp_module.h"
 
 // - TCP indexes of built in classes -
 unsigned c_bi_class_tcp_server = c_idx_not_exist;
+unsigned c_bi_class_tcp_conn = c_idx_not_exist;
 unsigned c_bi_class_tcp_client = c_idx_not_exist;
 
 // - TCP module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  2,                       // Class count
+  3,                       // Class count
   tcp_classes,         // Classes
   0,                       // Error base index
   20,                      // Error count
@@ -23,6 +24,7 @@ EXPORT built_in_module_s module =
 built_in_class_s *tcp_classes[] =
 {/*{{{*/
   &tcp_server_class,
+  &tcp_conn_class,
   &tcp_client_class,
 };/*}}}*/
 
@@ -58,6 +60,9 @@ bool tcp_initialize(script_parser_s &sp)
 
   // - initialize tcp_server class identifier -
   c_bi_class_tcp_server = class_base_idx++;
+
+  // - initialize tcp_conn class identifier -
+  c_bi_class_tcp_conn = class_base_idx++;
 
   // - initialize tcp_client class identifier -
   c_bi_class_tcp_client = class_base_idx++;
@@ -233,7 +238,7 @@ built_in_class_s tcp_server_class =
   c_modifier_public | c_modifier_final,
   9
 #ifdef UCL_WITH_OPENSSL
-  + 2
+  + 1
 #endif
   , tcp_server_methods,
   3, tcp_server_variables,
@@ -271,17 +276,7 @@ built_in_method_s tcp_server_methods[] =
     c_modifier_public | c_modifier_final,
     bic_tcp_server_method_init_ssl_2
   },
-  {
-    "conn_ssl#1",
-    c_modifier_public | c_modifier_final,
-    bic_tcp_server_method_conn_ssl_1
-  },
 #endif
-  {
-    "conn_fd#1",
-    c_modifier_public | c_modifier_final,
-    bic_tcp_server_method_conn_fd_1
-  },
   {
     "get_fds#0",
     c_modifier_public | c_modifier_final,
@@ -296,6 +291,11 @@ built_in_method_s tcp_server_methods[] =
     "message#2",
     c_modifier_public | c_modifier_final,
     bic_tcp_server_method_message_2
+  },
+  {
+    "connection#1",
+    c_modifier_public | c_modifier_final,
+    bic_tcp_server_method_connection_1
   },
   {
     "user_data#0",
@@ -367,12 +367,12 @@ void bic_tcp_server_init(interpreter_thread_s &it,location_s *location_ptr)
 
 void bic_tcp_server_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  tcp_server_s *cs_ptr = (tcp_server_s *)location_ptr->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)location_ptr->v_data_ptr;
 
-  if (cs_ptr != nullptr)
+  if (ts_ptr != nullptr)
   {
-    cs_ptr->clear(it);
-    cfree(cs_ptr);
+    ts_ptr->clear(it);
+    cfree(ts_ptr);
   }
 }/*}}}*/
 
@@ -463,26 +463,26 @@ method TcpServer
   }
 
   // - create tcp_server object -
-  tcp_server_s *cs_ptr = (tcp_server_s *)cmalloc(sizeof(tcp_server_s));
-  cs_ptr->init();
-  cs_ptr->init_static();
+  tcp_server_s *ts_ptr = (tcp_server_s *)cmalloc(sizeof(tcp_server_s));
+  ts_ptr->init();
+  ts_ptr->init_static();
 
   // - set file descriptor -
-  cs_ptr->server_fd = fd;
+  ts_ptr->server_fd = fd;
 
   // - retrieve callbacks -
   src_2_location->v_reference_cnt.atomic_inc();
-  cs_ptr->event_callback = src_2_location;
+  ts_ptr->event_callback = src_2_location;
 
   src_3_location->v_reference_cnt.atomic_inc();
-  cs_ptr->message_callback = src_3_location;
+  ts_ptr->message_callback = src_3_location;
 
   // - retrieve user data -
   src_4_location->v_reference_cnt.atomic_inc();
-  cs_ptr->user_data = src_4_location;
+  ts_ptr->user_data = src_4_location;
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (tcp_server_s *)cs_ptr;
+  dst_location->v_data_ptr = (tcp_server_s *)ts_ptr;
 
   return true;
 }/*}}}*/
@@ -498,12 +498,12 @@ pkey_file_name:c_bi_class_string
 method init_ssl
 ; @end
 
-  tcp_server_s *cs_ptr = (tcp_server_s *)dst_location->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)dst_location->v_data_ptr;
   string_s *cert_file_ptr = (string_s *)src_0_location->v_data_ptr;
   string_s *pkey_file_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - ERROR -
-  if (cs_ptr->ssl_ctx != nullptr)
+  if (ts_ptr->ssl_ctx != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ALREADY_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -542,75 +542,7 @@ method init_ssl
     return false;
   }
 
-  cs_ptr->ssl_ctx = ssl_ctx;
-
-  BIC_SET_RESULT_DESTINATION();
-
-  return true;
-}/*}}}*/
-
-bool bic_tcp_server_method_conn_ssl_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-conn_index:retrieve_integer_init
->
-method conn_ssl
-; @end
-
-  tcp_server_s *cs_ptr = (tcp_server_s *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (cs_ptr->ssl_ctx == nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_NOT_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - ERROR -
-  if (conn_index < 0 || conn_index >= cs_ptr->conn_list.used ||
-      !cs_ptr->conn_list.data[conn_index].valid)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  tcp_conn_s &conn = cs_ptr->conn_list[conn_index];
-
-  // - ERROR -
-  if (conn.ssl != nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_CONN_SSL_ALREADY_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  int nonblock_io = 1;
-  if (ioctl(conn.conn_fd,FIONBIO,&nonblock_io))
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  SSL *ssl = SSL_new(cs_ptr->ssl_ctx);
-
-  // - ERROR -
-  if (ssl == nullptr)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  // - ERROR -
-  if (SSL_set_fd(ssl,conn.conn_fd) != 1)
-  {
-    SSL_free(ssl);
-
-    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  SSL_set_accept_state(ssl);
-  conn.ssl = ssl;
+  ts_ptr->ssl_ctx = ssl_ctx;
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -618,55 +550,29 @@ method conn_ssl
 }/*}}}*/
 #endif
 
-bool bic_tcp_server_method_conn_fd_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-@begin ucl_params
-<
-conn_index:retrieve_integer_init
->
-method conn_fd
-; @end
-
-  tcp_server_s *cs_ptr = (tcp_server_s *)dst_location->v_data_ptr;
-
-  // - ERROR -
-  if (conn_index < 0 || conn_index >= cs_ptr->conn_list.used ||
-      !cs_ptr->conn_list.data[conn_index].valid)
-  {
-    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
-    return false;
-  }
-
-  long long int result = cs_ptr->conn_list[conn_index].conn_fd;
-
-  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
-
-  return true;
-}/*}}}*/
-
 bool bic_tcp_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  tcp_server_s *cs_ptr = (tcp_server_s *)dst_location->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)dst_location->v_data_ptr;
 
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
-  BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,cs_ptr->server_fd);
+  BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,ts_ptr->server_fd);
   array_ptr->push(fd_location);
 
   BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,POLLIN | POLLPRI);
   array_ptr->push(events_location);
 
-  if (cs_ptr->fd_conn_map.root_idx != c_idx_not_exist)
+  if (ts_ptr->fd_conn_map.root_idx != c_idx_not_exist)
   {
-    fd_conn_map_tree_s_node *fcmtn_ptr = cs_ptr->fd_conn_map.data;
-    fd_conn_map_tree_s_node *fcmtn_ptr_end = fcmtn_ptr + cs_ptr->fd_conn_map.used;
+    fd_conn_map_tree_s_node *fcmtn_ptr = ts_ptr->fd_conn_map.data;
+    fd_conn_map_tree_s_node *fcmtn_ptr_end = fcmtn_ptr + ts_ptr->fd_conn_map.used;
     do {
       if (fcmtn_ptr->valid)
       {
-        tcp_conn_s &conn = cs_ptr->conn_list[fcmtn_ptr->object.conn_index];
+        tcp_conn_s &conn = ts_ptr->conn_list[fcmtn_ptr->object.conn_index];
 
 #ifdef UCL_WITH_OPENSSL
         unsigned events = conn.ssl_action ? conn.ssl_events : conn.events;
@@ -699,15 +605,15 @@ events:retrieve_integer
 method process
 ; @end
 
-  tcp_server_s *cs_ptr = (tcp_server_s *)dst_location->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)dst_location->v_data_ptr;
 
-  if (fd == cs_ptr->server_fd)
+  if (fd == ts_ptr->server_fd)
   {
     socklen_t addr_len = sizeof(struct sockaddr_in);
     sockaddr_in address;
 
     // - ERROR -
-    int conn_fd = accept(cs_ptr->server_fd,(struct sockaddr *)&address,&addr_len);
+    int conn_fd = accept(ts_ptr->server_fd,(struct sockaddr *)&address,&addr_len);
     if (conn_fd == -1)
     {
       exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -724,25 +630,26 @@ method process
     }
 
     // - create new connection -
-    unsigned conn_index = cs_ptr->conn_list.append_blank();
+    unsigned conn_index = ts_ptr->conn_list.append_blank();
 
-    tcp_conn_s &conn = cs_ptr->conn_list[conn_index];
+    tcp_conn_s &conn = ts_ptr->conn_list[conn_index];
     conn.init_static();
 
     conn.conn_fd = conn_fd;
     conn.events = POLLIN | POLLPRI;
 
-    ((location_s *)cs_ptr->message_callback)->v_reference_cnt.atomic_inc();
-    conn.message_callback = cs_ptr->message_callback;
+    ((location_s *)ts_ptr->message_callback)->v_reference_cnt.atomic_inc();
+    conn.message_callback = ts_ptr->message_callback;
 
     conn.conn_index = conn_index;
+    conn.address.addr = address;
 
     // - update fd connection map -
     fd_conn_map_s fd_conn_map = {conn_fd,conn_index};
-    unsigned fd_conn_map_index = cs_ptr->fd_conn_map.insert(fd_conn_map);
+    unsigned fd_conn_map_index = ts_ptr->fd_conn_map.insert(fd_conn_map);
 
     // - call new connection callback -
-    TCP_CALL_CALLBACK_DELEGATE(cs_ptr->event_callback,operands[c_source_pos_idx],
+    TCP_CALL_CALLBACK_DELEGATE(ts_ptr->event_callback,operands[c_source_pos_idx],
       BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
       BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_tcp_EVENT_ACCEPTED,0);
 
@@ -751,8 +658,8 @@ method process
     ,
       // - drop connection without callback -
       conn.clear(it);
-      cs_ptr->conn_list.remove(conn_index);
-      cs_ptr->fd_conn_map.remove(fd_conn_map_index);
+      ts_ptr->conn_list.remove(conn_index);
+      ts_ptr->fd_conn_map.remove(fd_conn_map_index);
 
       return false;
     );
@@ -760,7 +667,7 @@ method process
   else
   {
     fd_conn_map_s search_fd_conn_map = {(int)fd,0};
-    unsigned fd_conn_map_index = cs_ptr->fd_conn_map.get_idx(search_fd_conn_map);
+    unsigned fd_conn_map_index = ts_ptr->fd_conn_map.get_idx(search_fd_conn_map);
 
     // - ERROR -
     if (fd_conn_map_index == c_idx_not_exist)
@@ -769,8 +676,8 @@ method process
       return false;
     }
 
-    unsigned conn_index = cs_ptr->fd_conn_map[fd_conn_map_index].conn_index;
-    tcp_conn_s &conn = cs_ptr->conn_list[conn_index];
+    unsigned conn_index = ts_ptr->fd_conn_map[fd_conn_map_index].conn_index;
+    tcp_conn_s &conn = ts_ptr->conn_list[conn_index];
 
     // - drop connection flag -
     bool drop_connection = false;
@@ -839,7 +746,7 @@ method process
     if (drop_connection)
     {
       // - call drop connection callback -
-      TCP_CALL_CALLBACK_DELEGATE(cs_ptr->event_callback,operands[c_source_pos_idx],
+      TCP_CALL_CALLBACK_DELEGATE(ts_ptr->event_callback,operands[c_source_pos_idx],
         BIC_CREATE_NEW_LOCATION_REFS(conn_index_loc,c_bi_class_integer,conn_index,0);
         BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_tcp_EVENT_DROPPED,0);
 
@@ -850,8 +757,8 @@ method process
 
       // - drop connection -
       conn.clear(it);
-      cs_ptr->conn_list.remove(conn_index);
-      cs_ptr->fd_conn_map.remove(fd_conn_map_index);
+      ts_ptr->conn_list.remove(conn_index);
+      ts_ptr->fd_conn_map.remove(fd_conn_map_index);
 
       // - drop due to exception -
       if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
@@ -877,7 +784,7 @@ message:c_bi_class_string
 method message
 ; @end
 
-  tcp_server_s *cs_ptr = (tcp_server_s *)dst_location->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)dst_location->v_data_ptr;
 
   if (src_0_location->v_type == c_bi_class_array)
   {
@@ -901,13 +808,13 @@ method message
         }
 
         // - ERROR -
-        if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
+        if (conn_index >= ts_ptr->conn_list.used || !ts_ptr->conn_list.data[conn_index].valid)
         {
           exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
 
-        tcp_conn_s &conn = cs_ptr->conn_list[conn_index];
+        tcp_conn_s &conn = ts_ptr->conn_list[conn_index];
 
         // - insert message to queue -
         src_1_location->v_reference_cnt.atomic_inc();
@@ -923,11 +830,11 @@ method message
   {
     if (conn_index == c_conn_index_CONN_ALL)
     {
-      if (cs_ptr->conn_list.first_idx != c_idx_not_exist)
+      if (ts_ptr->conn_list.first_idx != c_idx_not_exist)
       {
-        unsigned cl_idx = cs_ptr->conn_list.first_idx;
+        unsigned cl_idx = ts_ptr->conn_list.first_idx;
         do {
-          tcp_conn_s &conn = cs_ptr->conn_list[cl_idx];
+          tcp_conn_s &conn = ts_ptr->conn_list[cl_idx];
 
           // - insert message to queue -
           src_1_location->v_reference_cnt.atomic_inc();
@@ -936,21 +843,21 @@ method message
           // - update connection events -
           conn.events = POLLIN | POLLPRI | POLLOUT;
 
-          cl_idx = cs_ptr->conn_list.next_idx(cl_idx);
+          cl_idx = ts_ptr->conn_list.next_idx(cl_idx);
         } while(cl_idx != c_idx_not_exist);
       }
     }
     else
     {
       // - ERROR -
-      if (conn_index < 0 || conn_index >= cs_ptr->conn_list.used ||
-          !cs_ptr->conn_list.data[conn_index].valid)
+      if (conn_index < 0 || conn_index >= ts_ptr->conn_list.used ||
+          !ts_ptr->conn_list.data[conn_index].valid)
       {
         exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
 
-      tcp_conn_s &conn = cs_ptr->conn_list[conn_index];
+      tcp_conn_s &conn = ts_ptr->conn_list[conn_index];
 
       // - insert message to queue -
       src_1_location->v_reference_cnt.atomic_inc();
@@ -966,13 +873,47 @@ method message
   return true;
 }/*}}}*/
 
+bool bic_tcp_server_method_connection_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+conn_index:retrieve_integer
+>
+method connection
+; @end
+
+  tcp_server_s *ts_ptr = (tcp_server_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (conn_index < 0 || conn_index >= ts_ptr->conn_list.used ||
+      !ts_ptr->conn_list.data[conn_index].valid)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create tcp_conn object -
+  tcp_conn_ref_s *tcr_ptr = (tcp_conn_ref_s *)cmalloc(sizeof(tcp_conn_ref_s));
+  tcr_ptr->init();
+
+  dst_location->v_reference_cnt.atomic_inc();
+  tcr_ptr->server = dst_location;
+
+  tcr_ptr->index = conn_index;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_tcp_conn,tcr_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_tcp_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  tcp_server_s *cs_ptr = (tcp_server_s *)dst_location->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)dst_location->v_data_ptr;
 
-  location_s *new_ref_location = it.get_new_reference((location_s **)&cs_ptr->user_data);
+  location_s *new_ref_location = it.get_new_reference((location_s **)&ts_ptr->user_data);
 
   BIC_SET_RESULT(new_ref_location);
 
@@ -991,6 +932,280 @@ bool bic_tcp_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_b
 bool bic_tcp_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   printf("TcpServer");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
+// - class TCP_CONN -
+built_in_class_s tcp_conn_class =
+{/*{{{*/
+  "TcpConn",
+  c_modifier_public | c_modifier_final,
+  6
+#ifdef UCL_WITH_OPENSSL
+  + 1
+#endif
+  , tcp_conn_methods,
+  0, tcp_conn_variables,
+  bic_tcp_conn_consts,
+  bic_tcp_conn_init,
+  bic_tcp_conn_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s tcp_conn_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_tcp_conn_operator_binary_equal
+  },
+#ifdef UCL_WITH_OPENSSL
+  {
+    "init_ssl#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcp_conn_method_init_ssl_0
+  },
+#endif
+  {
+    "fd#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcp_conn_method_fd_0
+  },
+  {
+    "ip#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcp_conn_method_ip_0
+  },
+  {
+    "port#0",
+    c_modifier_public | c_modifier_final,
+    bic_tcp_conn_method_port_0
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_tcp_conn_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_tcp_conn_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s tcp_conn_variables[] =
+{/*{{{*/
+  BIC_CLASS_EMPTY_VARIABLES
+};/*}}}*/
+
+void bic_tcp_conn_consts(location_array_s &const_locations)
+{/*{{{*/
+}/*}}}*/
+
+void bic_tcp_conn_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (tcp_conn_ref_s *)nullptr;
+}/*}}}*/
+
+void bic_tcp_conn_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  tcp_conn_ref_s *tcr_ptr = (tcp_conn_ref_s *)location_ptr->v_data_ptr;
+
+  if (tcr_ptr != nullptr)
+  {
+    tcr_ptr->clear(it);
+    cfree(tcr_ptr);
+  }
+}/*}}}*/
+
+bool bic_tcp_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+#ifdef UCL_WITH_OPENSSL
+bool bic_tcp_conn_method_init_ssl_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  tcp_conn_ref_s *tcr_ptr = (tcp_conn_ref_s *)dst_location->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)tcr_ptr->server->v_data_ptr;
+
+  // - ERROR -
+  if (ts_ptr->ssl_ctx == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_NOT_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (tcr_ptr->index < 0 || tcr_ptr->index >= ts_ptr->conn_list.used ||
+      !ts_ptr->conn_list.data[tcr_ptr->index].valid)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  tcp_conn_s &conn = ts_ptr->conn_list[tcr_ptr->index];
+
+  // - ERROR -
+  if (conn.ssl != nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_CONN_SSL_ALREADY_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  int nonblock_io = 1;
+  if (ioctl(conn.conn_fd,FIONBIO,&nonblock_io))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  SSL *ssl = SSL_new(ts_ptr->ssl_ctx);
+
+  // - ERROR -
+  if (ssl == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (SSL_set_fd(ssl,conn.conn_fd) != 1)
+  {
+    SSL_free(ssl);
+
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_SSL_ACCEPT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  SSL_set_accept_state(ssl);
+  conn.ssl = ssl;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+#endif
+
+bool bic_tcp_conn_method_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  tcp_conn_ref_s *tcr_ptr = (tcp_conn_ref_s *)dst_location->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)tcr_ptr->server->v_data_ptr;
+
+  // - ERROR -
+  if (tcr_ptr->index < 0 || tcr_ptr->index >= ts_ptr->conn_list.used ||
+      !ts_ptr->conn_list.data[tcr_ptr->index].valid)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  long long int result = ts_ptr->conn_list[tcr_ptr->index].conn_fd;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcp_conn_method_ip_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  tcp_conn_ref_s *tcr_ptr = (tcp_conn_ref_s *)dst_location->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)tcr_ptr->server->v_data_ptr;
+
+  // - ERROR -
+  if (tcr_ptr->index < 0 || tcr_ptr->index >= ts_ptr->conn_list.used ||
+      !ts_ptr->conn_list.data[tcr_ptr->index].valid)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  sockaddr_in *addr_ptr = &ts_ptr->conn_list[tcr_ptr->index].address.addr;
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(256);
+
+  if (getnameinfo((sockaddr *)addr_ptr,sizeof(sockaddr_in),string_ptr->data,
+        string_ptr->size - 1,nullptr,0,NI_NUMERICHOST | NI_NUMERICSERV) == 0)
+  {
+    // - set string size -
+    string_ptr->size = strlen(string_ptr->data) + 1;
+
+    BIC_SET_RESULT_STRING(string_ptr);
+  }
+  else
+  {
+    string_ptr->clear();
+    cfree(string_ptr);
+
+    BIC_SET_RESULT_BLANK();
+  }
+
+  return true;
+}/*}}}*/
+
+bool bic_tcp_conn_method_port_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  tcp_conn_ref_s *tcr_ptr = (tcp_conn_ref_s *)dst_location->v_data_ptr;
+  tcp_server_s *ts_ptr = (tcp_server_s *)tcr_ptr->server->v_data_ptr;
+
+  // - ERROR -
+  if (tcr_ptr->index < 0 || tcr_ptr->index >= ts_ptr->conn_list.used ||
+      !ts_ptr->conn_list.data[tcr_ptr->index].valid)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  sockaddr_in *addr_ptr = &ts_ptr->conn_list[tcr_ptr->index].address.addr;
+
+  long long int result = (unsigned short)ntohs(addr_ptr->sin_port);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_tcp_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("TcpConn"),"TcpConn")
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_tcp_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("TcpConn");
 
   BIC_SET_RESULT_BLANK();
 
@@ -1123,12 +1338,12 @@ void bic_tcp_client_init(interpreter_thread_s &it,location_s *location_ptr)
 
 void bic_tcp_client_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  tcp_conn_s *cc_ptr = (tcp_conn_s *)location_ptr->v_data_ptr;
+  tcp_conn_s *tc_ptr = (tcp_conn_s *)location_ptr->v_data_ptr;
 
-  if (cc_ptr != nullptr)
+  if (tc_ptr != nullptr)
   {
-    cc_ptr->clear(it);
-    cfree(cc_ptr);
+    tc_ptr->clear(it);
+    cfree(tc_ptr);
   }
 }/*}}}*/
 
@@ -1222,30 +1437,30 @@ method TcpClient
   }
 
   // - create tcp_client object -
-  tcp_conn_s *cc_ptr = (tcp_conn_s *)cmalloc(sizeof(tcp_conn_s));
-  cc_ptr->init();
-  cc_ptr->init_static();
+  tcp_conn_s *tc_ptr = (tcp_conn_s *)cmalloc(sizeof(tcp_conn_s));
+  tc_ptr->init();
+  tc_ptr->init_static();
 
   // - set file descriptor -
-  cc_ptr->conn_fd = fd;
-  cc_ptr->events = POLLIN | POLLOUT | POLLPRI;
-  cc_ptr->connecting = true;
+  tc_ptr->conn_fd = fd;
+  tc_ptr->events = POLLIN | POLLOUT | POLLPRI;
+  tc_ptr->connecting = true;
 
   // - retrieve callbacks -
   src_2_location->v_reference_cnt.atomic_inc();
-  cc_ptr->event_callback = src_2_location;
+  tc_ptr->event_callback = src_2_location;
 
   src_3_location->v_reference_cnt.atomic_inc();
-  cc_ptr->message_callback = src_3_location;
+  tc_ptr->message_callback = src_3_location;
 
   // - retrieve user data -
   src_4_location->v_reference_cnt.atomic_inc();
-  cc_ptr->user_data = src_4_location;
+  tc_ptr->user_data = src_4_location;
 
-  cc_ptr->conn_index = 0;
+  tc_ptr->conn_index = 0;
 
   // - set destination data pointer -
-  dst_location->v_data_ptr = (tcp_conn_s *)cc_ptr;
+  dst_location->v_data_ptr = (tcp_conn_s *)tc_ptr;
 
   return true;
 }/*}}}*/
@@ -1255,10 +1470,10 @@ bool bic_tcp_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stack_ba
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  tcp_conn_s *cc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
+  tcp_conn_s *tc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (cc_ptr->ssl != nullptr)
+  if (tc_ptr->ssl != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_TCP_CLIENT_SSL_ALREADY_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1291,7 +1506,7 @@ bool bic_tcp_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stack_ba
   }
 
   // - ERROR -
-  if (SSL_set_fd(ssl,cc_ptr->conn_fd) != 1)
+  if (SSL_set_fd(ssl,tc_ptr->conn_fd) != 1)
   {
     SSL_free(ssl);
     SSL_CTX_free(ssl_ctx);
@@ -1301,7 +1516,7 @@ bool bic_tcp_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stack_ba
   }
 
   SSL_set_connect_state(ssl);
-  cc_ptr->ssl = ssl;
+  tc_ptr->ssl = ssl;
 
   SSL_CTX_free(ssl_ctx);
 
@@ -1326,12 +1541,12 @@ bool bic_tcp_client_method_events_0(interpreter_thread_s &it,unsigned stack_base
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  tcp_conn_s *cc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
+  tcp_conn_s *tc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
 
 #ifdef UCL_WITH_OPENSSL
-  long long int result = cc_ptr->ssl_action ? cc_ptr->ssl_events : cc_ptr->events;
+  long long int result = tc_ptr->ssl_action ? tc_ptr->ssl_events : tc_ptr->events;
 #else
-  long long int result = cc_ptr->events;
+  long long int result = tc_ptr->events;
 #endif
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
@@ -1343,20 +1558,20 @@ bool bic_tcp_client_method_get_fds_0(interpreter_thread_s &it,unsigned stack_bas
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  tcp_conn_s *cc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
+  tcp_conn_s *tc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
 
   // - create result array -
   pointer_array_s *array_ptr = it.get_new_array_ptr();
 
 #ifdef UCL_WITH_OPENSSL
-  unsigned events = cc_ptr->ssl_action ? cc_ptr->ssl_events : cc_ptr->events;
+  unsigned events = tc_ptr->ssl_action ? tc_ptr->ssl_events : tc_ptr->events;
 #else
-  unsigned events = cc_ptr->events;
+  unsigned events = tc_ptr->events;
 #endif
 
   if (events != 0)
   {
-    BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,cc_ptr->conn_fd);
+    BIC_CREATE_NEW_LOCATION(fd_location,c_bi_class_integer,tc_ptr->conn_fd);
     array_ptr->push(fd_location);
 
     BIC_CREATE_NEW_LOCATION(events_location,c_bi_class_integer,events);
@@ -1379,36 +1594,36 @@ events:retrieve_integer
 method process
 ; @end
 
-  tcp_conn_s *cc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
+  tcp_conn_s *tc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (fd != cc_ptr->conn_fd)
+  if (fd != tc_ptr->conn_fd)
   {
     exception_s::throw_exception(it,module.error_base + c_error_TCP_CLIENT_PROCESS_INVALID_FD,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  if (cc_ptr->connecting)
+  if (tc_ptr->connecting)
   {
     // - reset connecting flag -
-    cc_ptr->connecting = false;
+    tc_ptr->connecting = false;
 
     int error;
     socklen_t length = sizeof(error);
 
     // - check connect result -
-    if (getsockopt(cc_ptr->conn_fd,SOL_SOCKET,SO_ERROR,&error,&length))
+    if (getsockopt(tc_ptr->conn_fd,SOL_SOCKET,SO_ERROR,&error,&length))
     {
       error = 1;
     }
 
 #ifdef UCL_WITH_OPENSSL
-    if (cc_ptr->ssl == nullptr)
+    if (tc_ptr->ssl == nullptr)
     {
 #endif
       // - disable nonblocking io -
       int nonblock_io = 0;
-      if (!error && ioctl(cc_ptr->conn_fd,FIONBIO,&nonblock_io))
+      if (!error && ioctl(tc_ptr->conn_fd,FIONBIO,&nonblock_io))
       {
         error = 1;
       }
@@ -1419,10 +1634,10 @@ method process
     // - error occured -
     if (error)
     {
-      cc_ptr->events = 0;
+      tc_ptr->events = 0;
 
       // - call event error callback -
-      TCP_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
+      TCP_CALL_CALLBACK_DELEGATE(tc_ptr->event_callback,operands[c_source_pos_idx],
         BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_tcp_EVENT_ERROR,0);
 
         const unsigned param_cnt = 2;
@@ -1434,23 +1649,23 @@ method process
     else
     {
       // - set connected flag -
-      cc_ptr->connected = true;
+      tc_ptr->connected = true;
 
       // - call event new callback -
-      TCP_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
+      TCP_CALL_CALLBACK_DELEGATE(tc_ptr->event_callback,operands[c_source_pos_idx],
         BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_tcp_EVENT_CONNECTED,0);
 
         const unsigned param_cnt = 2;
         pointer param_data[param_cnt] = {dst_location MP_COMMA event_type_loc};
       ,
-        cc_ptr->events = 0;
+        tc_ptr->events = 0;
         return false;
       );
 
       // - no messages are queued to send -
-      if (cc_ptr->out_msg_queue.used == 0)
+      if (tc_ptr->out_msg_queue.used == 0)
       {
-        cc_ptr->events = POLLIN | POLLPRI;
+        tc_ptr->events = POLLIN | POLLPRI;
       }
     }
   }
@@ -1460,25 +1675,25 @@ method process
     bool drop_connection = false;
 
 #ifdef UCL_WITH_OPENSSL
-    if (cc_ptr->ssl_action)
+    if (tc_ptr->ssl_action)
     {
-      if (cc_ptr->ssl_events & events)
+      if (tc_ptr->ssl_events & events)
       {
         // - reset ssl action -
-        unsigned ssl_action = cc_ptr->ssl_action;
-        cc_ptr->ssl_action = SSL_ACTION_NONE;
+        unsigned ssl_action = tc_ptr->ssl_action;
+        tc_ptr->ssl_action = SSL_ACTION_NONE;
 
         switch (ssl_action)
         {
         case SSL_ACTION_SEND_MSG:
-          if (!cc_ptr->send_msg(it))
+          if (!tc_ptr->send_msg(it))
           {
             // - set drop connection flag -
             drop_connection = true;
           }
           break;
         case SSL_ACTION_RECV_MSG:
-          if (!cc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
+          if (!tc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
           {
             // - set drop connection flag -
             drop_connection = true;
@@ -1493,11 +1708,11 @@ method process
     {
 #endif
       // - mask events with connection events -
-      unsigned conn_events = cc_ptr->events & events;
+      unsigned conn_events = tc_ptr->events & events;
 
       if (conn_events & POLLOUT)
       {
-        if (!cc_ptr->send_msg(it))
+        if (!tc_ptr->send_msg(it))
         {
           // - set drop connection flag -
           drop_connection = true;
@@ -1509,7 +1724,7 @@ method process
 
       if (conn_events & POLLIN)
       {
-        if (!cc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
+        if (!tc_ptr->recv_msg(it,dst_location,operands[c_source_pos_idx]))
         {
           // - set drop connection flag -
           drop_connection = true;
@@ -1522,13 +1737,13 @@ method process
     // - drop connection flag is set -
     if (drop_connection)
     {
-      cc_ptr->events = 0;
+      tc_ptr->events = 0;
 
       // - reset connected flag -
-      cc_ptr->connected = false;
+      tc_ptr->connected = false;
 
       // - call event drop callback -
-      TCP_CALL_CALLBACK_DELEGATE(cc_ptr->event_callback,operands[c_source_pos_idx],
+      TCP_CALL_CALLBACK_DELEGATE(tc_ptr->event_callback,operands[c_source_pos_idx],
         BIC_CREATE_NEW_LOCATION_REFS(event_type_loc,c_bi_class_integer,c_tcp_EVENT_DROPPED,0);
 
         const unsigned param_cnt = 2;
@@ -1558,10 +1773,10 @@ message:c_bi_class_string
 method message
 ; @end
 
-  tcp_conn_s *cc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
+  tcp_conn_s *tc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (!cc_ptr->connected)
+  if (!tc_ptr->connected)
   {
     exception_s::throw_exception(it,module.error_base + c_error_TCP_CLIENT_NOT_CONNECTED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1569,10 +1784,10 @@ method message
 
   // - insert message to queue -
   src_0_location->v_reference_cnt.atomic_inc();
-  cc_ptr->out_msg_queue.insert(src_0_location);
+  tc_ptr->out_msg_queue.insert(src_0_location);
 
   // - update connection events -
-  cc_ptr->events = POLLIN | POLLPRI | POLLOUT;
+  tc_ptr->events = POLLIN | POLLPRI | POLLOUT;
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -1583,9 +1798,9 @@ bool bic_tcp_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  tcp_conn_s *cc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
+  tcp_conn_s *tc_ptr = (tcp_conn_s *)dst_location->v_data_ptr;
 
-  location_s *new_ref_location = it.get_new_reference((location_s **)&cc_ptr->user_data);
+  location_s *new_ref_location = it.get_new_reference((location_s **)&tc_ptr->user_data);
 
   BIC_SET_RESULT(new_ref_location);
 

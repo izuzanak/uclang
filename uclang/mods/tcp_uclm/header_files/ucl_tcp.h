@@ -74,6 +74,44 @@ class tcp_c
 };
 
 /*
+ * definition of structure tcp_conn_ref_s
+ */
+
+struct tcp_conn_ref_s
+{
+  location_s *server;
+  unsigned index;
+
+  inline void init();
+  inline void clear(interpreter_thread_s &it);
+};
+
+/*
+ * definition of structure tcp_address_s
+ */
+
+struct tcp_address_s
+{
+  sockaddr_in addr;
+
+  inline void swap(tcp_address_s &a_second)
+  {/*{{{*/
+    sockaddr_in tmp = addr;
+    addr = a_second.addr;
+    a_second.addr = tmp;
+  }/*}}}*/
+
+  inline bool operator==(tcp_address_s &a_second)
+  {/*{{{*/
+    return memcmp(&addr,&a_second.addr,sizeof(sockaddr_in)) == 0;
+  }/*}}}*/
+};
+
+@begin
+define tcp_address_s static
+@end
+
+/*
  * definition of generated structures
  */
 
@@ -106,6 +144,7 @@ pointer:message_callback
 pointer:user_data
 ui:conn_index
 
+tcp_address_s:address
 bc_array_s:in_msg
 
 pointer_queue_s:out_msg_queue
@@ -182,6 +221,23 @@ inline tcp_c::~tcp_c()
 #ifdef UCL_WITH_OPENSSL
   EVP_cleanup();
 #endif
+}/*}}}*/
+
+/*
+ * inline methods of structure tcp_conn_ref_s
+ */
+
+inline void tcp_conn_ref_s::init()
+{/*{{{*/
+  server = nullptr;
+}/*}}}*/
+
+inline void tcp_conn_ref_s::clear(interpreter_thread_s &it)
+{/*{{{*/
+  if (server != nullptr)
+  {
+    it.release_location_ptr(server);
+  }
 }/*}}}*/
 
 /*

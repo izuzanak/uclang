@@ -8,6 +8,7 @@ include "ucl_tcp.h"
 
 // - TCP indexes of built in classes -
 extern unsigned c_bi_class_tcp_server;
+extern unsigned c_bi_class_tcp_conn;
 extern unsigned c_bi_class_tcp_client;
 
 // - TCP module -
@@ -63,15 +64,33 @@ bool bic_tcp_server_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 bool bic_tcp_server_method_TcpServer_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 #ifdef UCL_WITH_OPENSSL
 bool bic_tcp_server_method_init_ssl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_tcp_server_method_conn_ssl_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 #endif
-bool bic_tcp_server_method_conn_fd_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcp_server_method_connection_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class TCP_CONN -
+extern built_in_variable_s tcp_conn_variables[];
+extern built_in_method_s tcp_conn_methods[];
+extern built_in_class_s tcp_conn_class;
+
+void bic_tcp_conn_consts(location_array_s &const_locations);
+void bic_tcp_conn_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_tcp_conn_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_tcp_conn_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#ifdef UCL_WITH_OPENSSL
+bool bic_tcp_conn_method_init_ssl_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
+bool bic_tcp_conn_method_fd_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcp_conn_method_ip_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcp_conn_method_port_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcp_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcp_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class TCP_CLIENT -
 extern built_in_variable_s tcp_client_variables[];
