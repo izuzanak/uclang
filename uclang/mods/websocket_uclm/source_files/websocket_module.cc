@@ -230,9 +230,9 @@ built_in_method_s ws_context_methods[] =
     bic_ws_context_method_user_data_0
   },
   {
-    "client#4",
+    "client#5",
     c_modifier_public | c_modifier_final,
-    bic_ws_context_method_client_4
+    bic_ws_context_method_client_5
   },
   {
     "get_fds#0",
@@ -483,7 +483,7 @@ bool bic_ws_context_method_user_data_0(interpreter_thread_s &it,unsigned stack_b
   return true;
 }/*}}}*/
 
-bool bic_ws_context_method_client_4(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_ws_context_method_client_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
@@ -491,6 +491,7 @@ address:c_bi_class_string
 port:retrieve_integer
 path:c_bi_class_string
 protocol:c_bi_class_string
+user_data:ignore
 >
 method client
 ; @end
@@ -514,6 +515,7 @@ method client
   info.origin = addr_ptr->data;
   info.protocol = prot_ptr->data;
   info.ietf_version_or_minus_one = -1;
+  info.opaque_user_data = src_4_location;
 
   // - connect client to server -
   lws *wsi = lws_client_connect_via_info(&info);
@@ -532,6 +534,10 @@ method client
   // - set websocket context pointer -
   dst_location->v_reference_cnt.atomic_inc();
   wscl_ptr->wsc_location = dst_location;
+
+  // - retrieve user data -
+  src_4_location->v_reference_cnt.atomic_inc();
+  wscl_ptr->user_data_ptr = src_4_location;
 
   // - set websocket pointer -
   wscl_ptr->ws_ptr = wsi;

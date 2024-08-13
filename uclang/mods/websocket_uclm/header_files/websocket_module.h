@@ -59,7 +59,7 @@ bool bic_ws_context_operator_binary_equal(interpreter_thread_s &it,unsigned stac
 bool bic_ws_context_method_WsContext_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_context_method_version_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_context_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_ws_context_method_client_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_ws_context_method_client_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_context_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_context_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_ws_context_method_protocol_idx_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

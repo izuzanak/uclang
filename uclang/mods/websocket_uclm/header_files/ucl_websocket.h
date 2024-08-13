@@ -104,6 +104,7 @@ struct ws_conn_s
 struct ws_client_s
 {
   location_s *wsc_location;
+  location_s *user_data_ptr;
   lws *ws_ptr;
 
   inline void init();
@@ -276,6 +277,7 @@ inline void ws_conn_s::clear(interpreter_thread_s &it)
 inline void ws_client_s::init()
 {/*{{{*/
   wsc_location = nullptr;
+  user_data_ptr = nullptr;
   ws_ptr = nullptr;
 }/*}}}*/
 
@@ -286,6 +288,12 @@ inline void ws_client_s::clear(interpreter_thread_s &it)
   if (wsc_location != nullptr)
   {
     it.release_location_ptr(wsc_location);
+  }
+
+  // - release user data location -
+  if (user_data_ptr != nullptr)
+  {
+    it.release_location_ptr(user_data_ptr);
   }
 
   init();

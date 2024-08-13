@@ -134,9 +134,16 @@ int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,
         // - set websocket pointer -
         wscn_ptr->ws_ptr = wsi;
 
-        // - set user data pointer to blank location -
-        ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
-        wscn_ptr->user_data_ptr = (location_s *)it.blank_location;
+        // - retrieve user data pointer -
+        location_s *user_data_loc = (location_s *)lws_get_opaque_user_data(wsi);
+        if (user_data_loc == nullptr)
+        {
+          user_data_loc = (location_s *)it.blank_location;
+        }
+
+        // - initialize connection user data pointer -
+        user_data_loc->v_reference_cnt.atomic_inc();
+        wscn_ptr->user_data_ptr = user_data_loc;
 
         // - create websocket connection location -
         BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_ws_conn,wscn_ptr);
