@@ -21,7 +21,7 @@ Class supporting serialization and deserialization of language objects to JavaSc
 
 <a name="create#1" />
 
-### Method `static` [`create#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L187)
+### Method `static` [`create#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L179)
 
 Create object of class `String` containing `JSON` representation of method parameter.
 
@@ -45,7 +45,7 @@ obj: {"Three":3,"Two":2,"One":1}
 
 <a name="create_nice#2" />
 
-### Method `static` [`create_nice#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L383)
+### Method `static` [`create_nice#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L378)
 
 Create object of class `String` containing `JSON` representation of method parameter.
 Output is formatted in Human readable format.
@@ -76,7 +76,7 @@ obj: {
 
 <a name="create_nice#3" />
 
-### Method `static` [`create_nice#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L427)
+### Method `static` [`create_nice#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L421)
 
 Create object of class `String` containing `JSON` representation of method parameter.
 Output is formatted in Human readable format, and all but first line are indented by given string.
@@ -108,7 +108,7 @@ obj: {
 
 <a name="parse#1" />
 
-### Method `static` [`parse#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L470)
+### Method `static` [`parse#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L463)
 
 Parse object of class `String` containing `JSON` representation of object.
 
@@ -132,7 +132,7 @@ obj: [One:1,Two:2,Three:3]
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L511)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L504)
 
 Convert object of class `Json` to object of class `String`.
 This method returns name of class `Json`.
@@ -152,7 +152,7 @@ Json.to_string(): Json
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L520)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/json_uclm/source_files/json_module.cc#L513)
 
 Print string representation of object of class `Json` to standard output.
 This method prints name of class `Json`.
