@@ -6,7 +6,6 @@ include "built_in.h"
 // - names of built in methods -
 const char *c_built_in_method_symbol_names[c_built_in_method_cnt] =
 {/*{{{*/
-
   "operator_binary_equal#1",
   "operator_binary_plus_equal#1",
   "operator_binary_minus_equal#1",
@@ -57,6 +56,7 @@ const char *c_built_in_method_symbol_names[c_built_in_method_cnt] =
 
   "length#0",
   "to_string#0",
+  "to_json#0",
   "print#0"
 };/*}}}*/
 

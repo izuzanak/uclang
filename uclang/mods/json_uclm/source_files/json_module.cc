@@ -16,7 +16,7 @@ EXPORT built_in_module_s module =
   json_classes,         // Classes
 
   0,                    // Error base index
-  3,                    // Error count
+  2,                    // Error count
   json_error_strings,   // Error strings
 
   json_initialize,      // Initialize function
@@ -32,7 +32,6 @@ built_in_class_s *json_classes[] =
 // - JSON error strings -
 const char *json_error_strings[] =
 {/*{{{*/
-  "error_JSON_CREATE_UNSUPPORTED_CLASS",
   "error_JSON_CREATE_NO_STRING_DICT_KEY",
   "error_JSON_PARSE_ERROR",
 };/*}}}*/
@@ -72,13 +71,6 @@ bool json_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_JSON_CREATE_UNSUPPORTED_CLASS:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nJSON create, unsupported class\n");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
   case c_error_JSON_CREATE_NO_STRING_DICT_KEY:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -355,11 +347,14 @@ static_method
 
       // - ERROR -
       default:
-        buffer.clear();
-        create_stack.clear();
+        BIC_CALL_TO_JSON(it,location_ptr,operands[c_source_pos_idx],
+            buffer.clear();
+            create_stack.clear();
 
-        exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_UNSUPPORTED_CLASS,operands[c_source_pos_idx],(location_s *)it.blank_location);
-        return false;
+            return false;
+            );
+
+        create_stack.pop();
       }
     }
   } while(create_stack.used > 0);
@@ -402,15 +397,14 @@ static_method
   bc_array_s buffer;
   buffer.init();
 
-  unsigned error = json_creator_s::create_nice(it,src_0_location,*tabulator_ptr,indent,buffer);
+  bool ok = json_creator_s::create_nice(it,src_0_location,*tabulator_ptr,indent,buffer,operands[c_source_pos_idx]);
   indent.clear();
 
   // - ERROR -
-  if (error != c_idx_not_exist)
+  if (!ok)
   {
     buffer.clear();
 
-    exception_s::throw_exception(it,module.error_base + error,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
@@ -446,14 +440,13 @@ static_method
   bc_array_s buffer;
   buffer.init();
 
-  unsigned error = json_creator_s::create_nice(it,src_0_location,*tabulator_ptr,*indent_ptr,buffer);
+  bool ok = json_creator_s::create_nice(it,src_0_location,*tabulator_ptr,*indent_ptr,buffer,operands[c_source_pos_idx]);
 
   // - ERROR -
-  if (error != c_idx_not_exist)
+  if (!ok)
   {
     buffer.clear();
 
-    exception_s::throw_exception(it,module.error_base + error,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

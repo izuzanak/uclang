@@ -36,8 +36,7 @@ extern const unsigned json_lalr_table[json_lalr_state_cnt*c_json_terminal_plus_n
 // - JSON error identifiers -
 enum
 {
-  c_error_JSON_CREATE_UNSUPPORTED_CLASS = 0,
-  c_error_JSON_CREATE_NO_STRING_DICT_KEY,
+  c_error_JSON_CREATE_NO_STRING_DICT_KEY = 0,
   c_error_JSON_PARSE_ERROR,
 };
 
@@ -48,7 +47,8 @@ enum
 struct json_creator_s
 {
   static void append_string(string_s &a_string,bc_array_s &a_buffer);
-  static unsigned create_nice(interpreter_thread_s &it,location_s *a_location,string_s &a_tabulator,string_s &a_indent,bc_array_s &a_buffer);
+  static bool create_nice(interpreter_thread_s &it,location_s *a_location,
+      string_s &a_tabulator,string_s &a_indent,bc_array_s &buffer,unsigned a_source_pos);
 };
 
 /*

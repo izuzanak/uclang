@@ -7,12 +7,11 @@ include "basic.h"
 @end
 
 // - count of built in method names -
-const unsigned c_built_in_method_cnt = 49;
+const unsigned c_built_in_method_cnt = 50;
 
 // - indexes of built in methods -
 enum
 {/*{{{*/
-
   c_operator_binary_equal,
   c_operator_binary_plus_equal,
   c_operator_binary_minus_equal,
@@ -63,6 +62,7 @@ enum
 
   c_built_in_method_length_0,
   c_built_in_method_to_string_0,
+  c_built_in_method_to_json_0,
   c_built_in_method_print_0
 };/*}}}*/
 
@@ -502,6 +502,46 @@ enum
       /* - copy string from location - */\
       *s_ptr = *((string_s *)ret_location->v_data_ptr);\
       strings_size += s_ptr->size - 1;\
+\
+      IT.release_stack_from(new_stack_base);\
+    }\
+  }/*}}}*/
+
+#define BIC_CALL_TO_JSON(IT,LOCATION_PTR,SOURCE_POS,ERR_CODE) \
+  {/*{{{*/\
+    unsigned new_stack_base = IT.data_stack.used;\
+\
+    ((location_s *)IT.blank_location)->v_reference_cnt.atomic_inc();\
+    IT.data_stack.push(IT.blank_location);\
+\
+    location_s *location = (location_s *)(LOCATION_PTR);\
+    location->v_reference_cnt.atomic_inc();\
+    IT.data_stack.push((pointer)location);\
+\
+    uli tmp_code[6] = {i_call,1,c_built_in_method_idxs[c_built_in_method_to_json_0],SOURCE_POS,0,1};\
+\
+    if (!IT.call_method(tmp_code,new_stack_base))\
+    {\
+      IT.release_stack_from(new_stack_base);\
+\
+      ERR_CODE;\
+    }\
+    else\
+    {\
+      /* - get string from return value - */\
+      location_s *ret_location = (location_s *)IT.get_stack_value(new_stack_base);\
+      if (ret_location->v_type != c_bi_class_string) {\
+        IT.release_stack_from(new_stack_base);\
+\
+        exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_RETURN_STRING,SOURCE_POS,(location_s *)IT.blank_location);\
+        BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,location->v_type,"to_json#0");\
+\
+        ERR_CODE;\
+      }\
+\
+      /* - append string to buffer - */\
+      string_s *string_ptr = (string_s *)ret_location->v_data_ptr;\
+      buffer.append(string_ptr->size - 1,string_ptr->data);\
 \
       IT.release_stack_from(new_stack_base);\
     }\

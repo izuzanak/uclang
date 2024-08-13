@@ -4,6 +4,9 @@ include "ucl_json.h"
 include "json_parse_actions.h"
 @end
 
+// - JSON module -
+extern "C" EXPORT built_in_module_s module;
+
 /*
  * constants and definitions
  */
@@ -97,7 +100,8 @@ void json_creator_s::append_string(string_s &a_string,bc_array_s &a_buffer)
   }
 }/*}}}*/
 
-unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_location,string_s &a_tabulator,string_s &a_indent,bc_array_s &a_buffer)
+bool json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_location,
+    string_s &a_tabulator,string_s &a_indent,bc_array_s &buffer,unsigned a_source_pos)
 {/*{{{*/
 
 #define JSON_CREATE_NICE_CLEAR() \
@@ -121,8 +125,8 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
 
 #define JSON_CREATE_NICE_INDENT() \
 {/*{{{*/\
-  a_buffer.push('\n');\
-  a_buffer.append(indent_size,indent_buffer.data);\
+  buffer.push('\n');\
+  buffer.append(indent_size,indent_buffer.data);\
 }/*}}}*/
 
   // - initialize indent buffer -
@@ -168,7 +172,7 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
         {
           if (cs_elm.initialize)
           {
-            a_buffer.push('{');
+            buffer.push('{');
 
             // - push tabulator to indent -
             JSON_CREATE_NICE_PUSH_TAB();
@@ -178,7 +182,7 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
           }
           else
           {
-            a_buffer.push(',');
+            buffer.push(',');
 
             // - insert indentation -
             JSON_CREATE_NICE_INDENT();
@@ -194,17 +198,18 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
           {
             JSON_CREATE_NICE_CLEAR();
 
-            return c_error_JSON_CREATE_NO_STRING_DICT_KEY;
+            exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_NO_STRING_DICT_KEY,a_source_pos,(location_s *)it.blank_location);
+            return false;
           }
 
           // - retrieve key string -
           string_s *string_ptr = (string_s *)key_location->v_data_ptr;
 
-          a_buffer.push('"');
-          json_creator_s::append_string(*string_ptr,a_buffer);
-          a_buffer.push('"');
-          a_buffer.push(':');
-          a_buffer.push(' ');
+          buffer.push('"');
+          json_creator_s::append_string(*string_ptr,buffer);
+          buffer.push('"');
+          buffer.push(':');
+          buffer.push(' ');
 
           // - insert value object to create stack -
           create_stack.push_blank();
@@ -215,7 +220,7 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
       {
         if (cs_elm.initialize)
         {
-          a_buffer.push('{');
+          buffer.push('{');
         }
         else
         {
@@ -226,7 +231,7 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
           JSON_CREATE_NICE_INDENT();
         }
 
-        a_buffer.push('}');
+        buffer.push('}');
 
         create_stack.pop();
       }
@@ -237,7 +242,7 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
       {
       case c_bi_class_blank:
         {/*{{{*/
-          a_buffer.append(strlen("null"),"null");
+          buffer.append(strlen("null"),"null");
           create_stack.pop();
         }/*}}}*/
         break;
@@ -246,8 +251,8 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
         {/*{{{*/
           long long int value = (long long int)location_ptr->v_data_ptr;
 
-          a_buffer.reserve(max_number_string_length);
-          a_buffer.used += snprintf(a_buffer.data + a_buffer.used,max_number_string_length,"%" HOST_LL_FORMAT "d",value);
+          buffer.reserve(max_number_string_length);
+          buffer.used += snprintf(buffer.data + buffer.used,max_number_string_length,"%" HOST_LL_FORMAT "d",value);
 
           create_stack.pop();
         }/*}}}*/
@@ -257,8 +262,8 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
         {/*{{{*/
           double value = (double)location_ptr->v_data_ptr;
 
-          a_buffer.reserve(max_number_string_length);
-          a_buffer.used += snprintf(a_buffer.data + a_buffer.used,max_number_string_length,"%f",value);
+          buffer.reserve(max_number_string_length);
+          buffer.used += snprintf(buffer.data + buffer.used,max_number_string_length,"%f",value);
 
           create_stack.pop();
         }/*}}}*/
@@ -268,9 +273,9 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
         {/*{{{*/
           string_s *string_ptr = (string_s *)location_ptr->v_data_ptr;
 
-          a_buffer.push('"');
-          json_creator_s::append_string(*string_ptr,a_buffer);
-          a_buffer.push('"');
+          buffer.push('"');
+          json_creator_s::append_string(*string_ptr,buffer);
+          buffer.push('"');
 
           create_stack.pop();
         }/*}}}*/
@@ -282,7 +287,7 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
 
           if (cs_elm.initialize)
           {
-            a_buffer.push('[');
+            buffer.push('[');
 
             // - if array is not empty -
             if (array_ptr->used != 0)
@@ -301,7 +306,7 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
           {
             if (cs_elm.index < array_ptr->used)
             {
-              a_buffer.push(',');
+              buffer.push(',');
 
               // - insert indentation -
               JSON_CREATE_NICE_INDENT();
@@ -328,7 +333,7 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
               JSON_CREATE_NICE_INDENT();
             }
 
-            a_buffer.push(']');
+            buffer.push(']');
 
             create_stack.pop();
           }
@@ -337,9 +342,13 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
 
       // - ERROR -
       default:
-        JSON_CREATE_NICE_CLEAR();
+        BIC_CALL_TO_JSON(it,location_ptr,a_source_pos,
+            JSON_CREATE_NICE_CLEAR();
 
-        return c_error_JSON_CREATE_UNSUPPORTED_CLASS;
+            return false;
+            );
+
+        create_stack.pop();
       }
     }
   } while(create_stack.used > 0);
@@ -351,9 +360,9 @@ unsigned json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_loca
   indent_buffer.clear();
 
   // - push terminating character to buffer -
-  a_buffer.push('\0');
+  buffer.push('\0');
 
-  return c_idx_not_exist;
+  return true;
 }/*}}}*/
 
 /*
