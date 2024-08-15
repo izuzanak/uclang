@@ -1013,14 +1013,19 @@ bool pa_element_name(string_s &source_string,script_parser_s &_this)
 
 bool pa_init_expression(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
+  class_records_s &class_records = _this.class_records;
   variable_records_s &variable_records = _this.variable_records;
+  ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   expression_descr_s &ed = _this.code_descrs.last().expression_descr;
   expressions_s &init_expressions = _this.init_expressions;
 
   // *****
 
+  class_record_s &class_record = class_records[parent_class_idxs.last()];
+  ui_array_s &class_vr_idxs = class_record.variable_record_idxs;
+
   // - store index of initialization expression to variable -
-  variable_records.last().init_expression_idx = init_expressions.used;
+  variable_records[class_vr_idxs.last()].init_expression_idx = init_expressions.used;
 
   // - creation of new initialization expression -
   init_expressions.push_blank();
@@ -1356,7 +1361,6 @@ bool pa_method_reference_parameter(string_s &source_string,script_parser_s &_thi
 
   // - creation of parameter description -
   variable_records.push_blank();
-
   variable_record_s &variable_record = variable_records.last();
   variable_record.name_idx = name_idx;
   variable_record.modifiers = c_variable_modifier_reference;

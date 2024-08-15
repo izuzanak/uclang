@@ -749,7 +749,14 @@ void script_parser_s::DEBUG_show_methods()
 
     do
     {
-      printf(" ## METHOD: %s ## \n",method_symbol_names[mr_ptr->name_idx].data);
+      if (mr_ptr->name_idx != c_idx_not_exist)
+      {
+        printf(" ## METHOD: %s ## \n",method_symbol_names[mr_ptr->name_idx].data);
+      }
+      else
+      {
+        printf(" ## METHOD: <anon_%u> ## \n",(unsigned)(mr_ptr - method_records.data));
+      }
 
       printf("modifiers: ");
       if (mr_ptr->modifiers & c_modifier_public) printf("public ");
@@ -762,7 +769,15 @@ void script_parser_s::DEBUG_show_methods()
       if (mr_ptr->modifiers & c_variable_modifier_reference) printf("reference ");
       putchar('\n');
 
-      printf("parent_record(class): %s\n",class_symbol_names[class_records[mr_ptr->parent_record].name_idx].data);
+      if (mr_ptr->parent_record != c_idx_not_exist)
+      {
+        printf("parent_record(class): %s\n",class_symbol_names[class_records[mr_ptr->parent_record].name_idx].data);
+      }
+      else
+      {
+        printf("parent_record(class): <none>\n");
+      }
+
       printf("flow_graph_idx: %u\n",mr_ptr->flow_graph_idx);
 
       printf("try_fg_maps:");
@@ -2664,8 +2679,17 @@ void script_parser_s::DEBUG_show_method_im_codes()
 
     if (!(method_record.modifiers & c_modifier_abstract))
     {
-      printf(" XXXXXXXXXXXXXXXXXX METHOD: %s::%s XXXXXXXXXXXXXXXXXX \n",class_symbol_names[class_records[method_record.parent_record].name_idx].data,
-             method_symbol_names[method_record.name_idx].data);
+      if (method_record.name_idx != c_idx_not_exist)
+      {
+        printf(" XXXXXXXXXXXXXXXXXX METHOD: %s::%s XXXXXXXXXXXXXXXXXX \n",class_symbol_names[class_records[method_record.parent_record].name_idx].data,
+            method_symbol_names[method_record.name_idx].data);
+      }
+      else
+      {
+        printf(" XXXXXXXXXXXXXXXXXX METHOD: %s::<anon_%u> XXXXXXXXXXXXXXXXXX \n",
+            method_record.parent_record == c_idx_not_exist ? "<none>" : class_symbol_names[class_records[method_record.parent_record].name_idx].data,
+            m_idx);
+      }
 
       uli_array_s &begin_code = method_record.begin_code;
       uli_array_s &run_time_code = method_record.run_time_code;
@@ -3028,11 +3052,30 @@ char *VAR_NAME;\
       GEN_UCL_INDEX_REF_NOBI(flow_graph_buff,flow_graph_str,mr_ptr,mr_ptr->flow_graph_idx);
       GEN_UCL_NAME_POS(name_pos_buff,name_pos_str,mr_ptr);
 
-      fprintf(a_file,
-"    new Method(\"%s\",%u,%u,["
-      ,method_symbol_names[mr_ptr->name_idx].data
-      ,mr_ptr->modifiers
-      ,mr_ptr->parent_record);
+      if (mr_ptr->name_idx != c_idx_not_exist)
+      {
+        fprintf(a_file,
+"    new Method(\"%s\",%u,"
+        ,method_symbol_names[mr_ptr->name_idx].data
+        ,mr_ptr->modifiers);
+      }
+      else
+      {
+        fprintf(a_file,
+"    new Method(\"<anon_%u>\",%u,"
+        ,(unsigned)(mr_ptr - method_records.data)
+        ,mr_ptr->modifiers);
+      }
+
+      if (mr_ptr->parent_record != c_idx_not_exist)
+      {
+        fprintf(a_file,"%u,["
+            ,mr_ptr->parent_record);
+      }
+      else
+      {
+        fprintf(a_file,"B,[");
+      }
 
       // - process indexes of method parameters -
       GEN_UCL_INDEX_ARRAY(mr_ptr->parameter_record_idxs);

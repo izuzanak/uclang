@@ -708,7 +708,7 @@ rules:
          print("   node_"..this_idx.." [label = \""..rule_body(0).."\"]");
          table.insert(node_stack,this_idx);
       else
-         print(table.concat(tabs,"").."element name: \""..rule_body(0).."\".. identifier");
+         print(table.concat(tabs,"").."element name: \""..rule_body(0).."\"");
       end
    }
 

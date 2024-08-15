@@ -11,10 +11,10 @@ unsigned c_bi_class_tcp_client = c_idx_not_exist;
 // - TCP module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  3,                       // Class count
+  3,                   // Class count
   tcp_classes,         // Classes
-  0,                       // Error base index
-  20,                      // Error count
+  0,                   // Error base index
+  20,                  // Error count
   tcp_error_strings,   // Error strings
   tcp_initialize,      // Initialize function
   tcp_print_exception, // Print exceptions function
