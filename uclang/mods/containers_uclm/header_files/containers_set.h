@@ -41,6 +41,7 @@ bool bic_set_method_Set_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
 bool bic_set_method_Set_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_clear_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_set_method_unordered_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_insert_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_remove_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_set_method_contain_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);

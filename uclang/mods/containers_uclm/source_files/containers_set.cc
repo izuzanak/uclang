@@ -8,7 +8,7 @@ built_in_class_s set_class =
 {/*{{{*/
   "Set",
   c_modifier_public | c_modifier_final,
-  33, set_methods,
+  34, set_methods,
   0, set_variables,
   bic_set_consts,
   bic_set_init,
@@ -127,6 +127,11 @@ built_in_method_s set_methods[] =
     "items#0",
     c_modifier_public | c_modifier_final,
     bic_set_method_items_0
+  },
+  {
+    "unordered_items#0",
+    c_modifier_public | c_modifier_final,
+    bic_set_method_unordered_items_0
   },
   {
     "insert#1",
@@ -1275,6 +1280,37 @@ bool bic_set_method_items_0(interpreter_thread_s &it,unsigned stack_base,uli *op
       t_idx = tree_ptr->get_stack_next_idx(t_idx,&stack_ptr,stack);
     }
     while(t_idx != c_idx_not_exist);
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_set_method_unordered_items_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  pointer_tree_s *tree_ptr = (pointer_tree_s *)dst_location->v_data_ptr;
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+
+  if (tree_ptr->root_idx != c_idx_not_exist)
+  {
+    array_ptr->init_size(tree_ptr->count);
+
+    pointer_tree_s_node *ptr = tree_ptr->data;
+    pointer_tree_s_node *ptr_end = ptr + tree_ptr->used;
+
+    do
+    {
+      if (ptr->valid)
+      {
+        location_s *item_location = it.get_location_value(ptr->object);
+        item_location->v_reference_cnt.atomic_inc();
+        array_ptr->push(item_location);
+      }
+    } while(++ptr < ptr_end);
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
