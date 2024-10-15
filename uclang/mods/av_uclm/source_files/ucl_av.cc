@@ -6,6 +6,7 @@ include "ucl_av.h"
 // - av global init object -
 av_c g_av;
 
+#if LIBAVCODEC_VERSION_MAJOR < 59
 // - mutex lock callback function -
 int av_lock_callback(void **mutex,enum AVLockOp op)
 {/*{{{*/
@@ -46,6 +47,7 @@ int av_lock_callback(void **mutex,enum AVLockOp op)
   }
   return 0;
 }/*}}}*/
+#endif
 
 // - log callback function -
 void av_log_callback(void* ptr,int level,const char *fmt,va_list vl)

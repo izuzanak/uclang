@@ -1,8 +1,8 @@
 
 if(PKG_CONFIG_FOUND)
-  pkg_search_module(LIBAVUTIL "libavutil >= 54.3.0")
-  pkg_search_module(LIBAVFORMAT "libavformat >= 56.1.0")
-  pkg_search_module(LIBAVCODEC "libavcodec >= 56.1.0")
+  pkg_search_module(LIBAVUTIL "libavutil >= 54.3.0 < 59.0.0")
+  pkg_search_module(LIBAVFORMAT "libavformat >= 56.1.0 < 59.0.0")
+  pkg_search_module(LIBAVCODEC "libavcodec >= 56.1.0 < 59.0.0")
   pkg_search_module(LIBSWSCALE "libswscale >= 3.0.0")
 endif()
 

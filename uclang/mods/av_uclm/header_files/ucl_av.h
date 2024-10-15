@@ -8,14 +8,16 @@ include "script_parser.h"
 @end
 
 extern "C" {
+#include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
 }
 
 extern "C" {
-
+#if LIBAVCODEC_VERSION_MAJOR < 59
 // - mutex lock callback function -
 int av_lock_callback(void **mutex,enum AVLockOp op);
+#endif
 
 // - log callback function -
 void av_log_callback(void* ptr,int level,const char *fmt,va_list vl);
@@ -214,16 +216,22 @@ inline av_c::av_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"libav_init()\n"););
 
+#if LIBAVCODEC_VERSION_MAJOR < 58
   av_register_all();
+#endif
   av_log_set_callback(&av_log_callback);
+#if LIBAVCODEC_VERSION_MAJOR < 59
   av_lockmgr_register(&av_lock_callback);
+#endif
 }/*}}}*/
 
 inline av_c::~av_c()
 {/*{{{*/
   debug_message_2(fprintf(stderr,"libav_exit()\n"););
 
+#if LIBAVCODEC_VERSION_MAJOR < 59
   av_lockmgr_register(nullptr);
+#endif
 }/*}}}*/
 
 #endif
