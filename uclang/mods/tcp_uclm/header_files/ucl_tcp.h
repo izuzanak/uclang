@@ -238,6 +238,8 @@ inline void tcp_conn_ref_s::clear(interpreter_thread_s &it)
   {
     it.release_location_ptr(server);
   }
+
+  init();
 }/*}}}*/
 
 /*
