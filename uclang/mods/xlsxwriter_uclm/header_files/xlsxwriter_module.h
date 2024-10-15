@@ -28,6 +28,7 @@ enum
   c_error_XLSX_WORKSHEET_FORMAT_WORKBOOK_MISMATCH,
   c_error_XLSX_WORKSHEET_WRITE_ERROR,
   c_error_XLSX_WORKSHEET_WRITE_INVALID_VALUE_TYPE,
+  c_error_XLSX_FORMAT_INVALID_COLOR_VALUE,
 };
 
 // - XLSX_WRITER error strings -
@@ -49,8 +50,8 @@ void bic_xlsx_workbook_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_xlsx_workbook_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_xlsx_workbook_method_XlsxWorkbook_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_xlsx_workbook_method_add_worksheet_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_xlsx_workbook_method_add_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_xlsx_workbook_method_worksheet_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_xlsx_workbook_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -81,6 +82,7 @@ void bic_xlsx_format_consts(location_array_s &const_locations);
 void bic_xlsx_format_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_xlsx_format_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_xlsx_format_method_set_font_color_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_format_method_set_num_format_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_format_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_format_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

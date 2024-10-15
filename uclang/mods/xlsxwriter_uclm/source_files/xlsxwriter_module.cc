@@ -15,7 +15,7 @@ EXPORT built_in_module_s module =
   xlsx_writer_classes,         // Classes
 
   0,                           // Error base index
-  8,                           // Error count
+  9,                           // Error count
   xlsx_writer_error_strings,   // Error strings
 
   xlsx_writer_initialize,      // Initialize function
@@ -41,6 +41,7 @@ const char *xlsx_writer_error_strings[] =
   "error_XLSX_WORKSHEET_FORMAT_WORKBOOK_MISMATCH",
   "error_XLSX_WORKSHEET_WRITE_ERROR",
   "error_XLSX_WORKSHEET_WRITE_INVALID_VALUE_TYPE",
+  "error_XLSX_FORMAT_INVALID_COLOR_VALUE",
 };/*}}}*/
 
 // - XLSX_WRITER initialize -
@@ -124,6 +125,13 @@ bool xlsx_writer_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nXLSX Worksheet, invalid value type to write\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_XLSX_FORMAT_INVALID_COLOR_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nXLSX Format, invalid color value\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     return false;
   }
@@ -162,14 +170,14 @@ built_in_method_s xlsx_workbook_methods[] =
     bic_xlsx_workbook_method_XlsxWorkbook_1
   },
   {
-    "add_worksheet#1",
+    "worksheet#1",
     c_modifier_public | c_modifier_final,
-    bic_xlsx_workbook_method_add_worksheet_1
+    bic_xlsx_workbook_method_worksheet_1
   },
   {
-    "add_format#0",
+    "format#0",
     c_modifier_public | c_modifier_final,
-    bic_xlsx_workbook_method_add_format_0
+    bic_xlsx_workbook_method_format_0
   },
   {
     "close#0",
@@ -237,13 +245,13 @@ method XlsxWorkbook
   return true;
 }/*}}}*/
 
-bool bic_xlsx_workbook_method_add_worksheet_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_xlsx_workbook_method_worksheet_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
 @begin ucl_params
 <
 sheetname:c_bi_class_string
 >
-method add_worksheet
+method worksheet
 ; @end
 
   lxw_workbook *xwb_ptr = (lxw_workbook *)dst_location->v_data_ptr;
@@ -279,7 +287,7 @@ method add_worksheet
   return true;
 }/*}}}*/
 
-bool bic_xlsx_workbook_method_add_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_xlsx_workbook_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
@@ -674,7 +682,7 @@ built_in_class_s xlsx_format_class =
 {/*{{{*/
   "Xlsxformat",
   c_modifier_public | c_modifier_final,
-  3, xlsx_format_methods,
+  4, xlsx_format_methods,
   0, xlsx_format_variables,
   bic_xlsx_format_consts,
   bic_xlsx_format_init,
@@ -694,6 +702,11 @@ built_in_class_s xlsx_format_class =
 
 built_in_method_s xlsx_format_methods[] =
 {/*{{{*/
+  {
+    "set_font_color#1",
+    c_modifier_public | c_modifier_final,
+    bic_xlsx_format_method_set_font_color_1
+  },
   {
     "set_num_format#1",
     c_modifier_public | c_modifier_final,
@@ -734,6 +747,31 @@ void bic_xlsx_format_clear(interpreter_thread_s &it,location_s *location_ptr)
     xf_ptr->clear(it);
     cfree(xf_ptr);
   }
+}/*}}}*/
+
+bool bic_xlsx_format_method_set_font_color_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+color:retrieve_integer
+>
+method set_font_color
+; @end
+
+  xlsx_format_s *xf_ptr = (xlsx_format_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (color < 0 || color > 0x1000000)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_XLSX_FORMAT_INVALID_COLOR_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  format_set_font_color(xf_ptr->format,color);
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
 }/*}}}*/
 
 bool bic_xlsx_format_method_set_num_format_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
