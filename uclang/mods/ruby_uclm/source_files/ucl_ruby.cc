@@ -266,7 +266,12 @@ location_s *ruby_c::ruby_value_value(interpreter_thread_s &it,VALUE rv_value,uli
         size_t kv_size = size << 1;
 
         VALUE kv_pairs = rb_ary_new_capa(kv_size);
+
+#if RUBY_API_VERSION_CODE >= 20700
+        rb_hash_foreach(rv_value,hash_kv_pair,kv_pairs);
+#else
         rb_hash_foreach(rv_value,(int (*)(ANYARGS))&hash_kv_pair,kv_pairs);
+#endif
 
         size_t idx = 0;
         do {

@@ -7,6 +7,7 @@ include "script_parser.h"
 @end
 
 #include <ruby.h>
+#include <ruby/version.h>
 
 /*
  * constants and definitions
