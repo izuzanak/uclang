@@ -25,6 +25,7 @@ enum
   c_error_XLSX_WORKBOOK_NOT_OPENED,
   c_error_XLSX_WORKBOOK_ADD_WORKSHEET_ERROR,
   c_error_XLSX_WORKBOOK_ADD_FORMAT_ERROR,
+  c_error_XLSX_WORKBOOK_BUFFER_NOT_AVAILABLE,
   c_error_XLSX_WORKSHEET_FORMAT_WORKBOOK_MISMATCH,
   c_error_XLSX_WORKSHEET_WRITE_ERROR,
   c_error_XLSX_WORKSHEET_WRITE_INVALID_VALUE_TYPE,
@@ -49,10 +50,12 @@ void bic_xlsx_workbook_consts(location_array_s &const_locations);
 void bic_xlsx_workbook_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_xlsx_workbook_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_xlsx_workbook_method_XlsxWorkbook_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_XlsxWorkbook_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_worksheet_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_xlsx_workbook_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

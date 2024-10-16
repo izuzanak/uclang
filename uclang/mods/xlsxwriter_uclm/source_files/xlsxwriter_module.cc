@@ -15,7 +15,7 @@ EXPORT built_in_module_s module =
   xlsx_writer_classes,         // Classes
 
   0,                           // Error base index
-  9,                           // Error count
+  10,                          // Error count
   xlsx_writer_error_strings,   // Error strings
 
   xlsx_writer_initialize,      // Initialize function
@@ -38,6 +38,7 @@ const char *xlsx_writer_error_strings[] =
   "error_XLSX_WORKBOOK_NOT_OPENED",
   "error_XLSX_WORKBOOK_ADD_WORKSHEET_ERROR",
   "error_XLSX_WORKBOOK_ADD_FORMAT_ERROR",
+  "error_XLSX_WORKBOOK_BUFFER_NOT_AVAILABLE",
   "error_XLSX_WORKSHEET_FORMAT_WORKBOOK_MISMATCH",
   "error_XLSX_WORKSHEET_WRITE_ERROR",
   "error_XLSX_WORKSHEET_WRITE_INVALID_VALUE_TYPE",
@@ -104,6 +105,13 @@ bool xlsx_writer_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nXLSX Workbook, add format error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_XLSX_WORKBOOK_BUFFER_NOT_AVAILABLE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nXLSX Workbook, buffer is not available\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_XLSX_WORKSHEET_FORMAT_WORKBOOK_MISMATCH:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -144,7 +152,7 @@ built_in_class_s xlsx_workbook_class =
 {/*{{{*/
   "XlsxWorkbook",
   c_modifier_public | c_modifier_final,
-  6, xlsx_workbook_methods,
+  8, xlsx_workbook_methods,
   0, xlsx_workbook_variables,
   bic_xlsx_workbook_consts,
   bic_xlsx_workbook_init,
@@ -165,6 +173,11 @@ built_in_class_s xlsx_workbook_class =
 built_in_method_s xlsx_workbook_methods[] =
 {/*{{{*/
   {
+    "XlsxWorkbook#0",
+    c_modifier_public | c_modifier_final,
+    bic_xlsx_workbook_method_XlsxWorkbook_0
+  },
+  {
     "XlsxWorkbook#1",
     c_modifier_public | c_modifier_final,
     bic_xlsx_workbook_method_XlsxWorkbook_1
@@ -183,6 +196,11 @@ built_in_method_s xlsx_workbook_methods[] =
     "close#0",
     c_modifier_public | c_modifier_final,
     bic_xlsx_workbook_method_close_0
+  },
+  {
+    "buffer#0",
+    c_modifier_public | c_modifier_final,
+    bic_xlsx_workbook_method_buffer_0
   },
   {
     "to_string#0",
@@ -207,17 +225,52 @@ void bic_xlsx_workbook_consts(location_array_s &const_locations)
 
 void bic_xlsx_workbook_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  location_ptr->v_data_ptr = (lxw_workbook *)nullptr;
+  location_ptr->v_data_ptr = (xlsx_workbook_s *)nullptr;
 }/*}}}*/
 
 void bic_xlsx_workbook_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
-  lxw_workbook *xwb_ptr = (lxw_workbook *)location_ptr->v_data_ptr;
+  xlsx_workbook_s *xwb_ptr = (xlsx_workbook_s *)location_ptr->v_data_ptr;
 
   if (xwb_ptr != nullptr)
   {
-    workbook_close(xwb_ptr);
+    xwb_ptr->clear(it);
+    cfree(xwb_ptr);
   }
+}/*}}}*/
+
+bool bic_xlsx_workbook_method_XlsxWorkbook_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - create xlsx workbook object -
+  xlsx_workbook_s *xwb_ptr = (xlsx_workbook_s *)cmalloc(sizeof(xlsx_workbook_s));
+  xwb_ptr->init();
+
+  lxw_workbook_options options = {
+    .constant_memory = LXW_FALSE,
+    .tmpdir = nullptr,
+    .output_buffer = (const char **)&xwb_ptr->buffer,
+    .output_buffer_size = &xwb_ptr->buffer_size,
+  };
+
+  lxw_workbook *workbook = workbook_new_opt(nullptr,&options);
+
+  // - ERROR -
+  if (workbook == nullptr)
+  {
+    xwb_ptr->clear(it);
+    cfree(xwb_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_XLSX_WORKBOOK_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  xwb_ptr->workbook = workbook;
+
+  dst_location->v_data_ptr = (xlsx_workbook_s *)xwb_ptr;
+
+  return true;
 }/*}}}*/
 
 bool bic_xlsx_workbook_method_XlsxWorkbook_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -231,16 +284,22 @@ method XlsxWorkbook
 
   string_s *path_str = (string_s *)src_0_location->v_data_ptr;
 
-  lxw_workbook *xwb_ptr = workbook_new(path_str->data);
+  lxw_workbook *workbook = workbook_new(path_str->data);
 
   // - ERROR -
-  if (xwb_ptr == nullptr)
+  if (workbook == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_XLSX_WORKBOOK_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  dst_location->v_data_ptr = (lxw_workbook *)xwb_ptr;
+  // - create xlsx workbook object -
+  xlsx_workbook_s *xwb_ptr = (xlsx_workbook_s *)cmalloc(sizeof(xlsx_workbook_s));
+  xwb_ptr->init();
+
+  xwb_ptr->workbook = workbook;
+
+  dst_location->v_data_ptr = (xlsx_workbook_s *)xwb_ptr;
 
   return true;
 }/*}}}*/
@@ -254,17 +313,17 @@ sheetname:c_bi_class_string
 method worksheet
 ; @end
 
-  lxw_workbook *xwb_ptr = (lxw_workbook *)dst_location->v_data_ptr;
+  xlsx_workbook_s *xwb_ptr = (xlsx_workbook_s *)dst_location->v_data_ptr;
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - ERROR -
-  if (xwb_ptr == nullptr)
+  if (xwb_ptr->workbook == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_XLSX_WORKBOOK_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  lxw_worksheet *worksheet = workbook_add_worksheet(xwb_ptr,string_ptr->data);
+  lxw_worksheet *worksheet = workbook_add_worksheet(xwb_ptr->workbook,string_ptr->data);
 
   // - ERROR -
   if (worksheet == nullptr)
@@ -291,16 +350,16 @@ bool bic_xlsx_workbook_method_format_0(interpreter_thread_s &it,unsigned stack_b
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  lxw_workbook *xwb_ptr = (lxw_workbook *)dst_location->v_data_ptr;
+  xlsx_workbook_s *xwb_ptr = (xlsx_workbook_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (xwb_ptr == nullptr)
+  if (xwb_ptr->workbook == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_XLSX_WORKBOOK_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  lxw_format *format = workbook_add_format(xwb_ptr);
+  lxw_format *format = workbook_add_format(xwb_ptr->workbook);
 
   // - ERROR -
   if (format == nullptr)
@@ -327,27 +386,56 @@ bool bic_xlsx_workbook_method_close_0(interpreter_thread_s &it,unsigned stack_ba
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  lxw_workbook *xwb_ptr = (lxw_workbook *)dst_location->v_data_ptr;
+  xlsx_workbook_s *xwb_ptr = (xlsx_workbook_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (xwb_ptr == nullptr)
+  if (xwb_ptr->workbook == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_XLSX_WORKBOOK_NOT_OPENED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - ERROR -
-  if (workbook_close(xwb_ptr) != LXW_NO_ERROR)
+  if (workbook_close(xwb_ptr->workbook) != LXW_NO_ERROR)
   {
-    dst_location->v_data_ptr = (lxw_workbook *)nullptr;
+    xwb_ptr->workbook = nullptr;
 
     exception_s::throw_exception(it,module.error_base + c_error_XLSX_WORKBOOK_CLOSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
-  dst_location->v_data_ptr = (lxw_workbook *)nullptr;
+  xwb_ptr->workbook = nullptr;
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_xlsx_workbook_method_buffer_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  xlsx_workbook_s *xwb_ptr = (xlsx_workbook_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (xwb_ptr->buffer == nullptr || xwb_ptr->buffer_size == 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_XLSX_WORKBOOK_BUFFER_NOT_AVAILABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create buffer object -
+  buffer_s *buffer_ptr = (buffer_s *)cmalloc(sizeof(buffer_s));
+
+  // - set owner reference -
+  dst_location->v_reference_cnt.atomic_inc();
+  buffer_ptr->owner_ptr = dst_location;
+
+  buffer_ptr->data = xwb_ptr->buffer;
+  buffer_ptr->size = xwb_ptr->buffer_size;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_buffer,buffer_ptr);
+  BIC_SET_RESULT(new_location);
 
   return true;
 }/*}}}*/
