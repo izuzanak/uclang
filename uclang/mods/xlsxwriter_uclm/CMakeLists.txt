@@ -1,6 +1,6 @@
 
 if(PKG_CONFIG_FOUND)
-  pkg_search_module(LIBXLSXWRITER "xlsxwriter >= 4")
+  pkg_search_module(LIBXLSXWRITER "xlsxwriter >= 1.1.8")
 endif()
 
 if(LIBXLSXWRITER_FOUND)
