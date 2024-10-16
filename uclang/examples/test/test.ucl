@@ -105,9 +105,11 @@ class Main
       {
         ("Test failed!\n").print();
 
-        // - create diff files -
+        // - print diffs and create diff files -
         if (Blank != out_diff)
         {
+          ("out.diff:\n%s\n" % out_diff).print();
+
           out_f = new File("snapshots/%s.out.diff" % path_name,"w");
           out_f.write(out_diff);
           out_f.close();
@@ -115,6 +117,8 @@ class Main
 
         if (Blank != err_diff)
         {
+          ("err.diff:\n%s\n" % err_diff).print();
+
           err_f = new File("snapshots/%s.err.diff" % path_name,"w");
           err_f.write(err_diff);
           err_f.close();
