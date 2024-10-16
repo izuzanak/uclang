@@ -277,7 +277,11 @@ built_in_class_s raw_processor_class =
   "RawProcessor",
   c_modifier_public | c_modifier_final,
   8, raw_processor_methods,
-  2, raw_processor_variables,
+  1
+#if ! LIBRAW_COMPILE_CHECK_VERSION_NOTLESS(0, 21)
+  + 1
+#endif
+  , raw_processor_variables,
   bic_raw_processor_consts,
   bic_raw_processor_init,
   bic_raw_processor_clear,
@@ -342,8 +346,11 @@ built_in_variable_s raw_processor_variables[] =
 {/*{{{*/
 
   // - raw processor flag values -
+#if ! LIBRAW_COMPILE_CHECK_VERSION_NOTLESS(0, 21)
   { "NO_MEMERR_CALLBACK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
   { "NO_DATAERR_CALLBACK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
 };/*}}}*/
 
 void bic_raw_processor_consts(location_array_s &const_locations)
@@ -351,8 +358,8 @@ void bic_raw_processor_consts(location_array_s &const_locations)
 
   // - insert raw processor flag values -
   {
-    const_locations.push_blanks(2);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
+    const_locations.push_blanks(raw_processor_class.variable_cnt);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - raw_processor_class.variable_cnt);
 
 #define CREATE_RAW_PROCESSOR_FLAG_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -360,7 +367,9 @@ void bic_raw_processor_consts(location_array_s &const_locations)
   cv_ptr->v_data_ptr = (long long int)VALUE;\
   cv_ptr++;
 
+#if ! LIBRAW_COMPILE_CHECK_VERSION_NOTLESS(0, 21)
     CREATE_RAW_PROCESSOR_FLAG_BIC_STATIC(LIBRAW_OPIONS_NO_MEMERR_CALLBACK);
+#endif
     CREATE_RAW_PROCESSOR_FLAG_BIC_STATIC(LIBRAW_OPIONS_NO_DATAERR_CALLBACK);
   }
 
