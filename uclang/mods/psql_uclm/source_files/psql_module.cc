@@ -523,6 +523,7 @@ method execute
             break;
           case FLOAT4OID:
           case FLOAT8OID:
+          case NUMERICOID:
             {
               char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
               double value = strtod(data,nullptr);
@@ -1106,6 +1107,7 @@ bool bic_psql_result_method_next_item_0(interpreter_thread_s &it,unsigned stack_
           break;
         case FLOAT4OID:
         case FLOAT8OID:
+        case NUMERICOID:
           {
             char *data = PQgetvalue(res_ptr,tuple_idx,field_idx);
             double value = strtod(data,nullptr);

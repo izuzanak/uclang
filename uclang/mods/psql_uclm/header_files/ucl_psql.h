@@ -22,6 +22,8 @@ include "script_parser.h"
 #define FLOAT4OID 700
 #define FLOAT8OID 701
 
+#define NUMERICOID 1700
+
 /*
  * definition of structure psql_result_s
  */
