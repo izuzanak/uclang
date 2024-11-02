@@ -9,6 +9,7 @@ include "ucl_psql.h"
 // - PSQL indexes of built in classes -
 extern unsigned c_bi_class_psql;
 extern unsigned c_bi_class_psql_conn;
+extern unsigned c_bi_class_psql_values;
 extern unsigned c_bi_class_psql_result;
 extern unsigned c_bi_class_psql_notify;
 
@@ -33,6 +34,12 @@ enum
   c_error_PSQL_CONN_GET_NOTIFY_WHILE_BUSY,
   c_error_PSQL_CONN_SET_NONBLOCK_ERROR,
   c_error_PSQL_CONN_PIPELINE_MODE_ERROR,
+  c_error_PSQL_VALUES_INVALID_OID_TYPE,
+  c_error_PSQL_VALUES_INVALID_OID_VALUE,
+  c_error_PSQL_VALUES_INVALID_VALUE_COUNT,
+  c_error_PSQL_VALUES_INVALID_VALUE_TYPE,
+  c_error_PSQL_VALUES_INVALID_VALUE,
+  c_error_PSQL_VALUES_VALUE_FORMAT_ERROR,
 };
 
 // - PSQL error strings -
@@ -83,6 +90,21 @@ bool bic_psql_conn_method_get_result_0(interpreter_thread_s &it,unsigned stack_b
 bool bic_psql_conn_method_get_notify_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_psql_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+
+// - class PSQL_VALUES -
+extern built_in_variable_s psql_values_variables[];
+extern built_in_method_s psql_values_methods[];
+extern built_in_class_s psql_values_class;
+
+void bic_psql_values_consts(location_array_s &const_locations);
+void bic_psql_values_init(interpreter_thread_s &it,location_s *location_ptr);
+void bic_psql_values_clear(interpreter_thread_s &it,location_s *location_ptr);
+
+bool bic_psql_values_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_values_method_PSqlValues_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_values_method_format_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_values_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_psql_values_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
 // - class PSQL_RESULT -
 extern built_in_variable_s psql_result_variables[];

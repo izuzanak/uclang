@@ -6,16 +6,17 @@ include "psql_module.h"
 // - PSQL indexes of built in classes -
 unsigned c_bi_class_psql = c_idx_not_exist;
 unsigned c_bi_class_psql_conn = c_idx_not_exist;
+unsigned c_bi_class_psql_values = c_idx_not_exist;
 unsigned c_bi_class_psql_result = c_idx_not_exist;
 unsigned c_bi_class_psql_notify = c_idx_not_exist;
 
 // - PSQL module -
 EXPORT built_in_module_s module =
 {/*{{{*/
-  4,                     // Class count
+  5,                     // Class count
   psql_classes,          // Classes
   0,                     // Error base index
-  12,                    // Error count
+  18,                    // Error count
   psql_error_strings,    // Error strings
   psql_initialize,       // Initialize function
   psql_print_exception,  // Print exceptions function
@@ -26,6 +27,7 @@ built_in_class_s *psql_classes[] =
 {/*{{{*/
   &psql_class,
   &psql_conn_class,
+  &psql_values_class,
   &psql_result_class,
   &psql_notify_class,
 };/*}}}*/
@@ -45,6 +47,12 @@ const char *psql_error_strings[] =
   "error_PSQL_CONN_GET_NOTIFY_WHILE_BUSY",
   "error_PSQL_CONN_SET_NONBLOCK_ERROR",
   "error_PSQL_CONN_PIPELINE_MODE_ERROR",
+  "error_PSQL_VALUES_INVALID_OID_TYPE",
+  "error_PSQL_VALUES_INVALID_OID_VALUE",
+  "error_PSQL_VALUES_INVALID_VALUE_COUNT",
+  "error_PSQL_VALUES_INVALID_VALUE_TYPE",
+  "error_PSQL_VALUES_INVALID_VALUE",
+  "error_PSQL_VALUES_VALUE_FORMAT_ERROR",
 };/*}}}*/
 
 // - PSQL initialize -
@@ -57,6 +65,9 @@ bool psql_initialize(script_parser_s &sp)
 
   // - initialize psql_conn class identifier -
   c_bi_class_psql_conn = class_base_idx++;
+
+  // - initialize psql_values class identifier -
+  c_bi_class_psql_values = class_base_idx++;
 
   // - initialize psql_result class identifier -
   c_bi_class_psql_result = class_base_idx++;
@@ -177,6 +188,48 @@ bool psql_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nPSqlConn, adjust pipeline mode error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_VALUES_INVALID_OID_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlValues, invalid OID type at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_VALUES_INVALID_OID_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlValues, invalid OID value at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_VALUES_INVALID_VALUE_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlValues, invalid count of values to format\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_VALUES_INVALID_VALUE_TYPE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlValues, invalid type of value at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_VALUES_INVALID_VALUE:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlValues, invalid value at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_PSQL_VALUES_VALUE_FORMAT_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nPSqlValues, format error of value at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -902,6 +955,447 @@ bool bic_psql_conn_method_print_0(interpreter_thread_s &it,unsigned stack_base,u
   return true;
 }/*}}}*/
 
+// - class PSQL_VALUES -
+built_in_class_s psql_values_class =
+{/*{{{*/
+  "PSqlValues",
+  c_modifier_public | c_modifier_final,
+  5, psql_values_methods,
+  8, psql_values_variables,
+  bic_psql_values_consts,
+  bic_psql_values_init,
+  bic_psql_values_clear,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr,
+  nullptr
+};/*}}}*/
+
+built_in_method_s psql_values_methods[] =
+{/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_psql_values_operator_binary_equal
+  },
+  {
+    "PSqlValues#1",
+    c_modifier_public | c_modifier_final,
+    bic_psql_values_method_PSqlValues_1
+  },
+  {
+    "format#1",
+    c_modifier_public | c_modifier_final,
+    bic_psql_values_method_format_1
+  },
+  {
+    "to_string#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_psql_values_method_to_string_0
+  },
+  {
+    "print#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_psql_values_method_print_0
+  },
+};/*}}}*/
+
+built_in_variable_s psql_values_variables[] =
+{/*{{{*/
+
+  // - psql values status constants -
+  { "BOOL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "INT8", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "INT2", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "INT4", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "TEXT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FLOAT4", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FLOAT8", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "NUMERIC", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+};/*}}}*/
+
+void bic_psql_values_consts(location_array_s &const_locations)
+{/*{{{*/
+
+  // - insert psql values status constants -
+  {
+    const_locations.push_blanks(psql_values_class.variable_cnt);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - psql_values_class.variable_cnt);
+
+#define CREATE_PSQL_VALUES_OID_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_PSQL_VALUES_OID_BIC_STATIC(BOOLOID);
+    CREATE_PSQL_VALUES_OID_BIC_STATIC(INT8OID);
+    CREATE_PSQL_VALUES_OID_BIC_STATIC(INT2OID);
+    CREATE_PSQL_VALUES_OID_BIC_STATIC(INT4OID);
+    CREATE_PSQL_VALUES_OID_BIC_STATIC(TEXTOID);
+    CREATE_PSQL_VALUES_OID_BIC_STATIC(FLOAT4OID);
+    CREATE_PSQL_VALUES_OID_BIC_STATIC(FLOAT8OID);
+    CREATE_PSQL_VALUES_OID_BIC_STATIC(NUMERICOID);
+  }
+
+}/*}}}*/
+
+void bic_psql_values_init(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  location_ptr->v_data_ptr = (psql_values_s *)nullptr;
+}/*}}}*/
+
+void bic_psql_values_clear(interpreter_thread_s &it,location_s *location_ptr)
+{/*{{{*/
+  psql_values_s *values_ptr = (psql_values_s *)location_ptr->v_data_ptr;
+
+  if (values_ptr != nullptr)
+  {
+    values_ptr->clear(it);
+    cfree(values_ptr);
+  }
+}/*}}}*/
+
+bool bic_psql_values_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_values_method_PSqlValues_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+oid_array:c_bi_class_array
+>
+method PSqlValues
+; @end
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - oid array -
+  ui_array_s oid_array;
+  oid_array.init();
+
+  if (array_ptr->used != 0)
+  {
+    pointer *ptr = array_ptr->data;
+    pointer *ptr_end = ptr + array_ptr->used;
+
+    do
+    {
+      location_s *oid_location = it.get_location_value(*ptr);
+
+      // - ERROR -
+      if (oid_location->v_type != c_bi_class_integer)
+      {
+        oid_array.clear();
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_OID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(ptr - array_ptr->data);
+
+        return false;
+      }
+
+      long long int value = (long long int)oid_location->v_data_ptr;
+
+      // - check allowed values -
+      switch (value)
+      {
+        case BOOLOID:
+        case INT8OID:
+        case INT2OID:
+        case INT4OID:
+        case TEXTOID:
+        case FLOAT4OID:
+        case FLOAT8OID:
+        case NUMERICOID:
+          break;
+
+        // - ERROR -
+        default:
+          oid_array.clear();
+
+          exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_OID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          new_exception->params.push(ptr - array_ptr->data);
+
+          return false;
+      }
+
+      oid_array.push(value);
+    }
+    while(++ptr < ptr_end);
+  }
+
+  // - create psql values object -
+  psql_values_s *values_ptr = (psql_values_s *)cmalloc(sizeof(psql_values_s));
+  values_ptr->init();
+
+  values_ptr->oid_array.swap(oid_array);
+  oid_array.clear();
+
+  // - retrieve psql values pointer -
+  dst_location->v_data_ptr = (psql_values_s *)values_ptr;
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_values_method_format_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+values:c_bi_class_array
+>
+method format
+; @end
+
+  psql_values_s *values_ptr = (psql_values_s *)dst_location->v_data_ptr;
+  ui_array_s *oid_array = &values_ptr->oid_array;
+
+  pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+  // - ERROR -
+  if (array_ptr->used != oid_array->used)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE_COUNT,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - initialize character buffer -
+  bc_array_s buffer;
+  buffer.init();
+
+  if (oid_array->used != 0)
+  {
+    unsigned *oid_ptr = oid_array->data;
+    unsigned *oid_ptr_end = oid_ptr + oid_array->used;
+    pointer *item_ptr = array_ptr->data;
+
+    do
+    {
+      location_s *item_location = it.get_location_value(*item_ptr);
+
+      switch (*oid_ptr)
+      {
+      case BOOLOID:
+      case INT8OID:
+      case INT2OID:
+      case INT4OID:
+        {/*{{{*/
+          long long int value;
+
+          // - ERROR -
+          if (!it.retrieve_integer(item_location,value))
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(oid_ptr - oid_array->data);
+
+            return false;
+          }
+
+          switch (*oid_ptr)
+          {
+          case BOOLOID:
+            {/*{{{*/
+              buffer.append(3,value != 0 ? "'t'" : "'f'");
+            }/*}}}*/
+            break;
+          case INT2OID:
+            {/*{{{*/
+
+              // - ERROR -
+              if (value < INT16_MIN || value > INT16_MAX)
+              {
+                buffer.clear();
+
+                exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+                new_exception->params.push(oid_ptr - oid_array->data);
+
+                return false;
+              }
+            }/*}}}*/
+          case INT4OID:
+            {/*{{{*/
+
+              // - ERROR -
+              if (value < INT32_MIN || value > INT32_MAX)
+              {
+                buffer.clear();
+
+                exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+                new_exception->params.push(oid_ptr - oid_array->data);
+
+                return false;
+              }
+            }/*}}}*/
+          case INT8OID:
+            {/*{{{*/
+              buffer.reserve(c_number_format_size);
+              int char_cnt = snprintf(buffer.data + buffer.used,c_number_format_size,"%" HOST_LL_FORMAT "d",value);
+
+              // - ERROR -
+              if (char_cnt < 0 || char_cnt > c_number_format_size)
+              {
+                buffer.clear();
+
+                exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_VALUE_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+                new_exception->params.push(oid_ptr - oid_array->data);
+
+                return false;
+              }
+
+              buffer.used += char_cnt;
+            }/*}}}*/
+            break;
+          default:
+            cassert(false);
+          }
+        }/*}}}*/
+        break;
+      case TEXTOID:
+        {/*{{{*/
+
+          // - ERROR -
+          if (item_location->v_type != c_bi_class_string)
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(oid_ptr - oid_array->data);
+
+            return false;
+          }
+
+          string_s *string_ptr = (string_s *)item_location->v_data_ptr;
+
+          // - start single quote -
+          buffer.push('\'');
+
+          if (string_ptr->size > 1)
+          {
+            char *ptr = string_ptr->data;
+            char *ptr_end = ptr + string_ptr->size - 1;
+            do
+            {
+              // - duplicate single quotes -
+              if (*ptr == '\'')
+              {
+                buffer.append(2,"''");
+              }
+              else
+              {
+                buffer.push(*ptr);
+              }
+            } while(++ptr < ptr_end);
+          }
+
+          // - end single quote -
+          buffer.push('\'');
+        }/*}}}*/
+        break;
+      case FLOAT4OID:
+      case FLOAT8OID:
+      case NUMERICOID:
+        {/*{{{*/
+          double value;
+
+          // - ERROR -
+          if (!it.retrieve_float(item_location,value))
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(oid_ptr - oid_array->data);
+
+            return false;
+          }
+
+          buffer.reserve(c_number_format_size);
+          int char_cnt = snprintf(buffer.data + buffer.used,c_number_format_size,"%.*g",DBL_DIG,value);
+
+          // - ERROR -
+          if (char_cnt < 0 || char_cnt > c_number_format_size)
+          {
+            buffer.clear();
+
+            exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_VALUE_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            new_exception->params.push(oid_ptr - oid_array->data);
+
+            return false;
+          }
+
+          buffer.used += char_cnt;
+        }/*}}}*/
+        break;
+
+      // - ERROR -
+      default:
+        buffer.clear();
+
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_OID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(oid_ptr - oid_array->data);
+
+        return false;
+      }
+
+      if (++item_ptr,++oid_ptr >= oid_ptr_end)
+      {
+        break;
+      }
+
+      // - insert value separator -
+      buffer.push(',');
+
+    } while(true);
+  }
+
+  // - push terminating character to buffer -
+  buffer.push('\0');
+
+  // - create result string from buffer -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->size = buffer.used;
+  string_ptr->data = buffer.data;
+
+  BIC_SET_RESULT_STRING(string_ptr);
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_values_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  BIC_TO_STRING_WITHOUT_DEST(
+    string_ptr->set(strlen("PSqlValues"),"PSqlValues");
+  );
+
+  return true;
+}/*}}}*/
+
+bool bic_psql_values_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  printf("PSqlValues");
+
+  BIC_SET_RESULT_BLANK();
+
+  return true;
+}/*}}}*/
+
 // - class PSQL_RESULT -
 built_in_class_s psql_result_class =
 {/*{{{*/
@@ -984,8 +1478,8 @@ void bic_psql_result_consts(location_array_s &const_locations)
 
   // - insert psql result status constants -
   {
-    const_locations.push_blanks(10);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 10);
+    const_locations.push_blanks(psql_result_class.variable_cnt);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - psql_result_class.variable_cnt);
 
 #define CREATE_PSQL_RESULT_STATUS_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -1003,17 +1497,11 @@ void bic_psql_result_consts(location_array_s &const_locations)
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_FATAL_ERROR);
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_COPY_BOTH);
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_SINGLE_TUPLE);
-  }
-
 #ifdef LIBPQ_HAS_PIPELINING
-  {
-    const_locations.push_blanks(2);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 2);
-
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_PIPELINE_SYNC);
     CREATE_PSQL_RESULT_STATUS_BIC_STATIC(PGRES_PIPELINE_ABORTED);
-  }
 #endif
+  }
 
 }/*}}}*/
 
