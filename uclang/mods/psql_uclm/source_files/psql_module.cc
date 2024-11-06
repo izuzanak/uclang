@@ -194,14 +194,14 @@ bool psql_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nPSqlValues, invalid OID type at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nPSqlValues, invalid OID type at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PSQL_VALUES_INVALID_OID_VALUE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nPSqlValues, invalid OID value at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nPSqlValues, invalid OID value at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PSQL_VALUES_INVALID_VALUE_COUNT:
@@ -215,21 +215,21 @@ bool psql_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nPSqlValues, invalid type of value at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nPSqlValues, invalid type of value at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PSQL_VALUES_INVALID_VALUE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nPSqlValues, invalid value at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nPSqlValues, invalid value at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PSQL_VALUES_VALUE_FORMAT_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nPSqlValues, format error of value at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nPSqlValues, format error of value at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:

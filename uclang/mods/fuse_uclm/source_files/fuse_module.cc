@@ -103,7 +103,7 @@ bool fuse_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nExpected string as command line argument at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nExpected string as command line argument at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_FUSE_CHANNEL_CREATE_ERROR:
@@ -138,21 +138,21 @@ bool fuse_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nUnsupported fuse operation with id %" HOST_LL_FORMAT "d, at position %" HOST_LL_FORMAT "d\n",exception.params[0],exception.params[1]);
+    fprintf(stderr,"\nUnsupported fuse operation with id %" HOST_LL_FORMAT "d, at index %" HOST_LL_FORMAT "d\n",exception.params[0],exception.params[1]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_FUSE_OPS_DELEGATE_WRONG_PARAM_CNT:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nWrong count of delegate parameters, expected %" HOST_LL_FORMAT "d parameter/s, at position %" HOST_LL_FORMAT "d\n",exception.params[0],exception.params[1]);
+    fprintf(stderr,"\nWrong count of delegate parameters, expected %" HOST_LL_FORMAT "d parameter/s, at index %" HOST_LL_FORMAT "d\n",exception.params[0],exception.params[1]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_FUSE_OPS_DELEGATE_ALREADY_ASSIGNED_TO_OPERATION:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nDelegate is already assigned to operation %" HOST_LL_FORMAT "d, at position %" HOST_LL_FORMAT "d\n",exception.params[0],exception.params[1]);
+    fprintf(stderr,"\nDelegate is already assigned to operation %" HOST_LL_FORMAT "d, at index %" HOST_LL_FORMAT "d\n",exception.params[0],exception.params[1]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_FUSE_HANDLE_CREATE_ERROR:

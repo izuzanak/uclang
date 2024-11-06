@@ -128,7 +128,7 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nExpected string as %s at position %" HOST_LL_FORMAT "d\n",((const char *[]){
+    fprintf(stderr,"\nExpected string as %s at index %" HOST_LL_FORMAT "d\n",((const char *[]){
       "property name",
       "button text",
     })[exception.params[0]],exception.params[1]);
@@ -138,7 +138,7 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid type %s at position %" HOST_LL_FORMAT "d\n",((const char *[]){
+    fprintf(stderr,"\nInvalid type %s at index %" HOST_LL_FORMAT "d\n",((const char *[]){
       "for button response id",
     })[exception.params[0]],exception.params[1]);
     fprintf(stderr," ---------------------------------------- \n");
@@ -171,7 +171,7 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while creating GValue");
 
     (exception.params.used >= 1) ?
-      fprintf(stderr," at position %" HOST_LL_FORMAT "d\n",exception.params[0]) :
+      fprintf(stderr," at index %" HOST_LL_FORMAT "d\n",exception.params[0]) :
       fputc('\n',stderr);
 
     fprintf(stderr," ---------------------------------------- \n");
@@ -208,7 +208,7 @@ bool gtk_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid type of signal parameter at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nInvalid type of signal parameter at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_GTK_G_OBJECT_CREATE_ERROR:

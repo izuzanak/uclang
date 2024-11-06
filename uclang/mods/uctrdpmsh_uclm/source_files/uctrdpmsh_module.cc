@@ -193,14 +193,14 @@ bool uctrdpmsh_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP page, invalid variable type at position %" HOST_LL_FORMAT "d, expected %s\n",exception.params[0],it.class_symbol_names[it.class_records[exception.params[1]].name_idx].data);
+    fprintf(stderr,"\nTRDP page, invalid variable type at index %" HOST_LL_FORMAT "d, expected %s\n",exception.params[0],it.class_symbol_names[it.class_records[exception.params[1]].name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_PAGE_PACK_INVALID_STRING_LENGTH:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP page, invalid string length at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nTRDP page, invalid string length at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_PAGE_UNPACK_ERROR:

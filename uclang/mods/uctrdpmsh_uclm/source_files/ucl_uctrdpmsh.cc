@@ -415,7 +415,7 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
     if (item_location->v_type != c_bi_class_integer)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);\
-      new_exception->params.push(pass.var_idx);\
+      new_exception->params.push(pass.var_idx - 1);\
       new_exception->params.push(c_bi_class_integer);\
 \
       return false;\
@@ -438,7 +438,7 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
     if (item_location->v_type != c_bi_class_integer)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);\
-      new_exception->params.push(pass.var_idx);\
+      new_exception->params.push(pass.var_idx - 1);\
       new_exception->params.push(c_bi_class_integer);\
 \
       return false;\
@@ -462,7 +462,7 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
     if (item_location->v_type != c_bi_class_float)\
     {\
       exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);\
-      new_exception->params.push(pass.var_idx);\
+      new_exception->params.push(pass.var_idx - 1);\
       new_exception->params.push(c_bi_class_float);\
 \
       return false;\
@@ -490,7 +490,7 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
             if (item_location->v_type != c_bi_class_integer)
             {
               exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);
-              new_exception->params.push(pass.var_idx);
+              new_exception->params.push(pass.var_idx - 1);
               new_exception->params.push(c_bi_class_integer);
 
               return false;
@@ -562,7 +562,7 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
             if (item_location->v_type != c_bi_class_string)
             {
               exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PAGE_PACK_INVALID_VARIABLE_TYPE,0,(location_s *)it.blank_location);
-              new_exception->params.push(pass.var_idx);
+              new_exception->params.push(pass.var_idx - 1);
               new_exception->params.push(c_bi_class_string);
 
               return false;
@@ -574,7 +574,7 @@ bool trdp_page_s::pack_page_data(interpreter_thread_s &it,pass_s &pass)
             if (string_ptr->size - 1 > var_descr.length)
             {
               exception_s *new_exception = exception_s::throw_exception(it,c_error_TRDP_PAGE_PACK_INVALID_STRING_LENGTH,0,(location_s *)it.blank_location);
-              new_exception->params.push(pass.var_idx);
+              new_exception->params.push(pass.var_idx - 1);
 
               return false;
             }

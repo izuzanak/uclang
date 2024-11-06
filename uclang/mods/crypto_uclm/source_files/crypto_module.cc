@@ -250,7 +250,7 @@ bool crypto_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nInvalid item of public key array, at position %" HOST_LL_FORMAT "d expected %s received %s\n",
+    fprintf(stderr,"\nInvalid item of public key array, at index %" HOST_LL_FORMAT "d expected %s received %s\n",
             exception.params[0],it.class_symbol_names[it.class_records[exception.params[1]].name_idx].data,it.class_symbol_names[it.class_records[exception.params[2]].name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
     break;

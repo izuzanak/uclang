@@ -475,7 +475,7 @@ bool base_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nWrong argument type for string formatting, at position %" HOST_LL_FORMAT "d expected %s received %s\n",
+    fprintf(stderr,"\nWrong argument type for string formatting, at index %" HOST_LL_FORMAT "d expected %s received %s\n",
             exception.params[0],it.class_symbol_names[it.class_records[exception.params[1]].name_idx].data,it.class_symbol_names[it.class_records[exception.params[2]].name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
@@ -483,7 +483,7 @@ bool base_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while formatting string argument at position %" HOST_LL_FORMAT "d\n",exception.params[0]);
+    fprintf(stderr,"\nError while formatting string argument at index %" HOST_LL_FORMAT "d\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_STRING_FORMAT_WRONG_FORMAT_SPECIFIER:
@@ -4706,7 +4706,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               SF_CLEAR_DATA();
 
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(element_idx);
+              new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_integer);
               new_exception->params.push(element_location->v_type);
 
@@ -4766,7 +4766,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               SF_CLEAR_DATA();
 
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(element_idx);
+              new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_char);
               new_exception->params.push(element_location->v_type);
 
@@ -4791,7 +4791,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               SF_CLEAR_DATA();
 
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_ARGUMENT_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(element_idx);
+              new_exception->params.push(element_idx - 1);
 
               return false;
             }
@@ -4821,7 +4821,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               SF_CLEAR_DATA();
 
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(element_idx);
+              new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_integer);
               new_exception->params.push(element_location->v_type);
 
@@ -4844,7 +4844,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               SF_CLEAR_DATA();
 
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_ARGUMENT_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(element_idx);
+              new_exception->params.push(element_idx - 1);
 
               return false;
             }
@@ -4874,7 +4874,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               SF_CLEAR_DATA();
 
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(element_idx);
+              new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_float);
               new_exception->params.push(element_location->v_type);
 
@@ -4899,7 +4899,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               SF_CLEAR_DATA();
 
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_ARGUMENT_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(element_idx);
+              new_exception->params.push(element_idx - 1);
 
               return false;
             }
@@ -4926,7 +4926,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
               SF_CLEAR_DATA();
 
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-              new_exception->params.push(element_idx);
+              new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_string);
               new_exception->params.push(element_location->v_type);
 

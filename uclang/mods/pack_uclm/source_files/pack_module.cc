@@ -143,7 +143,7 @@ bool pack_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nWrong argument type for pack code, at position %" HOST_LL_FORMAT "d expected %s received %s\n",
+    fprintf(stderr,"\nWrong argument type for pack code, at index %" HOST_LL_FORMAT "d expected %s received %s\n",
             exception.params[0],it.class_symbol_names[it.class_records[exception.params[1]].name_idx].data,it.class_symbol_names[it.class_records[exception.params[2]].name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
     break;
@@ -675,7 +675,7 @@ static_method
           PC_CLEAR_DATA();\
 \
           exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
-          new_exception->params.push(element_idx);\
+          new_exception->params.push(element_idx - 1);\
           new_exception->params.push(CLASS_TYPE);\
           new_exception->params.push(element_location->v_type);\
 \
@@ -868,7 +868,7 @@ static_method
             PC_CLEAR_DATA();
 
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-            new_exception->params.push(element_idx);
+            new_exception->params.push(element_idx - 1);
             new_exception->params.push(c_bi_class_string);
             new_exception->params.push(element_location->v_type);
 
@@ -939,7 +939,7 @@ static_method
             PC_CLEAR_DATA();
 
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
-            new_exception->params.push(element_idx);
+            new_exception->params.push(element_idx - 1);
             new_exception->params.push(c_bi_class_string);
             new_exception->params.push(element_location->v_type);
 
