@@ -137,21 +137,8 @@ bool logger_s::add_file(unsigned a_level,string_s &a_path,
   return true;
 }/*}}}*/
 
-bool logger_s::write(unsigned a_level,const string_s &a_message)
+bool logger_s::write_buffer(unsigned a_level,const bc_array_s &a_buffer)
 {/*{{{*/
-  buffer.used = 0;
-
-  // - retrieve time -
-  timeval tv;
-  datetime_s datetime;
-
-  gettimeofday(&tv,nullptr);
-  datetime.from_nanosec(tv.tv_sec*1000000000ULL + tv.tv_usec*1000ULL);
-
-  // - format log record -
-  buffer.append_format("%4.4hu/%2.2hu/%2.2hu %2.2hu:%2.2hu:%2.2hu.%3.3u %u %s: %s\n",
-    datetime.year,datetime.month,datetime.day,datetime.hour,datetime.min,datetime.sec,
-    (unsigned)(tv.tv_usec/1000),a_level,user.data,a_message.data);
 
   // - write ok flag -
   bool write_ok = true;
@@ -168,7 +155,7 @@ bool logger_s::write(unsigned a_level,const string_s &a_message)
         // - check log level -
         if (log_file.level >= a_level)
         {
-          if (!log_file.write(buffer))
+          if (!log_file.write(a_buffer))
           {
             write_ok = false;
           }

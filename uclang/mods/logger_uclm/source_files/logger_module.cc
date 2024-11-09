@@ -98,7 +98,7 @@ built_in_class_s logger_class =
 {/*{{{*/
   "Logger",
   c_modifier_public | c_modifier_final,
-  6, logger_methods,
+  8, logger_methods,
   0, logger_variables,
   bic_logger_consts,
   bic_logger_init,
@@ -137,6 +137,16 @@ built_in_method_s logger_methods[] =
     "write#2",
     c_modifier_public | c_modifier_final,
     bic_logger_method_write_2
+  },
+  {
+    "write#3",
+    c_modifier_public | c_modifier_final,
+    bic_logger_method_write_3
+  },
+  {
+    "write_headless#2",
+    c_modifier_public | c_modifier_final,
+    bic_logger_method_write_headless_2
   },
   {
     "to_string#0",
@@ -266,6 +276,69 @@ method write
   }
 
   if (!logger_ptr->write(level,*string_ptr))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_LOGGER_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_logger_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+time:retrieve_integer
+level:retrieve_integer
+message:c_bi_class_string
+>
+method write
+; @end
+
+  logger_s *logger_ptr = (logger_s *)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_2_location->v_data_ptr;
+
+  // - ERROR -
+  if (level < 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_LOGGER_WRITE_INVALID_LOG_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  if (!logger_ptr->write(time,level,*string_ptr))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_LOGGER_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_logger_method_write_headless_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+level:retrieve_integer
+message:c_bi_class_string
+>
+method write_headless
+; @end
+
+  logger_s *logger_ptr = (logger_s *)dst_location->v_data_ptr;
+  string_s *string_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (level < 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_LOGGER_WRITE_INVALID_LOG_LEVEL,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  if (!logger_ptr->write_headless(level,*string_ptr))
   {
     exception_s::throw_exception(it,module.error_base + c_error_LOGGER_WRITE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

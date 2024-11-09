@@ -47,7 +47,11 @@ struct logger_s
 
   bool add_file(unsigned a_level,string_s &a_path,
       unsigned a_max_size,unsigned a_max_count);
-  bool write(unsigned a_level,const string_s &a_message);
+
+  bool write_buffer(unsigned a_level,const bc_array_s &a_buffer);
+  inline bool write(ulli a_time,unsigned a_level,const string_s &a_message);
+  inline bool write(unsigned a_level,const string_s &a_message);
+  inline bool write_headless(unsigned a_level,const string_s &a_message);
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -61,7 +65,6 @@ struct logger_s
 @begin
 inlines log_file_s
 @end
-
 
 inline bool log_file_s::write(const bc_array_s &a_buffer)
 {/*{{{*/
@@ -117,6 +120,45 @@ inline int log_file_tree_s::__compare_value(log_file_s &a_first,log_file_s &a_se
 /*
  * inline methods of structure logger_s
  */
+
+
+inline bool logger_s::write(ulli a_time,unsigned a_level,const string_s &a_message)
+{/*{{{*/
+  buffer.used = 0;
+
+  // - retrieve milliseconds -
+  unsigned msec = a_time % 1000000000ULL / 1000000ULL;
+
+  datetime_s datetime;
+  datetime.from_nanosec(a_time);
+
+  // - format log record -
+  buffer.append_format("%4.4hu/%2.2hu/%2.2hu %2.2hu:%2.2hu:%2.2hu.%3.3u %u %s: %s\n",
+    datetime.year,datetime.month,datetime.day,datetime.hour,datetime.min,datetime.sec,
+    msec,a_level,user.data,a_message.data);
+
+  return write_buffer(a_level,buffer);
+}/*}}}*/
+
+inline bool logger_s::write(unsigned a_level,const string_s &a_message)
+{/*{{{*/
+  buffer.used = 0;
+
+  // - retrieve time -
+  timeval tv;
+  gettimeofday(&tv,nullptr);
+
+  return write(tv.tv_sec*1000000000ULL + tv.tv_usec*1000ULL,a_level,a_message);
+}/*}}}*/
+
+inline bool logger_s::write_headless(unsigned a_level,const string_s &a_message)
+{/*{{{*/
+  buffer.used = 0;
+  buffer.append(a_message.size - 1,a_message.data);
+  buffer.push('\n');
+
+  return write_buffer(a_level,buffer);
+}/*}}}*/
 
 inline void logger_s::init()
 {/*{{{*/

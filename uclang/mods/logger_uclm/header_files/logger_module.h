@@ -46,6 +46,8 @@ bool bic_logger_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
 bool bic_logger_method_Logger_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_logger_method_add_file_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_logger_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_logger_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_logger_method_write_headless_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_logger_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_logger_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
