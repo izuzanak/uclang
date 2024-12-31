@@ -50,6 +50,7 @@ void bic_xlsx_workbook_consts(location_array_s &const_locations);
 void bic_xlsx_workbook_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_xlsx_workbook_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_xlsx_workbook_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_XlsxWorkbook_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_XlsxWorkbook_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_workbook_method_worksheet_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -68,6 +69,7 @@ void bic_xlsx_worksheet_consts(location_array_s &const_locations);
 void bic_xlsx_worksheet_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_xlsx_worksheet_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_xlsx_worksheet_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_worksheet_method_set_format_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_worksheet_method_reset_format_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_worksheet_method_write_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -85,6 +87,7 @@ void bic_xlsx_format_consts(location_array_s &const_locations);
 void bic_xlsx_format_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_xlsx_format_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_xlsx_format_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_format_method_set_font_color_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_format_method_set_num_format_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_xlsx_format_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

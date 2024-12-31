@@ -152,7 +152,7 @@ built_in_class_s xlsx_workbook_class =
 {/*{{{*/
   "XlsxWorkbook",
   c_modifier_public | c_modifier_final,
-  8, xlsx_workbook_methods,
+  9, xlsx_workbook_methods,
   0, xlsx_workbook_variables,
   bic_xlsx_workbook_consts,
   bic_xlsx_workbook_init,
@@ -172,6 +172,11 @@ built_in_class_s xlsx_workbook_class =
 
 built_in_method_s xlsx_workbook_methods[] =
 {/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_xlsx_workbook_operator_binary_equal
+  },
   {
     "XlsxWorkbook#0",
     c_modifier_public | c_modifier_final,
@@ -237,6 +242,18 @@ void bic_xlsx_workbook_clear(interpreter_thread_s &it,location_s *location_ptr)
     xwb_ptr->clear(it);
     cfree(xwb_ptr);
   }
+}/*}}}*/
+
+bool bic_xlsx_workbook_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
 }/*}}}*/
 
 bool bic_xlsx_workbook_method_XlsxWorkbook_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -463,7 +480,7 @@ built_in_class_s xlsx_worksheet_class =
 {/*{{{*/
   "XlsxWorksheet",
   c_modifier_public | c_modifier_final,
-  7, xlsx_worksheet_methods,
+  8, xlsx_worksheet_methods,
   0, xlsx_worksheet_variables,
   bic_xlsx_worksheet_consts,
   bic_xlsx_worksheet_init,
@@ -483,6 +500,11 @@ built_in_class_s xlsx_worksheet_class =
 
 built_in_method_s xlsx_worksheet_methods[] =
 {/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_xlsx_worksheet_operator_binary_equal
+  },
   {
     "set_format#1",
     c_modifier_public | c_modifier_final,
@@ -543,6 +565,18 @@ void bic_xlsx_worksheet_clear(interpreter_thread_s &it,location_s *location_ptr)
     xws_ptr->clear(it);
     cfree(xws_ptr);
   }
+}/*}}}*/
+
+bool bic_xlsx_worksheet_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
 }/*}}}*/
 
 bool bic_xlsx_worksheet_method_set_format_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -770,7 +804,7 @@ built_in_class_s xlsx_format_class =
 {/*{{{*/
   "Xlsxformat",
   c_modifier_public | c_modifier_final,
-  4, xlsx_format_methods,
+  5, xlsx_format_methods,
   0, xlsx_format_variables,
   bic_xlsx_format_consts,
   bic_xlsx_format_init,
@@ -790,6 +824,11 @@ built_in_class_s xlsx_format_class =
 
 built_in_method_s xlsx_format_methods[] =
 {/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_xlsx_format_operator_binary_equal
+  },
   {
     "set_font_color#1",
     c_modifier_public | c_modifier_final,
@@ -835,6 +874,18 @@ void bic_xlsx_format_clear(interpreter_thread_s &it,location_s *location_ptr)
     xf_ptr->clear(it);
     cfree(xf_ptr);
   }
+}/*}}}*/
+
+bool bic_xlsx_format_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
 }/*}}}*/
 
 bool bic_xlsx_format_method_set_font_color_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
