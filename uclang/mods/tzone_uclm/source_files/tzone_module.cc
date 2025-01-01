@@ -137,7 +137,6 @@ void bic_time_zone_clear(interpreter_thread_s &it,location_s *location_ptr)
 
   if (tz_ptr != nullptr)
   {
-    tz_ptr->clear();
     cfree(tz_ptr);
   }
 }/*}}}*/
@@ -167,12 +166,10 @@ method TimeZone
 
   // - create time zone object -
   time_zone_s *tz_ptr = (time_zone_s *)cmalloc(sizeof(time_zone_s));
-  tz_ptr->init();
 
   // - ERROR -
   if (tz_ptr->create(tz_string->data))
   {
-    tz_ptr->clear();
     cfree(tz_ptr);
 
     exception_s::throw_exception(it,module.error_base + c_error_TIME_ZONE_PARSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
