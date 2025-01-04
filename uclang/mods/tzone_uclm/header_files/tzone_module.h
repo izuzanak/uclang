@@ -19,6 +19,7 @@ extern built_in_class_s *tzone_classes[];
 enum
 {
   c_error_TIME_ZONE_PARSE_ERROR = 0,
+  c_error_TIME_ZONE_TO_UTC_ERROR,
 };
 
 // - TZONE error strings -
@@ -42,6 +43,7 @@ void bic_time_zone_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_time_zone_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_time_zone_method_TimeZone_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_time_zone_method_to_local_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_time_zone_method_to_utc_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_time_zone_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_time_zone_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

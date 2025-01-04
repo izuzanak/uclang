@@ -13,7 +13,7 @@ EXPORT built_in_module_s module =
   tzone_classes,         // Classes
 
   0,                     // Error base index
-  1,                     // Error count
+  2,                     // Error count
   tzone_error_strings,   // Error strings
 
   tzone_initialize,      // Initialize function
@@ -30,6 +30,7 @@ built_in_class_s *tzone_classes[] =
 const char *tzone_error_strings[] =
 {/*{{{*/
   "error_TIME_ZONE_PARSE_ERROR",
+  "error_TIME_ZONE_TO_UTC_ERROR",
 };/*}}}*/
 
 // - TZONE initialize -
@@ -58,6 +59,13 @@ bool tzone_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nTime zone, parse error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_TIME_ZONE_TO_UTC_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTime zone, to UTC conversion error\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     return false;
   }
@@ -70,7 +78,7 @@ built_in_class_s time_zone_class =
 {/*{{{*/
   "TimeZone",
   c_modifier_public | c_modifier_final,
-  5, time_zone_methods,
+  6, time_zone_methods,
   0, time_zone_variables,
   bic_time_zone_consts,
   bic_time_zone_init,
@@ -104,6 +112,11 @@ built_in_method_s time_zone_methods[] =
     "to_local#1",
     c_modifier_public | c_modifier_final,
     bic_time_zone_method_to_local_1
+  },
+  {
+    "to_utc#1",
+    c_modifier_public | c_modifier_final,
+    bic_time_zone_method_to_utc_1
   },
   {
     "to_string#0",
@@ -194,6 +207,45 @@ method to_local
 
   long long int result = 0;
   tz_ptr->to_local(utc_time,&result);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_time_zone_method_to_utc_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+local_time:retrieve_integer
+>
+method to_utc
+; @end
+
+  time_zone_s *tz_ptr = (time_zone_s *)dst_location->v_data_ptr;
+
+  const long long int nanosec_in_hour = 60*60*1000000000ULL;
+
+  long long int result = local_time - 15*nanosec_in_hour;
+  long long int result_end = local_time + 14*nanosec_in_hour;
+
+  long long int local_value = 0;
+  do {
+    tz_ptr->to_local(result,&local_value);
+
+    if (local_value >= local_time)
+    {
+      break;
+    }
+
+  } while((result += nanosec_in_hour) < result_end);
+
+  // - ERROR -
+  if (result >= result_end)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TIME_ZONE_TO_UTC_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
