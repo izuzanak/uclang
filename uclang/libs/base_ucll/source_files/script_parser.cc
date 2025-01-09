@@ -9051,7 +9051,7 @@ void script_parser_s::generate_intermediate_code()
         {
           method_record_s &method_record = method_records[*mri_ptr];
 
-          if (!(method_record.modifiers & c_modifier_abstract))
+          if (!(method_record.modifiers & (c_modifier_abstract | c_modifier_built_in)))
           {
             exp_flow_graph_s &fg = method_flow_graphs[method_record.flow_graph_idx];
 

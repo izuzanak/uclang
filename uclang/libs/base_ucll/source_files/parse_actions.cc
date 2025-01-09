@@ -869,8 +869,53 @@ bool pa_modifier_parallel(string_s &source_string,script_parser_s &_this)
 bool pa_class_def_end(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   ui_array_s &parent_class_idxs = _this.parent_class_idxs;
+  class_records_s &class_records = _this.class_records;
+  method_records_s &method_records = _this.method_records;
 
   // *****
+
+  unsigned class_record_idx = parent_class_idxs.last();
+  class_record_s &class_record = class_records[class_record_idx];
+
+  // - method "operator_binary_equal#1" for all classes -
+  if (class_record.extend_array.used == 0)
+  {
+    unsigned method_name_idx = method_records[0].name_idx;
+
+    // - test uniqueness of method in parent class -
+    ui_array_s &class_mr_idxs = class_record.method_record_idxs;
+
+    unsigned *mri_ptr = class_mr_idxs.data;
+    unsigned *mri_ptr_end = mri_ptr + class_mr_idxs.used;
+
+    while (mri_ptr < mri_ptr_end)
+    {
+      if (method_records[*mri_ptr].name_idx == method_name_idx)
+      {
+        break;
+      }
+
+      ++mri_ptr;
+    }
+
+    // - method "operator_binary_equal#1" is not defined -
+    if (mri_ptr >= mri_ptr_end)
+    {
+      // - creation of new method record -
+      method_records.push_blank();
+      unsigned method_record_idx = method_records.used - 1;
+      method_record_s &method_record = method_records.last();
+
+      // - copy method record -
+      method_record = method_records[0];
+
+      // - adjust method parent -
+      method_record.parent_record = class_record_idx;
+
+      // - store method index to parent class -
+      class_mr_idxs.push(method_record_idx);
+    }
+  }
 
   // - remove class index from parent class stack -
   parent_class_idxs.used--;
