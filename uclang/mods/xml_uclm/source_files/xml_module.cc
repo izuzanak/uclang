@@ -447,7 +447,11 @@ static_method
   sp.cont_array_stack.push_blank();
 
   // - parse xml data -
+#if LIBXML_VERSION >= 21104
+  int res = sax_parser_s::sax_user_parse_memory(&sax,&sp,data_ptr->data,data_ptr->size - 1);
+#else
   int res = xmlSAXUserParseMemory(&sax,&sp,data_ptr->data,data_ptr->size - 1);
+#endif
 
   // - ERROR -
   if (res != 0)

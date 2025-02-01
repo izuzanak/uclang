@@ -110,6 +110,11 @@ additions
   // - retrieve or create string location -
   location_s *get_string_location(unsigned a_length,const char *a_data);
 
+#if LIBXML_VERSION >= 21104
+  static int sax_user_parse_memory(xmlSAXHandler *a_sax_handler,
+      void *a_user_data,const char *a_data,int a_length);
+#endif
+
   // - release parser locations -
   void release_locations();
 }

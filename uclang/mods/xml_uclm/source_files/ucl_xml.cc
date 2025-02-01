@@ -329,6 +329,44 @@ location_s *sax_parser_s::get_string_location(unsigned a_length,const char *a_da
   return (location_s *)string_locations[cs_idx];
 }/*}}}*/
 
+#if LIBXML_VERSION >= 21104
+int sax_parser_s::sax_user_parse_memory(xmlSAXHandler *a_sax_handler,
+    void *a_user_data,const char *a_data,int a_length)
+{/*{{{*/
+  if (!a_sax_handler || !a_data || a_length <= 0)
+  {
+      return -1;
+  }
+
+  // - create the parser context -
+  xmlParserCtxtPtr ctxt = xmlCreatePushParserCtxt(a_sax_handler,a_user_data,nullptr,0,nullptr);
+  if (!ctxt)
+  {
+      return -1;
+  }
+
+  // - feed xml data to the parser -
+  int ret = xmlParseChunk(ctxt,a_data,a_length,0);
+  if (ret != 0)
+  {
+      xmlFreeParserCtxt(ctxt);
+      return ret;
+  }
+
+  // - finalize the parsing -
+  ret = xmlParseChunk(ctxt,nullptr,0,1);
+  if (ret != 0)
+  {
+      xmlFreeParserCtxt(ctxt);
+      return ret;
+  }
+
+  xmlFreeParserCtxt(ctxt);
+
+  return 0;
+}/*}}}*/
+#endif
+
 void sax_parser_s::release_locations()
 {/*{{{*/
   interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
