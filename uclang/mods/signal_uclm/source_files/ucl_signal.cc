@@ -83,7 +83,7 @@ void data_signal_s::search_2d(bd_array_s *a_data[2],bd_array_s *a_win[2],
 
         double dist0 = d0 - w0;
         double dist1 = d1 - w1;
-        double dist = dist0*dist0 + dist1*dist1;
+        double dist = (dist0*dist0) + (dist1*dist1);
 
         if (dist < dmin_dist)
         {
@@ -115,7 +115,7 @@ void data_signal_s::search_2d(bd_array_s *a_data[2],bd_array_s *a_win[2],
 
         double dist0 = d0 - w0;
         double dist1 = d1 - w1;
-        double dist = dist0*dist0 + dist1*dist1;
+        double dist = (dist0*dist0) + (dist1*dist1);
 
         if (dist < wmin_dist)
         {
@@ -153,14 +153,14 @@ void data_signal_s::search_2d(bd_array_s *a_data[2],bd_array_s *a_win[2],
       {
         double dist0 = win0[0] - data0[di_start];
         double dist1 = win1[0] - data1[di_start];
-        start_dist = sqrt(dist0*dist0 + dist1*dist1);
+        start_dist = sqrt((dist0*dist0) + (dist1*dist1));
       }
 
       // - apply distance of end position -
       {
         double dist0 = win0[win_len - 1] - data0[di - 1];
         double dist1 = win1[win_len - 1] - data1[di - 1];
-        end_dist = sqrt(dist0*dist0 + dist1*dist1);
+        end_dist = sqrt((dist0*dist0) + (dist1*dist1));
       }
 
       double length_ratio = (double)(di - di_start)/win_len;

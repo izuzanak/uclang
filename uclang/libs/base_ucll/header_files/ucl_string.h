@@ -139,17 +139,17 @@ struct string_s
 
   /*!
    * \brief load string from text file
-   * \param a_file - name of file containing string text
+   * \param a_filename - name of file containing string text
    * \return true if string is successfully loaded
    */
-  inline bool load_text_file(const char *a_file);
+  inline bool load_text_file(const char *a_filename);
 
   /*!
    * \brief save string to text file
-   * \param a_file - name of target file
+   * \param a_filename - name of target file
    * \return true if string is successfully saved
    */
-  inline bool save_text_file(const char *a_file);
+  inline bool save_text_file(const char *a_filename);
 
   /*!
    * \brief create string of desired format
@@ -319,33 +319,38 @@ inline unsigned string_s::print()
   return fwrite(data,size - 1,1,stdout);
 }/*}}}*/
 
-inline bool string_s::load_text_file(const char *a_file)
+inline bool string_s::load_text_file(const char *a_filename)
 {/*{{{*/
-  if (a_file == nullptr)
+  if (a_filename == nullptr)
   {
     return false;
   }
 
-  FILE *f = fopen(a_file,"rb");
-  if (f == nullptr)
+  FILE *file = fopen(a_filename,"rb");
+  if (file == nullptr)
   {
     return false;
   }
 
-  fseek(f,0,SEEK_END);
-  unsigned file_size = ftell(f);
-  fseek(f,0,SEEK_SET);
+  long file_size;
+  if (fseek(file,0,SEEK_END) == -1 ||
+      (file_size = ftell(file)) == -1 ||
+      fseek(file,0,SEEK_SET) == -1)
+  {
+    (void)fclose(file);
+    return false;
+  }
 
   clear();
   data = (char *)cmalloc((file_size + 1)*sizeof(char));
-  if (fread(data,file_size,1,f) != 1)
+  if (fread(data,file_size,1,file) != 1)
   {
     clear();
 
-    fclose(f);
+    (void)fclose(file);
     return false;
   }
-  fclose(f);
+  (void)fclose(file);
 
   data[file_size] = '\0';
   size = file_size + 1;
@@ -353,29 +358,29 @@ inline bool string_s::load_text_file(const char *a_file)
   return true;
 }/*}}}*/
 
-inline bool string_s::save_text_file(const char *a_file)
+inline bool string_s::save_text_file(const char *a_filename)
 {/*{{{*/
-  if (a_file == nullptr)
+  if (a_filename == nullptr)
   {
     return false;
   }
 
-  FILE *f = fopen(a_file,"w");
-  if (f == nullptr)
+  FILE *file = fopen(a_filename,"w");
+  if (file == nullptr)
   {
     return false;
   }
 
   if (size > 1)
   {
-    if (fwrite(data,size - 1,1,f) != 1)
+    if (fwrite(data,size - 1,1,file) != 1)
     {
-      fclose(f);
+      (void)fclose(file);
       return false;
     }
   }
 
-  fclose(f);
+  (void)fclose(file);
   return true;
 }/*}}}*/
 

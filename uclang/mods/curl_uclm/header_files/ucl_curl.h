@@ -121,7 +121,7 @@ struct curl_result_s
 class curl_c
 {
   public:
-  inline curl_c();
+  inline curl_c() noexcept;
   inline ~curl_c();
 };
 
@@ -347,7 +347,7 @@ inline void curl_result_s::clear(interpreter_thread_s &it)
  * inline methods of class curl_c
  */
 
-inline curl_c::curl_c()
+inline curl_c::curl_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"curl_init()\n"););
 

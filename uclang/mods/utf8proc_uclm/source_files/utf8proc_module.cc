@@ -598,7 +598,7 @@ method UnicodeChar
   switch (src_0_location->v_type)
   {
   case c_bi_class_char:
-    result = (char)src_0_location->v_data_ptr;
+    result = (char)src_0_location->v_data_ptr; // NOLINT(cert-str34-c)
     break;
   case c_bi_class_integer:
     result = (long long int)src_0_location->v_data_ptr;
@@ -963,7 +963,7 @@ macro
 \
   /* - create unicode string - */\
   ui_array_s *result_ptr = (ui_array_s *)cmalloc(sizeof(ui_array_s));\
-  result_ptr->init_size(s_length*mult + 1);\
+  result_ptr->init_size((s_length*mult) + 1);\
 \
   if (s_length != 0 && mult > 0)\
   {\
@@ -1120,7 +1120,7 @@ bool bic_unicode_string_operator_binary_equal(interpreter_thread_s &it,unsigned 
 
 bool bic_unicode_string_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_UNICODE_STRING_OPERATOR_BINARY_PLUS("operator_binary_plus_equal#1");
+  BIC_UNICODE_STRING_OPERATOR_BINARY_PLUS("operator_binary_plus_equal#1"); // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
 
   BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_unicode_string,result_ptr,2);
 
@@ -1186,7 +1186,7 @@ bool bic_unicode_string_operator_binary_exclamation_equal(interpreter_thread_s &
 
 bool bic_unicode_string_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_UNICODE_STRING_OPERATOR_BINARY_PLUS("operator_binary_plus#1");
+  BIC_UNICODE_STRING_OPERATOR_BINARY_PLUS("operator_binary_plus#1"); // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_unicode_string,result_ptr);
   BIC_SET_RESULT(new_location);
@@ -1230,7 +1230,7 @@ method UnicodeString
   utf8proc_ssize_t cp_count = utf8proc_decompose(
       (const utf8proc_uint8_t *)source_ptr->data,source_length,
       (utf8proc_int32_t *)ustring_ptr->data,source_length,
-      (utf8proc_option_t)0);
+      (utf8proc_option_t)0); // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange)
 
   // - ERROR -
   if (cp_count < 0 || cp_count > source_length)

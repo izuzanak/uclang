@@ -1972,7 +1972,7 @@ inline bool interpreter_thread_s::retrieve_integer(location_s *location_ptr,long
   switch (location_ptr->v_type)
   {
   case c_bi_class_char:
-    a_number = (char)location_ptr->v_data_ptr;
+    a_number = (char)location_ptr->v_data_ptr; // NOLINT
     break;
   case c_bi_class_integer:
     a_number = (long long int)location_ptr->v_data_ptr;

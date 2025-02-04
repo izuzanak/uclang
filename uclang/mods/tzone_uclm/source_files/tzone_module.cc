@@ -226,8 +226,8 @@ method to_utc
 
   const long long int nanosec_in_hour = 60*60*1000000000ULL;
 
-  long long int result = local_time - 15*nanosec_in_hour;
-  long long int result_end = local_time + 14*nanosec_in_hour;
+  long long int result = local_time - (15*nanosec_in_hour);
+  long long int result_end = local_time + (14*nanosec_in_hour);
 
   long long int local_value = 0;
   do {

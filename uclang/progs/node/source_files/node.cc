@@ -51,7 +51,7 @@ UclVar parse_cb(UclVar a_state)
 }/*}}}*/
 
 #if SYSTEM_TYPE_UNIX_CHROME_NACL != ENABLED
-int main(int argc,char **argv)
+int main(int argc,char **argv) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
 
   // - select modules to import -

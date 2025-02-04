@@ -10,10 +10,10 @@
 include "script_parser.h"
 @end
 
-#include <libxml/tree.h>
-#include <libxml/parser.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
+#include <libxml/tree.h>           // NOLINT(misc-header-include-cycle)
+#include <libxml/parser.h>         // NOLINT(misc-header-include-cycle)
+#include <libxml/xpath.h>          // NOLINT(misc-header-include-cycle)
+#include <libxml/xpathInternals.h> // NOLINT(misc-header-include-cycle)
 
 /*
  * constants and definitions
@@ -61,7 +61,7 @@ struct xml_node_s
 class xml_c
 {
   public:
-  inline xml_c();
+  inline xml_c() noexcept;
   inline ~xml_c();
 };
 
@@ -199,7 +199,7 @@ inline void xml_node_s::clear(interpreter_thread_s &it)
  * inline methods of class xml_c
  */
 
-inline xml_c::xml_c()
+inline xml_c::xml_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"libxml_init()\n"););
 

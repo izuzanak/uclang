@@ -277,7 +277,7 @@ bool bi_object_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array
 
 unsigned pcd_terminal_recognize(char **a_ptr)
 {/*{{{*/
-#define PCD_GET_NEXT_CHAR() in_char = **a_ptr;
+#define PCD_GET_NEXT_CHAR() in_char = (unsigned char)**a_ptr;
 #define PCD_CLOSE_CHAR(RET_TERM_IDX) ++(*a_ptr);
 
   unsigned short in_char;
@@ -285,66 +285,66 @@ unsigned pcd_terminal_recognize(char **a_ptr)
 // - STATE 0 -
   PCD_GET_NEXT_CHAR();
 
-  if (in_char == 0)
+  if (in_char == 0) {
     goto state_1_label;
-
-  if (in_char >= 48 && in_char < 58)
+  }
+  if (in_char >= 48 && in_char < 58) {
     goto state_2_label;
-
-  if (in_char == 60)
+  }
+  if (in_char == 60) {
     goto state_3_label;
-
-  if (in_char == 61)
+  }
+  if (in_char == 61) {
     goto state_4_label;
-
-  if (in_char == 62)
+  }
+  if (in_char == 62) {
     goto state_5_label;
-
-  if (in_char == 66)
+  }
+  if (in_char == 66) {
     goto state_6_label;
-
-  if (in_char == 72)
+  }
+  if (in_char == 72) {
     goto state_7_label;
-
-  if (in_char == 73)
+  }
+  if (in_char == 73) {
     goto state_8_label;
-
-  if (in_char == 76)
+  }
+  if (in_char == 76) {
     goto state_9_label;
-
-  if (in_char == 81)
+  }
+  if (in_char == 81) {
     goto state_10_label;
-
-  if (in_char == 98)
+  }
+  if (in_char == 98) {
     goto state_11_label;
-
-  if (in_char == 99)
+  }
+  if (in_char == 99) {
     goto state_12_label;
-
-  if (in_char == 100)
+  }
+  if (in_char == 100) {
     goto state_13_label;
-
-  if (in_char == 102)
+  }
+  if (in_char == 102) {
     goto state_14_label;
-
-  if (in_char == 104)
+  }
+  if (in_char == 104) {
     goto state_15_label;
-
-  if (in_char == 105)
+  }
+  if (in_char == 105) {
     goto state_16_label;
-
-  if (in_char == 108)
+  }
+  if (in_char == 108) {
     goto state_17_label;
-
-  if (in_char == 113)
+  }
+  if (in_char == 113) {
     goto state_18_label;
-
-  if (in_char == 115)
+  }
+  if (in_char == 115) {
     goto state_19_label;
-
-  if (in_char == 122)
+  }
+  if (in_char == 122) {
     goto state_20_label;
-
+  }
   return c_idx_not_exist;
 
 // - STATE 1 -
@@ -357,9 +357,9 @@ state_2_label:
   PCD_CLOSE_CHAR(0);
   PCD_GET_NEXT_CHAR();
 
-  if (in_char >= 48 && in_char < 58)
+  if (in_char >= 48 && in_char < 58) {
     goto state_2_label;
-
+  }
   return 0;
 
 // - STATE 3 -

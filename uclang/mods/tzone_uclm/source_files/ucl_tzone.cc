@@ -55,8 +55,9 @@ int time_zone_s::create(const char *a_tz)
     a_tz++;
     stdname = a_tz;
     a_tz = tzu_getqzname(a_tz,'>');
-    if (*a_tz != '>')
+    if (*a_tz != '>') {
       return TIME_ZONE_PARSE_ERROR;
+    }
     stdlen = a_tz - stdname;
     a_tz++;
   } else {
@@ -64,19 +65,22 @@ int time_zone_s::create(const char *a_tz)
     stdlen = a_tz - stdname;
   }
 
-  if (!stdlen)
+  if (!stdlen) {
     return TIME_ZONE_PARSE_ERROR;
+  }
 
   a_tz = tzu_getoffset(a_tz,&this->stdoffset);
-  if (a_tz == NULL)
+  if (a_tz == NULL) {
     return TIME_ZONE_PARSE_ERROR;
+  }
 
   if (*a_tz != '\0') {
     if (*a_tz == '<') {
       dstname = ++a_tz;
       a_tz = tzu_getqzname(a_tz,'>');
-      if (*a_tz != '>')
+      if (*a_tz != '>') {
         return TIME_ZONE_PARSE_ERROR;
+      }
       dstlen = a_tz - dstname;
       a_tz++;
     } else {
@@ -84,14 +88,15 @@ int time_zone_s::create(const char *a_tz)
       a_tz = tzu_getzname(a_tz);
       dstlen = a_tz - dstname; /* length of DST abbr. */
     }
-    if (!dstlen)
+    if (!dstlen) {
       return TIME_ZONE_PARSE_ERROR;
-
+    }
 
     if (*a_tz != '\0' && *a_tz != ',' && *a_tz != ';') {
       a_tz = tzu_getoffset(a_tz,&this->dstoffset);
-      if (a_tz == NULL)
+      if (a_tz == NULL) {
         return TIME_ZONE_PARSE_ERROR;
+      }
     } else {
       this->dstoffset = this->stdoffset - SECSPERHOUR;
     }
@@ -102,14 +107,18 @@ int time_zone_s::create(const char *a_tz)
 
     if (*a_tz == ',' || *a_tz == ';') {
       a_tz++;
-      if ((a_tz = tzu_getrule(a_tz,&this->start)) == NULL)
+      if ((a_tz = tzu_getrule(a_tz,&this->start)) == NULL) {
         return TIME_ZONE_PARSE_ERROR;
-      if (*a_tz++ != ',')
+      }
+      if (*a_tz++ != ',') {
         return TIME_ZONE_PARSE_ERROR;
-      if ((a_tz = tzu_getrule(a_tz,&this->end)) == NULL)
+      }
+      if ((a_tz = tzu_getrule(a_tz,&this->end)) == NULL) {
         return TIME_ZONE_PARSE_ERROR;
-      if (*a_tz != '\0')
+      }
+      if (*a_tz != '\0') {
         return TIME_ZONE_PARSE_ERROR;
+      }
 
       this->year = -1;
       this->rule_mode = 1;
@@ -245,7 +254,7 @@ const char *tzu_getsecs(const char *strp,int *secsp)
     ** but which specifies the equivalent of
     ** "02:00 on the first Sunday on or after 23 Oct".
   */
-  strp = tzu_getnum(strp,&num,0,HOURSPERDAY * DAYSPERWEEK - 1);
+  strp = tzu_getnum(strp,&num,0,(HOURSPERDAY * DAYSPERWEEK) - 1);
   if (strp == NULL) {
     return NULL;
   }

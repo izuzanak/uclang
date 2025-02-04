@@ -16,7 +16,7 @@ include "script_parser.h"
 class gmp_c
 {
   public:
-  inline gmp_c();
+  inline gmp_c() noexcept;
   inline ~gmp_c();
 
   static void setf(string_s &a_target,const char *a_format,...);
@@ -52,7 +52,7 @@ class gmp_c
  * inline methods of class gmp_c
  */
 
-inline gmp_c::gmp_c()
+inline gmp_c::gmp_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"gmp_init()\n"););
 

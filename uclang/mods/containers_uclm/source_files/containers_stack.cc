@@ -909,7 +909,7 @@ bool bic_stack_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *
     do
     {
       BIC_CALL_PRINT(it,*e_ptr,operands[c_source_pos_idx],return false;);
-      if (++e_ptr >= e_ptr_end) break;
+      if (++e_ptr >= e_ptr_end) { break; }
       putchar(',');
     }
     while(true);

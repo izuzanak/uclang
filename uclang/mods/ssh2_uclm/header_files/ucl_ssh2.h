@@ -95,7 +95,7 @@ class ssh2_c
   static char *pass;
 
   public:
-  inline ssh2_c();
+  inline ssh2_c() noexcept;
   inline ~ssh2_c();
 
   /*
@@ -289,7 +289,7 @@ inline void ssh2_channel_s::clear(interpreter_thread_s &it)
  * inline methods of class ssh2_c
  */
 
-inline ssh2_c::ssh2_c()
+inline ssh2_c::ssh2_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"libssh2_init()\n"););
 

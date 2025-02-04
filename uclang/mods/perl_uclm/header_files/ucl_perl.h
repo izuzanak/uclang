@@ -84,7 +84,7 @@ struct perl_reference_s
 class perl_c
 {
   public:
-  inline perl_c();
+  inline perl_c() noexcept;
   inline ~perl_c();
 
   static SV *create_perl_sv(interpreter_thread_s &it,PerlInterpreter *my_perl,location_s *location_ptr);
@@ -276,7 +276,7 @@ inline bool perl_reference_s::set(PerlInterpreter *my_perl,SV *sv_value)
  * inline methods of class perl_c
  */
 
-inline perl_c::perl_c()
+inline perl_c::perl_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"perl_init()\n"););
 

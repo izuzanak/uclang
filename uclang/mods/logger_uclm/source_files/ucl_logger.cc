@@ -14,6 +14,8 @@ methods log_file_s
 
 bool log_file_s::rotate()
 {/*{{{*/
+  debug_assert(path.size > 0);
+
   struct stat st;
 
   // - close log file -

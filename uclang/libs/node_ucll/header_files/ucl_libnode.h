@@ -107,7 +107,7 @@ class UclNode
   interpreter_thread_s *thread;
 
   public:
-  inline UclNode();
+  inline UclNode() noexcept;
   inline ~UclNode();
 
   libnode_ucll_EXPORT bool Initialize(const char **a_modules);
@@ -124,7 +124,7 @@ libnode_ucll_EXPORT extern UclNode g_UclNode;
  * inline methods of class UclNode
  */
 
-inline UclNode::UclNode()
+inline UclNode::UclNode() noexcept
 {/*{{{*/
   parser.init();
   interpreter.init();

@@ -8,7 +8,6 @@ include "ucl_http.h"
 
 // - HTTP indexes of built in classes -
 extern unsigned c_bi_class_http_server;
-extern unsigned c_bi_class_http_conn;
 extern unsigned c_bi_class_http_resp;
 extern unsigned c_bi_class_http_post_proc;
 

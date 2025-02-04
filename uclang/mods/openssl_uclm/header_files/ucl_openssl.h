@@ -27,7 +27,7 @@ enum
 class openssl_c
 {
   public:
-  inline openssl_c();
+  inline openssl_c() noexcept;
   inline ~openssl_c();
 };
 
@@ -35,7 +35,7 @@ class openssl_c
  * inline methods of class openssl_c
  */
 
-inline openssl_c::openssl_c()
+inline openssl_c::openssl_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"openssl_init()\n"););
 

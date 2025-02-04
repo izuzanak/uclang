@@ -979,7 +979,7 @@ bool json_parser_s::parse_source(interpreter_thread_s &a_it,string_s &a_string)
     }
 
     // - retrieve action from table of actions -
-    unsigned parse_action = json_lalr_table[lalr_stack.last().lalr_state*c_json_terminal_plus_nonterminal_cnt + ret_term];
+    unsigned parse_action = json_lalr_table[(lalr_stack.last().lalr_state*c_json_terminal_plus_nonterminal_cnt) + ret_term];
 
     // - PARSE ERROR wrong syntax -
     if (parse_action == c_idx_not_exist)
@@ -1020,7 +1020,7 @@ bool json_parser_s::parse_source(interpreter_thread_s &a_it,string_s &a_string)
       lalr_stack.used -= json_rule_body_lengths[parse_action];
 
       // - insert new automat state to stack -
-      unsigned goto_val = json_lalr_table[lalr_stack.last().lalr_state*c_json_terminal_plus_nonterminal_cnt + json_rule_head_idxs[parse_action]];
+      unsigned goto_val = json_lalr_table[(lalr_stack.last().lalr_state*c_json_terminal_plus_nonterminal_cnt) + json_rule_head_idxs[parse_action]];
       lalr_stack.push(goto_val);
     }
 

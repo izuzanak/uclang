@@ -877,6 +877,9 @@ static_method
   {
     string_ptr->clear();
     cfree(string_ptr);
+
+    exception_s::throw_exception(it,module.error_base + c_error_CURSES_FUNCTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
   }
 
   // - adjust string size -

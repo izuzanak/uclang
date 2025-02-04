@@ -77,10 +77,10 @@ bool datetime_s::to_nanosec(long long unsigned &a_nanosec)
   unsigned tmp_year = year - 1601;
 
   // - number of days from epoch -
-  long long unsigned time = tmp_year*365
-    + tmp_year/4
-    - tmp_year/100
-    + tmp_year/400
+  long long unsigned time = (tmp_year*365)
+    + (tmp_year/4)
+    - (tmp_year/100)
+    + (tmp_year/400)
     + c_month_days_to_year_end[month - 1]
     + ((is_leap_year(year) && month > 2) ? 1 : 0)
     + day - 1

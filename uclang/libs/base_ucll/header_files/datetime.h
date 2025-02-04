@@ -138,7 +138,7 @@ inline datetime_s &datetime_s::operator=(const datetime_s &src)
 
 inline bool datetime_s::operator==(datetime_s &second)
 {/*{{{*/
-  return memcmp(this,&second,sizeof(datetime_s)) == 0;
+  return memcmp(this,&second,sizeof(datetime_s)) == 0; // NOLINT
 }/*}}}*/
 
 inline void datetime_s::from_seconds(long long unsigned a_seconds)

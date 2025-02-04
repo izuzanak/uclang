@@ -8,7 +8,6 @@ include "ucl_xml.h"
 
 // - XML indexes of built in classes -
 extern unsigned c_bi_class_xml;
-extern unsigned c_bi_class_xml_node;
 
 // - XML module -
 extern "C" EXPORT built_in_module_s module;

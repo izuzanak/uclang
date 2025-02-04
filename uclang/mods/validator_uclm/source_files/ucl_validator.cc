@@ -7,7 +7,7 @@ include "ucl_validator.h"
  * methods of structure validator_s
  */
 
-unsigned validator_s::recognize_property(const char *a_string,unsigned &a_input_idx)
+unsigned validator_s::recognize_property(const char *a_string,unsigned &a_input_idx) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
 #define GET_NEXT_CHAR() \
 {\
@@ -774,7 +774,7 @@ state_71_label:
   }\
 }/*}}}*/
 
-bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
+bool validator_s::validate_pair(location_s *a_value,location_s *a_props) //NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
   interpreter_thread_s &it = *it_ptr;
 
@@ -1106,7 +1106,7 @@ bool validator_s::validate_pair(location_s *a_value,location_s *a_props)
         regex_t *regex_ptr;
         if (regex_idx >= regex_list.used)
         {
-          while (regex_list.used < regex_idx) regex_list.push(nullptr);
+          while (regex_list.used < regex_idx) { regex_list.push(nullptr); }
 
           // - compile new regular expresion -
           regex_ptr = (regex_t *)cmalloc(sizeof(regex_t));

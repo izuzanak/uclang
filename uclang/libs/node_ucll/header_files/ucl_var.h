@@ -892,18 +892,18 @@ class UclVar
   libnode_ucll_EXPORT static UclVar __static_call(std::string a_class_name,std::string a_method_name,UclVar a_op);
   libnode_ucll_EXPORT static UclVar __static_call(std::string a_class_name,std::string a_method_name,UclVar a_op,UclVar a_op_1);
 
-  libnode_ucll_EXPORT static UclVar __new(std::string a_name);
-  libnode_ucll_EXPORT static UclVar __new(std::string a_name,UclVar a_op);
-  libnode_ucll_EXPORT static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1);
-  libnode_ucll_EXPORT static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
-  libnode_ucll_EXPORT static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3);
-  libnode_ucll_EXPORT static UclVar __new(std::string a_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3,UclVar a_op_4);
+  libnode_ucll_EXPORT static UclVar __new(std::string a_class_name);
+  libnode_ucll_EXPORT static UclVar __new(std::string a_class_name,UclVar a_op);
+  libnode_ucll_EXPORT static UclVar __new(std::string a_class_name,UclVar a_op,UclVar a_op_1);
+  libnode_ucll_EXPORT static UclVar __new(std::string a_class_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2);
+  libnode_ucll_EXPORT static UclVar __new(std::string a_class_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3);
+  libnode_ucll_EXPORT static UclVar __new(std::string a_class_name,UclVar a_op,UclVar a_op_1,UclVar a_op_2,UclVar a_op_3,UclVar a_op_4);
 
   libnode_ucll_EXPORT UclVar __member(std::string a_name);
   libnode_ucll_EXPORT UclVar __slice(UclVar a_start,UclVar a_stop,UclVar a_step);
 
-  static void Initialize(script_parser_s &a_parser,bool *a_modules);
-  static void Initialize(interpreter_s &a_interpreter,bool *a_modules);
+  static void Initialize(script_parser_s &a_parser,const bool *a_modules);
+  static void Initialize(interpreter_s &a_interpreter,const bool *a_modules);
   static void InitThread(interpreter_thread_s &a_it);
   static void Release(interpreter_s &a_interpreter);
 
@@ -914,7 +914,7 @@ class UclVar
   }/*}}}*/
 
 #if __cplusplus >= 201103
-  inline UclVar(UclVar &&a_src)
+  inline UclVar(UclVar &&a_src) noexcept
   {/*{{{*/
     location_ptr = a_src.location_ptr;
     a_src.location_ptr = nullptr;

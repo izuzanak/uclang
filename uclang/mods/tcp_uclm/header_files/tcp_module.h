@@ -7,9 +7,7 @@ include "ucl_tcp.h"
 @end
 
 // - TCP indexes of built in classes -
-extern unsigned c_bi_class_tcp_server;
 extern unsigned c_bi_class_tcp_conn;
-extern unsigned c_bi_class_tcp_client;
 
 // - TCP module -
 extern "C" EXPORT built_in_module_s module;

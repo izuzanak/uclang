@@ -915,6 +915,8 @@ bool trdp_page_s::from_dict(
   }
   else
   {
+    debug_assert(tree_ptr != nullptr);
+
     // - retrieve value location from dictionary -
     pointer_map_s search_map = {var_descr.name_location,nullptr};
     unsigned index = tree_ptr->get_idx(search_map);

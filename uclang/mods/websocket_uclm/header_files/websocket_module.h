@@ -8,7 +8,6 @@ include "ucl_websocket.h"
 
 // - WEBSOCKET indexes of built in classes -
 extern unsigned c_bi_class_ws_context;
-extern unsigned c_bi_class_ws_conn;
 extern unsigned c_bi_class_ws_client;
 extern unsigned c_bi_class_ws_base64;
 

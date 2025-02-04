@@ -28,9 +28,9 @@ bool image_s::operator==(image_s &a_second)
   unsigned s_line_size = a_second.image_data_ptr->line_bytes;
   unsigned image_ls = width*pixel_step;
 
-  unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
-  unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
-  unsigned char *s_ptr = a_second.image_data_ptr->data + a_second.y_pos*s_line_size + a_second.x_pos*pixel_step;
+  unsigned char *ptr = image_data_ptr->data + (y_pos*line_size) + (x_pos*pixel_step);
+  unsigned char *ptr_end = ptr + ((height - 1)*line_size) + (width*pixel_step);
+  unsigned char *s_ptr = a_second.image_data_ptr->data + (a_second.y_pos*s_line_size) + (a_second.x_pos*pixel_step);
 
   do {
     if (memcmp(ptr,s_ptr,image_ls) != 0) {
@@ -108,8 +108,8 @@ bool image_s::io_clear()
   unsigned line_size = image_data_ptr->line_bytes;
   unsigned image_ls = width*pixel_step;
 
-  unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
-  unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
+  unsigned char *ptr = image_data_ptr->data + (y_pos*line_size) + (x_pos*pixel_step);
+  unsigned char *ptr_end = ptr + ((height - 1)*line_size) + (width*pixel_step);
 
   do {
     memset(ptr,0,image_ls);
@@ -120,7 +120,7 @@ bool image_s::io_clear()
   return true;
 }/*}}}*/
 
-bool image_s::io_fill(unsigned char *a_color)
+bool image_s::io_fill(const unsigned char *a_color)
 {/*{{{*/
   if (pixel_format == c_image_pixel_format_blank)
   {
@@ -130,8 +130,8 @@ bool image_s::io_fill(unsigned char *a_color)
   unsigned line_size = image_data_ptr->line_bytes;
   unsigned image_ls = width*pixel_step;
 
-  unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
-  unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
+  unsigned char *ptr = image_data_ptr->data + (y_pos*line_size) + (x_pos*pixel_step);
+  unsigned char *ptr_end = ptr + ((height - 1)*line_size) + (width*pixel_step);
 
 #define IMAGE_FILL(OPERATION) \
   {/*{{{*/\
@@ -185,9 +185,9 @@ bool image_s::io_copy(const image_s &a_src)
   unsigned s_line_size = a_src.image_data_ptr->line_bytes;
   unsigned image_ls = width*pixel_step;
 
-  unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
-  unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
-  const unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*pixel_step;
+  unsigned char *ptr = image_data_ptr->data + (y_pos*line_size) + (x_pos*pixel_step);
+  unsigned char *ptr_end = ptr + ((height - 1)*line_size) + (width*pixel_step);
+  const unsigned char *s_ptr = a_src.image_data_ptr->data + (a_src.y_pos*s_line_size) + (a_src.x_pos*pixel_step);
 
   do {
     memcpy(ptr,s_ptr,image_ls);
@@ -212,9 +212,9 @@ bool image_s::io_convert(image_s &a_src)
   unsigned image_ls = width*pixel_step;
   unsigned s_image_ls = width*a_src.pixel_step;
 
-  unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
-  unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
-  unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*a_src.pixel_step;
+  unsigned char *ptr = image_data_ptr->data + (y_pos*line_size) + (x_pos*pixel_step);
+  unsigned char *ptr_end = ptr + ((height - 1)*line_size) + (width*pixel_step);
+  unsigned char *s_ptr = a_src.image_data_ptr->data + (a_src.y_pos*s_line_size) + (a_src.x_pos*a_src.pixel_step);
 
 #define IMAGE_CONVERT(OPERATION) \
   {/*{{{*/\
@@ -311,7 +311,7 @@ bool image_s::io_convert(image_s &a_src)
           double real = ((double *)s_ptr)[0];
           double imag = ((double *)s_ptr)[1];
 
-          *((double *)ptr) = sqrt(real*real + imag*imag);
+          *((double *)ptr) = sqrt((real*real) + (imag*imag));
           );
       break;
     default:
@@ -349,9 +349,9 @@ bool image_s::io_apply(image_s &a_src)
   unsigned s_line_size = a_src.image_data_ptr->line_bytes;
   unsigned image_ls = width*pixel_step;
 
-  unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;
-  unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;
-  unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*pixel_step;
+  unsigned char *ptr = image_data_ptr->data + (y_pos*line_size) + (x_pos*pixel_step);
+  unsigned char *ptr_end = ptr + ((height - 1)*line_size) + (width*pixel_step);
+  unsigned char *s_ptr = a_src.image_data_ptr->data + (a_src.y_pos*s_line_size) + (a_src.x_pos*pixel_step);
 
 #define IMAGE_APPLY(OPERATION) \
   {/*{{{*/\
@@ -398,8 +398,8 @@ bool image_s::io_normalize(image_s &a_src)
 
 #define IMAGE_NORMALIZE_GET_MIN_MAX(OPERATION) \
   {/*{{{*/\
-    unsigned char *s_ptr = a_src.image_data_ptr->data + a_src.y_pos*s_line_size + a_src.x_pos*pixel_step;\
-    unsigned char *s_ptr_end = s_ptr + (height - 1)*s_line_size + width*pixel_step;\
+    unsigned char *s_ptr = a_src.image_data_ptr->data + (a_src.y_pos*s_line_size) + (a_src.x_pos*pixel_step);\
+    unsigned char *s_ptr_end = s_ptr + ((height - 1)*s_line_size) + (width*pixel_step);\
 \
     do {\
       unsigned char *s_ptr_w_end = s_ptr + image_ls;\
@@ -413,8 +413,8 @@ bool image_s::io_normalize(image_s &a_src)
 
 #define IMAGE_NORMALIZE_APPLY(OPERATION) \
   {/*{{{*/\
-    unsigned char *ptr = image_data_ptr->data + y_pos*line_size + x_pos*pixel_step;\
-    unsigned char *ptr_end = ptr + (height - 1)*line_size + width*pixel_step;\
+    unsigned char *ptr = image_data_ptr->data + (y_pos*line_size) + (x_pos*pixel_step);\
+    unsigned char *ptr_end = ptr + ((height - 1)*line_size) + (width*pixel_step);\
 \
     do {\
       unsigned char *ptr_w_end = ptr + image_ls;\
@@ -485,7 +485,7 @@ void png_data_s::read_data(png_structp a_png_ptr,png_bytep a_data,png_size_t a_l
 
 void jpeg_error_mgr_s::error_exit(j_common_ptr cinfo)
 {/*{{{*/
-  longjmp(((jpeg_error_mgr_s *)cinfo->err)->jump_buffer,1);
+  longjmp(((jpeg_error_mgr_s *)cinfo->err)->jump_buffer,1); // NOLINT
 }/*}}}*/
 
 /*

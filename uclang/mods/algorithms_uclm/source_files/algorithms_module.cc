@@ -415,7 +415,7 @@ bool bic_algo_method_any_true_1(interpreter_thread_s &it,unsigned stack_base,uli
   return true;
 }/*}}}*/
 
-bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_algo_method_map_2(interpreter_thread_s &it,unsigned stack_base,uli *operands) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
 @begin ucl_params
 <
@@ -707,7 +707,7 @@ static_method
   return true;
 }/*}}}*/
 
-bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_algo_method_filter_2(interpreter_thread_s &it,unsigned stack_base,uli *operands) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
 @begin ucl_params
 <

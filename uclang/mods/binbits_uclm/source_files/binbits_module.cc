@@ -863,7 +863,7 @@ bool bic_bin_array_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   return true;
 }/*}}}*/
 
-bool bic_bin_array_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_bin_array_operator_binary_plus_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
@@ -951,7 +951,7 @@ bool bic_bin_array_operator_binary_exclamation_equal(interpreter_thread_s &it,un
   return true;
 }/*}}}*/
 
-bool bic_bin_array_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_bin_array_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
@@ -1115,7 +1115,7 @@ method BinArray
   return true;
 }/*}}}*/
 
-bool bic_bin_array_method_BinArray_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_bin_array_method_BinArray_2(interpreter_thread_s &it,unsigned stack_base,uli *operands) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
 @begin ucl_params
 <

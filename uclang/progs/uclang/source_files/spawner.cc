@@ -451,7 +451,7 @@ bool spawn_parser_s::parse_source(string_s &a_string)
     }
 
     // - retrieve action from table of actions -
-    unsigned parse_action = spwn_lalr_table[lalr_stack.last().lalr_state*c_spwn_terminal_plus_nonterminal_cnt + ret_term];
+    unsigned parse_action = spwn_lalr_table[(lalr_stack.last().lalr_state*c_spwn_terminal_plus_nonterminal_cnt) + ret_term];
 
     // - PARSE ERROR wrong syntax -
     if (parse_action == c_idx_not_exist)
@@ -492,7 +492,7 @@ bool spawn_parser_s::parse_source(string_s &a_string)
       lalr_stack.used -= spwn_rule_body_lengths[parse_action];
 
       // - insert new automat state to stack -
-      unsigned goto_val = spwn_lalr_table[lalr_stack.last().lalr_state*c_spwn_terminal_plus_nonterminal_cnt + spwn_rule_head_idxs[parse_action]];
+      unsigned goto_val = spwn_lalr_table[(lalr_stack.last().lalr_state*c_spwn_terminal_plus_nonterminal_cnt) + spwn_rule_head_idxs[parse_action]];
       lalr_stack.push(goto_val);
     }
 

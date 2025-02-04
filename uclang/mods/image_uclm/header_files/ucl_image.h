@@ -82,7 +82,7 @@ struct image_s
   bool create_referred(unsigned a_x_pos,unsigned a_y_pos,unsigned a_width,unsigned a_height,image_s &a_src);
 
   bool io_clear();
-  bool io_fill(unsigned char *a_color);
+  bool io_fill(const unsigned char *a_color);
   bool io_copy(const image_s &a_src);
   bool io_convert(image_s &a_src);
   bool io_apply(image_s &a_src);

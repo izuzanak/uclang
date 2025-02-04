@@ -6,9 +6,6 @@
 include "ucl_mqtt.h"
 @end
 
-// - MQTT indexes of built in classes -
-extern unsigned c_bi_class_mqtt_client;
-
 // - MQTT module -
 extern "C" EXPORT built_in_module_s module;
 

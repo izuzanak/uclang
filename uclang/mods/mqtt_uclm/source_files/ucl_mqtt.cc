@@ -451,7 +451,7 @@ int mqtt_conn_s::process_properties(uint8_t a_pkt_type,uint32_t a_size,const cha
   return 0;
 }/*}}}*/
 
-int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32_t size,const char *data)
+int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32_t size,const char *data) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
   const char *data_end = data + size;
 

@@ -284,7 +284,7 @@ ui_arrays_s:state_moves
 additions
 {
 void create_new(fa_states_array_s &states_array);
-unsigned recognize(char *input,unsigned &input_idx,unsigned input_length);
+unsigned recognize(const char *input,unsigned &input_idx,unsigned input_length);
 }
 
 final_automata_s;
@@ -779,7 +779,7 @@ inlines p_lalr_table_s
 
 inline unsigned &p_lalr_table_s::value(unsigned a_x_idx,unsigned a_y_idx)
 {/*{{{*/
-  unsigned t_idx = a_y_idx*x_size + a_x_idx;
+  unsigned t_idx = (a_y_idx*x_size) + a_x_idx;
   debug_assert(t_idx < table.used);
   return table.data[t_idx];
 }/*}}}*/

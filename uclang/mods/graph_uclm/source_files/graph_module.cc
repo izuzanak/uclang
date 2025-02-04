@@ -452,6 +452,8 @@ bool bic_graph_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s 
   edge_rb_tree_s &edges = graph_ptr->edges;
 
   pointer *v_locations = (pointer *)cmalloc(vertices.count*sizeof(pointer));
+  debug_assert(memset(v_locations,0,vertices.count*sizeof(pointer)) == v_locations);
+
   unsigned *v_idx_to_v_pos = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));
 
   // - process graph vertices -

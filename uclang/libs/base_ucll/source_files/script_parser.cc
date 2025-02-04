@@ -3562,7 +3562,7 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
   module_idx++;
 }/*}}}*/
 
-unsigned script_parser_s::recognize_terminal(unsigned &input_idx) // lgtm [cpp/use-of-goto]
+unsigned script_parser_s::recognize_terminal(unsigned &input_idx) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
   string_s &source_string = sources[source_idx].source_string;
   unsigned source_string_length = source_string.size - 1;
@@ -8136,7 +8136,7 @@ void script_parser_s::parse_script(unsigned a_source_idx)
     }
 
     // - retrieve action from table of actions -
-    unsigned parse_action = lalr_table[lalr_stack.last().lalr_state*c_terminal_plus_nonterminal_cnt + ret_term];
+    unsigned parse_action = lalr_table[(lalr_stack.last().lalr_state*c_terminal_plus_nonterminal_cnt) + ret_term];
 
     // - PARSE ERROR wrong syntax -
     if (parse_action == c_idx_not_exist)
@@ -8178,7 +8178,7 @@ void script_parser_s::parse_script(unsigned a_source_idx)
       lalr_stack.used -= rule_body_lengths[parse_action];
 
       // - insert new automat state to stack -
-      unsigned goto_val = lalr_table[lalr_stack.last().lalr_state*c_terminal_plus_nonterminal_cnt + rule_head_idxs[parse_action]];
+      unsigned goto_val = lalr_table[(lalr_stack.last().lalr_state*c_terminal_plus_nonterminal_cnt) + rule_head_idxs[parse_action]];
       lalr_stack.push(goto_val);
     }
 
@@ -8463,6 +8463,8 @@ void script_parser_s::element_search()
         vn_ri_ep_map.used = 0;
         vn_ri_ep_map.copy_resize(variable_symbol_names.used);
         vn_ri_ep_map.used = variable_symbol_names.used;
+
+        debug_assert(vn_ri_ep_map.data != nullptr);
         memset(vn_ri_ep_map.data,(int)c_idx_not_exist,vn_ri_ep_map.used*sizeof(ri_ep_s));
 
       }

@@ -79,7 +79,7 @@ unsigned primes_s::get_prime(unsigned a_idx)
 
   if (sieve[a_idx])
   {
-    return 2*a_idx + 1;
+    return (2*a_idx) + 1;
   }
 
   return c_idx_not_exist;

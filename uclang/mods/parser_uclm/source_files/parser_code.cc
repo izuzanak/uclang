@@ -773,7 +773,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
   }
 }/*}}}*/
 
-unsigned final_automata_s::recognize(char *input,unsigned &input_idx,unsigned input_length)
+unsigned final_automata_s::recognize(const char *input,unsigned &input_idx,unsigned input_length)
 {/*{{{*/
   debug_assert(input != nullptr);
 
@@ -829,7 +829,7 @@ unsigned final_automata_s::recognize(char *input,unsigned &input_idx,unsigned in
 methods reg_parser_s
 @end
 
-unsigned reg_parser_s::recognize_terminal(string_s &source_string,unsigned &input_idx) // lgtm [cpp/use-of-goto]
+unsigned reg_parser_s::recognize_terminal(string_s &source_string,unsigned &input_idx) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
   unsigned source_string_length = source_string.size - 1;
 
@@ -2336,7 +2336,7 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
     }
 
     // - select action from parse table -
-    unsigned parse_action = reg_lalr_table[lalr_stack.last().lalr_state*c_reg_terminal_plus_nonterminal_cnt + ret_term];
+    unsigned parse_action = reg_lalr_table[(lalr_stack.last().lalr_state*c_reg_terminal_plus_nonterminal_cnt) + ret_term];
 
     // - ERROR -
     if (parse_action == c_idx_not_exist)
@@ -2710,7 +2710,7 @@ c_reduce_char_lbl:
       lalr_stack.used -= reg_rule_body_lengths[parse_action];
 
       // - push new state to stack top -
-      unsigned goto_val = reg_lalr_table[lalr_stack.last().lalr_state*c_reg_terminal_plus_nonterminal_cnt + reg_rule_head_idxs[parse_action]];
+      unsigned goto_val = reg_lalr_table[(lalr_stack.last().lalr_state*c_reg_terminal_plus_nonterminal_cnt) + reg_rule_head_idxs[parse_action]];
       lalr_stack.push(goto_val);
     }
 
@@ -3951,7 +3951,10 @@ bool p_creat_descr_s::compute_kernels()
               {
                 ui_array_set_s &ef_rules = first_rules[element - terminals.used][ef_idx];
 
-                nk_rule_dots.copy_resize(ef_rules.used + 1);
+                unsigned new_ef_rules_size = ef_rules.used + 1;
+                debug_assert(new_ef_rules_size > 0);
+
+                nk_rule_dots.copy_resize(new_ef_rules_size);
 
                 if (ef_rules.used != 0)
                 {

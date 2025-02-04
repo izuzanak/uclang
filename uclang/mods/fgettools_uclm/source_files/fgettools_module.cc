@@ -302,7 +302,7 @@ method FgetTarget
 
   unsigned file_size = file_st.st_size;
   unsigned map_size = map_st.st_size;
-  unsigned block_cnt = file_size/block_size + (file_size%block_size != 0);
+  unsigned block_cnt = (file_size/block_size) + (file_size%block_size != 0);
 
   // - ERROR -
   if (map_size != block_cnt/8 + (block_cnt%8 != 0))
@@ -533,7 +533,7 @@ method update_data
   if (update)
   {
     // - update target file -
-    char *dst_data_ptr = ft_ptr->file_ptr + block_index*ft_ptr->block_size;
+    char *dst_data_ptr = ft_ptr->file_ptr + (block_index*ft_ptr->block_size);
 
     memcpy(dst_data_ptr,data_ptr,data_size);
     msync(dst_data_ptr,data_size,MS_SYNC);

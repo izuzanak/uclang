@@ -1003,7 +1003,7 @@ static_method
 
 bool bic_sys_method_rand_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  long long int result = rand();
+  long long int result = rand(); // NOLINT
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
@@ -1076,7 +1076,7 @@ method system
 static_method
 ; @end
 
-  int ret_val = system(((string_s *)src_0_location->v_data_ptr)->data);
+  int ret_val = system(((string_s *)src_0_location->v_data_ptr)->data); // NOLINT
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,ret_val);
 
@@ -1106,14 +1106,14 @@ bool bic_sys_method_open_2(interpreter_thread_s &it,unsigned stack_base,uli *ope
   SYS_FILE_OPEN(c_bi_class_sys,"open#2");
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_file,f);
-  BIC_SET_RESULT(new_location);
+  BIC_SET_RESULT(new_location); // NOLINT(clang-analyzer-unix.Stream)
 
   return true;
 }/*}}}*/
 
 bool bic_sys_method_popen_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  SYS_PIPE_OPEN(c_bi_class_sys,"popen#2");
+  SYS_PIPE_OPEN(c_bi_class_sys,"popen#2"); // NOLINT
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_pipe,f);
   BIC_SET_RESULT(new_location);
@@ -1167,13 +1167,13 @@ bool bic_sys_method_pipe_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
   // - create read file -
   {
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_file,fr);
-    array_ptr->push(new_location);
+    array_ptr->push(new_location); // NOLINT(clang-analyzer-unix.Stream)
   }
 
   // - create write file -
   {
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_file,fw);
-    array_ptr->push(new_location);
+    array_ptr->push(new_location); // NOLINT(clang-analyzer-unix.Stream)
   }
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
@@ -2134,7 +2134,7 @@ bool bic_pipe_method_Pipe_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  SYS_PIPE_OPEN(c_bi_class_pipe,"Pipe#2");
+  SYS_PIPE_OPEN(c_bi_class_pipe,"Pipe#2"); // NOLINT
 
   dst_location->v_data_ptr = (FILE *)f;
 
@@ -2446,7 +2446,7 @@ bool bic_file_method_File_2(interpreter_thread_s &it,unsigned stack_base,uli *op
 
   dst_location->v_data_ptr = (FILE *)f;
 
-  return true;
+  return true; // NOLINT(clang-analyzer-unix.Stream)
 }/*}}}*/
 
 bool bic_file_method_seek_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -5255,7 +5255,7 @@ bool bic_timer_method_remain_0(interpreter_thread_s &it,unsigned stack_base,uli 
     timer_record_s &record = records.data[r_idx].object;
 
     long long int result = record.target_stamp - timer_s::get_stamp();
-    if (result < 0) result = 0;
+    if (result < 0) { result = 0; }
 
     BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
   }
@@ -5282,7 +5282,7 @@ bool bic_timer_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli
     timer_record_s &record = records.data[r_idx].object;
 
     result = record.target_stamp - timer_s::get_stamp();
-    if (result < 0) result = 0;
+    if (result < 0) { result = 0; }
   }
   else
   {
@@ -5481,7 +5481,7 @@ static_method
     return false;
   }
 
-  long long int result = res.tv_sec*1000000000LL + res.tv_nsec;
+  long long int result = (res.tv_sec*1000000000LL) + res.tv_nsec;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
@@ -5508,7 +5508,7 @@ static_method
     return false;
   }
 
-  long long int result = tp.tv_sec*1000000000LL + tp.tv_nsec;
+  long long int result = (tp.tv_sec*1000000000LL) + tp.tv_nsec;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 

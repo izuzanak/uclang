@@ -6,11 +6,6 @@
 include "ucl_perl.h"
 @end
 
-// - PERL indexes of built in classes -
-extern unsigned c_bi_class_perl_interpreter;
-extern unsigned c_bi_class_perl_value;
-extern unsigned c_bi_class_perl_reference;
-
 // - PERL module -
 extern "C" EXPORT built_in_module_s module;
 

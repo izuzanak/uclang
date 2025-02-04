@@ -218,7 +218,7 @@ bool bic_time_method_Time_0(interpreter_thread_s &it,unsigned stack_base,uli *op
   timeval tv;
   gettimeofday(&tv,nullptr);
 
-  dst_location->v_data_ptr = (long long unsigned)(tv.tv_sec*1000000000ULL + tv.tv_usec*1000ULL);
+  dst_location->v_data_ptr = (long long unsigned)((tv.tv_sec*1000000000ULL) + (tv.tv_usec*1000ULL));
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   FILETIME ft;
   GetSystemTimeAsFileTime(&ft);

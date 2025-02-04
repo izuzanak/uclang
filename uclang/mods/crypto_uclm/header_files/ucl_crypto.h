@@ -29,7 +29,7 @@ const char c_base16_map[] = "0123456789abcdef";
 class crypto_c
 {
   public:
-  inline crypto_c();
+  inline crypto_c() noexcept;
   inline ~crypto_c();
 };
 
@@ -104,7 +104,7 @@ struct crypto_seal_s
  * inline methods of class crypto_c
  */
 
-inline crypto_c::crypto_c()
+inline crypto_c::crypto_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"libcrypto_init()\n"););
 

@@ -626,7 +626,7 @@ void docu_parsed_s::text_lines_to_string(string_s &a_target)
   }
 }/*}}}*/
 
-unsigned docu_parsed_s::fa_recognize(unsigned &input_idx) // lgtm [cpp/use-of-goto]
+unsigned docu_parsed_s::fa_recognize(unsigned &input_idx) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
 #define DOCU_PARSE_GET_NEXT_CHAR() \
   {\
@@ -1433,7 +1433,7 @@ bool docu_parsed_s::parse(interpreter_thread_s &it,string_s &a_source)
     }
 
     // - nalezeni akce v tabulce akci -
-    parse_action = dp_lalr_table[lalr_stack.last().lalr_state*c_dp_terminal_plus_nonterminal_cnt + ret_term];
+    parse_action = dp_lalr_table[(lalr_stack.last().lalr_state*c_dp_terminal_plus_nonterminal_cnt) + ret_term];
 
     // - ERROR -
     if (parse_action == c_idx_not_exist)
@@ -1472,7 +1472,7 @@ bool docu_parsed_s::parse(interpreter_thread_s &it,string_s &a_source)
       lalr_stack.used -= dp_rule_body_lengths[parse_action];
 
       // - ulozeni noveho stavu automatu na zasobnik -
-      unsigned goto_val = dp_lalr_table[lalr_stack.last().lalr_state*c_dp_terminal_plus_nonterminal_cnt + dp_rule_head_idxs[parse_action]];
+      unsigned goto_val = dp_lalr_table[(lalr_stack.last().lalr_state*c_dp_terminal_plus_nonterminal_cnt) + dp_rule_head_idxs[parse_action]];
       lalr_stack.push(goto_val);
     }
 

@@ -15,7 +15,7 @@ include "script_parser.h"
 class curses_c
 {
   public:
-  inline curses_c();
+  inline curses_c() noexcept;
   inline ~curses_c();
 };
 
@@ -23,7 +23,7 @@ class curses_c
  * inline methods of class curses_c
  */
 
-inline curses_c::curses_c()
+inline curses_c::curses_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"libcurses_init()\n"););
 

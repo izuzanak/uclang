@@ -178,7 +178,7 @@ method Iconv
 
   // - ERROR -
   iconv_t new_ic_ptr;
-  if ((new_ic_ptr = iconv_open(tocode_ptr->data,fromcode_ptr->data)) == (iconv_t)-1)
+  if ((new_ic_ptr = iconv_open(tocode_ptr->data,fromcode_ptr->data)) == (iconv_t)-1) // NOLINT(performance-no-int-to-ptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_ICONV_OPEN_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

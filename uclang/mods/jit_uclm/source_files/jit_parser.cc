@@ -3145,7 +3145,7 @@ bool jit_parser_s::parse_source()
     }
 
     // - retrieve action from table of actions -
-    unsigned parse_action = jit_lalr_table[lalr_stack.last().lalr_state*c_jit_terminal_plus_nonterminal_cnt + ret_term];
+    unsigned parse_action = jit_lalr_table[(lalr_stack.last().lalr_state*c_jit_terminal_plus_nonterminal_cnt) + ret_term];
 
     // - PARSE ERROR wrong syntax -
     if (parse_action == c_idx_not_exist)
@@ -3188,7 +3188,7 @@ bool jit_parser_s::parse_source()
       lalr_stack.used -= jit_rule_body_lengths[parse_action];
 
       // - insert new automat state to stack -
-      unsigned goto_val = jit_lalr_table[lalr_stack.last().lalr_state*c_jit_terminal_plus_nonterminal_cnt + jit_rule_head_idxs[parse_action]];
+      unsigned goto_val = jit_lalr_table[(lalr_stack.last().lalr_state*c_jit_terminal_plus_nonterminal_cnt) + jit_rule_head_idxs[parse_action]];
       lalr_stack.push(goto_val);
     }
 

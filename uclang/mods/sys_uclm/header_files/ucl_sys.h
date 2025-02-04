@@ -40,7 +40,7 @@ const int value_off = 0;
 // - should match glibc structure -
 struct IO_FILE_plus
 {
-  FILE file;
+  FILE file; // NOLINT
   void *vtable;
 };
 
@@ -160,7 +160,7 @@ inline long long int timer_s::get_stamp()
   timespec tv;
   clock_gettime(CLOCK_MONOTONIC,&tv);
 
-  return 1000LL*tv.tv_sec + tv.tv_nsec/1000000LL;
+  return (1000LL*tv.tv_sec) + (tv.tv_nsec/1000000LL);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   return GetTickCount64();
 #else

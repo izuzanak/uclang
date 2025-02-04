@@ -1031,7 +1031,7 @@ PCD_WRITE_DATA:
   return true;
 }/*}}}*/
 
-bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_pack_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *operands) // NOLINT(google-readability-function-size,readability-function-size)
 {/*{{{*/
 @begin ucl_params
 <

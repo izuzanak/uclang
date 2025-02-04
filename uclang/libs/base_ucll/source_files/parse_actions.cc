@@ -2375,6 +2375,8 @@ bool pa_for_expression(string_s &source_string,script_parser_s &_this)
 
   // - retrieve identifier expression -
   id_ed = ed;
+  debug_assert(id_ed.tmp_exp_info.used >= 2);
+
   id_ed.tmp_exp_info.used--;
   id_ed.tmp_expression.used = id_ed.tmp_exp_info.last().ui_second;
 

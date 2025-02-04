@@ -169,7 +169,7 @@ enum
 class mqtt_c
 {
   public:
-  inline mqtt_c();
+  inline mqtt_c() noexcept;
   inline ~mqtt_c();
 };
 
@@ -379,7 +379,7 @@ mqtt_conn_s;
  * inline methods of class mqtt_c
  */
 
-inline mqtt_c::mqtt_c()
+inline mqtt_c::mqtt_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"mqtt_init()\n"););
 

@@ -1362,7 +1362,7 @@ bool bic_mqtt_client_method_properties_0(interpreter_thread_s &it,unsigned stack
           switch (prop_descr.type)
           {
           case MQTT_DATA_TYPE_BYTE:
-            value = prop_data[0];
+            value = prop_data[0]; // NOLINT(cert-str34-c)
             break;
           case MQTT_DATA_TYPE_TWO_BYTE_INTEGER:
             value = mqtt_conn_s::two_byte_dec(prop_data);

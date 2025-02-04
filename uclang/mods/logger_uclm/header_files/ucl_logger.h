@@ -148,7 +148,7 @@ inline bool logger_s::write(unsigned a_level,const string_s &a_message)
   timeval tv;
   gettimeofday(&tv,nullptr);
 
-  return write(tv.tv_sec*1000000000ULL + tv.tv_usec*1000ULL,a_level,a_message);
+  return write((tv.tv_sec*1000000000ULL) + (tv.tv_usec*1000ULL),a_level,a_message);
 }/*}}}*/
 
 inline bool logger_s::write_headless(unsigned a_level,const string_s &a_message)

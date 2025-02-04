@@ -495,7 +495,7 @@ inline long long int tm_time_diff()
 {/*{{{*/
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
   gettimeofday(&g_measure_stv,nullptr);
-  return g_measure_stv.tv_usec - g_measure_tv.tv_usec + (g_measure_stv.tv_sec - g_measure_tv.tv_sec)*1000000LL;
+  return g_measure_stv.tv_usec - g_measure_tv.tv_usec + ((g_measure_stv.tv_sec - g_measure_tv.tv_sec)*1000000LL);
 #elif SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
   return (GetTickCount64() - tick_cnt)*1000;
 #else

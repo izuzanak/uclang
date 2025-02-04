@@ -69,7 +69,7 @@ enum
 class channel_c
 {
   public:
-  inline channel_c();
+  inline channel_c() noexcept;
   inline ~channel_c();
 };
 
@@ -166,7 +166,7 @@ channel_server_s;
  * inline methods of class channel_c
  */
 
-inline channel_c::channel_c()
+inline channel_c::channel_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"channel_init()\n"););
 

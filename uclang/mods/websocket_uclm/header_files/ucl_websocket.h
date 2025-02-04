@@ -117,7 +117,7 @@ struct ws_client_s
 class websocket_c
 {
   public:
-  inline websocket_c();
+  inline websocket_c() noexcept;
   inline ~websocket_c();
 };
 
@@ -137,7 +137,7 @@ int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,
 
 typedef enum
 {/*{{{*/
-  step_a, step_b, step_c, step_d
+  step_a,step_b,step_c,step_d
 }/*}}}*/
 base64_decodestep;
 
@@ -150,7 +150,7 @@ base64_decodestate;
 
 void base64_init_decodestate(base64_decodestate* state_in);
 int base64_decode_value(int value_in);
-int base64_decode_block(const char* code_in, const int length_in, char* plaintext_out, base64_decodestate* state_in);
+int base64_decode_block(const char* code_in,int length_in,char* plaintext_out,base64_decodestate* state_in);
 
 /*
  * inline methods of generated structures
@@ -303,7 +303,7 @@ inline void ws_client_s::clear(interpreter_thread_s &it)
  * inline methods of class websocket_c
  */
 
-inline websocket_c::websocket_c()
+inline websocket_c::websocket_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"websocket_init()\n"););
 

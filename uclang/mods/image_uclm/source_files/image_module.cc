@@ -373,8 +373,8 @@ built_in_variable_s image_variables[] =
 {/*{{{*/\
   unsigned line_size = (IMG_PTR)->image_data_ptr->line_bytes;\
 \
-  unsigned char *ptr = (IMG_PTR)->image_data_ptr->data + (IMG_PTR)->y_pos*line_size + (IMG_PTR)->x_pos*(IMG_PTR)->pixel_step;\
-  unsigned char *ptr_end = ptr + ((IMG_PTR)->height - 1)*line_size + (IMG_PTR)->width*(IMG_PTR)->pixel_step;\
+  unsigned char *ptr = (IMG_PTR)->image_data_ptr->data + ((IMG_PTR)->y_pos*line_size) + ((IMG_PTR)->x_pos*(IMG_PTR)->pixel_step);\
+  unsigned char *ptr_end = ptr + (((IMG_PTR)->height - 1)*line_size) + ((IMG_PTR)->width*(IMG_PTR)->pixel_step);\
   png_bytepp r_ptr = ROW_PTRS;\
 \
   do {\
@@ -916,7 +916,7 @@ static_method
   }
 
   // - ERROR -
-  if (setjmp(png_jmpbuf(png_ptr)))
+  if (setjmp(png_jmpbuf(png_ptr))) // NOLINT
   {
     png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);
 
@@ -932,7 +932,7 @@ static_method
 
   png_set_read_fn(png_ptr,&png_data,png_data_s::read_data);
 
-  BIC_IMAGE_READ_PNG_DATA();
+  BIC_IMAGE_READ_PNG_DATA(); // NOLINT
 }/*}}}*/
 
 bool bic_image_method_read_png_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -997,7 +997,7 @@ static_method
   }
 
   // - ERROR -
-  if (setjmp(png_jmpbuf(png_ptr)))
+  if (setjmp(png_jmpbuf(png_ptr))) // NOLINT
   {
     png_destroy_read_struct(&png_ptr,&info_ptr,nullptr);
     fclose(f);
@@ -1008,7 +1008,7 @@ static_method
 
   png_init_io(png_ptr,f);
 
-  BIC_IMAGE_READ_PNG_DATA(fclose(f));
+  BIC_IMAGE_READ_PNG_DATA(fclose(f)); // NOLINT
 }/*}}}*/
 
 bool bic_image_method_write_png_file_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1086,7 +1086,7 @@ method write_png_file
   }
 
   // - ERROR -
-  if (setjmp(png_jmpbuf(png_ptr)))
+  if (setjmp(png_jmpbuf(png_ptr))) // NOLINT
   {
     fclose(f);
     png_destroy_write_struct(&png_ptr,&info_ptr);
@@ -1111,7 +1111,7 @@ method write_png_file
   BIC_IMAGE_CREATE_ROW_PTRS(img_ptr,row_ptrs)
 
   // - ERROR -
-  if (setjmp(png_jmpbuf(png_ptr)))
+  if (setjmp(png_jmpbuf(png_ptr))) // NOLINT
   {
     cfree(row_ptrs);
     fclose(f);
@@ -1153,7 +1153,7 @@ static_method
   cinfo.err = jpeg_std_error(&jem.pub);
   jem.pub.error_exit = jpeg_error_mgr_s::error_exit;
 
-  if (setjmp(jem.jump_buffer))
+  if (setjmp(jem.jump_buffer)) // NOLINT
   {
     jpeg_destroy_decompress(&cinfo);
 
@@ -1197,7 +1197,7 @@ static_method
   cinfo.err = jpeg_std_error(&jem.pub);
   jem.pub.error_exit = jpeg_error_mgr_s::error_exit;
 
-  if (setjmp(jem.jump_buffer))
+  if (setjmp(jem.jump_buffer)) // NOLINT
   {
     jpeg_destroy_decompress(&cinfo);
     fclose(f);
@@ -1264,7 +1264,7 @@ method write_jpeg_file
   cinfo.err = jpeg_std_error(&jem.pub);
   jem.pub.error_exit = jpeg_error_mgr_s::error_exit;
 
-  if (setjmp(jem.jump_buffer))
+  if (setjmp(jem.jump_buffer)) // NOLINT
   {
     jpeg_destroy_compress(&cinfo);
     fclose(f);

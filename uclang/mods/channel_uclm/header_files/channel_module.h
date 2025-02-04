@@ -6,10 +6,6 @@
 include "ucl_channel.h"
 @end
 
-// - CHANNEL indexes of built in classes -
-extern unsigned c_bi_class_channel_server;
-extern unsigned c_bi_class_channel_client;
-
 // - CHANNEL module -
 extern "C" EXPORT built_in_module_s module;
 

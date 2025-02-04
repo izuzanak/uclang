@@ -464,7 +464,7 @@ void *run_interpreter(void *data)
   exit(return_value);
 #endif
 
-  return (pointer)(t_ps_uint)return_value;
+  return (pointer)(t_ps_uint)return_value; // NOLINT(performance-no-int-to-ptr)
 }/*}}}*/
 
 #if SYSTEM_TYPE_UNIX_CHROME_NACL != ENABLED
@@ -477,7 +477,7 @@ int main(int argc,char **argv)
 #else
 
   // - values given to main thread function -
-  pointer mt_start_info[2] = {(pointer)(t_ps_uint)argc,(pointer)argv};
+  pointer mt_start_info[2] = {(pointer)(t_ps_uint)argc,(pointer)argv}; // NOLINT(performance-no-int-to-ptr)
 
   run_interpreter(&mt_start_info);
 #endif

@@ -37,7 +37,7 @@ void gf_uclvar_operator_plus(interpreter_thread_s &it,unsigned source_pos,void *
 
 void gf_uclvar_get_string(interpreter_thread_s &it,unsigned source_pos,void *a_value,string_s &a_string)
 {/*{{{*/
-  unsigned strings_size = 0;
+  unsigned strings_size = 0; // NOLINT(clang-diagnostic-unused-but-set-variable)
   string_s *s_ptr = &a_string;
 
   BIC_CALL_TO_STRING(it,a_value,source_pos,
@@ -1341,6 +1341,7 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
 
   // - no loops and multiple edges -
   bb_array_s imat;
+  debug_assert(vertices.used*vertices.used > 0);
   imat.init_size(vertices.used*vertices.used);
   imat.used = imat.size;
   memset(imat.data,false,imat.used*sizeof(bool));
@@ -1355,12 +1356,12 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
 
   // - create graph spanning tree -
   unsigned unused_vertex_cnt = a_vertex_cnt;
-  unsigned v_idx = rand()%(unused_vertex_cnt--);
+  unsigned v_idx = rand()%(unused_vertex_cnt--); // NOLINT(cert-msc30-c,cert-msc50-cpp)
   used_vertices[v_idx] = true;
 
   do {
     unsigned last_v_idx = v_idx;
-    v_idx = rand()%(unused_vertex_cnt--);
+    v_idx = rand()%(unused_vertex_cnt--); // NOLINT(cert-msc30-c,cert-msc50-cpp)
 
     unsigned idx = 0;
     do {
@@ -1370,7 +1371,7 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
           break;
         }
       }
-    } while(++idx);
+    } while(++idx < a_vertex_cnt);
 
     used_vertices[v_idx] = true;
 
@@ -1379,7 +1380,7 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
 
     // - insert edge between vertices -
     insert_edge(sv_idx,tv_idx,new_location);
-    imat[sv_idx*vertices.used + tv_idx] = true;
+    imat[(sv_idx*vertices.used) + tv_idx] = true;
 
   } while(unused_vertex_cnt > 0);
 
@@ -1392,13 +1393,13 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
     do {
 
       // - insert edge between random vertices -
-      unsigned sv_idx = vertex_map[rand()%a_vertex_cnt];
-      unsigned tv_idx = vertex_map[rand()%a_vertex_cnt];
+      unsigned sv_idx = vertex_map[rand()%a_vertex_cnt]; // NOLINT(cert-msc30-c,cert-msc50-cpp)
+      unsigned tv_idx = vertex_map[rand()%a_vertex_cnt]; // NOLINT(cert-msc30-c,cert-msc50-cpp)
 
-      if (!imat[sv_idx*vertices.used + tv_idx])
+      if (!imat[(sv_idx*vertices.used) + tv_idx])
       {
         insert_edge(sv_idx,tv_idx,new_location);
-        imat[sv_idx*vertices.used + tv_idx] = true;
+        imat[(sv_idx*vertices.used) + tv_idx] = true;
         --edge_cnt;
       }
     } while(edge_cnt > 0);

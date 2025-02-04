@@ -69,7 +69,7 @@ enum
 class tcp_c
 {
   public:
-  inline tcp_c();
+  inline tcp_c() noexcept;
   inline ~tcp_c();
 };
 
@@ -204,7 +204,7 @@ tcp_server_s;
  * inline methods of class tcp_c
  */
 
-inline tcp_c::tcp_c()
+inline tcp_c::tcp_c() noexcept
 {/*{{{*/
   debug_message_2(fprintf(stderr,"tcp_init()\n"););
 
