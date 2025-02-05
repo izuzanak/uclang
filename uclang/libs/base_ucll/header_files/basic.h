@@ -230,7 +230,9 @@
 #endif
 
 // - asserts definitions -
-//#define DEBUG_ASSERT ENABLED
+#ifndef NDEBUG
+#define DEBUG_ASSERT ENABLED
+#endif
 #define CASSERT ENABLED
 
 #if DEBUG_ASSERT == ENABLED

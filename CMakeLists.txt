@@ -15,6 +15,11 @@ set_property(GLOBAL PROPERTY TARGET_MESSAGES OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 enable_testing()
 
+# - update compilation flags -
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfatal-errors -Wno-class-memaccess")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=undefined -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+
 # - process target source file -
 function(process_source TARGET)
   execute_process(COMMAND ${PROCESS_BIN} --deps "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS}
@@ -94,10 +99,10 @@ endfunction()
 # - set global variables -
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   set(OS_LINUX TRUE)
-  add_definitions(-Wall -O3 -DNDEBUG -Wfatal-errors -Wno-class-memaccess -DLINUX)
+  add_definitions(-DLINUX)
 elseif(MSYS)
   set(OS_MSYS2 TRUE)
-  add_definitions(-Wall -O3 -DNDEBUG -Wfatal-errors -Wno-class-memaccess -DMSYS2 -DDISABLE_SO_DOMAIN)
+  add_definitions(-DMSYS2 -DDISABLE_SO_DOMAIN)
 else()
   set(OS_WINDOWS TRUE)
   add_definitions("/DWINDOWS /D_CRT_SECURE_NO_WARNINGS /wd4244")
