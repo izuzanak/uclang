@@ -22,21 +22,9 @@ enum
 class ftp_init_c
 {
   public:
-  inline ftp_init_c()
-  {
-    debug_message_2(fprintf(stderr,"ftplib_init()\n"););
-
-    // - initialize ftp library -
-    FtpInit();
-  }
-  inline ~ftp_init_c()
-  {
-    debug_message_2(fprintf(stderr,"ftplib_exit()\n"););
-  }
+  inline ftp_init_c() noexcept;
+  inline ~ftp_init_c();
 };
-
-// - ftp global init object -
-ftp_init_c ftp_init;
 
 /*
  * definition of structure ftp_session_s
@@ -63,6 +51,23 @@ struct ftp_handle_s
   inline void init();
   inline void clear(interpreter_thread_s &it);
 };
+
+/*
+ * inline methods of structure ftp_init_c
+ */
+
+inline ftp_init_c::ftp_init_c() noexcept
+{
+  debug_message_2(fprintf(stderr,"ftplib_init()\n"););
+
+  // - initialize ftp library -
+  FtpInit();
+}
+
+inline ftp_init_c::~ftp_init_c()
+{
+  debug_message_2(fprintf(stderr,"ftplib_exit()\n"););
+}
 
 /*
  * inline methods of structure ftp_session_s
