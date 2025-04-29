@@ -229,6 +229,10 @@ int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,
                 );
             it.release_location_ptr(trg_location);
           }
+          else
+          {
+            lws_callback_on_writable(wsi);
+          }
         }/*}}}*/
         break;
       case LWS_CALLBACK_ESTABLISHED:
