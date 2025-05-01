@@ -15,7 +15,7 @@ EXPORT built_in_module_s module =
   4,                     // Class count
   linux_classes,         // Classes
   0,                     // Error base index
-  29,                    // Error count
+  30,                    // Error count
   linux_error_strings,   // Error strings
   linux_initialize,      // Initialize function
   linux_print_exception, // Print exceptions function
@@ -51,6 +51,7 @@ const char *linux_error_strings[] =
   "error_FD_IOCTL_INVALID_ARGUMENT_TYPE",
   "error_FD_IOCTL_UNKNOWN_REQUEST",
   "error_FD_IOCTL_ERROR",
+  "error_FD_FLOCK_ERROR",
   "error_FD_NOT_OPENED",
   "error_TIMER_FD_CREATE_ERROR",
   "error_TIMER_FD_SETTIME_ERROR",
@@ -239,6 +240,15 @@ bool linux_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nFile descriptor ioctl error: ");
+    errno = exception.params[0];
+    perror("");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FD_FLOCK_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nFile descriptor flock error: ");
     errno = exception.params[0];
     perror("");
     fprintf(stderr," ---------------------------------------- \n");
@@ -517,12 +527,12 @@ built_in_class_s fd_class =
 {/*{{{*/
   "Fd",
   c_modifier_public | c_modifier_final,
-  24
+  25
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,6,0)
   + 2
 #endif
   , fd_methods,
-  16 + 12 + 1 + 1 + 3 + 6
+  16 + 12 + 1 + 4 + 1 + 3 + 6
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,16,0)
   + 5
 #endif
@@ -574,6 +584,11 @@ built_in_method_s fd_methods[] =
     "ioctl#3",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_fd_method_ioctl_3
+  },
+  {
+    "flock#1",
+    c_modifier_public | c_modifier_final,
+    bic_fd_method_flock_1
   },
   {
     "openat#3",
@@ -718,6 +733,12 @@ built_in_variable_s fd_variables[] =
 
   // - ioctl requests -
   { "FIONBIO",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - flock operations -
+  { "LOCK_SH",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "LOCK_EX",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "LOCK_NB",  c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "LOCK_UN",  c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - special file descriptor values -
   { "AT_FDCWD",  c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -1038,6 +1059,23 @@ void bic_fd_consts(location_array_s &const_locations)
     CREATE_FD_IOCTL_REQUEST_BIC_STATIC(FIONBIO);
   }
 
+  // - insert flock operations -
+  {
+    const_locations.push_blanks(4);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 4);
+
+#define CREATE_FD_IOCTL_REQUEST_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_FD_IOCTL_REQUEST_BIC_STATIC(LOCK_SH);
+    CREATE_FD_IOCTL_REQUEST_BIC_STATIC(LOCK_EX);
+    CREATE_FD_IOCTL_REQUEST_BIC_STATIC(LOCK_NB);
+    CREATE_FD_IOCTL_REQUEST_BIC_STATIC(LOCK_UN);
+  }
+
   // - insert special file descriptor values -
   {
     const_locations.push_blanks(1);
@@ -1270,6 +1308,44 @@ static_method
 ; @end
 
   BIC_FD_METHOD_IOCTL(src_2_location);
+
+  return true;
+}/*}}}*/
+
+bool bic_fd_method_flock_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+operation:retrieve_integer
+>
+method flock
+; @end
+
+  int fd = (int)dst_location->v_data_ptr;
+
+  long long int result = 1;
+
+  if (flock(fd,operation) != 0)
+  {
+    switch (errno)
+    {
+      case EINTR:
+      case EWOULDBLOCK:
+        result = 0;
+        break;
+
+      // - ERROR -
+      default:
+      {
+        exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FD_FLOCK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        new_exception->params.push(errno);
+
+        return false;
+      }
+    }
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

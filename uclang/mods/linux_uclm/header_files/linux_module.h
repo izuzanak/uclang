@@ -39,6 +39,7 @@ enum
   c_error_FD_IOCTL_INVALID_ARGUMENT_TYPE,
   c_error_FD_IOCTL_UNKNOWN_REQUEST,
   c_error_FD_IOCTL_ERROR,
+  c_error_FD_FLOCK_ERROR,
   c_error_FD_NOT_OPENED,
   c_error_TIMER_FD_CREATE_ERROR,
   c_error_TIMER_FD_SETTIME_ERROR,
@@ -90,6 +91,7 @@ bool bic_fd_method_open_3(interpreter_thread_s &it,unsigned stack_base,uli *oper
 bool bic_fd_method_creat_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_ioctl_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_ioctl_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_fd_method_flock_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_openat_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_close_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_fd_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);

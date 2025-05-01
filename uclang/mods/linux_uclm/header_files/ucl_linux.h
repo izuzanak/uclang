@@ -8,12 +8,13 @@ include "script_parser.h"
 
 #include <fcntl.h>
 #include <linux/version.h>
+#include <sys/file.h>
+#include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/timerfd.h>
 #include <sys/types.h>
 #include <sys/uio.h>
-#include <sys/ioctl.h>
 #include <unistd.h>
 
 // - file descriptor flags -
