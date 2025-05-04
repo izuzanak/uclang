@@ -15,7 +15,7 @@ EXPORT built_in_module_s module =
   4,                     // Class count
   linux_classes,         // Classes
   0,                     // Error base index
-  30,                    // Error count
+  31,                    // Error count
   linux_error_strings,   // Error strings
   linux_initialize,      // Initialize function
   linux_print_exception, // Print exceptions function
@@ -33,6 +33,7 @@ built_in_class_s *linux_classes[] =
 // - LINUX error strings -
 const char *linux_error_strings[] =
 {/*{{{*/
+  "error_LINUX_FORK_ERROR",
   "error_LINUX_SYSCONF_ERROR",
   "error_FD_DUPLICATE_ERROR",
   "error_FD_OPEN_ERROR",
@@ -96,6 +97,15 @@ bool linux_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
+  case c_error_LINUX_FORK_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nLinux fork error: ");
+    errno = exception.params[0];
+    perror("");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_LINUX_SYSCONF_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -355,7 +365,7 @@ built_in_class_s linux_class =
 {/*{{{*/
   "Linux",
   c_modifier_public | c_modifier_final,
-  4, linux_methods,
+  5, linux_methods,
   14, linux_variables,
   bic_linux_consts,
   bic_linux_init,
@@ -375,6 +385,11 @@ built_in_class_s linux_class =
 
 built_in_method_s linux_methods[] =
 {/*{{{*/
+  {
+    "fork#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_linux_method_fork_0
+  },
   {
     "sync#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -458,6 +473,24 @@ void bic_linux_init(interpreter_thread_s &it,location_s *location_ptr)
 void bic_linux_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
   cassert(0);
+}/*}}}*/
+
+bool bic_linux_method_fork_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  long long int result = fork();
+
+  // - ERROR -
+  if (result < 0)
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_LINUX_FORK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(errno);
+
+    return false;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
 }/*}}}*/
 
 bool bic_linux_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

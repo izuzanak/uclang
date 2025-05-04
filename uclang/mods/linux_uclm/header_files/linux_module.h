@@ -21,7 +21,8 @@ extern built_in_class_s *linux_classes[];
 // - LINUX error identifiers -
 enum
 {
-  c_error_LINUX_SYSCONF_ERROR = 0,
+  c_error_LINUX_FORK_ERROR = 0,
+  c_error_LINUX_SYSCONF_ERROR,
   c_error_FD_DUPLICATE_ERROR,
   c_error_FD_OPEN_ERROR,
   c_error_FD_CREATE_ERROR,
@@ -71,6 +72,7 @@ void bic_linux_consts(location_array_s &const_locations);
 void bic_linux_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_linux_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_linux_method_fork_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_linux_method_sync_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_linux_method_sysconf_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_linux_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
