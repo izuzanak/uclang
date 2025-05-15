@@ -215,7 +215,7 @@ built_in_class_s channel_server_class =
 {/*{{{*/
   "ChannelServer",
   c_modifier_public | c_modifier_final,
-  8
+  9
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -270,6 +270,11 @@ built_in_method_s channel_server_methods[] =
     "message#2",
     c_modifier_public | c_modifier_final,
     bic_channel_server_method_message_2
+  },
+  {
+    "out_queue_lens#0",
+    c_modifier_public | c_modifier_final,
+    bic_channel_server_method_out_queue_lens_0
   },
   {
     "user_data#0",
@@ -911,6 +916,35 @@ method message
   return true;
 }/*}}}*/
 
+bool bic_channel_server_method_out_queue_lens_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
+  channel_conn_list_s &conn_list = cs_ptr->conn_list;
+
+  pointer_array_s *array_ptr = it.get_new_array_ptr();
+  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
+
+  // - retrieve lengths of output queues -
+  if (conn_list.first_idx != c_idx_not_exist)
+  {
+    unsigned cl_idx = conn_list.first_idx;
+    do {
+      long long int length = conn_list[cl_idx].out_msg_queue.used;
+
+      BIC_CREATE_NEW_LOCATION(length_location,c_bi_class_integer,length);
+      array_ptr->push(length_location);
+
+      cl_idx = conn_list.next_idx(cl_idx);
+    } while(cl_idx != c_idx_not_exist);
+  }
+
+  BIC_SET_RESULT(array_location);
+
+  return true;
+}/*}}}*/
+
 bool bic_channel_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -947,7 +981,7 @@ built_in_class_s channel_client_class =
 {/*{{{*/
   "ChannelClient",
   c_modifier_public | c_modifier_final,
-  10
+  11
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -1012,6 +1046,11 @@ built_in_method_s channel_client_methods[] =
     "message#1",
     c_modifier_public | c_modifier_final,
     bic_channel_client_method_message_1
+  },
+  {
+    "out_queue_len#0",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_out_queue_len_0
   },
   {
     "user_data#0",
@@ -1530,6 +1569,19 @@ method message
   cc_ptr->events = POLLIN | POLLPRI | POLLOUT;
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_out_queue_len_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
+
+  long long int result = cc_ptr->out_msg_queue.used;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
