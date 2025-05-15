@@ -265,7 +265,7 @@ built_in_class_s http_server_class =
   "HttpServer",
   c_modifier_public | c_modifier_final,
   9, http_server_methods,
-  3 + 2
+  3 + 5
 #ifdef ENABLE_RM_CLASS_SOCKET
   + 1
 #endif
@@ -349,6 +349,9 @@ built_in_variable_s http_server_variables[] =
 #endif
   { "OPTION_HTTPS_MEM_KEY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPTION_HTTPS_MEM_CERT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPTION_CONNECTION_LIMIT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPTION_CONNECTION_TIMEOUT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPTION_PER_IP_CONNECTION_LIMIT", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -373,12 +376,12 @@ void bic_http_server_consts(location_array_s &const_locations)
 
   // - insert http server option constants -
   {
-    const_locations.push_blanks(2
+    const_locations.push_blanks(5
 #ifdef ENABLE_RM_CLASS_SOCKET
   + 1
 #endif
     );
-    location_s *cv_ptr = const_locations.data + (const_locations.used - (2
+    location_s *cv_ptr = const_locations.data + (const_locations.used - (5
 #ifdef ENABLE_RM_CLASS_SOCKET
   + 1
 #endif
@@ -395,6 +398,9 @@ void bic_http_server_consts(location_array_s &const_locations)
 #endif
     CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_HTTPS_MEM_KEY);
     CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_HTTPS_MEM_CERT);
+    CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_CONNECTION_LIMIT);
+    CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_CONNECTION_TIMEOUT);
+    CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_PER_IP_CONNECTION_LIMIT);
   }
 
 }/*}}}*/
@@ -505,6 +511,24 @@ method HttpServer
 
           string_s *string_ptr = (string_s *)value_loc->v_data_ptr;
           *mhd_opt_ptr++ = MHD_OptionItem{ (MHD_OPTION)option,0,string_ptr->data };
+
+          ptr += 2;
+        }
+        break;
+      case MHD_OPTION_CONNECTION_LIMIT:
+      case MHD_OPTION_CONNECTION_TIMEOUT:
+      case MHD_OPTION_PER_IP_CONNECTION_LIMIT:
+        {
+          location_s *value_loc = it.get_location_value(ptr[1]);
+
+          long long int value;
+          if (!it.retrieve_integer(value_loc,value))
+          {
+            exception_s::throw_exception(it,module.error_base + c_error_HTTP_SERVER_INVALID_OPTION_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+            return false;
+          }
+
+          *mhd_opt_ptr++ = MHD_OptionItem{ (MHD_OPTION)option,(unsigned)value,nullptr };
 
           ptr += 2;
         }
