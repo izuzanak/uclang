@@ -80,7 +80,7 @@ bool http_initialize(script_parser_s &sp)
   c_bi_class_http_post_proc = class_base_idx++;
 
 #ifdef ENABLE_RM_CLASS_SOCKET
-  // - retrieve remote dict class index -
+  // - retrieve remote socket_addr class index -
   c_rm_class_socket_addr = sp.resolve_class_idx_by_name("SocketAddr",c_idx_not_exist);
 
   // - ERROR -

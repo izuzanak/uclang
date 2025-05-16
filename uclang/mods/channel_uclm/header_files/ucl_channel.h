@@ -98,6 +98,7 @@ struct
 <
 bi:conn_fd
 ui:events
+pointer:address_loc
 bool:connecting
 bool:connected
 
@@ -219,6 +220,7 @@ inline void channel_conn_s::init_static()
 
   conn_fd = -1;
   events = 0;
+  address_loc = nullptr;
   connecting = false;
   connected = false;
 
@@ -243,6 +245,11 @@ inline void channel_conn_s::clear(interpreter_thread_s &it)
   if (conn_fd != -1)
   {
     close(conn_fd);
+  }
+
+  if (address_loc != nullptr)
+  {
+    it.release_location_ptr((location_s *)address_loc);
   }
 
   if (event_callback != nullptr)

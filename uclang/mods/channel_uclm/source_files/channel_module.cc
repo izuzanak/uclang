@@ -7,6 +7,8 @@ include "channel_module.h"
 unsigned c_bi_class_channel_server = c_idx_not_exist;
 unsigned c_bi_class_channel_client = c_idx_not_exist;
 
+unsigned c_rm_class_socket_addr = c_idx_not_exist;
+
 // - CHANNEL module -
 EXPORT built_in_module_s module =
 {/*{{{*/
@@ -59,6 +61,19 @@ bool channel_initialize(script_parser_s &sp)
 
   // - initialize channel_client class identifier -
   c_bi_class_channel_client = class_base_idx++;
+
+  // - retrieve remote socket_addr class index -
+  c_rm_class_socket_addr = sp.resolve_class_idx_by_name("SocketAddr",c_idx_not_exist);
+
+  // - ERROR -
+  if (c_rm_class_socket_addr == c_idx_not_exist)
+  {
+    sp.error_code.push(ei_module_cannot_find_remote_class);
+    sp.error_code.push(sp.module_names_positions[sp.module_idx].ui_first);
+    sp.error_code.push(sp.module_idx);
+
+    return false;
+  }
 
   return true;
 }/*}}}*/
@@ -215,7 +230,7 @@ built_in_class_s channel_server_class =
 {/*{{{*/
   "ChannelServer",
   c_modifier_public | c_modifier_final,
-  9
+  10
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -272,9 +287,14 @@ built_in_method_s channel_server_methods[] =
     bic_channel_server_method_message_2
   },
   {
-    "out_queue_lens#0",
+    "address#1",
     c_modifier_public | c_modifier_final,
-    bic_channel_server_method_out_queue_lens_0
+    bic_channel_server_method_address_1
+  },
+  {
+    "out_queue_len#1",
+    c_modifier_public | c_modifier_final,
+    bic_channel_server_method_out_queue_len_1
   },
   {
     "user_data#0",
@@ -304,6 +324,109 @@ built_in_variable_s channel_server_variables[] =
   { "CONN_ALL", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
+
+#define CHANNEL_SERVER_CONNECTION_PROPERTY(NAME,RETRIEVE_PROPERTY) \
+  /*{{{*/\
+@begin ucl_params
+<
+conn_index:retrieve_integer_init
+conn_index:c_bi_class_array
+>
+method NAME
+macro
+; @end\
+\
+  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;\
+\
+  if (src_0_location->v_type == c_bi_class_array)\
+  {\
+    pointer_array_s *source_array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;\
+\
+    pointer_array_s *array_ptr = it.get_new_array_ptr();\
+    BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);\
+\
+    if (source_array_ptr->used != 0)\
+    {\
+      /* - process connection array - */\
+      pointer *ptr = source_array_ptr->data;\
+      pointer *ptr_end = ptr + source_array_ptr->used;\
+      do {\
+        location_s *item_location = it.get_location_value(*ptr);\
+\
+        long long int conn_index;\
+\
+        /* - ERROR - */\
+        if (!it.retrieve_integer(item_location,conn_index))\
+        {\
+          it.release_location_ptr(array_location);\
+\
+          exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+          return false;\
+        }\
+\
+        /* - ERROR - */\
+        if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)\
+        {\
+          it.release_location_ptr(array_location);\
+\
+          exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+          return false;\
+        }\
+\
+        channel_conn_s &conn = cs_ptr->conn_list[conn_index];\
+\
+        RETRIEVE_PROPERTY\
+        array_ptr->push(property_loc);\
+\
+      } while(++ptr < ptr_end);\
+    }\
+\
+    BIC_SET_RESULT(array_location);\
+  }\
+  else\
+  {\
+    if (conn_index == c_conn_index_CONN_ALL)\
+    {\
+      pointer_array_s *array_ptr = it.get_new_array_ptr();\
+      BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);\
+\
+      if (cs_ptr->conn_list.first_idx != c_idx_not_exist)\
+      {\
+        unsigned cl_idx = cs_ptr->conn_list.first_idx;\
+        do {\
+          channel_conn_s &conn = cs_ptr->conn_list[cl_idx];\
+\
+          BIC_CREATE_NEW_LOCATION(index_location,c_bi_class_integer,(long long int)cl_idx);\
+          array_ptr->push(index_location);\
+\
+          RETRIEVE_PROPERTY\
+          array_ptr->push(property_loc);\
+\
+          cl_idx = cs_ptr->conn_list.next_idx(cl_idx);\
+        } while(cl_idx != c_idx_not_exist);\
+      }\
+\
+      BIC_SET_RESULT(array_location);\
+    }\
+    else\
+    {\
+      /* - ERROR - */\
+      if (conn_index < 0 || conn_index >= cs_ptr->conn_list.used ||\
+          !cs_ptr->conn_list.data[conn_index].valid)\
+      {\
+        exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+        return false;\
+      }\
+\
+      channel_conn_s &conn = cs_ptr->conn_list[conn_index];\
+\
+      RETRIEVE_PROPERTY\
+      BIC_SET_RESULT(property_loc);\
+    }\
+  }\
+\
+  return true;\
+  /*}}}*/
 
 void bic_channel_server_consts(location_array_s &const_locations)
 {/*{{{*/
@@ -655,6 +778,14 @@ method process
     conn.conn_fd = conn_fd;
     conn.events = POLLIN | POLLPRI;
 
+    // - set address location -
+    sockaddr_in *address_ptr = (sockaddr_in *)cmalloc(sizeof(sockaddr_in));
+    *address_ptr = address;
+
+    BIC_CREATE_NEW_LOCATION(addr_location,c_rm_class_socket_addr,address_ptr);
+    conn.address_loc = addr_location;
+
+    // - message callback -
     ((location_s *)cs_ptr->message_callback)->v_reference_cnt.atomic_inc();
     conn.message_callback = cs_ptr->message_callback;
 
@@ -916,33 +1047,20 @@ method message
   return true;
 }/*}}}*/
 
-bool bic_channel_server_method_out_queue_lens_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+bool bic_channel_server_method_address_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  CHANNEL_SERVER_CONNECTION_PROPERTY("address#1",
+    location_s *property_loc = (location_s *)conn.address_loc;
+    property_loc->v_reference_cnt.atomic_inc();
+  );
+}/*}}}*/
 
-  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
-  channel_conn_list_s &conn_list = cs_ptr->conn_list;
-
-  pointer_array_s *array_ptr = it.get_new_array_ptr();
-  BIC_CREATE_NEW_LOCATION(array_location,c_bi_class_array,array_ptr);
-
-  // - retrieve lengths of output queues -
-  if (conn_list.first_idx != c_idx_not_exist)
-  {
-    unsigned cl_idx = conn_list.first_idx;
-    do {
-      long long int length = conn_list[cl_idx].out_msg_queue.used;
-
-      BIC_CREATE_NEW_LOCATION(length_location,c_bi_class_integer,length);
-      array_ptr->push(length_location);
-
-      cl_idx = conn_list.next_idx(cl_idx);
-    } while(cl_idx != c_idx_not_exist);
-  }
-
-  BIC_SET_RESULT(array_location);
-
-  return true;
+bool bic_channel_server_method_out_queue_len_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  CHANNEL_SERVER_CONNECTION_PROPERTY("out_queue_len#1",
+    long long int length = conn.out_msg_queue.used;
+    BIC_CREATE_NEW_LOCATION(property_loc,c_bi_class_integer,length);
+  );
 }/*}}}*/
 
 bool bic_channel_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -981,7 +1099,7 @@ built_in_class_s channel_client_class =
 {/*{{{*/
   "ChannelClient",
   c_modifier_public | c_modifier_final,
-  11
+  12
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -1046,6 +1164,11 @@ built_in_method_s channel_client_methods[] =
     "message#1",
     c_modifier_public | c_modifier_final,
     bic_channel_client_method_message_1
+  },
+  {
+    "address#0",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_address_0
   },
   {
     "out_queue_len#0",
@@ -1214,6 +1337,13 @@ method ChannelClient
   cc_ptr->conn_fd = fd;
   cc_ptr->events = POLLIN | POLLOUT | POLLPRI;
   cc_ptr->connecting = true;
+
+  // - set address location -
+  sockaddr_in *address_ptr = (sockaddr_in *)cmalloc(sizeof(sockaddr_in));
+  *address_ptr = address;
+
+  BIC_CREATE_NEW_LOCATION(addr_location,c_rm_class_socket_addr,address_ptr);
+  cc_ptr->address_loc = addr_location;
 
   // - retrieve callbacks -
   src_2_location->v_reference_cnt.atomic_inc();
@@ -1569,6 +1699,19 @@ method message
   cc_ptr->events = POLLIN | POLLPRI | POLLOUT;
 
   BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_address_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
+  location_s *addr_location = (location_s *)cc_ptr->address_loc;
+
+  addr_location->v_reference_cnt.atomic_inc();
+  BIC_SET_RESULT(addr_location);
 
   return true;
 }/*}}}*/
