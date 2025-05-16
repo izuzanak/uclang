@@ -528,7 +528,7 @@ method HttpServer
             return false;
           }
 
-          *mhd_opt_ptr++ = MHD_OptionItem{ (MHD_OPTION)option,(unsigned)value,nullptr };
+          *mhd_opt_ptr++ = MHD_OptionItem{ (MHD_OPTION)option,(intptr_t)value,nullptr };
 
           ptr += 2;
         }
