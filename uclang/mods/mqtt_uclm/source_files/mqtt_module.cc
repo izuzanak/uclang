@@ -560,21 +560,25 @@ method MqttClient
     return false;
   }
 
-  sockaddr_in address;
-
-  // - retrieve host by name address -
-  struct hostent *host = gethostbyname(ip_str_ptr->data);
+  struct addrinfo addr_hints;
+  memset(&addr_hints,0,sizeof(struct addrinfo));
+  addr_hints.ai_family = AF_INET;
 
   // - ERROR -
-  if (host == nullptr)
+  struct addrinfo *addr_info;
+  if (getaddrinfo(ip_str_ptr->data,nullptr,&addr_hints,&addr_info) != 0)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_IP_ADDRESS,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 
-  memcpy(&address.sin_addr.s_addr,host->h_addr,host->h_length);
+  sockaddr_in address;
+  address.sin_addr = ((struct sockaddr_in *)addr_info->ai_addr)->sin_addr;
   address.sin_port = htons(port);
   address.sin_family = AF_INET;
+
+  // - release address info -
+  freeaddrinfo(addr_info);
 
   // - create socket -
   int fd = socket(AF_INET,SOCK_STREAM,0);

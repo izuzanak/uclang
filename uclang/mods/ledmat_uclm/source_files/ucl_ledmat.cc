@@ -13,21 +13,11 @@ bool ledmat_s::spi_setup(int a_channel,int a_speed)
   fd = wiringPiSPISetup(a_channel,a_speed);
   return fd != -1;
 #elif defined(ENABLE_SPI_UDP)
-  struct hostent *host = nullptr;
-
-  // - retrieve target host by name address -
-  host = gethostbyname("127.0.0.1");
 
   // - fill target address structure -
-  memcpy(&target_addr.sin_addr.s_addr,host->h_addr,host->h_length);
+  target_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
   target_addr.sin_port = htons(5500 + a_channel);
   target_addr.sin_family = AF_INET;
-
-  // - ERROR -
-  if (host == nullptr)
-  {
-    return false;
-  }
 
   // - create socket -
   sock = socket(AF_INET,SOCK_DGRAM,0);
@@ -36,20 +26,9 @@ bool ledmat_s::spi_setup(int a_channel,int a_speed)
     return false;
   }
 
-  // - retrieve host by name address -
-  host = gethostbyname("0.0.0.0");
-
-  // - ERROR -
-  if (host == nullptr)
-  {
-    close(sock);
-
-    return false;
-  }
-
   // - fill address structure -
   sockaddr_in addr;
-  memcpy(&addr.sin_addr.s_addr,host->h_addr,host->h_length);
+  target_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
   addr.sin_port = htons(0);
   addr.sin_family = AF_INET;
 

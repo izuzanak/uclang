@@ -2681,11 +2681,13 @@ method SocketAddr
 
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  // - retrieve host by name address -
-  struct hostent *host = gethostbyname(string_ptr->data);
+  struct addrinfo addr_hints;
+  memset(&addr_hints,0,sizeof(struct addrinfo));
+  addr_hints.ai_family = AF_INET;
 
   // - ERROR -
-  if (host == nullptr)
+  struct addrinfo *addr_info;
+  if (getaddrinfo(string_ptr->data,nullptr,&addr_hints,&addr_info) != 0)
   {
     exception_s::throw_exception(it,module.error_base + c_error_SOCKET_ADDRESS_RESOLVE_ERROR,operands[c_source_pos_idx],src_0_location);
     return false;
@@ -2694,9 +2696,12 @@ method SocketAddr
   // - fill address structure -
   sockaddr_in *addr_ptr = (sockaddr_in *)cmalloc(sizeof(sockaddr_in));
 
-  memcpy(&addr_ptr->sin_addr.s_addr,host->h_addr,host->h_length);
+  addr_ptr->sin_addr = ((struct sockaddr_in *)addr_info->ai_addr)->sin_addr;
   addr_ptr->sin_port = htons(port);
   addr_ptr->sin_family = AF_INET;
+
+  // - release address info -
+  freeaddrinfo(addr_info);
 
   dst_location->v_data_ptr = (sockaddr_in *)addr_ptr;
 
