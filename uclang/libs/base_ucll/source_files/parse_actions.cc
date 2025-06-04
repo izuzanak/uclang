@@ -4128,6 +4128,7 @@ bool pa_lambda_end(string_s &source_string,script_parser_s &_this)
 bool pa_lambda_begin(string_s &source_string,script_parser_s &_this)
 {/*{{{*/
   method_records_s &method_records = _this.method_records;
+  ui_array_s &parent_class_idxs = _this.parent_class_idxs;
   ui_array_s &parent_method_idxs = _this.parent_method_idxs;
   code_descrs_s &code_descrs = _this.code_descrs;
   lalr_stack_s &lalr_stack = _this.lalr_stack;
@@ -4146,7 +4147,7 @@ bool pa_lambda_begin(string_s &source_string,script_parser_s &_this)
   method_record.name_idx = c_idx_not_exist;
 
   method_record.modifiers = c_modifier_public & c_modifier_static & c_modifier_final;
-  method_record.parent_record = c_idx_not_exist;
+  method_record.parent_record = parent_class_idxs.last();
   method_record.flow_graph_idx = c_idx_not_exist;
 
   // - store position of lambda in code -

@@ -9103,15 +9103,20 @@ void script_parser_s::generate_intermediate_code()
   {
     unsigned cd_idx = 0;
     do {
+      unsigned method_ri = const_delegates[cd_idx].name_idx_ri;
+      method_record_s &method_record = method_records[method_ri];
+
+      // - retrieve method parent index -
+      im_descr.class_idx = method_record.parent_record;
 
       // - retrieve method record index -
-      im_descr.method_idx = const_delegates[cd_idx].name_idx_ri;
+      im_descr.method_idx = method_ri;
 
       // - set modifier of generated code -
       im_descr.code_modifiers = c_code_modifier_run_time | c_code_modifier_static;
 
       // - count method parameters on stack -
-      im_descr.stack_idx_max = method_records[im_descr.method_idx].parameter_record_idxs.used;
+      im_descr.stack_idx_max = method_record.parameter_record_idxs.used;
 
       // - generate method intermediate code -
       if (!generate_method_intermediate_code())
