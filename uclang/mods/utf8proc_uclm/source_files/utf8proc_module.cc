@@ -348,7 +348,7 @@ string:c_bi_class_string
 map_options:retrieve_integer
 >
 class c_bi_class_utf8proc
-method decompose
+method map
 static_method
 ; @end
 
