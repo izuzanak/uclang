@@ -44,7 +44,7 @@ struct epoll_s
   epoll_fds_s fds;
 
   inline void init();
-  void clear(interpreter_thread_s &it);
+  inline void clear(interpreter_thread_s &it);
   bool reinit();
 };
 

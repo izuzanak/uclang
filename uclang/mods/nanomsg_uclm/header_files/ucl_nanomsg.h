@@ -45,7 +45,7 @@ struct nano_endpoint_s
   int end_id;
 
   inline void init();
-  void clear(interpreter_thread_s &it);
+  inline void clear(interpreter_thread_s &it);
 };
 
 /*

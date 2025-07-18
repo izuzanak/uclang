@@ -65,7 +65,7 @@ struct proto_source_s
   proto_enum_tree_s enum_tree;
 
   inline void init();
-  void clear(interpreter_thread_s &it);
+  inline void clear(interpreter_thread_s &it);
 
   void update_init_descr_enum(interpreter_thread_s &it,ProtobufCEnumDescriptor *descr);
   void update_init_descr_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr);

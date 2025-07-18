@@ -34,7 +34,7 @@ struct mmap_s
   long long int length;
 
   inline void init();
-  void clear(interpreter_thread_s &it);
+  inline void clear(interpreter_thread_s &it);
 };
 
 /*
