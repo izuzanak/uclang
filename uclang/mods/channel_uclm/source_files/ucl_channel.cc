@@ -200,7 +200,7 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
 
       in_msg_length = strtol(ptr,&end_ptr,16);
 
-      if (end_ptr - ptr != 10)
+      if ((end_ptr - ptr != 10) || in_msg_length > max_msg_length)
       {
         return false;
       }

@@ -109,6 +109,7 @@ ui:conn_index
 
 bc_array_s:in_msg
 ui:in_msg_length
+ui:max_msg_length
 
 pointer_queue_s:out_msg_queue
 ui:out_msg_offset
@@ -146,6 +147,7 @@ bi:server_fd
 pointer:event_callback
 pointer:message_callback
 pointer:user_data
+ui:max_msg_length
 channel_conn_list_s:conn_list
 fd_conn_map_tree_s:fd_conn_map
 >
@@ -230,6 +232,7 @@ inline void channel_conn_s::init_static()
   conn_index = c_idx_not_exist;
 
   in_msg_length = 0;
+  max_msg_length = UINT_MAX;
   out_msg_offset = 0;
 }/*}}}*/
 
@@ -296,6 +299,7 @@ inline void channel_server_s::init_static()
   event_callback = nullptr;
   message_callback = nullptr;
   user_data = nullptr;
+  max_msg_length = UINT_MAX;
 }/*}}}*/
 
 inline void channel_server_s::clear(interpreter_thread_s &it)

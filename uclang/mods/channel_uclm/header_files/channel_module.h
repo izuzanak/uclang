@@ -33,6 +33,7 @@ enum
   c_error_CHANNEL_CLIENT_NOT_CONNECTED,
   c_error_CHANNEL_CLIENT_SSL_ALREADY_INITIALIZED,
   c_error_CHANNEL_CLIENT_SSL_INIT_ERROR,
+  c_error_CHANNEL_INVALID_MAXIMAL_MESSAGE_LENGTH,
 };
 
 // - CHANNEL error strings -
@@ -61,6 +62,8 @@ bool bic_channel_server_method_init_ssl_2(interpreter_thread_s &it,unsigned stac
 bool bic_channel_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_channel_server_method_max_message_length_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_channel_server_method_max_message_length_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_address_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_out_queue_len_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -86,6 +89,7 @@ bool bic_channel_client_method_events_0(interpreter_thread_s &it,unsigned stack_
 bool bic_channel_client_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_message_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_channel_client_method_max_message_length_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_address_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_out_queue_len_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_channel_client_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

@@ -15,7 +15,7 @@ EXPORT built_in_module_s module =
   2,                       // Class count
   channel_classes,         // Classes
   0,                       // Error base index
-  18,                      // Error count
+  19,                      // Error count
   channel_error_strings,   // Error strings
   channel_initialize,      // Initialize function
   channel_print_exception, // Print exceptions function
@@ -49,6 +49,7 @@ const char *channel_error_strings[] =
   "error_CHANNEL_CLIENT_NOT_CONNECTED",
   "error_CHANNEL_CLIENT_SSL_ALREADY_INITIALIZED",
   "error_CHANNEL_CLIENT_SSL_INIT_ERROR",
+  "error_CHANNEL_INVALID_MAXIMAL_MESSAGE_LENGTH",
 };/*}}}*/
 
 // - CHANNEL initialize -
@@ -215,6 +216,13 @@ bool channel_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nChannelClient, error while initializing SSL\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_CHANNEL_INVALID_MAXIMAL_MESSAGE_LENGTH:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nChannel, invalid maximal message length\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     class_stack.clear();
     return false;
@@ -230,7 +238,7 @@ built_in_class_s channel_server_class =
 {/*{{{*/
   "ChannelServer",
   c_modifier_public | c_modifier_final,
-  10
+  12
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -285,6 +293,16 @@ built_in_method_s channel_server_methods[] =
     "message#2",
     c_modifier_public | c_modifier_final,
     bic_channel_server_method_message_2
+  },
+  {
+    "max_message_length#1",
+    c_modifier_public | c_modifier_final,
+    bic_channel_server_method_max_message_length_1
+  },
+  {
+    "max_message_length#2",
+    c_modifier_public | c_modifier_final,
+    bic_channel_server_method_max_message_length_2
   },
   {
     "address#1",
@@ -741,6 +759,9 @@ method process
     channel_conn_s &conn = cs_ptr->conn_list[conn_index];
     conn.init_static();
 
+    // - initialize connection maximal message length -
+    conn.max_msg_length = cs_ptr->max_msg_length;
+
 #ifdef UCL_WITH_OPENSSL
     if (cs_ptr->ssl_ctx != nullptr)
     {
@@ -1051,6 +1072,120 @@ method message
   return true;
 }/*}}}*/
 
+bool bic_channel_server_method_max_message_length_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+max_msg_length:retrieve_integer
+>
+method max_message_length
+; @end
+
+  // - ERROR -
+  if (max_msg_length < 0 || max_msg_length > UINT_MAX)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_INVALID_MAXIMAL_MESSAGE_LENGTH,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
+
+  cs_ptr->max_msg_length = max_msg_length;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_server_method_max_message_length_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+conn_index:retrieve_integer_init
+conn_index:c_bi_class_array
+max_msg_length:retrieve_integer
+>
+method max_message_length
+; @end
+
+  // - ERROR -
+  if (max_msg_length < 0 || max_msg_length > UINT_MAX)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_INVALID_MAXIMAL_MESSAGE_LENGTH,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  channel_server_s *cs_ptr = (channel_server_s *)dst_location->v_data_ptr;
+
+  if (src_0_location->v_type == c_bi_class_array)
+  {
+    pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
+
+    if (array_ptr->used != 0)
+    {
+      // - process connection array -
+      pointer *ptr = array_ptr->data;
+      pointer *ptr_end = ptr + array_ptr->used;
+      do {
+        location_s *item_location = it.get_location_value(*ptr);
+
+        long long int conn_index;
+
+        // - ERROR -
+        if (!it.retrieve_integer(item_location,conn_index))
+        {
+          exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        // - ERROR -
+        if (conn_index >= cs_ptr->conn_list.used || !cs_ptr->conn_list.data[conn_index].valid)
+        {
+          exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+          return false;
+        }
+
+        channel_conn_s &conn = cs_ptr->conn_list[conn_index];
+        conn.max_msg_length = max_msg_length;
+
+      } while(++ptr < ptr_end);
+    }
+  }
+  else
+  {
+    if (conn_index == c_conn_index_CONN_ALL)
+    {
+      if (cs_ptr->conn_list.first_idx != c_idx_not_exist)
+      {
+        unsigned cl_idx = cs_ptr->conn_list.first_idx;
+        do {
+          channel_conn_s &conn = cs_ptr->conn_list[cl_idx];
+          conn.max_msg_length = max_msg_length;
+
+          cl_idx = cs_ptr->conn_list.next_idx(cl_idx);
+        } while(cl_idx != c_idx_not_exist);
+      }
+    }
+    else
+    {
+      // - ERROR -
+      if (conn_index < 0 || conn_index >= cs_ptr->conn_list.used ||
+          !cs_ptr->conn_list.data[conn_index].valid)
+      {
+        exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_SERVER_MESSAGE_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+        return false;
+      }
+
+      channel_conn_s &conn = cs_ptr->conn_list[conn_index];
+      conn.max_msg_length = max_msg_length;
+    }
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
 bool bic_channel_server_method_address_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   CHANNEL_SERVER_CONNECTION_PROPERTY("address#1",
@@ -1103,7 +1238,7 @@ built_in_class_s channel_client_class =
 {/*{{{*/
   "ChannelClient",
   c_modifier_public | c_modifier_final,
-  12
+  13
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -1168,6 +1303,11 @@ built_in_method_s channel_client_methods[] =
     "message#1",
     c_modifier_public | c_modifier_final,
     bic_channel_client_method_message_1
+  },
+  {
+    "max_message_length#1",
+    c_modifier_public | c_modifier_final,
+    bic_channel_client_method_max_message_length_1
   },
   {
     "address#0",
@@ -1705,6 +1845,31 @@ method message
 
   // - update connection events -
   cc_ptr->events = POLLIN | POLLPRI | POLLOUT;
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_channel_client_method_max_message_length_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+max_msg_length:retrieve_integer
+>
+method max_message_length
+; @end
+
+  // - ERROR -
+  if (max_msg_length < 0 || max_msg_length > UINT_MAX)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_INVALID_MAXIMAL_MESSAGE_LENGTH,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  channel_conn_s *cc_ptr = (channel_conn_s *)dst_location->v_data_ptr;
+
+  cc_ptr->max_msg_length = max_msg_length;
 
   BIC_SET_RESULT_DESTINATION();
 
