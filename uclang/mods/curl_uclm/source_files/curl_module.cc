@@ -222,7 +222,7 @@ built_in_class_s curl_class =
   "Curl",
   c_modifier_public | c_modifier_final,
   9, curl_methods,
-  13 + 10 + 3, curl_variables,
+  17 + 10 + 3 + 5, curl_variables,
   bic_curl_consts,
   bic_curl_init,
   bic_curl_clear,
@@ -300,6 +300,10 @@ built_in_variable_s curl_variables[] =
   { "OPT_DIRLISTONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_FTP_CREATE_MISSING_DIRS", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_FTPPORT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_KEYPASSWD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_SSH_AUTH_TYPES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_SSH_PRIVATE_KEYFILE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_SSH_PUBLIC_KEYFILE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_SSL_VERIFYPEER", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_SSL_VERIFYHOST", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_QUOTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -322,6 +326,13 @@ built_in_variable_s curl_variables[] =
   { "FTP_CREATE_DIR_NONE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "FTP_CREATE_DIR", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "FTP_CREATE_DIR_RETRY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - curl ssh authentication constants -
+  { "SSH_AUTH_PUBLICKEY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SSH_AUTH_PASSWORD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SSH_AUTH_HOST", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SSH_AUTH_KEYBOARD", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "SSH_AUTH_AGENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
 };/*}}}*/
 
 #define BIC_CURL_GET_DELETE_HEAD_METHODS(NAME,OPTIONS) \
@@ -478,8 +489,8 @@ void bic_curl_consts(location_array_s &const_locations)
 
   // - curl option constants -
   {
-    const_locations.push_blanks(13);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 13);
+    const_locations.push_blanks(17);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 17);
 
 #define CREATE_CURL_OPTION_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -495,6 +506,10 @@ void bic_curl_consts(location_array_s &const_locations)
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_DIRLISTONLY);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_FTP_CREATE_MISSING_DIRS);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_FTPPORT);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_KEYPASSWD);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSH_AUTH_TYPES);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSH_PRIVATE_KEYFILE);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSH_PUBLIC_KEYFILE);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSL_VERIFYPEER);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSL_VERIFYHOST);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_QUOTE);
@@ -539,6 +554,24 @@ void bic_curl_consts(location_array_s &const_locations)
     CREATE_CURL_FTP_CREATE_DIR_BIC_STATIC(CURLFTP_CREATE_DIR_NONE);
     CREATE_CURL_FTP_CREATE_DIR_BIC_STATIC(CURLFTP_CREATE_DIR);
     CREATE_CURL_FTP_CREATE_DIR_BIC_STATIC(CURLFTP_CREATE_DIR_RETRY);
+  }
+
+  // - curl ssh authentication constants -
+  {
+    const_locations.push_blanks(5);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 5);
+
+#define CREATE_CURL_SSH_AUTHENTICATION_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CURL_SSH_AUTHENTICATION_BIC_STATIC(CURLSSH_AUTH_PUBLICKEY);
+    CREATE_CURL_SSH_AUTHENTICATION_BIC_STATIC(CURLSSH_AUTH_PASSWORD);
+    CREATE_CURL_SSH_AUTHENTICATION_BIC_STATIC(CURLSSH_AUTH_HOST);
+    CREATE_CURL_SSH_AUTHENTICATION_BIC_STATIC(CURLSSH_AUTH_KEYBOARD);
+    CREATE_CURL_SSH_AUTHENTICATION_BIC_STATIC(CURLSSH_AUTH_AGENT);
   }
 }/*}}}*/
 
@@ -1524,6 +1557,7 @@ method setopt
   case CURLOPT_FTP_CREATE_MISSING_DIRS:
   case CURLOPT_SSL_VERIFYPEER:
   case CURLOPT_SSL_VERIFYHOST:
+  case CURLOPT_SSH_AUTH_TYPES:
     {/*{{{*/
       long long int value;
 
@@ -1542,6 +1576,9 @@ method setopt
   case CURLOPT_USERNAME:
   case CURLOPT_PASSWORD:
   case CURLOPT_FTPPORT:
+  case CURLOPT_KEYPASSWD:
+  case CURLOPT_SSH_PRIVATE_KEYFILE:
+  case CURLOPT_SSH_PUBLIC_KEYFILE:
     {/*{{{*/
 
       // - ERROR -
