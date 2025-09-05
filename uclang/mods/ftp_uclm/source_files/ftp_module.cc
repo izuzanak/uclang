@@ -625,7 +625,7 @@ bool bic_ftp_session_method_getcwd_0(interpreter_thread_s &it,unsigned stack_bas
 
   // - create target string -
   string_s *string_ptr = it.get_new_string_ptr();
-  string_ptr->create(1024);
+  string_ptr->create(PATH_MAX);
 
   // - ERROR -
   if (FtpPwd(string_ptr->data,string_ptr->size - 1,ftps_ptr->nb_ptr) != 1)
@@ -1139,7 +1139,7 @@ bool bic_ftp_handle_method_read_0(interpreter_thread_s &it,unsigned stack_base,u
     return false;
   }
 
-  const unsigned c_buffer_add = 1024;
+  const unsigned c_buffer_add = 4096;
 
   // - target data buffer -
   bc_array_s data_buffer;

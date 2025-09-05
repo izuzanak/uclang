@@ -477,7 +477,7 @@ built_in_variable_s gz_file_variables[] =
     return false;\
   }\
 \
-  const int c_buffer_add = 1024;\
+  const int c_buffer_add = 4096;\
 \
   /* - target data buffer - */\
   bc_array_s data_buffer;\

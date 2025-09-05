@@ -889,7 +889,7 @@ built_in_variable_s zip_file_variables[] =
   BIC_ZIP_FILE_RETRIEVE_FROM(dst_location);\
   BIC_ZIP_ARCHIVE_RETRIEVE_FROM(zf_ptr->archive_loc);\
 \
-  const unsigned c_buffer_add = 1024;\
+  const unsigned c_buffer_add = 4096;\
 \
   /* - target data buffer - */\
   bc_array_s data_buffer;\

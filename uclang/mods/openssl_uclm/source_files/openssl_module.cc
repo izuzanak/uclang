@@ -655,7 +655,7 @@ bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   SSL *ssl_ptr = (SSL *)dst_location->v_data_ptr;
 
-  const long int c_buffer_add = 1024;
+  const long int c_buffer_add = 4096;
 
   // - target data buffer -
   bc_array_s data_buffer;

@@ -2035,7 +2035,7 @@ built_in_variable_s pipe_variables[] =
     return false;\
   }\
 \
-  const unsigned c_buffer_add = 1024;\
+  const unsigned c_buffer_add = 4096;\
 \
   /* - target data buffer - */\
   bc_array_s data_buffer;\
@@ -4224,7 +4224,7 @@ bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
     return false;
   }
 
-  const long int c_buffer_add = 1024;
+  const long int c_buffer_add = 4096;
 
   // - target data buffer -
   bc_array_s data_buffer;

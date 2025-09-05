@@ -492,7 +492,7 @@ bool bic_serial_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *
 
   serial_s *serial_ptr = (serial_s *)dst_location->v_data_ptr;
 
-  const long int c_buffer_add = 1024;
+  const long int c_buffer_add = 4096;
 
   // - target data buffer -
   bc_array_s data_buffer;

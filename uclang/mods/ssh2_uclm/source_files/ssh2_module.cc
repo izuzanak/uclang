@@ -1783,7 +1783,7 @@ built_in_variable_s ssh2_channel_variables[] =
   /* - retrieve ssh2 channel - */\
   ssh2_channel_s *ssh2ch_ptr = (ssh2_channel_s *)dst_location->v_data_ptr;\
 \
-  const int c_buffer_add = 1024;\
+  const int c_buffer_add = 4096;\
 \
   /* - target data buffer - */\
   bc_array_s data_buffer;\
