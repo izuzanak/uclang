@@ -415,14 +415,16 @@ bool image_s::io_normalize(image_s &a_src)
   {/*{{{*/\
     unsigned char *ptr = image_data_ptr->data + (y_pos*line_size) + (x_pos*pixel_step);\
     unsigned char *ptr_end = ptr + ((height - 1)*line_size) + (width*pixel_step);\
+    unsigned char *s_ptr = a_src.image_data_ptr->data + (a_src.y_pos*s_line_size) + (a_src.x_pos*pixel_step);\
 \
     do {\
       unsigned char *ptr_w_end = ptr + image_ls;\
       do {\
         OPERATION;\
-      } while((ptr += pixel_step) < ptr_w_end);\
+      } while(s_ptr += pixel_step,(ptr += pixel_step) < ptr_w_end);\
 \
       ptr += line_size - image_ls;\
+      s_ptr += s_line_size - image_ls;\
     } while(ptr < ptr_end);\
   }/*}}}*/
 
@@ -445,7 +447,7 @@ bool image_s::io_normalize(image_s &a_src)
         double div = max - min;
 
         IMAGE_NORMALIZE_APPLY(
-            ((double *)ptr)[0] = (((double *)ptr)[0] - min)/div;
+            ((double *)ptr)[0] = (((double *)s_ptr)[0] - min)/div;
             );
       }
     }/*}}}*/
