@@ -1028,6 +1028,26 @@ obj <= [1,2,3];
 (\"a,b,c: %s\\n\" % $[a,b,c]).print();
 "
 ),/*}}}*/
+        "item#1", new MethodDescr
+(/*{{{*/
+"Retrieve element from object of class `%s` stored at requested index position." % m_target_name,
+["Type convertible to integer."],
+"* Object representing element in object of class `%s` at position of requested index." % m_target_name,
+"
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+idx = %s;
+do {
+  (\"obj.item(%%d): %%s\\n\" %% [idx,$obj.item(idx)]).print();
+  idx = %s;
+} while(Blank != idx);
+" % [
+get_code(m_target_name,"obj","create_example"),
+get_property(m_target_name,"iter_first_idx") % "obj",
+get_property(m_target_name,"iter_next_idx") % ["obj","idx"]
+]
+),/*}}}*/
+
         "resize#1", new MethodDescr
 (/*{{{*/
 "Resize object of class `%s` to size given by method parameter. New

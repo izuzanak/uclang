@@ -612,7 +612,6 @@ Retrieve element from object of class `Array` stored at requested index position
 **Return:**
 
 * Object representing element in object of class `Array` at position of requested index.
-* Object of class `Blank` otherwise.
 
 **Example:**
 
