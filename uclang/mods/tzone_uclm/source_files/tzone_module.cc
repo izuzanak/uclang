@@ -38,7 +38,7 @@ bool tzone_initialize(script_parser_s &sp)
 {/*{{{*/
   unsigned class_base_idx = sp.class_records.used - module.class_cnt;
 
-  // - initialize time class identifier -
+  // - initialize time_zone class identifier -
   c_bi_class_time_zone = class_base_idx++;
 
   return true;
