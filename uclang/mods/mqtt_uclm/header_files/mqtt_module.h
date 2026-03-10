@@ -15,7 +15,7 @@ extern built_in_class_s *mqtt_classes[];
 // - MQTT error identifiers -
 enum
 {
-  c_error_MQTT_CLIENT_WRONG_DELEGATE_PARAMETER_COUNT,
+  c_error_MQTT_CLIENT_WRONG_DELEGATE_PARAMETER_COUNT = 0,
   c_error_MQTT_CLIENT_INVALID_IP_ADDRESS,
   c_error_MQTT_CLIENT_CREATE_ERROR,
   c_error_MQTT_CLIENT_PROCESS_INVALID_FD,

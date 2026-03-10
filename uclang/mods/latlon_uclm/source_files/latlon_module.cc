@@ -6,9 +6,6 @@ include "latlon_module.h"
 // - LATLON indexes of built in classes -
 unsigned c_bi_class_latlon = c_idx_not_exist;
 
-// - LATLON indexes of remote classes -
-unsigned c_rm_class_dict = c_idx_not_exist;
-
 // - LATLON module -
 EXPORT built_in_module_s module =
 {/*{{{*/

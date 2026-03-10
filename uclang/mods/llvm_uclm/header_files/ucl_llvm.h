@@ -72,6 +72,13 @@ inline void llvm_module_s::init()
 
 inline void llvm_module_s::clear(interpreter_thread_s &it)
 {/*{{{*/
+
+  // - release llvm module -
+  if (module != nullptr)
+  {
+    delete module;
+  }
+
   init();
 }/*}}}*/
 

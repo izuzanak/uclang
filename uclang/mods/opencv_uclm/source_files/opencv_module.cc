@@ -356,7 +356,7 @@ built_in_class_s cv_mat_class =
 {/*{{{*/
   "CvMat",
   c_modifier_public | c_modifier_final,
-  8, cv_mat_methods,
+  7, cv_mat_methods,
   0, cv_mat_variables,
   bic_cv_mat_consts,
   bic_cv_mat_init,
@@ -382,11 +382,6 @@ built_in_method_s cv_mat_methods[] =
     bic_cv_mat_operator_binary_equal
   },
   {
-    "CvMat#1",
-    c_modifier_public | c_modifier_final,
-    bic_cv_mat_method_CvMat_1
-  },
-  {
     "read#2",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_cv_mat_method_read_2
@@ -403,7 +398,7 @@ built_in_method_s cv_mat_methods[] =
   },
   {
     "encode#2",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_cv_mat_method_encode_2
   },
   {
@@ -485,14 +480,6 @@ bool bic_cv_mat_operator_binary_equal(interpreter_thread_s &it,unsigned stack_ba
   BIC_SET_RESULT(src_0_location);
 
   return true;
-}/*}}}*/
-
-bool bic_cv_mat_method_CvMat_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
-{/*{{{*/
-
-  // TODO continue ...
-  BIC_TODO_ERROR(__FILE__,__LINE__);
-  return false;
 }/*}}}*/
 
 bool bic_cv_mat_method_read_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -1381,7 +1368,7 @@ method set
   VideoCapture *vc_ptr = (VideoCapture *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (vc_ptr->set(prop_id,value))
+  if (!vc_ptr->set(prop_id,value))
   {
     exception_s::throw_exception(it,module.error_base + c_error_CV_CAPTURE_SET_PROPERTY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

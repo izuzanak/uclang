@@ -676,27 +676,27 @@ built_in_method_s dlms_object_methods[] =
   },
   {
     "code#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_dlms_object_method_code_0
   },
   {
     "object_type#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_dlms_object_method_object_type_0
   },
   {
     "data_type#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_dlms_object_method_data_type_0
   },
   {
     "value#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_dlms_object_method_value_0
   },
   {
     "value#1",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_dlms_object_method_value_1
   },
   {

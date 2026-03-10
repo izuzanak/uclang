@@ -271,7 +271,7 @@ static_method
     if (pipeline) { gst_object_unref(pipeline); }
     if (decoder)  { gst_object_unref(decoder); }
 
-    exception_s::throw_exception(it,module.error_base + c_error_GST_CANNOT_CREATE_SINK,operands[c_source_pos_idx],src_1_location);
+    exception_s::throw_exception(it,module.error_base + c_error_GST_CANNOT_CREATE_SINK,operands[c_source_pos_idx],src_0_location);
     return false;
   }
 

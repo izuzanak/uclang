@@ -343,7 +343,7 @@ built_in_class_s btrfs_sub_class =
 {/*{{{*/
   "BtrfsSub",
   c_modifier_public | c_modifier_final,
-  9, btrfs_sub_methods,
+  10, btrfs_sub_methods,
   3, btrfs_sub_variables,
   bic_btrfs_sub_consts,
   bic_btrfs_sub_init,
@@ -363,6 +363,11 @@ built_in_class_s btrfs_sub_class =
 
 built_in_method_s btrfs_sub_methods[] =
 {/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_btrfs_sub_operator_binary_equal
+  },
   {
     "BtrfsSub#1",
     c_modifier_public | c_modifier_final,
@@ -470,6 +475,18 @@ void bic_btrfs_sub_clear(interpreter_thread_s &it,location_s *location_ptr)
     bs_ptr->clear(it);
     cfree(bs_ptr);
   }
+}/*}}}*/
+
+bool bic_btrfs_sub_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
 }/*}}}*/
 
 bool bic_btrfs_sub_method_BtrfsSub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)

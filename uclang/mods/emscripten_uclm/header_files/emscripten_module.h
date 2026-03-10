@@ -18,7 +18,7 @@ extern built_in_class_s *emscripten_classes[];
 // - EMSCRIPTEN error identifiers -
 enum
 {
-  c_error_EMSCRIPTEN_DUMMY_ERROR,
+  c_error_EMSCRIPTEN_DUMMY_ERROR = 0,
 };
 
 // - EMSCRIPTEN error strings -

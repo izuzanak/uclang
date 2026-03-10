@@ -169,7 +169,7 @@ bool bic_va_display_method_VaDisplay_1(interpreter_thread_s &it,unsigned stack_b
 <
 name:c_bi_class_string
 >
-method VADisplay
+method VaDisplay
 ; @end
 
   Display *x11_display_ptr = XOpenDisplay(((string_s *)src_0_location->v_data_ptr)->data);

@@ -86,7 +86,7 @@ built_in_method_s cipher_rc4_methods[] =
   },
   {
     "process#1",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_cipher_rc4_method_process_1
   },
   {

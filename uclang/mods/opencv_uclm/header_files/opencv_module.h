@@ -71,7 +71,6 @@ void bic_cv_mat_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_cv_mat_clear(interpreter_thread_s &it,location_s *location_ptr);
 
 bool bic_cv_mat_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
-bool bic_cv_mat_method_CvMat_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cv_mat_method_read_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cv_mat_method_write_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_cv_mat_method_decode_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);

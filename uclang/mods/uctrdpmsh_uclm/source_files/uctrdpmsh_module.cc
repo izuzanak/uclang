@@ -29,8 +29,8 @@ built_in_class_s *uctrdpmsh_classes[] =
 // - UCTRDPMSH error strings -
 const char *uctrdpmsh_error_strings[] =
 {/*{{{*/
-  "error_TRDP_PAGE_DESCR_PROCESS_ERROR",
   "error_TRDP_PAGE_DESCR_TOO_SHORT",
+  "error_TRDP_PAGE_DESCR_PROCESS_ERROR",
   "error_TRDP_PAGE_DESCR_EXPECTED_STRING_AS_NAME",
   "error_TRDP_PAGE_DESCR_EXPECTED_INTEGER_AS_TYPE",
   "error_TRDP_PAGE_DESCR_EXPECTED_INTEGER_AS_ARRAY_SIZE",
@@ -84,18 +84,18 @@ bool uctrdpmsh_print_exception(interpreter_s &it,exception_s &exception)
 
   switch (exception.type - module.error_base)
   {
-  case c_error_TRDP_PAGE_DESCR_PROCESS_ERROR:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nTRDP page, page description error\n");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
   case c_error_TRDP_PAGE_DESCR_TOO_SHORT:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nTRDP page, description unexpectedly ended\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_TRDP_PAGE_DESCR_PROCESS_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nTRDP page, page description error\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_TRDP_PAGE_DESCR_EXPECTED_STRING_AS_NAME:

@@ -33,6 +33,7 @@ void bic_validator_consts(location_array_s &const_locations);
 void bic_validator_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_validator_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_validator_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_validator_method_Validator_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_validator_method_validate_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_validator_method_value_stack_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

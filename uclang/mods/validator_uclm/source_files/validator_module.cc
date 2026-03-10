@@ -177,7 +177,7 @@ built_in_class_s validator_class =
 {/*{{{*/
   "Validator",
   c_modifier_public | c_modifier_final,
-  6, validator_methods,
+  7, validator_methods,
   0, validator_variables,
   bic_validator_consts,
   bic_validator_init,
@@ -197,6 +197,11 @@ built_in_class_s validator_class =
 
 built_in_method_s validator_methods[] =
 {/*{{{*/
+  {
+    "operator_binary_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_validator_operator_binary_equal
+  },
   {
     "Validator#1",
     c_modifier_public | c_modifier_final,
@@ -236,6 +241,18 @@ built_in_variable_s validator_variables[] =
 
 void bic_validator_consts(location_array_s &const_locations)
 {/*{{{*/
+}/*}}}*/
+
+bool bic_validator_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  src_0_location->v_reference_cnt.atomic_add(2);
+
+  BIC_SET_DESTINATION(src_0_location);
+  BIC_SET_RESULT(src_0_location);
+
+  return true;
 }/*}}}*/
 
 void bic_validator_init(interpreter_thread_s &it,location_s *location_ptr)

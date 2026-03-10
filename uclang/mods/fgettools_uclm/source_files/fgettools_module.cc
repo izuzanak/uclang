@@ -34,8 +34,8 @@ const char *fgettools_error_strings[] =
   "error_FGET_TARGET_CANNOT_OPEN_MAP_FILE",
   "error_FGET_TARGET_FILES_SIZE_MISMATCH",
   "error_FGET_TARGET_CANNOT_MAP_FILES_TO_MEMORY",
-  "error_FGET_TARGET_NEGATIVE_REQUEST_COUNT",
   "error_FGET_TARGET_INVALID_INDEX_VALUE",
+  "error_FGET_TARGET_NEGATIVE_REQUEST_COUNT",
   "error_FGET_TARGET_INVALID_BLOCK_INDEX",
 };/*}}}*/
 
@@ -93,18 +93,18 @@ bool fgettools_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nError while mapping files to memory\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
-  case c_error_FGET_TARGET_NEGATIVE_REQUEST_COUNT:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nRequested negative count %" HOST_LL_FORMAT "d of requests\n",exception.params[0]);
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
   case c_error_FGET_TARGET_INVALID_INDEX_VALUE:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nInvalid index value %" HOST_LL_FORMAT "d cannot be set\n",exception.params[0]);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_FGET_TARGET_NEGATIVE_REQUEST_COUNT:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nRequested negative count %" HOST_LL_FORMAT "d of requests\n",exception.params[0]);
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_FGET_TARGET_INVALID_BLOCK_INDEX:

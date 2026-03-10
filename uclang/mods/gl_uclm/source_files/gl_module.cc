@@ -1095,22 +1095,22 @@ built_in_method_s gl_attribute_methods[] =
   },
   {
     "name#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gl_attribute_method_name_0
   },
   {
     "index#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gl_attribute_method_index_0
   },
   {
     "size#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gl_attribute_method_size_0
   },
   {
     "get_type#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gl_attribute_method_get_type_0
   },
   {
@@ -1266,27 +1266,27 @@ built_in_method_s gl_uniform_methods[] =
   },
   {
     "name#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gl_uniform_method_name_0
   },
   {
     "index#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gl_uniform_method_index_0
   },
   {
     "size#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gl_uniform_method_size_0
   },
   {
     "get_type#0",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gl_uniform_method_get_type_0
   },
   {
     "write#1",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gl_uniform_method_write_1
   },
   {

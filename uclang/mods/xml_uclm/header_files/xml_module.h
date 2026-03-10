@@ -18,7 +18,7 @@ extern built_in_class_s *xml_classes[];
 // - XML error identifiers -
 enum
 {
-  c_error_XML_ERROR_PARSING_DATA,
+  c_error_XML_ERROR_PARSING_DATA = 0,
   c_error_XML_NODE_NAME_INVALID_VALUE_ERROR,
   c_error_XML_NODE_NODE_DICTIONARY_NOT_AVAILABLE,
   c_error_XML_NODE_ATTRIBUTE_INVALID_VALUE_ERROR,

@@ -21,7 +21,7 @@ EXPORT built_in_module_s module =
   cl_classes,          // Classes
 
   0,                   // Error base index
-  25,                  // Error count
+  26,                  // Error count
   cl_error_strings,    // Error strings
 
   cl_initialize,       // Initialize function

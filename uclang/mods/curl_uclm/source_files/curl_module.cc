@@ -36,9 +36,9 @@ built_in_class_s *curl_classes[] =
 const char *curl_error_strings[] =
 {/*{{{*/
   "error_CURL_CANNOT_CREATE_SESSION",
+  "error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST",
   "error_CURL_URL_ESCAPE_ERROR",
   "error_CURL_URL_UNESCAPE_ERROR",
-  "error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST",
   "error_CURL_HTTP_HEADER_EXPECTED_STRING",
   "error_CURL_MULTI_WRONG_CALLBACK_DELEGATE",
   "error_CURL_MULTI_CANNOT_CREATE_SESSION",
@@ -90,6 +90,13 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nCannot create curl session\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nError while performing HTTP request\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_CURL_URL_ESCAPE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -102,13 +109,6 @@ bool curl_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCurl, URL unescape error\n");
-    fprintf(stderr," ---------------------------------------- \n");
-    break;
-  case c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST:
-    fprintf(stderr," ---------------------------------------- \n");
-    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
-    print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nError while performing HTTP request\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CURL_HTTP_HEADER_EXPECTED_STRING:

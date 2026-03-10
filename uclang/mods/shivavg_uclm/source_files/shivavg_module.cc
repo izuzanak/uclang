@@ -152,7 +152,9 @@ bool bic_shiva_vg_method_create_context_2(interpreter_thread_s &it,unsigned stac
 width:retrieve_integer
 height:retrieve_integer
 >
+class c_bi_class_shiva_vg
 method create_context
+static_method
 ; @end
 
   // - ERROR -
@@ -184,7 +186,9 @@ bool bic_shiva_vg_method_resize_surface_2(interpreter_thread_s &it,unsigned stac
 width:retrieve_integer
 height:retrieve_integer
 >
+class c_bi_class_shiva_vg
 method resize_surface
+static_method
 ; @end
 
   vgResizeSurfaceSH(width,height);

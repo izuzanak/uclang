@@ -56,7 +56,7 @@ bool node_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
-    fprintf(stderr,"\nExceeded maximal count of callback paramaeters\n");
+    fprintf(stderr,"\nExceeded maximal count of callback parameters\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_NODE_CALLBACK_WRONG_PARAM_COUNT:

@@ -1,0 +1,124 @@
+
+init_code: {}
+
+terminals:
+   begin {"@begin"}
+   end {"@end"}
+
+   include {"include"}
+   inlines {"inlines"}
+   methods {"methods"}
+   define {"define"}
+   abbreviation {"abbreviation"}
+   options {"options"}
+   additions {"additions"}
+
+   basic {"basic"}
+   static {"static"}
+   dynamic {"dynamic"}
+   flushable {"flushable"}
+
+   if {"#if".w}
+   else {"#else".w}
+   endif {"#endif".w}
+
+   str {'"'.!'"'*.'"'}
+   additions_body {'{'.!'\}'*.'\}'}
+   id {('_'+l).('_'+l+d)*}
+
+   ls_br {'<'}
+   rs_br {'>'}
+
+   lr_br {'('}
+   rr_br {')'}
+
+   colon {':'}
+   semicolon {';'}
+
+   double_ampersand {"&&"}
+   double_pipe {"||"}
+   exclamation {'!'}
+
+   _SKIP_ {w.w*}
+   __SKIP__ {'$'.!'\n'*.'\n'}
+   _END_ {'\0'}
+
+nonterminals:
+   <start>
+   <def_list>
+   <def>
+   <modifier_list>
+   <modifier>
+   <attr_list>
+   <attr>
+   <element_list>
+   <element>
+
+   <if_condition>
+   <if_else>
+   <else>
+
+   <exp>
+   <B>
+   <A>
+
+   <option_list>
+
+rules:
+   <start> -> begin <def_list> end _END_ ->> {}
+
+   <def_list> -> <def_list> <def> ->> {}
+   <def_list> -> <def> ->> {}
+
+   <def> -> include str ->> {print("include: "..rule_body(1))}
+   <def> -> inlines id ->> {print("inlines: "..rule_body(1))}
+   <def> -> methods id ->> {print("methods: "..rule_body(1))}
+   <def> -> define id <modifier_list> ->> {print("define: "..rule_body(1))}
+   <def> -> abbreviation id id ->> {print("abbreviation: "..rule_body(1).." "..rule_body(2))}
+
+   <modifier_list> -> <modifier_list> <modifier> ->> {}
+   <modifier_list> -> <modifier> ->> {}
+
+   <modifier> -> basic ->> {print("mod. basic")}
+   <modifier> -> static ->> {print("mod. static")}
+   <modifier> -> dynamic ->> {print("mod. dynamic")}
+   <modifier> -> flushable ->> {print("mod. flushable")}
+
+   <def> -> id <attr_list> semicolon ->> {print("container:"..rule_body(0))}
+
+   <attr_list> -> <attr_list> <attr> ->> {}
+   <attr_list> -> <attr> ->> {}
+
+   <attr> -> ls_br <element_list> rs_br ->> {}
+
+   <element_list> -> <element_list> <element> ->> {}
+   <element_list> -> <element> ->> {}
+
+   <element> -> id ->> {print("type: "..rule_body(0))}
+   <element> -> id colon id ->> {print("type and name: "..rule_body(0)..":"..rule_body(2))}
+
+   <element> -> <if_condition> <element_list> <if_else> ->> {}
+
+   <if_condition> -> if <exp> ->> {print("if")}
+   <if_else> -> endif ->> {print("endif")}
+   <if_else> -> <else> <element_list> endif ->> {print("endif")}
+   <else> -> else ->> {print("else")}
+
+   <exp> -> <B> ->> {}
+
+   <B> -> <B> double_ampersand <A> ->> {print("operator &&")}
+   <B> -> <B> double_pipe <A> ->> {print("operator ||")}
+   <B> -> <A> ->> {}
+
+   <A> -> exclamation <A> ->> {print("operator !")}
+   <A> -> lr_br <B> rr_br ->> {}
+   <A> -> id ->> {print("identifier "..rule_body(0).."")}
+
+   <attr> -> options <option_list> rr_br ->> {}
+
+   <option_list> -> <option_list> id  ->> {print("option: "..rule_body(1))}
+   <option_list> -> lr_br ->> {}
+
+   <attr> -> additions additions_body ->> {print("additions: "..rule_body(1))}
+   <attr> -> id ->> {print("name: "..rule_body(0))}
+

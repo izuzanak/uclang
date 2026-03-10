@@ -233,10 +233,12 @@ void bic_ruby_interpreter_consts(location_array_s &const_locations)
 
 void bic_ruby_interpreter_init(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  cassert(0);
 }/*}}}*/
 
 void bic_ruby_interpreter_clear(interpreter_thread_s &it,location_s *location_ptr)
 {/*{{{*/
+  cassert(0);
 }/*}}}*/
 
 #define BIC_RUBY_INTERPRETER_RETRIEVE_ERROR_LOCATION() \

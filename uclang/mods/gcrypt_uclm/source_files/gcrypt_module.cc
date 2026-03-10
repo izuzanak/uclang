@@ -101,7 +101,7 @@ built_in_method_s gcrypt_cipher_methods[] =
   },
   {
     "GcryptCipher#4",
-    c_modifier_public | c_modifier_final | c_modifier_static,
+    c_modifier_public | c_modifier_final,
     bic_gcrypt_cipher_method_GcryptCipher_4
   },
   {

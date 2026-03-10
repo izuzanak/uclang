@@ -2181,7 +2181,7 @@ built_in_class_s primes_class =
 {/*{{{*/
   "Primes",
   c_modifier_public | c_modifier_final,
-  8, primes_methods,
+  9, primes_methods,
   0, primes_variables,
   bic_primes_consts,
   bic_primes_init,

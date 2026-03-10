@@ -63,6 +63,7 @@ void bic_btrfs_sub_consts(location_array_s &const_locations);
 void bic_btrfs_sub_init(interpreter_thread_s &it,location_s *location_ptr);
 void bic_btrfs_sub_clear(interpreter_thread_s &it,location_s *location_ptr);
 
+bool bic_btrfs_sub_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_BtrfsSub_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_is_sub_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_btrfs_sub_method_id_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
