@@ -6,6 +6,8 @@ import algorithms;
 import json;
 import parser;
 import pack;
+import regex;
+import time;
 
 class VarClassDescr
 {
@@ -629,6 +631,81 @@ iterable types.",
     CLASS_PROPERTIES["Json"] = class_Json = new Dict(
     [/*{{{*/
       "description","Class supporting serialization and deserialization of language objects to JavaScript Object Notation."
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Buffer"] = class_Buffer = new Dict(
+    [/*{{{*/
+      "description","Class describing objects representing raw binary data buffers.",
+      "extra_code","
+class Main
+{
+  public static main(argv)
+  {
+    arr = new BinArray(BinArray.TYPE_INT32);
+    arr.push(1);
+    arr.push(2);
+    arr.push(3);
+    buf = arr.buffer();
+%s
+  }
+}
+",
+      "create_example","buf"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["SocketAddr"] = class_SocketAddr = new Dict(
+    [/*{{{*/
+      "description","Class describing network socket addresses.",
+      "create_example","new SocketAddr(\"127.0.0.1\",8080)"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Regex"] = class_Regex = new Dict(
+    [/*{{{*/
+      "description","Class implementing POSIX regular expression matching.",
+      "create_example","new Regex(\"[0-9]+\")"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Signal"] = class_Signal = new Dict(
+    [/*{{{*/
+      "description","Class providing access to Unix signal handling."
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Poll"] = class_Poll = new Dict(
+    [/*{{{*/
+      "description","Class providing access to system poll mechanism for monitoring multiple file descriptors.",
+      "create_example_obj",
+"pipe = Sys.pipe();
+pipe[1].write_close(\"Hello\\n\");
+obj = new Poll([pipe[0].get_fd(),Poll.POLLIN]);"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Timer"] = class_Timer = new Dict(
+    [/*{{{*/
+      "description","Class implementing timer scheduling mechanism.",
+      "extra_code","
+class Main
+{
+  public timer_cb(a_data)
+  {
+    (\"timer_cb: %%s\\n\" %% $a_data).print();
+  }
+
+  public Main(a_argv)
+  {
+%s
+  }
+
+  public static main(argv)
+  {
+    new Main(argv);
+  }
+}
+",
+      "create_example","new Timer()"
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Clock"] = class_Clock = new Dict(
+    [/*{{{*/
+      "description","Class providing access to POSIX clock functions."
+    ]);/*}}}*/
+    CLASS_PROPERTIES["Time"] = class_Time = new Dict(
+    [/*{{{*/
+      "description","Class describing time values with nanosecond precision.",
+      "create_example","new Time()",
+      "create_compare","new Time(\"20250101120000\")"
     ]);/*}}}*/
 
     switch (m_target_name)
@@ -1569,12 +1646,14 @@ of new object of class `%s`." % [m_target_name,m_target_name],
     {
       class_Sys["var_classes"] = new Dict(
       [/*{{{*/
-        "os",new VarClassDescr("Operating system related constants")
+        "os",new VarClassDescr("Operating system related constants"),
+        "random",new VarClassDescr("Random number generation related constants")
       ]);/*}}}*/
       class_Sys["variables"] = new Dict(
       [/*{{{*/
         "NAME",new VariableDescr("Identification of operating system type.","os"),
-        "SEP",new VariableDescr("Character used to separate pathname components.","os")
+        "SEP",new VariableDescr("Character used to separate pathname components.","os"),
+        "RAND_MAX",new VariableDescr("Maximum value returned by method [`Sys.rand#0`](#rand%230).","random")
       ]);/*}}}*/
       class_Sys["methods"] = new Dict(
       [/*{{{*/
@@ -1587,6 +1666,165 @@ Sys.sleep(250);
 (\"time: %d ms\\n\" % new Time().milli_sec()).print();
 "
 ),/*}}}*/
+        "srand#1", new MethodDescr
+(/*{{{*/
+"Seeds the pseudo-random number generator.",
+["Type convertible to integer."],new Blank(),"
+Sys.srand(12345);
+(\"rand: %d\\n\" % Sys.rand()).print();
+(\"rand: %d\\n\" % Sys.rand()).print();
+"
+),/*}}}*/
+        "rand#0", new MethodDescr
+(/*{{{*/
+"Returns a pseudo-random integer in range from `0` to `Sys.RAND_MAX`.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+Sys.srand(12345);
+(\"rand: %d\\n\" % Sys.rand()).print();
+(\"rand: %d\\n\" % Sys.rand()).print();
+(\"rand: %d\\n\" % Sys.rand()).print();
+"
+),/*}}}*/
+        "getpid#0", new MethodDescr
+(/*{{{*/
+"Returns process identifier of current process.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+(\"type: %s\\n\" % $(type Sys.getpid())).print();
+"
+),/*}}}*/
+        "getuid#0", new MethodDescr
+(/*{{{*/
+"Returns user identifier of current process.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+(\"type: %s\\n\" % $(type Sys.getuid())).print();
+"
+),/*}}}*/
+        "getgid#0", new MethodDescr
+(/*{{{*/
+"Returns group identifier of current process.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+(\"type: %s\\n\" % $(type Sys.getgid())).print();
+"
+),/*}}}*/
+        "system#1", new MethodDescr
+(/*{{{*/
+"Executes shell command described by string parameter.",
+["Object of class %s containing shell command to be executed." % doc_class_ref("String")],
+"* Object of class %s representing command exit status." % doc_class_ref("Integer"),"
+res = Sys.system(\"echo Hello from shell\");
+(\"exit status: %d\\n\" % res).print();
+"
+),/*}}}*/
+        "exit#1", new MethodDescr
+(/*{{{*/
+"Terminates current process with given exit code.",
+["Type convertible to integer representing exit code."],new Blank(),"
+(\"before exit\\n\").print();
+// Sys.exit(0);
+(\"this would not be reached\\n\").print();
+"
+),/*}}}*/
+        "open#2", new MethodDescr
+(/*{{{*/
+"Opens file and returns object of class %s." % doc_class_ref("File"),
+["Object of class %s containing path to file." % doc_class_ref("String"),
+ "Object of class %s containing file open flags." % doc_class_ref("String")],
+"* Object of class %s." % doc_class_ref("File"),"
+new File(\"temporary\",\"w\").write_close(\"Hello world\\n\");
+file = Sys.open(\"temporary\",\"r\");
+file.read().print();
+file.close();
+Sys.remove(\"temporary\");
+"
+),/*}}}*/
+        "popen#2", new MethodDescr
+(/*{{{*/
+"Opens process pipe and returns object of class %s." % doc_class_ref("Pipe"),
+["Object of class %s containing system command." % doc_class_ref("String"),
+ "Object of class %s containing pipe open flags." % doc_class_ref("String")],
+"* Object of class %s." % doc_class_ref("Pipe"),"
+pipe = Sys.popen(\"echo Hello from pipe\",\"r\");
+pipe.read().print();
+pipe.close();
+"
+),/*}}}*/
+        "pipe#0", new MethodDescr
+(/*{{{*/
+"Creates anonymous pipe and returns array of two objects of class %s. First
+element is read end, second is write end." % doc_class_ref("Pipe"),
+[],"* Object of class %s containing two objects of class %s." % [doc_class_ref("Array"),doc_class_ref("Pipe")],"
+pipes = Sys.pipe();
+pipes[1].write_close(\"Hello pipe\\n\");
+pipes[0].read().print();
+pipes[0].close();
+"
+),/*}}}*/
+        "mkdir#1", new MethodDescr
+(/*{{{*/
+"Creates directory in file system.",
+["Object of class %s containing path of directory to create." % doc_class_ref("String")],new Blank(),"
+Sys.mkdir(\"test_dir\");
+(\"is_dir: %d\\n\" % Sys.is_dir(\"test_dir\")).print();
+Sys.rmdir(\"test_dir\");
+"
+),/*}}}*/
+        "rmdir#1", new MethodDescr
+(/*{{{*/
+"Removes empty directory from file system.",
+["Object of class %s containing path of directory to remove." % doc_class_ref("String")],new Blank(),"
+Sys.mkdir(\"test_dir\");
+(\"is_dir: %d\\n\" % Sys.is_dir(\"test_dir\")).print();
+Sys.rmdir(\"test_dir\");
+(\"is_dir: %d\\n\" % Sys.is_dir(\"test_dir\")).print();
+"
+),/*}}}*/
+        "chdir#1", new MethodDescr
+(/*{{{*/
+"Changes current working directory.",
+["Object of class %s containing path of target directory." % doc_class_ref("String")],new Blank(),"
+cwd = Sys.getcwd();
+Sys.mkdir(\"test_dir\");
+Sys.chdir(\"test_dir\");
+(\"cwd changed: %d\\n\" % (Sys.getcwd() != cwd)).print();
+Sys.chdir(cwd);
+Sys.rmdir(\"test_dir\");
+"
+),/*}}}*/
+        "listdir#1", new MethodDescr
+(/*{{{*/
+"Returns list of entries in directory.",
+["Object of class %s containing path to directory." % doc_class_ref("String")],
+"* Object of class %s containing objects of class %s." % [doc_class_ref("Array"),doc_class_ref("String")],"
+Sys.mkdir(\"test_dir\");
+new File(\"test_dir/a.txt\",\"w\").write_close(\"a\");
+new File(\"test_dir/b.txt\",\"w\").write_close(\"b\");
+entries = Sys.listdir(\"test_dir\");
+(\"entries: %s\\n\" % $entries).print();
+Sys.remove(\"test_dir/a.txt\");
+Sys.remove(\"test_dir/b.txt\");
+Sys.rmdir(\"test_dir\");
+"
+),/*}}}*/
+        "mkfifo#1", new MethodDescr
+(/*{{{*/
+"Creates named pipe (FIFO) in file system.",
+["Object of class %s containing path of named pipe to create." % doc_class_ref("String")],new Blank(),"
+Sys.mkfifo(\"test_fifo\");
+(\"is_file: %d\\n\" % Sys.is_file(\"test_fifo\")).print();
+Sys.remove(\"test_fifo\");
+"
+),/*}}}*/
+        "chmod#2", new MethodDescr
+(/*{{{*/
+"Changes file permissions.",
+["Object of class %s containing file path." % doc_class_ref("String"),
+ "Type convertible to integer representing permission mode."],new Blank(),"
+new File(\"temporary\",\"w\").write_close(\"data\");
+Sys.chmod(\"temporary\",0644);
+(\"done\\n\").print();
+Sys.remove(\"temporary\");
+"
+),/*}}}*/
         "remove#1", new MethodDescr
 (/*{{{*/
 "Deletes file or directory from file system.",
@@ -1595,6 +1833,94 @@ new File(\"temporary\",\"w\").write_close(\"Hello world\\n\");
 (\"Sys.is_file(): %d\\n\" % Sys.is_file(\"temporary\")).print();
 Sys.remove(\"temporary\");
 (\"Sys.is_file(): %d\\n\" % Sys.is_file(\"temporary\")).print();
+"
+),/*}}}*/
+        "rename#2", new MethodDescr
+(/*{{{*/
+"Renames file or directory.",
+["Object of class %s containing source path." % doc_class_ref("String"),
+ "Object of class %s containing target path." % doc_class_ref("String")],new Blank(),"
+new File(\"temporary\",\"w\").write_close(\"data\");
+Sys.rename(\"temporary\",\"temporary_new\");
+(\"old exists: %d\\n\" % Sys.is_file(\"temporary\")).print();
+(\"new exists: %d\\n\" % Sys.is_file(\"temporary_new\")).print();
+Sys.remove(\"temporary_new\");
+"
+),/*}}}*/
+        "link#2", new MethodDescr
+(/*{{{*/
+"Creates hard link to file.",
+["Object of class %s containing path to existing file." % doc_class_ref("String"),
+ "Object of class %s containing path for new link." % doc_class_ref("String")],new Blank(),"
+new File(\"temporary\",\"w\").write_close(\"data\");
+Sys.link(\"temporary\",\"temporary_link\");
+(\"link exists: %d\\n\" % Sys.is_file(\"temporary_link\")).print();
+Sys.remove(\"temporary_link\");
+Sys.remove(\"temporary\");
+"
+),/*}}}*/
+        "getcwd#0", new MethodDescr
+(/*{{{*/
+"Returns current working directory path.",
+[],"* Object of class %s." % doc_class_ref("String"),"
+(\"type: %s\\n\" % $(type Sys.getcwd())).print();
+"
+),/*}}}*/
+        "setenv#2", new MethodDescr
+(/*{{{*/
+"Sets environment variable.",
+["Object of class %s containing variable name." % doc_class_ref("String"),
+ "Object of class %s containing variable value." % doc_class_ref("String")],new Blank(),"
+Sys.setenv(\"TEST_VAR\",\"hello\");
+(\"TEST_VAR: %s\\n\" % Sys.getenv(\"TEST_VAR\")).print();
+"
+),/*}}}*/
+        "getenv#1", new MethodDescr
+(/*{{{*/
+"Returns value of environment variable.",
+["Object of class %s containing variable name." % doc_class_ref("String")],
+"* Object of class %s." % doc_class_ref("String"),"
+Sys.setenv(\"TEST_VAR\",\"hello\");
+(\"TEST_VAR: %s\\n\" % Sys.getenv(\"TEST_VAR\")).print();
+"
+),/*}}}*/
+        "is_file#1", new MethodDescr
+(/*{{{*/
+"Tests whether given path refers to a regular file.",
+["Object of class %s containing file path." % doc_class_ref("String")],
+"* Object of class %s, value `1` if path is a regular file, `0` otherwise." % doc_class_ref("Integer"),"
+new File(\"temporary\",\"w\").write_close(\"data\");
+(\"is_file: %d\\n\" % Sys.is_file(\"temporary\")).print();
+(\"is_file: %d\\n\" % Sys.is_file(\"nonexistent\")).print();
+Sys.remove(\"temporary\");
+"
+),/*}}}*/
+        "is_dir#1", new MethodDescr
+(/*{{{*/
+"Tests whether given path refers to a directory.",
+["Object of class %s containing directory path." % doc_class_ref("String")],
+"* Object of class %s, value `1` if path is a directory, `0` otherwise." % doc_class_ref("Integer"),"
+Sys.mkdir(\"test_dir\");
+(\"is_dir: %d\\n\" % Sys.is_dir(\"test_dir\")).print();
+(\"is_dir: %d\\n\" % Sys.is_dir(\"nonexistent\")).print();
+Sys.rmdir(\"test_dir\");
+"
+),/*}}}*/
+        "size#1", new MethodDescr
+(/*{{{*/
+"Returns size of file in bytes.",
+["Object of class %s containing file path." % doc_class_ref("String")],
+"* Object of class %s representing file size in bytes." % doc_class_ref("Integer"),"
+new File(\"temporary\",\"w\").write_close(\"Hello world\\n\");
+(\"size: %d\\n\" % Sys.size(\"temporary\")).print();
+Sys.remove(\"temporary\");
+"
+),/*}}}*/
+        "time#0", new MethodDescr
+(/*{{{*/
+"Returns current Unix time in seconds.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+(\"type: %s\\n\" % $(type Sys.time())).print();
 "
 )/*}}}*/
       ]);/*}}}*/
@@ -1689,7 +2015,9 @@ obj.readln();
       [/*{{{*/
         "domain",new VarClassDescr("Domain identifying protocol family to be used for communication"),
         "type",new VarClassDescr("Type specifying communication semantics"),
-        "option",new VarClassDescr("Socket related options")
+        "option",new VarClassDescr("Socket related options"),
+        "proto",new VarClassDescr("Protocol level constants"),
+        "ip_option",new VarClassDescr("IP protocol options")
       ]);/*}}}*/
       class_Socket["variables"] = new Dict(
       [/*{{{*/
@@ -1699,11 +2027,646 @@ obj.readln();
         "SOCK_STREAM",new VariableDescr("Sequenced, reliable, two-way, connection-based byte streams.","type"),
         "SOCK_DGRAM",new VariableDescr("Connectionless, unreliable messages of a fixed maximum length.","type"),
         "SOCK_RAW",new VariableDescr("Raw network protocol access.","type"),
+        "SOL_SOCKET",new VariableDescr("Socket level for socket options.","option"),
+        "SO_ERROR",new VariableDescr("Get and clear pending socket error.","option"),
+        "SO_SNDBUF",new VariableDescr("Send buffer size.","option"),
+        "SO_RCVBUF",new VariableDescr("Receive buffer size.","option"),
         "SO_RCVTIMEO",new VariableDescr("Receiving timeout until reporting an error.","option"),
-        "SO_SNDTIMEO",new VariableDescr("Sending timeout until reporting an error.","option")
+        "SO_SNDTIMEO",new VariableDescr("Sending timeout until reporting an error.","option"),
+        "SO_BROADCAST",new VariableDescr("Enable sending of broadcast messages.","option"),
+        "IPPROTO_IP",new VariableDescr("IP protocol level.","proto"),
+        "IP_ADD_MEMBERSHIP",new VariableDescr("Join a multicast group.","ip_option"),
+        "IP_DROP_MEMBERSHIP",new VariableDescr("Leave a multicast group.","ip_option")
       ]);/*}}}*/
       class_Socket["methods"] = new Dict(
       [/*{{{*/
+        "Socket#2", new MethodDescr
+(/*{{{*/
+"Creates object of class `%s` with given domain and type." % m_target_name,
+["Type convertible to integer representing communication domain (e.g. `Socket.AF_INET`).",
+ "Type convertible to integer representing socket type (e.g. `Socket.SOCK_STREAM`)."],new Blank(),"
+obj = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
+(\"obj: %s\\n\" % $obj).print();
+obj.close();
+"
+),/*}}}*/
+        "listen#2", new MethodDescr
+(/*{{{*/
+"Binds socket to address and starts listening for incoming connections.",
+["Object of class %s representing address to bind to." % doc_class_ref("SocketAddr"),
+ "Type convertible to integer representing connection backlog size."],new Blank(),"
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+" % get_property(m_target_name,"create_example_obj")
+),/*}}}*/
+        "accept#0", new MethodDescr
+(/*{{{*/
+"Accepts incoming connection on listening socket. Returns array containing
+new connected socket and address of connecting peer.",
+[],"* Object of class %s containing object of class `%s` and object of class %s." % [doc_class_ref("Array"),m_target_name,doc_class_ref("SocketAddr")],"
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+" % get_property(m_target_name,"create_example_obj")
+),/*}}}*/
+        "connect#1", new MethodDescr
+(/*{{{*/
+"Connects socket to given address.",
+["Object of class %s representing address to connect to." % doc_class_ref("SocketAddr")],new Blank(),"
+%s
+(\"obj: %%s\\n\" %% $obj).print();
+" % get_property(m_target_name,"create_example_obj")
+),/*}}}*/
+        "bind#1", new MethodDescr
+(/*{{{*/
+"Binds socket to given local address.",
+["Object of class %s representing local address to bind to." % doc_class_ref("SocketAddr")],new Blank(),"
+obj = new Socket(Socket.AF_INET,Socket.SOCK_DGRAM);
+obj.bind(new SocketAddr(\"127.0.0.1\",0));
+(\"obj: %s\\n\" % $obj).print();
+obj.close();
+"
+),/*}}}*/
+        "sendto#2", new MethodDescr
+(/*{{{*/
+"Sends data to given address using connectionless socket.",
+["Object of class %s containing data to send." % doc_class_ref("String"),
+ "Object of class %s representing target address." % doc_class_ref("SocketAddr")],new Blank(),"
+obj = new Socket(Socket.AF_INET,Socket.SOCK_DGRAM);
+obj.bind(new SocketAddr(\"127.0.0.1\",0));
+(\"obj: %s\\n\" % $obj).print();
+obj.close();
+"
+),/*}}}*/
+        "recvfrom#0", new MethodDescr
+(/*{{{*/
+"Receives data from connectionless socket. Returns array containing received
+data string and sender address.",
+[],"* Object of class %s containing object of class %s and object of class %s." % [doc_class_ref("Array"),doc_class_ref("String"),doc_class_ref("SocketAddr")],"
+obj = new Socket(Socket.AF_INET,Socket.SOCK_DGRAM);
+obj.bind(new SocketAddr(\"127.0.0.1\",0));
+(\"obj: %s\\n\" % $obj).print();
+obj.close();
+"
+),/*}}}*/
+        "close#0", new MethodDescr
+(/*{{{*/
+"Closes socket and releases associated resources.",
+[],new Blank(),"
+obj = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
+obj.close();
+(\"closed\\n\").print();
+"
+),/*}}}*/
+        "set_timeout#2", new MethodDescr
+(/*{{{*/
+"Sets socket send/receive timeout.",
+["Type convertible to integer representing timeout seconds.",
+ "Type convertible to integer representing timeout microseconds."],new Blank(),"
+%s
+obj.set_timeout(5,0);
+(\"timeout set\\n\").print();
+" % get_property(m_target_name,"create_example_obj")
+),/*}}}*/
+        "sockopt#3", new MethodDescr
+(/*{{{*/
+"Sets socket option.",
+["Type convertible to integer representing option level (e.g. `Socket.SOL_SOCKET`).",
+ "Type convertible to integer representing option name (e.g. `Socket.SO_BROADCAST`).",
+ "Type convertible to integer representing option value."],new Blank(),"
+obj = new Socket(Socket.AF_INET,Socket.SOCK_DGRAM);
+obj.sockopt(Socket.SOL_SOCKET,Socket.SO_BROADCAST,1);
+(\"option set\\n\").print();
+obj.close();
+"
+),/*}}}*/
+        "sockopt#2", new MethodDescr
+(/*{{{*/
+"Retrieves socket option value.",
+["Type convertible to integer representing option level (e.g. `Socket.SOL_SOCKET`).",
+ "Type convertible to integer representing option name (e.g. `Socket.SO_SNDBUF`)."],
+"* Object of class %s representing option value." % doc_class_ref("Integer"),"
+obj = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
+(\"SO_SNDBUF: %d\\n\" % obj.sockopt(Socket.SOL_SOCKET,Socket.SO_SNDBUF)).print();
+obj.close();
+"
+),/*}}}*/
+        "write#1", new MethodDescr
+(/*{{{*/
+"Writes data to connected socket.",
+["Object of class %s containing data to write." % doc_class_ref("String")],new Blank(),"
+%s
+obj.write(\"Hello\\n\");
+(\"written\\n\").print();
+" % get_property(m_target_name,"create_example_obj")
+),/*}}}*/
+        "read#0", new MethodDescr
+(/*{{{*/
+"Reads all available data from socket.",
+[],"* Object of class %s." % doc_class_ref("String"),"
+%s
+data = obj.read();
+(\"data: %%s\\n\" %% data).print();
+" % get_property(m_target_name,"create_example_obj")
+),/*}}}*/
+        "read#1", new MethodDescr
+(/*{{{*/
+"Reads exactly given number of bytes from socket.",
+["Type convertible to integer representing number of bytes to read."],
+"* Object of class %s." % doc_class_ref("String"),"
+%s
+data = obj.read(5);
+(\"data: %%s\\n\" %% data).print();
+" % get_property(m_target_name,"create_example_obj")
+),/*}}}*/
+        "get_fd#0", new MethodDescr
+(/*{{{*/
+"Returns underlying file descriptor of socket.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
+(\"type: %s\\n\" % $(type obj.get_fd())).print();
+obj.close();
+"
+)/*}}}*/
+      ]);/*}}}*/
+    }
+
+    case "Buffer":
+    {
+      class_Buffer["methods"] = new Dict(
+      [/*{{{*/
+        "size#0", new MethodDescr
+(/*{{{*/
+"Returns size of buffer in bytes.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+(\"size: %d\\n\" % buf.size()).print();
+"
+)/*}}}*/
+      ]);/*}}}*/
+    }
+
+    case "SocketAddr":
+    {
+      class_SocketAddr["methods"] = new Dict(
+      [/*{{{*/
+        "SocketAddr#2", new MethodDescr
+(/*{{{*/
+"Creates object of class `%s` from hostname or IP address string and port number." % m_target_name,
+["Object of class %s containing hostname or IP address." % doc_class_ref("String"),
+ "Type convertible to integer representing port number."],new Blank(),"
+obj = new SocketAddr(\"127.0.0.1\",8080);
+(\"obj: %s\\n\" % $obj).print();
+"
+),/*}}}*/
+        "name#0", new MethodDescr
+(/*{{{*/
+"Returns hostname or IP address of socket address.",
+[],"* Object of class %s." % doc_class_ref("String"),"
+obj = new SocketAddr(\"127.0.0.1\",8080);
+(\"name: %s\\n\" % obj.name()).print();
+"
+),/*}}}*/
+        "port#0", new MethodDescr
+(/*{{{*/
+"Returns port number of socket address.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new SocketAddr(\"127.0.0.1\",8080);
+(\"port: %d\\n\" % obj.port()).print();
+"
+)/*}}}*/
+      ]);/*}}}*/
+    }
+
+    case "Regex":
+    {
+      class_Regex["methods"] = new Dict(
+      [/*{{{*/
+        "Regex#1", new MethodDescr
+(/*{{{*/
+"Creates object of class `%s` from regular expression pattern string." % m_target_name,
+["Object of class %s containing POSIX regular expression pattern." % doc_class_ref("String")],new Blank(),"
+obj = new Regex(\"[0-9]+\");
+(\"obj: %s\\n\" % $obj).print();
+"
+),/*}}}*/
+        "match#1", new MethodDescr
+(/*{{{*/
+"Matches regular expression against input string. Returns array with start
+and end positions of match, or object of class %s if no match found." % doc_class_ref("Blank"),
+["Object of class %s containing input string." % doc_class_ref("String")],
+"* Object of class %s containing start and end positions, or object of class %s." % [doc_class_ref("Array"),doc_class_ref("Blank")],"
+obj = new Regex(\"[0-9]+\");
+res = obj.match(\"abc 123 def\");
+(\"match: %s\\n\" % $res).print();
+res = obj.match(\"no digits\");
+(\"match: %s\\n\" % $res).print();
+"
+),/*}}}*/
+        "match#2", new MethodDescr
+(/*{{{*/
+"Matches regular expression against input string with capture groups. Returns
+array of sub-arrays with start and end positions for each group, or object
+of class %s if no match found." % doc_class_ref("Blank"),
+["Object of class %s containing input string." % doc_class_ref("String"),
+ "Type convertible to integer representing number of capture groups."],
+"* Object of class %s containing sub-arrays, or object of class %s." % [doc_class_ref("Array"),doc_class_ref("Blank")],"
+obj = new Regex(\"([a-z]+) ([0-9]+)\");
+res = obj.match(\"abc 123\",3);
+(\"match: %s\\n\" % $res).print();
+"
+),/*}}}*/
+        "match_from#2", new MethodDescr
+(/*{{{*/
+"Matches regular expression against input string starting at given byte offset.
+Returns array with start and end positions (absolute), or object of class
+%s if no match found." % doc_class_ref("Blank"),
+["Object of class %s containing input string." % doc_class_ref("String"),
+ "Type convertible to integer representing byte offset from which to start matching."],
+"* Object of class %s containing start and end positions, or object of class %s." % [doc_class_ref("Array"),doc_class_ref("Blank")],"
+obj = new Regex(\"[0-9]+\");
+res = obj.match_from(\"abc 123 def 456\",8);
+(\"match: %s\\n\" % $res).print();
+"
+),/*}}}*/
+        "split#1", new MethodDescr
+(/*{{{*/
+"Splits input string by regular expression pattern.",
+["Object of class %s containing input string." % doc_class_ref("String")],
+"* Object of class %s containing split parts." % doc_class_ref("Array"),"
+obj = new Regex(\"[ ,]+\");
+res = obj.split(\"one, two, three\");
+(\"parts: %s\\n\" % $res).print();
+"
+),/*}}}*/
+        "replace#2", new MethodDescr
+(/*{{{*/
+"Replaces all occurrences of regular expression pattern in input string with
+replacement string.",
+["Object of class %s containing input string." % doc_class_ref("String"),
+ "Object of class %s containing replacement string." % doc_class_ref("String")],
+"* Object of class %s." % doc_class_ref("String"),"
+obj = new Regex(\"[0-9]+\");
+res = obj.replace(\"abc 123 def 456\",\"NUM\");
+(\"result: %s\\n\" % res).print();
+"
+)/*}}}*/
+      ]);/*}}}*/
+    }
+
+    case "Signal":
+    {
+      class_Signal["var_classes"] = new Dict(
+      [/*{{{*/
+        "common",new VarClassDescr("Common signal constants"),
+        "unix",new VarClassDescr("Unix signal constants")
+      ]);/*}}}*/
+      class_Signal["variables"] = new Dict(
+      [/*{{{*/
+        "SIGINT",new VariableDescr("Interrupt from keyboard.","common"),
+        "SIGTERM",new VariableDescr("Termination signal.","common"),
+        "SIGHUP",new VariableDescr("Hangup detected on controlling terminal.","unix"),
+        "SIGQUIT",new VariableDescr("Quit from keyboard.","unix"),
+        "SIGILL",new VariableDescr("Illegal instruction.","unix"),
+        "SIGTRAP",new VariableDescr("Trace/breakpoint trap.","unix"),
+        "SIGABRT",new VariableDescr("Abort signal.","unix"),
+        "SIGIOT",new VariableDescr("IOT trap.","unix"),
+        "SIGBUS",new VariableDescr("Bus error.","unix"),
+        "SIGFPE",new VariableDescr("Floating point exception.","unix"),
+        "SIGKILL",new VariableDescr("Kill signal.","unix"),
+        "SIGUSR1",new VariableDescr("User-defined signal 1.","unix"),
+        "SIGSEGV",new VariableDescr("Segmentation violation.","unix"),
+        "SIGUSR2",new VariableDescr("User-defined signal 2.","unix"),
+        "SIGPIPE",new VariableDescr("Broken pipe.","unix"),
+        "SIGALRM",new VariableDescr("Timer signal from alarm.","unix"),
+        "SIGSTKFLT",new VariableDescr("Stack fault on coprocessor.","unix"),
+        "SIGCHLD",new VariableDescr("Child stopped or terminated.","unix"),
+        "SIGCONT",new VariableDescr("Continue if stopped.","unix"),
+        "SIGSTOP",new VariableDescr("Stop process.","unix"),
+        "SIGTSTP",new VariableDescr("Stop typed at terminal.","unix"),
+        "SIGTTIN",new VariableDescr("Terminal input for background process.","unix"),
+        "SIGTTOU",new VariableDescr("Terminal output for background process.","unix"),
+        "SIGURG",new VariableDescr("Urgent condition on socket.","unix"),
+        "SIGXCPU",new VariableDescr("CPU time limit exceeded.","unix"),
+        "SIGXFSZ",new VariableDescr("File size limit exceeded.","unix"),
+        "SIGVTALRM",new VariableDescr("Virtual alarm clock.","unix"),
+        "SIGPROF",new VariableDescr("Profiling timer expired.","unix"),
+        "SIGWINCH",new VariableDescr("Window resize signal.","unix"),
+        "SIGIO",new VariableDescr("I/O now possible.","unix"),
+        "SIGPOLL",new VariableDescr("Pollable event.","unix"),
+        "SIGPWR",new VariableDescr("Power failure.","unix"),
+        "SIGSYS",new VariableDescr("Bad system call.","unix"),
+        "SIGRTMIN",new VariableDescr("First real-time signal.","unix"),
+        "SIGRTMAX",new VariableDescr("Last real-time signal.","unix")
+      ]);/*}}}*/
+      class_Signal["methods"] = new Dict(
+      [/*{{{*/
+        "bind#2", new MethodDescr
+(/*{{{*/
+"Binds signal handler delegate to given signal number. Handler delegate must
+accept one parameter. Can only be called from main thread.",
+["Type convertible to integer representing signal number (e.g. `Signal.SIGINT`).",
+ "Object of class %s, handler to be called when signal is received." % doc_class_ref("Delegate")],new Blank(),"
+// Signal.bind(Signal.SIGINT,handler_delegate);
+(\"Signal class\\n\").print();
+"
+),/*}}}*/
+        "unbind#1", new MethodDescr
+(/*{{{*/
+"Removes signal handler for given signal number. Can only be called from main thread.",
+["Type convertible to integer representing signal number."],new Blank(),"
+// Signal.unbind(Signal.SIGINT);
+(\"Signal class\\n\").print();
+"
+),/*}}}*/
+        "send#2", new MethodDescr
+(/*{{{*/
+"Sends signal to process identified by process ID.",
+["Type convertible to integer representing target process ID.",
+ "Type convertible to integer representing signal number."],new Blank(),"
+(\"pid: %d\\n\" % Sys.getpid()).print();
+"
+)/*}}}*/
+      ]);/*}}}*/
+    }
+
+    case "Poll":
+    {
+      class_Poll["var_classes"] = new Dict(
+      [/*{{{*/
+        "events",new VarClassDescr("Event type constants for poll operations")
+      ]);/*}}}*/
+      class_Poll["variables"] = new Dict(
+      [/*{{{*/
+        "POLLIN",new VariableDescr("Data available to read.","events"),
+        "POLLPRI",new VariableDescr("Urgent data available to read.","events"),
+        "POLLOUT",new VariableDescr("Writing now will not block.","events"),
+        "POLLERR",new VariableDescr("Error condition.","events"),
+        "POLLHUP",new VariableDescr("Hang up.","events"),
+        "POLLNVAL",new VariableDescr("Invalid request, file descriptor not open.","events")
+      ]);/*}}}*/
+      class_Poll["methods"] = new Dict(
+      [/*{{{*/
+        "Poll#1", new MethodDescr
+(/*{{{*/
+"Creates object of class `%s` from array of alternating file descriptor and
+event pairs." % m_target_name,
+["Object of class %s containing alternating file descriptor integers and event mask integers." % doc_class_ref("Array")],new Blank(),"
+pipe = Sys.pipe();
+pipe[1].write_close(\"Hello\\n\");
+obj = new Poll([pipe[0].get_fd(),Poll.POLLIN]);
+(\"obj: %s\\n\" % $obj).print();
+pipe[0].close();
+"
+),/*}}}*/
+        "ready#1", new MethodDescr
+(/*{{{*/
+"Polls file descriptors with given timeout. Returns `1` if any file descriptor
+is ready, `0` if timeout expired.",
+["Type convertible to integer representing timeout in milliseconds."],
+"* Object of class %s." % doc_class_ref("Integer"),"
+pipe = Sys.pipe();
+pipe[1].write_close(\"Hello\\n\");
+obj = new Poll([pipe[0].get_fd(),Poll.POLLIN]);
+(\"ready: %d\\n\" % obj.ready(100)).print();
+pipe[0].close();
+"
+),/*}}}*/
+        "poll#1", new MethodDescr
+(/*{{{*/
+"Polls file descriptors with given timeout. Returns array of revents values
+for each file descriptor, or object of class %s on timeout." % doc_class_ref("Blank"),
+["Type convertible to integer representing timeout in milliseconds."],
+"* Object of class %s containing revents integers, or object of class %s." % [doc_class_ref("Array"),doc_class_ref("Blank")],"
+pipe = Sys.pipe();
+pipe[1].write_close(\"Hello\\n\");
+obj = new Poll([pipe[0].get_fd(),Poll.POLLIN]);
+res = obj.poll(100);
+(\"poll: %s\\n\" % $res).print();
+pipe[0].close();
+"
+)/*}}}*/
+      ]);/*}}}*/
+    }
+
+    case "Timer":
+    {
+      class_Timer["methods"] = new Dict(
+      [/*{{{*/
+        "Timer#0", new MethodDescr
+(/*{{{*/
+"Creates object of class `%s`." % m_target_name,
+[],new Blank(),"
+obj = new Timer();
+(\"obj: %s\\n\" % $obj).print();
+"
+),/*}}}*/
+        "schedule#3", new MethodDescr
+(/*{{{*/
+"Schedules callback to be called after given delay. Returns record index that
+can be used to cancel scheduled callback.",
+["Type convertible to integer representing delay in milliseconds.",
+ "Object of class %s to be called when timer fires." % doc_class_ref("Delegate"),
+ "User data to be passed to callback delegate."],
+"* Object of class %s representing scheduled record index." % doc_class_ref("Integer"),"
+obj = new Timer();
+idx = obj.schedule(100,new Delegate(this,\"timer_cb\",1),\"data\");
+(\"idx: %d\\n\" % idx).print();
+Sys.sleep(150);
+obj.process();
+"
+),/*}}}*/
+        "cancel#1", new MethodDescr
+(/*{{{*/
+"Cancels scheduled timer callback identified by record index.",
+["Type convertible to integer representing record index returned by [`schedule#3`](#schedule%233)."],new Blank(),"
+obj = new Timer();
+idx = obj.schedule(100,new Delegate(this,\"timer_cb\",1),\"data\");
+obj.cancel(idx);
+(\"cancelled\\n\").print();
+"
+),/*}}}*/
+        "process#0", new MethodDescr
+(/*{{{*/
+"Fires all scheduled callbacks whose delay has expired.",
+[],new Blank(),"
+obj = new Timer();
+obj.schedule(50,new Delegate(this,\"timer_cb\",1),\"hello\");
+Sys.sleep(100);
+obj.process();
+"
+),/*}}}*/
+        "remain#0", new MethodDescr
+(/*{{{*/
+"Returns time remaining in milliseconds until next scheduled event, or object
+of class %s if no timers are scheduled." % doc_class_ref("Blank"),
+[],"* Object of class %s, or object of class %s." % [doc_class_ref("Integer"),doc_class_ref("Blank")],"
+obj = new Timer();
+obj.schedule(1000,new Delegate(this,\"timer_cb\",1),\"data\");
+(\"type: %s\\n\" % $(type obj.remain())).print();
+"
+),/*}}}*/
+        "timeout#0", new MethodDescr
+(/*{{{*/
+"Returns time remaining in milliseconds until next scheduled event. Returns
+`0` if a timer has already expired.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Timer();
+obj.schedule(1000,new Delegate(this,\"timer_cb\",1),\"data\");
+(\"type: %s\\n\" % $(type obj.timeout())).print();
+"
+)/*}}}*/
+      ]);/*}}}*/
+    }
+
+    case "Clock":
+    {
+      class_Clock["var_classes"] = new Dict(
+      [/*{{{*/
+        "clock_id",new VarClassDescr("Clock identifier constants")
+      ]);/*}}}*/
+      class_Clock["variables"] = new Dict(
+      [/*{{{*/
+        "CLOCK_REALTIME",new VariableDescr("System-wide real-time clock.","clock_id"),
+        "CLOCK_MONOTONIC",new VariableDescr("Monotonic clock that cannot be set.","clock_id"),
+        "CLOCK_PROCESS_CPUTIME_ID",new VariableDescr("Per-process CPU-time clock.","clock_id"),
+        "CLOCK_THREAD_CPUTIME_ID",new VariableDescr("Per-thread CPU-time clock.","clock_id")
+      ]);/*}}}*/
+      class_Clock["methods"] = new Dict(
+      [/*{{{*/
+        "getres#1", new MethodDescr
+(/*{{{*/
+"Returns resolution of given clock as array of seconds and nanoseconds.",
+["Type convertible to integer representing clock identifier (e.g. `Clock.CLOCK_REALTIME`)."],
+"* Object of class %s containing `[seconds, nanoseconds]`." % doc_class_ref("Array"),"
+res = Clock.getres(Clock.CLOCK_REALTIME);
+(\"resolution: %s\\n\" % $res).print();
+"
+),/*}}}*/
+        "gettime#1", new MethodDescr
+(/*{{{*/
+"Returns current time of given clock as array of seconds and nanoseconds.",
+["Type convertible to integer representing clock identifier (e.g. `Clock.CLOCK_MONOTONIC`)."],
+"* Object of class %s containing `[seconds, nanoseconds]`." % doc_class_ref("Array"),"
+time = Clock.gettime(Clock.CLOCK_MONOTONIC);
+(\"time: %s\\n\" % $time).print();
+"
+),/*}}}*/
+        "settime#2", new MethodDescr
+(/*{{{*/
+"Sets time of given clock.",
+["Type convertible to integer representing clock identifier.",
+ "Object of class %s containing `[seconds, nanoseconds]`." % doc_class_ref("Array")],new Blank(),"
+// Clock.settime(Clock.CLOCK_REALTIME,[0,0]);
+(\"Clock class\\n\").print();
+"
+)/*}}}*/
+      ]);/*}}}*/
+    }
+
+    case "Time":
+    {
+      class_Time["methods"] = new Dict(
+      [/*{{{*/
+        "Time#0", new MethodDescr
+(/*{{{*/
+"Creates object of class `%s` representing current time." % m_target_name,
+[],new Blank(),"
+obj = new Time();
+(\"type: %s\\n\" % $(type obj)).print();
+"
+),/*}}}*/
+        "Time#1", new MethodDescr
+(/*{{{*/
+"Creates object of class `%s` from given value. Accepts integer (nanoseconds),
+float, object of class `%s`, or string in format `\"YYYYMMDDHHmmSS\"`." % [m_target_name,m_target_name],
+["Object of class %s, %s, %s or %s." % [doc_class_ref("Integer"),doc_class_ref("Float"),doc_class_ref("Time"),doc_class_ref("String")]],new Blank(),"
+obj = new Time(1742049025000000000);
+(\"obj: %s\\n\" % $obj).print();
+obj = new Time(\"20250101120000\");
+(\"obj: %s\\n\" % $obj).print();
+"
+),/*}}}*/
+        "value#0", new MethodDescr
+(/*{{{*/
+"Returns raw time value in nanoseconds.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Time(\"20250315143025\");
+(\"value: %d\\n\" % obj.value()).print();
+"
+),/*}}}*/
+        "nano_sec#0", new MethodDescr
+(/*{{{*/
+"Returns time value in nanoseconds.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Time(\"20250315143025\");
+(\"nano_sec: %d\\n\" % obj.nano_sec()).print();
+"
+),/*}}}*/
+        "micro_sec#0", new MethodDescr
+(/*{{{*/
+"Returns time value in microseconds.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Time(\"20250315143025\");
+(\"micro_sec: %d\\n\" % obj.micro_sec()).print();
+"
+),/*}}}*/
+        "milli_sec#0", new MethodDescr
+(/*{{{*/
+"Returns time value in milliseconds.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Time(\"20250315143025\");
+(\"milli_sec: %d\\n\" % obj.milli_sec()).print();
+"
+),/*}}}*/
+        "seconds#0", new MethodDescr
+(/*{{{*/
+"Returns time value in seconds.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Time(\"20250315143025\");
+(\"seconds: %d\\n\" % obj.seconds()).print();
+"
+),/*}}}*/
+        "minutes#0", new MethodDescr
+(/*{{{*/
+"Returns time value in minutes.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Time(\"20250315143025\");
+(\"minutes: %d\\n\" % obj.minutes()).print();
+"
+),/*}}}*/
+        "hours#0", new MethodDescr
+(/*{{{*/
+"Returns time value in hours.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Time(\"20250315143025\");
+(\"hours: %d\\n\" % obj.hours()).print();
+"
+),/*}}}*/
+        "days#0", new MethodDescr
+(/*{{{*/
+"Returns time value in days.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Time(\"20250315143025\");
+(\"days: %d\\n\" % obj.days()).print();
+"
+),/*}}}*/
+        "datetime#0", new MethodDescr
+(/*{{{*/
+"Returns array of 10 integers representing date and time components:
+`[year, month, day, weekday, hour, minute, second, millisecond, microsecond, nanosecond]`.",
+[],"* Object of class %s." % doc_class_ref("Array"),"
+obj = new Time(\"20250101120000\");
+dt = obj.datetime();
+(\"datetime: %s\\n\" % $dt).print();
+"
+),/*}}}*/
+        "day_of_week#0", new MethodDescr
+(/*{{{*/
+"Returns day of week as integer.",
+[],"* Object of class %s." % doc_class_ref("Integer"),"
+obj = new Time(\"20250101120000\");
+(\"day_of_week: %d\\n\" % obj.day_of_week()).print();
+"
+)/*}}}*/
       ]);/*}}}*/
     }
 

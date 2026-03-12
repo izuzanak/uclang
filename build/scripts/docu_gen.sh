@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export LD_LIBRARY_PATH=$(pwd)
+export PATH=$(pwd):$PATH
+
 mkdir -p snippets
 
 # Generate base documentation
@@ -15,7 +18,7 @@ uclang scripts/docu_gen.ucl Type ../uclang/doc/02_modules/02_module_base/09_clas
 uclang scripts/docu_gen.ucl Mutex ../uclang/doc/02_modules/02_module_base/10_class_mutex.md
 uclang scripts/docu_gen.ucl Thread ../uclang/doc/02_modules/02_module_base/11_class_thread.md sys
 uclang scripts/docu_gen.ucl Delegate ../uclang/doc/02_modules/02_module_base/12_class_delegate.md
-#./uclang scripts/docu_gen.ucl Buffer ../uclang/doc/02_modules/02_module_base/13_class_buffer.md
+uclang scripts/docu_gen.ucl Buffer ../uclang/doc/02_modules/02_module_base/13_class_buffer.md binbits
 
 # Generate containers documentation
 uclang scripts/docu_gen.ucl Stack ../uclang/doc/02_modules/03_module_containers/01_class_stack.md containers
@@ -26,15 +29,19 @@ uclang scripts/docu_gen.ucl Tree ../uclang/doc/02_modules/03_module_containers/0
 uclang scripts/docu_gen.ucl Dict ../uclang/doc/02_modules/03_module_containers/06_class_dict.md containers
 
 # Generate sys documentation
-#./uclang scripts/docu_gen.ucl Sys ../uclang/doc/02_modules/04_module_sys/01_class_sys.md sys:time
+uclang scripts/docu_gen.ucl Sys ../uclang/doc/02_modules/04_module_sys/01_class_sys.md sys:time
 uclang scripts/docu_gen.ucl Pipe ../uclang/doc/02_modules/04_module_sys/02_class_pipe.md sys
 uclang scripts/docu_gen.ucl File ../uclang/doc/02_modules/04_module_sys/03_class_file.md sys
-#./uclang scripts/docu_gen.ucl Socket ../uclang/doc/02_modules/04_module_sys/04_class_socket.md sys
-#./uclang scripts/docu_gen.ucl Regex ../uclang/doc/02_modules/04_module_sys/05_class_regex.md sys
-#./uclang scripts/docu_gen.ucl Signal ../uclang/doc/02_modules/04_module_sys/06_class_signal.md sys
-#./uclang scripts/docu_gen.ucl Poll ../uclang/doc/02_modules/04_module_sys/007_class_poll.md sys
-#./uclang scripts/docu_gen.ucl Timer ../uclang/doc/02_modules/04_module_sys/008_class_timer.md sys
-#./uclang scripts/docu_gen.ucl Clock ../uclang/doc/02_modules/04_module_sys/009_class_clock.md sys
+uclang scripts/docu_gen.ucl Socket ../uclang/doc/02_modules/04_module_sys/04_class_socket.md sys
+uclang scripts/docu_gen.ucl SocketAddr ../uclang/doc/02_modules/04_module_sys/05_class_socket_addr.md sys
+uclang scripts/docu_gen.ucl Regex ../uclang/doc/02_modules/04_module_sys/06_class_regex.md regex
+uclang scripts/docu_gen.ucl Signal ../uclang/doc/02_modules/04_module_sys/07_class_signal.md sys
+uclang scripts/docu_gen.ucl Poll ../uclang/doc/02_modules/04_module_sys/08_class_poll.md sys
+uclang scripts/docu_gen.ucl Timer ../uclang/doc/02_modules/04_module_sys/09_class_timer.md sys
+uclang scripts/docu_gen.ucl Clock ../uclang/doc/02_modules/04_module_sys/10_class_clock.md sys
+
+# Generate time documentation
+uclang scripts/docu_gen.ucl Time ../uclang/doc/02_modules/04_module_sys/11_class_time.md time
 
 # Generate parser documentation
 uclang scripts/docu_gen.ucl FinalAutomata ../uclang/doc/02_modules/05_module_parser/01_class_final_automata.md parser
@@ -52,4 +59,3 @@ uclang scripts/docu_gen.ucl Range ../uclang/doc/02_modules/07_module_algorithms/
 
 # Generate json documentation
 uclang scripts/docu_gen.ucl Json ../uclang/doc/02_modules/08_module_json/01_class_json.md containers:json
-
