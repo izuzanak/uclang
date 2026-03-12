@@ -50,7 +50,7 @@ open flags.
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 obj.read().print();
 ```
 ```
@@ -82,7 +82,7 @@ Assignment operator `=`. Object of class `Pipe` is replaced by method parameter.
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 ("obj: %s\n" % $obj).print();
 obj = "New value";
 ("obj: %s\n" % $obj).print();
@@ -109,7 +109,7 @@ Closes stream represented by object of class `Pipe`.
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 obj.close();
 obj.read();
 ```
@@ -211,7 +211,7 @@ Read all data from stream represented by object of class `Pipe`, and return obje
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 obj.read().print();
 obj.read().print();
 '\n'.print();
@@ -239,7 +239,7 @@ Read one line from stream represented by object of class `Pipe`, and return obje
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 while (Blank != (line = obj.readln()))
 {
   ("line: %s\n" % line).print();
@@ -270,7 +270,7 @@ Read requested count of bytes from stream represented by object of class `Pipe`,
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 obj.read(32).print();
 '\n'.print();
 ```
@@ -297,7 +297,7 @@ Read maximaly requested count of bytes from stream represented by object of clas
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 obj.read_max(47).print();
 '\n'.print();
 obj.read_max(47).print();
@@ -327,7 +327,7 @@ Read all data from stream represented by object of class `Pipe`, and return obje
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 obj.read_close().print();
 ```
 ```
@@ -351,7 +351,7 @@ Retrieve pid of process on other side of pipe.
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 ("obj.pid(): %s\n" % $(type obj.pid())).print();
 ```
 ```
@@ -371,7 +371,7 @@ Return integer file descriptor of stream represented by object of class `Pipe`.
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 ("obj.get_fd(): %d\n" % obj.get_fd()).print();
 ```
 ```
@@ -392,7 +392,7 @@ Read one line from stream represented by object of class `Pipe`, and return obje
 **Example:**
 
 ```cpp
-obj = new Pipe("cat numbers.txt 2> /dev/null","r");
+obj = new Pipe("cat scripts/numbers.txt 2> /dev/null","r");
 for (line <- obj)
 {
   ("line: %s\n" % line).print();

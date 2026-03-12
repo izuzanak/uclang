@@ -186,5 +186,26 @@ float         -> 125.250000
 float.isnan() -> 0
 float         -> 125.250000
 
+=== Float built in constants ===================================================
+
+Float.INFINITY:       inf
+Float.CLASS_NAN:      0
+Float.CLASS_INFINITE: 1
+Float.CLASS_ZERO:     2
+Float.CLASS_SUBNORMAL:3
+Float.CLASS_NORMAL:   4
+
+=== Float method classify#0 ====================================================
+
+float            -> 125.250000
+float.classify() -> 4
+(float.classify() == Float.CLASS_NORMAL)   -> 1
+float            -> 0.000000
+float.classify() -> 2
+(float.classify() == Float.CLASS_ZERO)     -> 1
+float            -> inf
+float.classify() -> 1
+(float.classify() == Float.CLASS_INFINITE) -> 1
+
 === Tutorial end ===============================================================
 

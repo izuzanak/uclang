@@ -64,7 +64,7 @@ Creates object of class `File`, based on file path and file open flags.
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 obj.read().print();
 ```
 ```
@@ -96,7 +96,7 @@ Assignment operator `=`. Object of class `File` is replaced by method parameter.
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 ("obj: %s\n" % $obj).print();
 obj = "New value";
 ("obj: %s\n" % $obj).print();
@@ -130,7 +130,7 @@ indicator.
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 ("line: %s\n" % obj.readln()).print();
 ("line: %s\n" % obj.readln()).print();
 obj.seek(0,File.SEEK_SET);
@@ -156,7 +156,7 @@ Return of file position indicator of stream represented by object of class
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 obj.readln();
 ("obj.tell(): %d\n" % obj.tell()).print();
 obj.readln();
@@ -180,7 +180,7 @@ Closes stream represented by object of class `File`.
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 obj.close();
 obj.read();
 ```
@@ -279,7 +279,7 @@ Read all data from stream represented by object of class `File`, and return obje
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 obj.read().print();
 obj.read().print();
 '\n'.print();
@@ -307,7 +307,7 @@ Read one line from stream represented by object of class `File`, and return obje
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 while (Blank != (line = obj.readln()))
 {
   ("line: %s\n" % line).print();
@@ -338,7 +338,7 @@ Read requested count of bytes from stream represented by object of class `File`,
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 obj.read(32).print();
 '\n'.print();
 ```
@@ -365,7 +365,7 @@ Read maximaly requested count of bytes from stream represented by object of clas
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 obj.read_max(47).print();
 '\n'.print();
 obj.read_max(47).print();
@@ -395,7 +395,7 @@ Read all data from stream represented by object of class `File`, and return obje
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 obj.read_close().print();
 ```
 ```
@@ -419,7 +419,7 @@ Return integer file descriptor of stream represented by object of class `File`.
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 ("obj.get_fd(): %d\n" % obj.get_fd()).print();
 ```
 ```
@@ -440,7 +440,7 @@ Read one line from stream represented by object of class `File`, and return obje
 **Example:**
 
 ```cpp
-obj = new File("numbers.txt","r");
+obj = new File("scripts/numbers.txt","r");
 for (line <- obj)
 {
   ("line: %s\n" % line).print();

@@ -105,12 +105,15 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_class_HttpServer;
   libnode_ucll_EXPORT static unsigned c_bi_class_HttpConn;
   libnode_ucll_EXPORT static unsigned c_bi_class_HttpResp;
+  libnode_ucll_EXPORT static unsigned c_bi_class_HttpPostProc;
   libnode_ucll_EXPORT static unsigned c_bi_class_WsContext;
   libnode_ucll_EXPORT static unsigned c_bi_class_WsConn;
   libnode_ucll_EXPORT static unsigned c_bi_class_WsClient;
   libnode_ucll_EXPORT static unsigned c_bi_class_WsBase64;
   libnode_ucll_EXPORT static unsigned c_bi_class_CurlResult;
   libnode_ucll_EXPORT static unsigned c_bi_class_Curl;
+  libnode_ucll_EXPORT static unsigned c_bi_class_CurlMulti;
+  libnode_ucll_EXPORT static unsigned c_bi_class_CurlMultiRequest;
   libnode_ucll_EXPORT static unsigned c_bi_class_FtpSession;
   libnode_ucll_EXPORT static unsigned c_bi_class_FtpHandle;
   libnode_ucll_EXPORT static unsigned c_bi_class_Ssh2Session;
@@ -359,7 +362,7 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_step_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_reset_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_reset_clear_0;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_HttpServer_2;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_HttpServer_4;
   libnode_ucll_EXPORT static unsigned c_bi_mni_stop_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_get_fds_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_process_1;
@@ -383,8 +386,8 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_HttpResp_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_add_header_2;
   libnode_ucll_EXPORT static unsigned c_bi_mni_add_footer_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_WsContext_2;
-  libnode_ucll_EXPORT static unsigned c_bi_mni_client_4;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_key_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_offset_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_protocol_idx_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_callback_on_writable_1;
   libnode_ucll_EXPORT static unsigned c_bi_mni_reason_0;
@@ -488,6 +491,29 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_mni_nodes_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_texts_0;
   libnode_ucll_EXPORT static unsigned c_bi_mni_content_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_to_json_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_link_2;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_unordered_items_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_unordered_keys_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_remove_if_key_1;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_day_of_week_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_value_2;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_client_ip_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_WsContext_3;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_client_5;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_header_1;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_CurlMulti_1;
+  libnode_ucll_EXPORT static unsigned c_bi_mni__GET_2;
+  libnode_ucll_EXPORT static unsigned c_bi_mni__PUT_3;
+  libnode_ucll_EXPORT static unsigned c_bi_mni__POST_3;
+  libnode_ucll_EXPORT static unsigned c_bi_mni__DELETE_2;
+  libnode_ucll_EXPORT static unsigned c_bi_mni__HEAD_2;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_url_escape_1;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_url_unescape_1;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_add_headers_1;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_setopt_2;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_cancel_0;
+  libnode_ucll_EXPORT static unsigned c_bi_mni_code_0;
 
   // - built in variable name indexes declaration -
   libnode_ucll_EXPORT static unsigned c_bi_vni__INFINITY;
@@ -569,6 +595,10 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_vni_SO_RCVBUF;
   libnode_ucll_EXPORT static unsigned c_bi_vni_SO_RCVTIMEO;
   libnode_ucll_EXPORT static unsigned c_bi_vni_SO_SNDTIMEO;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SO_BROADCAST;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_IPPROTO_IP;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_IP_ADD_MEMBERSHIP;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_IP_DROP_MEMBERSHIP;
   libnode_ucll_EXPORT static unsigned c_bi_vni__SIGINT;
   libnode_ucll_EXPORT static unsigned c_bi_vni__SIGTERM;
   libnode_ucll_EXPORT static unsigned c_bi_vni__SIGHUP;
@@ -673,6 +703,14 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_vni_YES;
   libnode_ucll_EXPORT static unsigned c_bi_vni_NO;
   libnode_ucll_EXPORT static unsigned c_bi_vni_INVALID_NONCE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_USE_SSL;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_USE_POLL;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_USE_EPOLL;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPTION_HTTPS_MEM_KEY;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPTION_HTTPS_MEM_CERT;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPTION_CONNECTION_LIMIT;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPTION_CONNECTION_TIMEOUT;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPTION_PER_IP_CONNECTION_LIMIT;
   libnode_ucll_EXPORT static unsigned c_bi_vni_FROM_STRING;
   libnode_ucll_EXPORT static unsigned c_bi_vni_FROM_FILE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_CONTINUE;
@@ -709,12 +747,9 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_PRECONDITION_FAILED;
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_UNSUPPORTED_MEDIA_TYPE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_EXPECTATION_FAILED;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_UNPROCESSABLE_ENTITY;
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_LOCKED;
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_FAILED_DEPENDENCY;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_UNORDERED_COLLECTION;
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_UPGRADE_REQUIRED;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_NO_RESPONSE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_RETRY_WITH;
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS;
   libnode_ucll_EXPORT static unsigned c_bi_vni_HTTP_UNAVAILABLE_FOR_LEGAL_REASONS;
@@ -767,9 +802,60 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_vni_TIMEOUT_AWAITING_SERVER_RESPONSE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TIMEOUT_AWAITING_PING;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TIMEOUT_CLOSE_ACK;
-  libnode_ucll_EXPORT static unsigned c_bi_vni_TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TIMEOUT_SENT_CLIENT_HANDSHAKE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TIMEOUT_SSL_ACCEPT;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_CB_CLIENT_CLOSED;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_CB_RECEIVE_PONG;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_GET_URI;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_POST_URI;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HOST;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_CONNECTION;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_UPGRADE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_ORIGIN;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_CHALLENGE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_ACCEPT;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_IF_MODIFIED_SINCE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_IF_NONE_MATCH;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_ACCEPT_ENCODING;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_ACCEPT_LANGUAGE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_PRAGMA;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_CACHE_CONTROL;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_AUTHORIZATION;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_COOKIE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_CONTENT_LENGTH;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_CONTENT_TYPE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_DATE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_RANGE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_ACCEPT_RANGES;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_AGE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_ALLOW;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_CONTENT_DISPOSITION;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_CONTENT_ENCODING;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_CONTENT_LANGUAGE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_CONTENT_LOCATION;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_CONTENT_RANGE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_ETAG;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_EXPECT;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_EXPIRES;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_FROM;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_IF_MATCH;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_IF_RANGE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_IF_UNMODIFIED_SINCE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_LAST_MODIFIED;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_LINK;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_LOCATION;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_REFRESH;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_RETRY_AFTER;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_SERVER;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_SET_COOKIE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_TRANSFER_ENCODING;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP_URI_ARGS;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HTTP1_0;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_X_FORWARDED_FOR;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_CONNECT;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_HEAD_URI;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_TOKEN_X_AUTH_TOKEN;
   libnode_ucll_EXPORT static unsigned c_bi_vni_INFO_EFFECTIVE_URL;
   libnode_ucll_EXPORT static unsigned c_bi_vni_INFO_RESPONSE_CODE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_INFO_TOTAL_TIME;
@@ -828,6 +914,27 @@ class UclVar
   libnode_ucll_EXPORT static unsigned c_bi_vni_AUTH_NTLM_WB;
   libnode_ucll_EXPORT static unsigned c_bi_vni_AUTH_ONLY;
   libnode_ucll_EXPORT static unsigned c_bi_vni_AUTH_NONE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_DIRLISTONLY;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_FTP_CREATE_MISSING_DIRS;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_FTPPORT;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_KEYPASSWD;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_SSH_AUTH_TYPES;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_SSH_PRIVATE_KEYFILE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_SSH_PUBLIC_KEYFILE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_SSL_VERIFYPEER;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_SSL_VERIFYHOST;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_QUOTE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_PREQUOTE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_OPT_POSTQUOTE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_FTP_CREATE_DIR_NONE;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_FTP_CREATE_DIR;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_FTP_CREATE_DIR_RETRY;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SSH_AUTH_PUBLICKEY;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SSH_AUTH_PASSWORD;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SSH_AUTH_HOST;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SSH_AUTH_KEYBOARD;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_SSH_AUTH_AGENT;
+  libnode_ucll_EXPORT static unsigned c_bi_vni_CURLE_OK;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TYPE_DIR;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TYPE_DIR_VERBOSE;
   libnode_ucll_EXPORT static unsigned c_bi_vni_TYPE_FILE_READ;
@@ -1360,6 +1467,7 @@ class UclVar
     static unsigned c_bi_mi_is_dir_1;
     static unsigned c_bi_mi_size_1;
     static unsigned c_bi_mi_time_0;
+    static unsigned c_bi_mi_link_2;
     static unsigned c_bi_mi_to_string_0;
     static unsigned c_bi_mi_print_0;
 
@@ -1499,6 +1607,11 @@ class UclVar
       return __static_call_0(c_bi_mi_time_0);
     }/*}}}*/
 
+    inline static UclVar link(UclVar op_0,UclVar op_1)
+    {/*{{{*/
+      return __static_call_2(c_bi_mi_link_2,op_0,op_1);
+    }/*}}}*/
+
     inline static UclVar to_string()
     {/*{{{*/
       return __static_call_0(c_bi_mi_to_string_0);
@@ -1619,6 +1732,10 @@ class UclVar
     libnode_ucll_EXPORT static UclVar SO_RCVBUF;
     libnode_ucll_EXPORT static UclVar SO_RCVTIMEO;
     libnode_ucll_EXPORT static UclVar SO_SNDTIMEO;
+    libnode_ucll_EXPORT static UclVar SO_BROADCAST;
+    libnode_ucll_EXPORT static UclVar IPPROTO_IP;
+    libnode_ucll_EXPORT static UclVar IP_ADD_MEMBERSHIP;
+    libnode_ucll_EXPORT static UclVar IP_DROP_MEMBERSHIP;
 
     public:
     inline static UclVar to_string()
@@ -2158,6 +2275,16 @@ class UclVar
     static unsigned c_bi_mi_print_0;
 
     public:
+    libnode_ucll_EXPORT static UclVar USE_SSL;
+    libnode_ucll_EXPORT static UclVar USE_POLL;
+    libnode_ucll_EXPORT static UclVar USE_EPOLL;
+    libnode_ucll_EXPORT static UclVar OPTION_HTTPS_MEM_KEY;
+    libnode_ucll_EXPORT static UclVar OPTION_HTTPS_MEM_CERT;
+    libnode_ucll_EXPORT static UclVar OPTION_CONNECTION_LIMIT;
+    libnode_ucll_EXPORT static UclVar OPTION_CONNECTION_TIMEOUT;
+    libnode_ucll_EXPORT static UclVar OPTION_PER_IP_CONNECTION_LIMIT;
+
+    public:
     inline static UclVar to_string()
     {/*{{{*/
       return __static_call_0(c_bi_mi_to_string_0);
@@ -2170,9 +2297,9 @@ class UclVar
 
   };/*}}}*/
 
-  inline static UclVar HttpServer(UclVar op_0,UclVar op_1)
+  inline static UclVar HttpServer(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3)
   {/*{{{*/
-    return __new_object_2(c_bi_class_HttpServer,c_bi_mni_HttpServer_2,op_0,op_1);
+    return __new_object_4(c_bi_class_HttpServer,c_bi_mni_HttpServer_4,op_0,op_1,op_2,op_3);
   }/*}}}*/
 
   // - class HttpConn -
@@ -2259,12 +2386,9 @@ class UclVar
     libnode_ucll_EXPORT static UclVar HTTP_PRECONDITION_FAILED;
     libnode_ucll_EXPORT static UclVar HTTP_UNSUPPORTED_MEDIA_TYPE;
     libnode_ucll_EXPORT static UclVar HTTP_EXPECTATION_FAILED;
-    libnode_ucll_EXPORT static UclVar HTTP_UNPROCESSABLE_ENTITY;
     libnode_ucll_EXPORT static UclVar HTTP_LOCKED;
     libnode_ucll_EXPORT static UclVar HTTP_FAILED_DEPENDENCY;
-    libnode_ucll_EXPORT static UclVar HTTP_UNORDERED_COLLECTION;
     libnode_ucll_EXPORT static UclVar HTTP_UPGRADE_REQUIRED;
-    libnode_ucll_EXPORT static UclVar HTTP_NO_RESPONSE;
     libnode_ucll_EXPORT static UclVar HTTP_RETRY_WITH;
     libnode_ucll_EXPORT static UclVar HTTP_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS;
     libnode_ucll_EXPORT static UclVar HTTP_UNAVAILABLE_FOR_LEGAL_REASONS;
@@ -2302,6 +2426,27 @@ class UclVar
     return __new_object_2(c_bi_class_HttpResp,c_bi_mni_HttpResp_2,op_0,op_1);
   }/*}}}*/
 
+  // - class HttpPostProc -
+  class HttpPostProc
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
   // - class WsContext -
   class WsContext
   {/*{{{*/
@@ -2332,9 +2477,9 @@ class UclVar
 
   };/*}}}*/
 
-  inline static UclVar WsContext(UclVar op_0,UclVar op_1)
+  inline static UclVar WsContext(UclVar op_0,UclVar op_1,UclVar op_2)
   {/*{{{*/
-    return __new_object_2(c_bi_class_WsContext,c_bi_mni_WsContext_2,op_0,op_1);
+    return __new_object_3(c_bi_class_WsContext,c_bi_mni_WsContext_3,op_0,op_1,op_2);
   }/*}}}*/
 
   // - class WsConn -
@@ -2357,7 +2502,9 @@ class UclVar
     libnode_ucll_EXPORT static UclVar CB_CLIENT_FILTER_PRE_ESTABLISH;
     libnode_ucll_EXPORT static UclVar CB_CLIENT_ESTABLISHED;
     libnode_ucll_EXPORT static UclVar CB_CLOSED;
+    libnode_ucll_EXPORT static UclVar CB_CLIENT_CLOSED;
     libnode_ucll_EXPORT static UclVar CB_RECEIVE;
+    libnode_ucll_EXPORT static UclVar CB_RECEIVE_PONG;
     libnode_ucll_EXPORT static UclVar CB_CLIENT_RECEIVE;
     libnode_ucll_EXPORT static UclVar CB_CLIENT_RECEIVE_PONG;
     libnode_ucll_EXPORT static UclVar CB_CLIENT_WRITEABLE;
@@ -2384,9 +2531,58 @@ class UclVar
     libnode_ucll_EXPORT static UclVar TIMEOUT_AWAITING_SERVER_RESPONSE;
     libnode_ucll_EXPORT static UclVar TIMEOUT_AWAITING_PING;
     libnode_ucll_EXPORT static UclVar TIMEOUT_CLOSE_ACK;
-    libnode_ucll_EXPORT static UclVar TIMEOUT_AWAITING_EXTENSION_CONNECT_RESPONSE;
     libnode_ucll_EXPORT static UclVar TIMEOUT_SENT_CLIENT_HANDSHAKE;
     libnode_ucll_EXPORT static UclVar TIMEOUT_SSL_ACCEPT;
+    libnode_ucll_EXPORT static UclVar TOKEN_GET_URI;
+    libnode_ucll_EXPORT static UclVar TOKEN_POST_URI;
+    libnode_ucll_EXPORT static UclVar TOKEN_HOST;
+    libnode_ucll_EXPORT static UclVar TOKEN_CONNECTION;
+    libnode_ucll_EXPORT static UclVar TOKEN_UPGRADE;
+    libnode_ucll_EXPORT static UclVar TOKEN_ORIGIN;
+    libnode_ucll_EXPORT static UclVar TOKEN_CHALLENGE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_ACCEPT;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_IF_MODIFIED_SINCE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_IF_NONE_MATCH;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_ACCEPT_ENCODING;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_ACCEPT_LANGUAGE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_PRAGMA;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_CACHE_CONTROL;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_AUTHORIZATION;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_COOKIE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_CONTENT_LENGTH;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_CONTENT_TYPE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_DATE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_RANGE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_ACCEPT_RANGES;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_AGE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_ALLOW;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_CONTENT_DISPOSITION;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_CONTENT_ENCODING;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_CONTENT_LANGUAGE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_CONTENT_LOCATION;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_CONTENT_RANGE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_ETAG;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_EXPECT;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_EXPIRES;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_FROM;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_IF_MATCH;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_IF_RANGE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_IF_UNMODIFIED_SINCE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_LAST_MODIFIED;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_LINK;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_LOCATION;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_REFRESH;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_RETRY_AFTER;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_SERVER;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_SET_COOKIE;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_TRANSFER_ENCODING;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP_URI_ARGS;
+    libnode_ucll_EXPORT static UclVar TOKEN_HTTP1_0;
+    libnode_ucll_EXPORT static UclVar TOKEN_X_FORWARDED_FOR;
+    libnode_ucll_EXPORT static UclVar TOKEN_CONNECT;
+    libnode_ucll_EXPORT static UclVar TOKEN_HEAD_URI;
+    libnode_ucll_EXPORT static UclVar TOKEN_X_AUTH_TOKEN;
 
     public:
     inline static UclVar to_string()
@@ -2507,6 +2703,7 @@ class UclVar
     libnode_ucll_EXPORT static UclVar INFO_LOCAL_IP;
     libnode_ucll_EXPORT static UclVar INFO_LOCAL_PORT;
     libnode_ucll_EXPORT static UclVar INFO_TLS_SESSION;
+    libnode_ucll_EXPORT static UclVar CURLE_OK;
 
     public:
     inline static UclVar to_string()
@@ -2531,6 +2728,8 @@ class UclVar
     static unsigned c_bi_mi__POST_2;
     static unsigned c_bi_mi__DELETE_1;
     static unsigned c_bi_mi__HEAD_1;
+    static unsigned c_bi_mi_url_escape_1;
+    static unsigned c_bi_mi_url_unescape_1;
     static unsigned c_bi_mi_to_string_0;
     static unsigned c_bi_mi_print_0;
 
@@ -2540,6 +2739,18 @@ class UclVar
     libnode_ucll_EXPORT static UclVar OPT_HTTPAUTH;
     libnode_ucll_EXPORT static UclVar OPT_USERNAME;
     libnode_ucll_EXPORT static UclVar OPT_PASSWORD;
+    libnode_ucll_EXPORT static UclVar OPT_DIRLISTONLY;
+    libnode_ucll_EXPORT static UclVar OPT_FTP_CREATE_MISSING_DIRS;
+    libnode_ucll_EXPORT static UclVar OPT_FTPPORT;
+    libnode_ucll_EXPORT static UclVar OPT_KEYPASSWD;
+    libnode_ucll_EXPORT static UclVar OPT_SSH_AUTH_TYPES;
+    libnode_ucll_EXPORT static UclVar OPT_SSH_PRIVATE_KEYFILE;
+    libnode_ucll_EXPORT static UclVar OPT_SSH_PUBLIC_KEYFILE;
+    libnode_ucll_EXPORT static UclVar OPT_SSL_VERIFYPEER;
+    libnode_ucll_EXPORT static UclVar OPT_SSL_VERIFYHOST;
+    libnode_ucll_EXPORT static UclVar OPT_QUOTE;
+    libnode_ucll_EXPORT static UclVar OPT_PREQUOTE;
+    libnode_ucll_EXPORT static UclVar OPT_POSTQUOTE;
     libnode_ucll_EXPORT static UclVar AUTH_ANY;
     libnode_ucll_EXPORT static UclVar AUTH_ANYSAFE;
     libnode_ucll_EXPORT static UclVar AUTH_BASIC;
@@ -2550,6 +2761,14 @@ class UclVar
     libnode_ucll_EXPORT static UclVar AUTH_NTLM_WB;
     libnode_ucll_EXPORT static UclVar AUTH_ONLY;
     libnode_ucll_EXPORT static UclVar AUTH_NONE;
+    libnode_ucll_EXPORT static UclVar FTP_CREATE_DIR_NONE;
+    libnode_ucll_EXPORT static UclVar FTP_CREATE_DIR;
+    libnode_ucll_EXPORT static UclVar FTP_CREATE_DIR_RETRY;
+    libnode_ucll_EXPORT static UclVar SSH_AUTH_PUBLICKEY;
+    libnode_ucll_EXPORT static UclVar SSH_AUTH_PASSWORD;
+    libnode_ucll_EXPORT static UclVar SSH_AUTH_HOST;
+    libnode_ucll_EXPORT static UclVar SSH_AUTH_KEYBOARD;
+    libnode_ucll_EXPORT static UclVar SSH_AUTH_AGENT;
 
     public:
     inline static UclVar _GET(UclVar op_0)
@@ -2577,6 +2796,63 @@ class UclVar
       return __static_call_1(c_bi_mi__HEAD_1,op_0);
     }/*}}}*/
 
+    inline static UclVar url_escape(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_url_escape_1,op_0);
+    }/*}}}*/
+
+    inline static UclVar url_unescape(UclVar op_0)
+    {/*{{{*/
+      return __static_call_1(c_bi_mi_url_unescape_1,op_0);
+    }/*}}}*/
+
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  // - class CurlMulti -
+  class CurlMulti
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
+    inline static UclVar to_string()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_to_string_0);
+    }/*}}}*/
+
+    inline static UclVar print()
+    {/*{{{*/
+      return __static_call_0(c_bi_mi_print_0);
+    }/*}}}*/
+
+  };/*}}}*/
+
+  inline static UclVar CurlMulti(UclVar op_0)
+  {/*{{{*/
+    return __new_object_1(c_bi_class_CurlMulti,c_bi_mni_CurlMulti_1,op_0);
+  }/*}}}*/
+
+  // - class CurlMultiRequest -
+  class CurlMultiRequest
+  {/*{{{*/
+    friend class UclVar;
+    protected:
+    static unsigned c_bi_mi_to_string_0;
+    static unsigned c_bi_mi_print_0;
+
+    public:
     inline static UclVar to_string()
     {/*{{{*/
       return __static_call_0(c_bi_mi_to_string_0);
@@ -4224,11 +4500,6 @@ class UclVar
     return __call_2(c_bi_mni_add_footer_2,op_0,op_1);
   }/*}}}*/
 
-  inline UclVar client(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3)
-  {/*{{{*/
-    return __call_4(c_bi_mni_client_4,op_0,op_1,op_2,op_3);
-  }/*}}}*/
-
   inline UclVar protocol_idx(UclVar op_0)
   {/*{{{*/
     return __call_1(c_bi_mni_protocol_idx_1,op_0);
@@ -4642,6 +4913,106 @@ class UclVar
   inline UclVar content()
   {/*{{{*/
     return __call_0(c_bi_mni_content_0);
+  }/*}}}*/
+
+  inline UclVar to_json()
+  {/*{{{*/
+    return __call_0(c_bi_mni_to_json_0);
+  }/*}}}*/
+
+  inline UclVar unordered_items()
+  {/*{{{*/
+    return __call_0(c_bi_mni_unordered_items_0);
+  }/*}}}*/
+
+  inline UclVar unordered_keys()
+  {/*{{{*/
+    return __call_0(c_bi_mni_unordered_keys_0);
+  }/*}}}*/
+
+  inline UclVar remove_if_key(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_remove_if_key_1,op_0);
+  }/*}}}*/
+
+  inline UclVar day_of_week()
+  {/*{{{*/
+    return __call_0(c_bi_mni_day_of_week_0);
+  }/*}}}*/
+
+  inline UclVar value(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_value_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar client_ip()
+  {/*{{{*/
+    return __call_0(c_bi_mni_client_ip_0);
+  }/*}}}*/
+
+  inline UclVar client(UclVar op_0,UclVar op_1,UclVar op_2,UclVar op_3,UclVar op_4)
+  {/*{{{*/
+    return __call_5(c_bi_mni_client_5,op_0,op_1,op_2,op_3,op_4);
+  }/*}}}*/
+
+  inline UclVar header(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_header_1,op_0);
+  }/*}}}*/
+
+  inline UclVar _GET(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni__GET_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar _PUT(UclVar op_0,UclVar op_1,UclVar op_2)
+  {/*{{{*/
+    return __call_3(c_bi_mni__PUT_3,op_0,op_1,op_2);
+  }/*}}}*/
+
+  inline UclVar _POST(UclVar op_0,UclVar op_1,UclVar op_2)
+  {/*{{{*/
+    return __call_3(c_bi_mni__POST_3,op_0,op_1,op_2);
+  }/*}}}*/
+
+  inline UclVar _DELETE(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni__DELETE_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar _HEAD(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni__HEAD_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar url_escape(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_url_escape_1,op_0);
+  }/*}}}*/
+
+  inline UclVar url_unescape(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_url_unescape_1,op_0);
+  }/*}}}*/
+
+  inline UclVar add_headers(UclVar op_0)
+  {/*{{{*/
+    return __call_1(c_bi_mni_add_headers_1,op_0);
+  }/*}}}*/
+
+  inline UclVar setopt(UclVar op_0,UclVar op_1)
+  {/*{{{*/
+    return __call_2(c_bi_mni_setopt_2,op_0,op_1);
+  }/*}}}*/
+
+  inline UclVar cancel()
+  {/*{{{*/
+    return __call_0(c_bi_mni_cancel_0);
+  }/*}}}*/
+
+  inline UclVar code()
+  {/*{{{*/
+    return __call_0(c_bi_mni_code_0);
   }/*}}}*/
 
   /*}}}*/

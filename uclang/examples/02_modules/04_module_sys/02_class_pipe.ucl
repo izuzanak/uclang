@@ -92,6 +92,12 @@ class Main
     ("pipe.get_fd() -> %d\n" % pipe.get_fd()).print();
     pipe.close();
 
+    Tutorial.note("Pipe method pid#0");
+    pipe = new Pipe("cat","w");
+    ("pipe           -> %s\n" % $pipe).print();
+    ("pipe.pid() > 0 -> %d\n" % (pipe.pid() > 0)).print();
+    pipe.close();
+
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl
     //

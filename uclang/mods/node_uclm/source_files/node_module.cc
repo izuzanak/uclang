@@ -219,15 +219,22 @@ bool bic_node_callback_method_call_0(interpreter_thread_s &it,unsigned stack_bas
   }
 
   // - call C/C++ callback -
-  UclVar result = ((t_node_callback_0)nc_ptr->callback_ptr)();
+  try
+  {
+    UclVar result = ((t_node_callback_0)nc_ptr->callback_ptr)();
 
-  // - retrieve result location -
-  location_s *result_loc = result.location_ptr;
-  result_loc->v_reference_cnt.atomic_inc();
+    // - retrieve result location -
+    location_s *result_loc = it.get_location_value(result.location_ptr);
+    result_loc->v_reference_cnt.atomic_inc();
 
-  BIC_SET_RESULT(result_loc);
+    BIC_SET_RESULT(result_loc);
 
-  return true;
+    return true;
+  }
+  catch (const std::string &)
+  {
+    return false;
+  }
 }/*}}}*/
 
 bool bic_node_callback_method_call_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -249,17 +256,25 @@ bool bic_node_callback_method_call_1(interpreter_thread_s &it,unsigned stack_bas
   src_0_location->v_reference_cnt.atomic_inc();
 
   // - call C/C++ callback -
-  UclVar result = ((t_node_callback_1)nc_ptr->callback_ptr)(UclVar(&src_0_location));
+  try
+  {
+    UclVar result = ((t_node_callback_1)nc_ptr->callback_ptr)(UclVar(&src_0_location));
 
-  it.release_location_ptr(src_0_location);
+    it.release_location_ptr(src_0_location);
 
-  // - retrieve result location -
-  location_s *result_loc = result.location_ptr;
-  result_loc->v_reference_cnt.atomic_inc();
+    // - retrieve result location -
+    location_s *result_loc = it.get_location_value(result.location_ptr);
+    result_loc->v_reference_cnt.atomic_inc();
 
-  BIC_SET_RESULT(result_loc);
+    BIC_SET_RESULT(result_loc);
 
-  return true;
+    return true;
+  }
+  catch (const std::string &)
+  {
+    it.release_location_ptr(src_0_location);
+    return false;
+  }
 }/*}}}*/
 
 bool bic_node_callback_method_call_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
@@ -283,20 +298,29 @@ bool bic_node_callback_method_call_2(interpreter_thread_s &it,unsigned stack_bas
   src_1_location->v_reference_cnt.atomic_inc();
 
   // - call C/C++ callback -
-  UclVar result = ((t_node_callback_2)nc_ptr->callback_ptr)(
-    UclVar(&src_0_location),
-    UclVar(&src_1_location));
+  try
+  {
+    UclVar result = ((t_node_callback_2)nc_ptr->callback_ptr)(
+      UclVar(&src_0_location),
+      UclVar(&src_1_location));
 
-  it.release_location_ptr(src_0_location);
-  it.release_location_ptr(src_1_location);
+    it.release_location_ptr(src_0_location);
+    it.release_location_ptr(src_1_location);
 
-  // - retrieve result location -
-  location_s *result_loc = result.location_ptr;
-  result_loc->v_reference_cnt.atomic_inc();
+    // - retrieve result location -
+    location_s *result_loc = it.get_location_value(result.location_ptr);
+    result_loc->v_reference_cnt.atomic_inc();
 
-  BIC_SET_RESULT(result_loc);
+    BIC_SET_RESULT(result_loc);
 
-  return true;
+    return true;
+  }
+  catch (const std::string &)
+  {
+    it.release_location_ptr(src_0_location);
+    it.release_location_ptr(src_1_location);
+    return false;
+  }
 }/*}}}*/
 
 bool bic_node_callback_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)

@@ -243,6 +243,41 @@ class Main
     ("float.isnan() -> %d\n" % float.isnan()).print();
     ("float         -> %f\n" % float).print();
 
+    Tutorial.note("Float built in constants");
+
+    // Built in constants
+    //
+    // public static static_const INFINITY
+    // public static static_const CLASS_NAN
+    // public static static_const CLASS_INFINITE
+    // public static static_const CLASS_ZERO
+    // public static static_const CLASS_SUBNORMAL
+    // public static static_const CLASS_NORMAL
+    //
+
+    ("Float.INFINITY:       %f\n" % Float.INFINITY).print();
+    ("Float.CLASS_NAN:      %d\n" % Float.CLASS_NAN).print();
+    ("Float.CLASS_INFINITE: %d\n" % Float.CLASS_INFINITE).print();
+    ("Float.CLASS_ZERO:     %d\n" % Float.CLASS_ZERO).print();
+    ("Float.CLASS_SUBNORMAL:%d\n" % Float.CLASS_SUBNORMAL).print();
+    ("Float.CLASS_NORMAL:   %d\n" % Float.CLASS_NORMAL).print();
+
+    Tutorial.note("Float method classify#0");
+    float = 125.25;
+    ("float            -> %f\n" % float).print();
+    ("float.classify() -> %d\n" % float.classify()).print();
+    ("(float.classify() == Float.CLASS_NORMAL)   -> %d\n" % (float.classify() == Float.CLASS_NORMAL)).print();
+
+    float = 0.0;
+    ("float            -> %f\n" % float).print();
+    ("float.classify() -> %d\n" % float.classify()).print();
+    ("(float.classify() == Float.CLASS_ZERO)     -> %d\n" % (float.classify() == Float.CLASS_ZERO)).print();
+
+    float = Float.INFINITY;
+    ("float            -> %f\n" % float).print();
+    ("float.classify() -> %d\n" % float.classify()).print();
+    ("(float.classify() == Float.CLASS_INFINITE) -> %d\n" % (float.classify() == Float.CLASS_INFINITE)).print();
+
     // Function of special methods is described in
     // 01_syntax/11_spec_methods.ucl
     //

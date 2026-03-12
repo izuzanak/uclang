@@ -41,26 +41,29 @@ class Main
     ("poll: %s\n" % $poll).print();
 
     // Method ready#1 tests if required events was fired for one or more file
-    // descriptor/s
+    // descriptor/s. Use a readable file for deterministic POLLIN results.
     //
     Tutorial.note("Poll method ready#1");
-    poll = new Poll([0,Poll.POLLIN | Poll.POLLPRI]);
+    poll_file = new File("07_class_poll.ucl","r");
+    poll = new Poll([poll_file.get_fd(),Poll.POLLIN | Poll.POLLPRI]);
     ("poll         -> %s\n" % $poll).print();
     ("poll.ready() -> %s\n" % $poll.ready(0)).print();
     ("poll         -> %s\n" % $poll).print();
+    poll_file.close();
 
-    // Method ready#1 tests if required events was fired for one or more file
-    // descriptor/s
+    // Method poll#1 tests if required events was fired for one or more file
+    // descriptor/s. Use a readable file for deterministic POLLIN results.
     //
     Tutorial.note("Poll method poll#1");
+    poll_file = new File("07_class_poll.ucl","r");
     poll = new Poll([
-      0,Poll.POLLIN | Poll.POLLPRI,    // stdin
-      1,Poll.POLLOUT | Poll.POLLPRI,   // stdout
-      2,Poll.POLLOUT | Poll.POLLPRI]); // stderr
+      poll_file.get_fd(),Poll.POLLIN | Poll.POLLPRI, // readable file
+      1,Poll.POLLOUT | Poll.POLLPRI,                 // stdout
+      2,Poll.POLLOUT | Poll.POLLPRI]);               // stderr
 
     ("poll        -> %s\n" % $poll).print();
     ("poll.poll() -> %s\n\n" % $(res = poll.poll(0))).print();
-    
+
     fd_idx = 0;
     for (evt <- res)
     {
@@ -80,6 +83,7 @@ class Main
     }
 
     ("\npoll        -> %s\n" % $poll).print();
+    poll_file.close();
 
     Tutorial.note("Poll built in constants");
 

@@ -164,6 +164,39 @@ class Main
     // public final print#0
     //
 
+    Tutorial.note("Dict method unordered_keys#0");
+    dict = new Dict(["One",1,"Two",2,"Three",3]);
+    ("dict                              -> %s\n" % $dict).print();
+    unord_keys = dict.unordered_keys();
+    ("dict.unordered_keys().length()    -> %d\n" % unord_keys.length()).print();
+
+    Tutorial.note("Dict method unordered_items#0");
+    dict = new Dict(["One",1,"Two",2,"Three",3]);
+    ("dict                              -> %s\n" % $dict).print();
+    unord_items = dict.unordered_items();
+    ("dict.unordered_items().length()   -> %d\n" % unord_items.length()).print();
+
+    Tutorial.note("Dict method remove_if_key#1");
+    dict = new Dict(["One",1,"Two",2,"Three",3]);
+    ("dict                          -> %s\n" % $dict).print();
+    ("dict.remove_if_key(\"One\")     -> %s\n" % $dict.remove_if_key("One")).print();
+    ("dict.remove_if_key(\"Missing\") -> %s\n" % $dict.remove_if_key("Missing")).print();
+    ("dict                          -> %s\n" % $dict).print();
+
+    Tutorial.note("Dict method lee_key#1");
+    dict = new Dict([10,"ten",20,"twenty",30,"thirty"]);
+    ("dict                -> %s\n" % $dict).print();
+    ("dict.lee_key(25)    -> %s\n" % $dict.lee_key(25)).print();
+    ("dict.lee_key(20)    -> %s\n" % $dict.lee_key(20)).print();
+    ("dict.lee_key(5)     -> %s\n" % $dict.lee_key(5)).print();
+
+    Tutorial.note("Dict method gre_key#1");
+    dict = new Dict([10,"ten",20,"twenty",30,"thirty"]);
+    ("dict                -> %s\n" % $dict).print();
+    ("dict.gre_key(15)    -> %s\n" % $dict.gre_key(15)).print();
+    ("dict.gre_key(20)    -> %s\n" % $dict.gre_key(20)).print();
+    ("dict.gre_key(35)    -> %s\n" % $dict.gre_key(35)).print();
+
     // Method to_string#1 return string created by concatenating string
     // representations of dictionary pairs separated by string given as method
     // parameter

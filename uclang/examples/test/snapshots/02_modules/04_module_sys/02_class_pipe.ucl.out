@@ -76,5 +76,10 @@ pipe.read_close() -> 01_class_sys.ucl
 pipe          -> Pipe
 pipe.get_fd() -> 4
 
+=== Pipe method pid#0 ==========================================================
+
+pipe           -> Pipe
+pipe.pid() > 0 -> 1
+
 === Tutorial end ===============================================================
 

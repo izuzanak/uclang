@@ -11,15 +11,15 @@ poll: 10
 === Poll method ready#1 ========================================================
 
 poll         -> Poll
-poll.ready() -> 0
+poll.ready() -> 1
 poll         -> Poll
 
 === Poll method poll#1 =========================================================
 
 poll        -> Poll
-poll.poll() -> [0,4,4]
+poll.poll() -> [1,4,4]
 
-Events 0: 
+Events 0: POLLIN 
 Events 1: POLLOUT 
 Events 2: POLLOUT 
 

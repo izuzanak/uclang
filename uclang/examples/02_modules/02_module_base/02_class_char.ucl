@@ -1,0 +1,243 @@
+// vim: syntax=java
+
+import tutorial;
+
+class Main
+{
+  static public main(argv)
+  {
+    // class Char represents single character value
+
+    // Built in methods
+    //
+    // public final operator_binary_equal#1
+    // public final operator_binary_plus_equal#1
+    // public final operator_binary_minus_equal#1
+    // public final operator_binary_asterisk_equal#1
+    // public final operator_binary_slash_equal#1
+    // public final operator_binary_percent_equal#1
+    // public final operator_binary_double_ls_br_equal#1
+    // public final operator_binary_double_rs_br_equal#1
+    // public final operator_binary_ampersand_equal#1
+    // public final operator_binary_pipe_equal#1
+    // public final operator_binary_circumflex_equal#1
+    // public final operator_binary_double_ampersand#1
+    // public final operator_binary_double_pipe#1
+    // public final operator_binary_ampersand#1
+    // public final operator_binary_pipe#1
+    // public final operator_binary_circumflex#1
+    // public final operator_binary_double_equal#1
+    // public final operator_binary_exclamation_equal#1
+    // public final operator_binary_rs_br#1
+    // public final operator_binary_ls_br#1
+    // public final operator_binary_rs_br_equal#1
+    // public final operator_binary_ls_br_equal#1
+    // public final operator_binary_double_rs_br#1
+    // public final operator_binary_double_ls_br#1
+    // public final operator_binary_plus#1
+    // public final operator_binary_minus#1
+    // public final operator_binary_asterisk#1
+    // public final operator_binary_slash#1
+    // public final operator_binary_percent#1
+    // public final operator_unary_post_double_plus#0
+    // public final operator_unary_post_double_minus#0
+    // public final operator_unary_pre_double_plus#0
+    // public final operator_unary_pre_double_minus#0
+    // public final operator_unary_pre_plus#0
+    // public final operator_unary_pre_minus#0
+    // public final operator_unary_pre_exclamation#0
+    // public final operator_unary_pre_tilde#0
+    // public final Char#0
+    // public final Char#1
+    // public final compare#1
+    // public final to_string#0
+    // public final print#0
+    //
+
+    Tutorial.note("Char object");
+    ("Char: %d\n" % new Integer(new Char())).print();
+    ("Char: %c\n" % new Char('A')).print();
+    ("Char: %c\n" % new Char(65)).print();
+
+    Tutorial.note("Char assign operator");
+    ch = 'A';
+    ("ch: %c\n" % ch).print();
+    ch = "string";
+    ("ch: %s\n" % ch).print();
+
+    Tutorial.note("Char plus operators");
+    ch_0 = 'A';
+    ch_1 = '!';
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_1         -> %c\n" % ch_1).print();
+    ("ch_0 + ch_1  -> %c\n" % (ch_0 + ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_0 += ch_1 -> %c\n" % (ch_0 += ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("+ ch_0       -> %c\n" % (+ ch_0)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+
+    Tutorial.note("Char minus operators");
+    ch_0 = 'z';
+    ch_1 = '!';
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_1         -> %c\n" % ch_1).print();
+    ("ch_0 - ch_1  -> %c\n" % (ch_0 - ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_0 -= ch_1 -> %c\n" % (ch_0 -= ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("- ch_0       -> %d\n" % new Integer(- ch_0)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+
+    Tutorial.note("Char asterisk operators");
+    ch_0 = '!';
+    ch_1 = '#';
+    ("ch_0         -> %d\n" % new Integer(ch_0)).print();
+    ("ch_1         -> %d\n" % new Integer(ch_1)).print();
+    ("ch_0 * ch_1  -> %d\n" % new Integer(ch_0 * ch_1)).print();
+    ("ch_0         -> %d\n" % new Integer(ch_0)).print();
+    ("ch_0 *= ch_1 -> %d\n" % new Integer(ch_0 *= ch_1)).print();
+    ("ch_0         -> %d\n" % new Integer(ch_0)).print();
+
+    Tutorial.note("Char slash operators");
+    ch_0 = 'Z';
+    ch_1 = '!';
+    ("ch_0         -> %d\n" % new Integer(ch_0)).print();
+    ("ch_1         -> %d\n" % new Integer(ch_1)).print();
+    ("ch_0 / ch_1  -> %d\n" % new Integer(ch_0 / ch_1)).print();
+    ("ch_0         -> %d\n" % new Integer(ch_0)).print();
+    ("ch_0 /= ch_1 -> %d\n" % new Integer(ch_0 /= ch_1)).print();
+    ("ch_0         -> %d\n" % new Integer(ch_0)).print();
+
+    Tutorial.note("Char percent operators");
+    ch_0 = 'Z';
+    ch_1 = '7';
+    ("ch_0          -> %d\n" % new Integer(ch_0)).print();
+    ("ch_1          -> %d\n" % new Integer(ch_1)).print();
+    ("ch_0 %% ch_1   -> %d\n" % new Integer(ch_0 % ch_1)).print();
+    ("ch_0          -> %d\n" % new Integer(ch_0)).print();
+    ("ch_0 %%= ch_1  -> %d\n" % new Integer(ch_0 %= ch_1)).print();
+    ("ch_0          -> %d\n" % new Integer(ch_0)).print();
+
+    Tutorial.note("Char << operators");
+    ch_0 = '!';
+    ch_1 = '\x01';
+    ("ch_0          -> %d\n" % new Integer(ch_0)).print();
+    ("ch_1          -> %d\n" % new Integer(ch_1)).print();
+    ("ch_0 << ch_1  -> %d\n" % new Integer(ch_0 << ch_1)).print();
+    ("ch_0          -> %d\n" % new Integer(ch_0)).print();
+    ("ch_0 <<= ch_1 -> %d\n" % new Integer(ch_0 <<= ch_1)).print();
+    ("ch_0          -> %d\n" % new Integer(ch_0)).print();
+
+    Tutorial.note("Char >> operators");
+    ch_0 = '`';
+    ch_1 = '\x01';
+    ("ch_0          -> %d\n" % new Integer(ch_0)).print();
+    ("ch_1          -> %d\n" % new Integer(ch_1)).print();
+    ("ch_0 >> ch_1  -> %d\n" % new Integer(ch_0 >> ch_1)).print();
+    ("ch_0          -> %d\n" % new Integer(ch_0)).print();
+    ("ch_0 >>= ch_1 -> %d\n" % new Integer(ch_0 >>= ch_1)).print();
+    ("ch_0          -> %d\n" % new Integer(ch_0)).print();
+
+    Tutorial.note("Char ampersand operators");
+    ch_0 = 'o';
+    ch_1 = '7';
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_1         -> %c\n" % ch_1).print();
+    ("ch_0 & ch_1  -> %d\n" % new Integer(ch_0 & ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_0 &= ch_1 -> %d\n" % new Integer(ch_0 &= ch_1)).print();
+    ("ch_0         -> %d\n" % new Integer(ch_0)).print();
+
+    Tutorial.note("Char pipe operators");
+    ch_0 = 'A';
+    ch_1 = '0';
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_1         -> %c\n" % ch_1).print();
+    ("ch_0 | ch_1  -> %c\n" % new Char(ch_0 | ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_0 |= ch_1 -> %c\n" % (ch_0 |= ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+
+    Tutorial.note("Char circumflex operators");
+    ch_0 = 'A';
+    ch_1 = '2';
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_1         -> %c\n" % ch_1).print();
+    ("ch_0 ^ ch_1  -> %c\n" % new Char(ch_0 ^ ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_0 ^= ch_1 -> %c\n" % (ch_0 ^= ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+
+    Tutorial.note("Char double ampersand operators");
+    ("'\\0' && 'A'  -> %d\n" % ('\0' && 'A')).print();
+    ("'\\0' && '\\0' -> %d\n" % ('\0' && '\0')).print();
+    ("'A' && 'B'   -> %d\n" % ('A' && 'B')).print();
+    ("'A' && '\\0'  -> %d\n" % ('A' && '\0')).print();
+
+    Tutorial.note("Char double pipe operators");
+    ("'\\0' || 'A'  -> %d\n" % ('\0' || 'A')).print();
+    ("'\\0' || '\\0' -> %d\n" % ('\0' || '\0')).print();
+    ("'A' || 'B'   -> %d\n" % ('A' || 'B')).print();
+    ("'A' || '\\0'  -> %d\n" % ('A' || '\0')).print();
+
+    Tutorial.note("Char compare operators");
+    ch_0 = 'A';
+    ch_1 = 'Z';
+    ("ch_0         -> %c\n" % ch_0).print();
+    ("ch_1         -> %c\n" % ch_1).print();
+    ("ch_0 == ch_1 -> %d\n" % (ch_0 == ch_1)).print();
+    ("ch_0 != ch_1 -> %d\n" % (ch_0 != ch_1)).print();
+    ("ch_0 > ch_1  -> %d\n" % (ch_0 > ch_1)).print();
+    ("ch_0 < ch_1  -> %d\n" % (ch_0 < ch_1)).print();
+    ("ch_0 >= ch_1 -> %d\n" % (ch_0 >= ch_1)).print();
+    ("ch_0 <= ch_1 -> %d\n" % (ch_0 <= ch_1)).print();
+    ("ch_0         -> %c\n" % ch_0).print();
+
+    Tutorial.note("Char double plus operators");
+    ch_0 = 'A';
+    ("ch_0    -> %c\n" % ch_0).print();
+    ("++ ch_0 -> %c\n" % (++ ch_0)).print();
+    ("ch_0    -> %c\n" % ch_0).print();
+    ("ch_0 ++ -> %c\n" % (ch_0 ++)).print();
+    ("ch_0    -> %c\n" % ch_0).print();
+
+    Tutorial.note("Char double minus operators");
+    ch_0 = 'Z';
+    ("ch_0    -> %c\n" % ch_0).print();
+    ("-- ch_0 -> %c\n" % (-- ch_0)).print();
+    ("ch_0    -> %c\n" % ch_0).print();
+    ("ch_0 -- -> %c\n" % (ch_0 --)).print();
+    ("ch_0    -> %c\n" % ch_0).print();
+
+    Tutorial.note("Char exclamation operator");
+    ("!'A'  -> %d\n" % !'A').print();
+    ("!'\\0' -> %d\n" % !'\0').print();
+
+    Tutorial.note("Char tilde operator");
+    ch_0 = '?';
+    ("ch_0  -> %c\n" % ch_0).print();
+    ("~ch_0 -> %d\n" % new Integer(~ch_0)).print();
+
+    // Function of special methods is described in
+    // 01_syntax/11_spec_methods.ucl
+    //
+    // public final compare#1
+    // public final to_string#0
+    // public final print#0
+    //
+
+    Tutorial.note("Char method compare#1");
+    ch_0 = 'A';
+    ch_1 = 'Z';
+    ("ch_0.compare(ch_1) -> %d\n" % ch_0.compare(ch_1)).print();
+    ("ch_1.compare(ch_0) -> %d\n" % ch_1.compare(ch_0)).print();
+    ("ch_0.compare(ch_0) -> %d\n" % ch_0.compare(ch_0)).print();
+
+    Tutorial.note("Char method to_string#0");
+    ch = 'A';
+    ("ch.to_string() -> %s\n" % ch.to_string()).print();
+
+    Tutorial.note("Tutorial end");
+  }
+}

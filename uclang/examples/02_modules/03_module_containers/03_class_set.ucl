@@ -200,6 +200,12 @@ class Main
     // public final print#0
     //
 
+    Tutorial.note("Set method unordered_items#0");
+    set = new Set([1,2,3,4,5]);
+    ("set                            -> %s\n" % $set).print();
+    unord = set.unordered_items();
+    ("set.unordered_items().length() -> %d\n" % unord.length()).print();
+
     // Method to_string#1 return string created by concatenating string
     // representations of set items separated by string given as method
     // parameter

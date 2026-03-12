@@ -106,6 +106,18 @@ class Main
     // public final static print#0
     //
 
+    Tutorial.note("File methods seek#2 with SEEK_CUR and SEEK_END");
+    file = new File("/tmp/03_class_file.ucl","r");
+    ("file                        -> %s\n" % $file).print();
+    ("file.tell()                 -> %d\n" % file.tell()).print();
+    ("file.seek(5,File.SEEK_SET)  -> %s\n" % $file.seek(5,File.SEEK_SET)).print();
+    ("file.tell()                 -> %d\n" % file.tell()).print();
+    ("file.seek(3,File.SEEK_CUR)  -> %s\n" % $file.seek(3,File.SEEK_CUR)).print();
+    ("file.tell()                 -> %d\n" % file.tell()).print();
+    ("file.seek(0,File.SEEK_END)  -> %s\n" % $file.seek(0,File.SEEK_END)).print();
+    ("file.tell()                 -> %d\n" % file.tell()).print();
+    file.close();
+
     Tutorial.note("File built in constants");
 
     // Built in constants
@@ -113,11 +125,17 @@ class Main
     // public static static_const stdin
     // public static static_const stdout
     // public static static_const stderr
+    // public static static_const SEEK_SET
+    // public static static_const SEEK_CUR
+    // public static static_const SEEK_END
     //
 
-    ("File.stdin:  %s\n" % $File.stdin).print();
-    ("File.stdout: %s\n" % $File.stdout).print();
-    ("File.stderr: %s\n" % $File.stderr).print();
+    ("File.stdin:     %s\n" % $File.stdin).print();
+    ("File.stdout:    %s\n" % $File.stdout).print();
+    ("File.stderr:    %s\n" % $File.stderr).print();
+    ("File.SEEK_SET:  %d\n" % File.SEEK_SET).print();
+    ("File.SEEK_CUR:  %d\n" % File.SEEK_CUR).print();
+    ("File.SEEK_END:  %d\n" % File.SEEK_END).print();
 
     // Methods of class File throws following exceptions
     //

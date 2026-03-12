@@ -56,11 +56,25 @@ Hello again!
 file          -> File
 file.get_fd() -> 3
 
+=== File methods seek#2 with SEEK_CUR and SEEK_END =============================
+
+file                        -> File
+file.tell()                 -> 0
+file.seek(5,File.SEEK_SET)  -> File
+file.tell()                 -> 5
+file.seek(3,File.SEEK_CUR)  -> File
+file.tell()                 -> 8
+file.seek(0,File.SEEK_END)  -> File
+file.tell()                 -> 26
+
 === File built in constants ====================================================
 
-File.stdin:  File
-File.stdout: File
-File.stderr: File
+File.stdin:     File
+File.stdout:    File
+File.stderr:    File
+File.SEEK_SET:  0
+File.SEEK_CUR:  1
+File.SEEK_END:  2
 
 === Tutorial end ===============================================================
 

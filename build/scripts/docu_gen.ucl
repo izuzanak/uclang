@@ -422,7 +422,7 @@ class Main
       "description","Class providing access to system pipes.",
       "source_id","\\(pipe\\|stream\\)",
       "channel_name","stream",
-      "create_example","new Pipe(\"cat numbers.txt 2> /dev/null\",\"r\")",
+      "create_example","new Pipe(\"cat scripts/numbers.txt 2> /dev/null\",\"r\")",
       "create_output","new Pipe(\"cat\",\"w\")"
     ]);/*}}}*/
     CLASS_PROPERTIES["File"] = class_File = new Dict(
@@ -430,7 +430,7 @@ class Main
       "description","Class providing access to system files.",
       "source_id","\\(file\\|stream\\)",
       "channel_name","stream",
-      "create_example","new File(\"numbers.txt\",\"r\")",
+      "create_example","new File(\"scripts/numbers.txt\",\"r\")",
       "create_output","new File(\"output.txt\",\"w\")"
     ]);/*}}}*/
     CLASS_PROPERTIES["Socket"] = class_Socket = new Dict(
