@@ -10,7 +10,7 @@ include "script_parser.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_script_parse_action_cnt = 191;
+const unsigned c_script_parse_action_cnt = 197;
 bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,script_parser_s &_this) =
 {/*{{{*/
   pa_null,
@@ -72,6 +72,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 
   pa_method_parameters_done,
   pa_method_parameters_done,
+  pa_method_parameters_done,
 
   pa_null,
   pa_null,
@@ -121,6 +122,8 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
   pa_switch_item,
   pa_switch_item_begin,
   pa_switch_item_begin,
+  pa_switch_item,
+  pa_switch_item_begin,
   pa_null,
   pa_null,
 
@@ -134,6 +137,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 
   pa_elements_array,
 
+  pa_null,
   pa_null,
   pa_null,
 
@@ -240,6 +244,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 
   pa_null,
   pa_null,
+  pa_null,
 
   pa_parameters_begin,
 
@@ -250,6 +255,7 @@ bool(*script_pa_callers[c_script_parse_action_cnt])(string_s &source_string,scri
 
   pa_lambda_end,
   pa_lambda_begin,
+  pa_null,
   pa_null,
   pa_null,
 

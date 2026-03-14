@@ -200,6 +200,7 @@ nonterminals:
    <switch_item_list>
    <switch_item>
    <switch_item_begin>
+   <switch_comma_begin>
    <case_exp_list>
 
    <condition>
@@ -753,6 +754,18 @@ rules:
          print(table.concat(tabs,"").."method parameters done");
       end
    }
+   <method_parameters> -> <method_parameter_list> comma rr_br ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<method_parameter_list> , )\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."method parameters done");
+      end
+   }
    <method_parameters> -> rr_br ->>
    {
       if gen_parse_tree == 1 then
@@ -1214,6 +1227,33 @@ rules:
       end
    }
 
+   <switch_item> -> <switch_comma_begin> <command_block> ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<switch_comma_begin> <command_block>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."switch item");
+      end
+   }
+
+   <switch_comma_begin> -> case <case_exp_list> comma ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"case <case_exp_list> ,\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         print(table.concat(tabs,"").."switch item begin");
+      end
+   }
+
    <case_exp_list> -> <case_exp_list> comma <exp> ->>
    {
       if gen_parse_tree == 1 then
@@ -1319,6 +1359,17 @@ rules:
          this_idx = node_idx;
          node_idx = node_idx + 1;
          print("   node_"..this_idx.." [label = \"<array_elements_begin> <array_element_list>\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      end
+   }
+   <array_elements> -> <array_elements_begin> <array_element_list> comma ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<array_elements_begin> <array_element_list> ,\"]");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
@@ -2268,6 +2319,19 @@ rules:
          table.remove(tabs);
       end
    }
+   <parameters> -> <parameters_begin> <parameter_list> comma rr_br ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<parameters_begin> <parameter_list> , )\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      else
+         table.remove(tabs);
+      end
+   }
 
    <parameters_begin> -> lr_br ->>
    {
@@ -2358,6 +2422,16 @@ rules:
          this_idx = node_idx;
          node_idx = node_idx + 1;
          print("   node_"..this_idx.." [label = \"<method_parameter_list> )\"]");
+         print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
+         table.insert(node_stack,this_idx);
+      end
+   }
+   <lambda_parameters> -> <method_parameter_list> comma rr_br ->>
+   {
+      if gen_parse_tree == 1 then
+         this_idx = node_idx;
+         node_idx = node_idx + 1;
+         print("   node_"..this_idx.." [label = \"<method_parameter_list> , )\"]");
          print("   node_"..this_idx.." -> node_"..table.remove(node_stack).."");
          table.insert(node_stack,this_idx);
       end
