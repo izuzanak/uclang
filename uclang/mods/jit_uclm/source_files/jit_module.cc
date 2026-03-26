@@ -374,6 +374,9 @@ method create_fun
   {
     parser.clear();
 
+    // - end function build -
+    jit_context_build_end(jc_ptr->context);
+
     // - retrieve thrown exception -
     exception_s *exception = (exception_s *)((location_s *)it.exception_location)->v_data_ptr;
 
@@ -416,6 +419,9 @@ method create_fun
 
           // - release parser -
           parser.clear();
+
+          // - end function build -
+          jit_context_build_end(jc_ptr->context);
 
           exception_s::throw_exception(it,module.error_base + c_error_JIT_PARSER_USED_UNDEFINED_LABEL,operands[c_source_pos_idx],new_location);
           return false;

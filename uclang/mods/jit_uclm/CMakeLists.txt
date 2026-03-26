@@ -1,21 +1,17 @@
 
-set(JIT_LIBS "${EXT_LIBS}/libjit/libjit/lib")
+if(PKG_CONFIG_FOUND)
+  pkg_search_module(LIBJIT "libjit >= 0.1.4")
+endif()
 
-find_library(JITPLUS_LIBRARY jitplus ${JIT_LIBS})
-find_library(JITDYNAMIC_LIBRARY jitdynamic ${JIT_LIBS})
-find_library(JIT_LIBRARY jit ${JIT_LIBS})
-
-if(JITPLUS_LIBRARY AND JITDYNAMIC_LIBRARY AND JIT_LIBRARY)
+if(LIBJIT_FOUND)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS
     "${LIB_BASE}/header_files")
   set(CONF_INCLUDE_DIRS
-    "${EXT_LIBS}/libjit/libjit/include")
+    ${LIBJIT_INCLUDE_DIRS})
   set(CONF_COMP_DEFS)
   set(CONF_LINK_LIBS
     base_ucll
-    ${JITPLUS_LIBRARY}
-    ${JITDYNAMIC_LIBRARY}
-    ${JIT_LIBRARY})
+    ${LIBJIT_LIBRARIES})
 endif()
 

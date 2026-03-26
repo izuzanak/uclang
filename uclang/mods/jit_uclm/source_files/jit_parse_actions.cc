@@ -2311,7 +2311,7 @@ bool jit_pa_const_oct_i64(jit_parser_s &_this)
   // - retrieve constant integer -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  long long int const_int = strtoll(num_data,nullptr,8);
+  long long int const_int = (long long int)strtoull(num_data,nullptr,8);
   num_data[num_end] = tmp_char;
 
   // - push constant to expression stack -
@@ -2341,7 +2341,7 @@ bool jit_pa_const_dec_i64(jit_parser_s &_this)
   // - retrieve constant integer -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  long long int const_int = strtoll(num_data,nullptr,10);
+  long long int const_int = (long long int)strtoull(num_data,nullptr,10);
   num_data[num_end] = tmp_char;
 
   // - push constant to expression stack -
@@ -2371,7 +2371,7 @@ bool jit_pa_const_hex_i64(jit_parser_s &_this)
   // - retrieve constant integer -
   char tmp_char = num_data[num_end];
   num_data[num_end] = '\0';
-  long long int const_int = strtoll(num_data,nullptr,16);
+  long long int const_int = (long long int)strtoull(num_data,nullptr,16);
   num_data[num_end] = tmp_char;
 
   // - push constant to expression stack -
