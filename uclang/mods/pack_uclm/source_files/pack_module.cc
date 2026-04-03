@@ -899,7 +899,7 @@ static_method
             else
             {
               // - copy string length with preserved byte order -
-              *((unsigned *)(buffer.data + old_used)) = string_length;
+              memcpy(buffer.data + old_used,&string_length,sizeof(unsigned));
             }
 
             // - copy string data -
@@ -1290,7 +1290,7 @@ static_method
             else
             {
               // - copy string length with preserved byte order -
-              string_length = *((unsigned *)ds_ptr);
+              memcpy(&string_length,ds_ptr,sizeof(unsigned));
               ds_ptr += sizeof(unsigned);
             }
           }
