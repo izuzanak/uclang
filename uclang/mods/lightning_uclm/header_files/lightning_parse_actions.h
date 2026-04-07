@@ -33,6 +33,8 @@ bool ltg_pa_do_while_pre_condition(ltg_parser_s &_this);
 bool ltg_pa_break(ltg_parser_s &_this);
 bool ltg_pa_continue(ltg_parser_s &_this);
 bool ltg_pa_return(ltg_parser_s &_this);
+bool ltg_pa_label(ltg_parser_s &_this);
+bool ltg_pa_goto(ltg_parser_s &_this);
 bool ltg_pa_expression(ltg_parser_s &_this);
 bool ltg_pa_operator_binary_equal(ltg_parser_s &_this);
 bool ltg_pa_operator_binary_plus_equal(ltg_parser_s &_this);

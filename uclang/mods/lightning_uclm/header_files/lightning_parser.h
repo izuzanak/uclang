@@ -119,7 +119,7 @@ enum
 /*
  * parse constants
  */
-const unsigned c_ltg_rule_cnt = 122;
+const unsigned c_ltg_rule_cnt = 124;
 extern const unsigned ltg_rule_head_idxs[c_ltg_rule_cnt];
 extern const unsigned ltg_rule_body_lengths[c_ltg_rule_cnt];
 
@@ -132,8 +132,8 @@ extern const unsigned ltg_rule_body_lengths[c_ltg_rule_cnt];
 #define LTG_GOTO(VALUE) VALUE
 
 const unsigned c_ltg_lalr_table_reduce_base = 0x80000000;
-const unsigned c_ltg_terminal_plus_nonterminal_cnt = 115;
-const unsigned ltg_lalr_state_cnt = 207;
+const unsigned c_ltg_terminal_plus_nonterminal_cnt = 116;
+const unsigned ltg_lalr_state_cnt = 212;
 
 extern const unsigned ltg_lalr_table[ltg_lalr_state_cnt*c_ltg_terminal_plus_nonterminal_cnt];
 

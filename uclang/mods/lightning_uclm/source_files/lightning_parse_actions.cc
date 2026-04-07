@@ -10,7 +10,7 @@ include "ucl_lightning.h"
 const unsigned max_number_string_length = 12;
 
 // - callers of parse action functions -
-const unsigned c_ltg_parse_action_cnt = 122;
+const unsigned c_ltg_parse_action_cnt = 124;
 bool(*ltg_pa_callers[c_ltg_parse_action_cnt])(ltg_parser_s &_this) =
 {/*{{{*/
   ltg_pa_null,
@@ -61,6 +61,8 @@ bool(*ltg_pa_callers[c_ltg_parse_action_cnt])(ltg_parser_s &_this) =
   ltg_pa_continue,
   ltg_pa_return,
   ltg_pa_null,
+  ltg_pa_label,
+  ltg_pa_goto,
   ltg_pa_null,
   ltg_pa_expression,
   ltg_pa_null,
@@ -577,6 +579,20 @@ bool ltg_pa_continue(ltg_parser_s &_this)
 bool ltg_pa_return(ltg_parser_s &_this)
 {/*{{{*/
   fprintf(stderr,"ltg_pa_return\n");
+
+  return true;
+}/*}}}*/
+
+bool ltg_pa_label(ltg_parser_s &_this)
+{/*{{{*/
+  fprintf(stderr,"ltg_pa_label\n");
+
+  return true;
+}/*}}}*/
+
+bool ltg_pa_goto(ltg_parser_s &_this)
+{/*{{{*/
+  fprintf(stderr,"ltg_pa_goto\n");
 
   return true;
 }/*}}}*/
