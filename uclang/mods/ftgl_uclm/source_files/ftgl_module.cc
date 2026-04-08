@@ -287,8 +287,7 @@ method GlVertexBuffer
   unsigned vert_item_cnt = 0;
   unsigned vert_size = 0;
 
-  ui_array_s vert_item_types;
-  vert_item_types.init();
+  CONT_INIT_CLEAR(ui_array_s,vert_item_types);
 
   unsigned attr_idx = 0;
   do {
@@ -342,7 +341,6 @@ method GlVertexBuffer
   vb_ptr->vert_item_cnt = vert_item_cnt;
 
   vb_ptr->vert_item_types.swap(vert_item_types);
-  vert_item_types.clear();
 
   vb_ptr->vert_size = vert_size;
 
@@ -874,13 +872,11 @@ method buffer
   string_s *tex_coord_name_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - create buffer description string -
-  string_s buff_str;
-  buff_str.init();
+  CONT_INIT_CLEAR(string_s,buff_str);
   buff_str.setf("%s:3f,%s:2f",vertex_name_ptr->data,tex_coord_name_ptr->data);
 
   // - create new vertex buffer -
   vertex_buffer_t *buffer_ptr = vertex_buffer_new(buff_str.data);
-  buff_str.clear();
 
   // - ERROR -
   if (buffer_ptr == nullptr)

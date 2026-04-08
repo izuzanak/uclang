@@ -801,8 +801,7 @@ method subgraph
   bool *e_used = (bool *)cmalloc(graph_ptr->edges.used*sizeof(bool));
   memset(e_used,false,graph_ptr->edges.used*sizeof(bool));
 
-  ui_array_s edge_idxs;
-  edge_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,edge_idxs);
 
   pointer_array_s *edge_array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
@@ -817,7 +816,6 @@ method subgraph
       if (item_location->v_type != c_bi_class_integer)
       {
         cfree(e_used);
-        edge_idxs.clear();
 
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_EDGE_INDEX_EXPECTED_INTEGER,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -829,7 +827,6 @@ method subgraph
       if (!graph_ptr->ucl_check_edge_idx(edge_idx))
       {
         cfree(e_used);
-        edge_idxs.clear();
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GRAPH_EDGE_INDEX_INVALID,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(edge_idx);
@@ -855,7 +852,6 @@ method subgraph
 
   // - swap edge indexes -
   sg_ptr->edge_idxs.swap(edge_idxs);
-  edge_idxs.clear();
 
   // - create reference to graph -
   dst_location->v_reference_cnt.atomic_inc();
@@ -886,19 +882,13 @@ method subgraph
   bool *e_used = (bool *)cmalloc(graph_ptr->edges.used*sizeof(bool));
   memset(e_used,false,graph_ptr->edges.used*sizeof(bool));
 
-  ui_array_s vertex_idxs;
-  vertex_idxs.init();
-
-  ui_array_s edge_idxs;
-  edge_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,vertex_idxs);
+  CONT_INIT_CLEAR(ui_array_s,edge_idxs);
 
 #define BIC_GRAPH_METHOD_SUBGRAPH_2_CLEAR() \
 {/*{{{*/\
   cfree(v_used);\
   cfree(e_used);\
-\
-  vertex_idxs.clear();\
-  edge_idxs.clear();\
 }/*}}}*/
 
   pointer_array_s *vertex_array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
@@ -993,9 +983,6 @@ method subgraph
   sg_ptr->vertex_idxs.swap(vertex_idxs);
   sg_ptr->edge_idxs.swap(edge_idxs);
 
-  vertex_idxs.clear();
-  edge_idxs.clear();
-
   // - create reference to graph -
   dst_location->v_reference_cnt.atomic_inc();
   sg_ptr->graph_ptr = dst_location;
@@ -1051,8 +1038,7 @@ bool bic_graph_method_degree_sequence_0(interpreter_thread_s &it,unsigned stack_
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
-  ui_array_s degree_sequence;
-  degree_sequence.init();
+  CONT_INIT_CLEAR(ui_array_s,degree_sequence);
 
   // - retrieve graph degree sequence -
   graph_ptr->degree_sequence(degree_sequence);
@@ -1070,8 +1056,6 @@ bool bic_graph_method_degree_sequence_0(interpreter_thread_s &it,unsigned stack_
     } while(++ptr < ptr_end);
   }
 
-  degree_sequence.clear();
-
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
 
@@ -1084,8 +1068,7 @@ bool bic_graph_method_minimum_spanning_tree_0(interpreter_thread_s &it,unsigned 
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
-  ui_array_s edge_idxs;
-  edge_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,edge_idxs);
 
   if (graph_ptr->minimum_spanning_tree_kruskals(edge_idxs))
   {
@@ -1109,8 +1092,6 @@ bool bic_graph_method_minimum_spanning_tree_0(interpreter_thread_s &it,unsigned 
   {
     BIC_SET_RESULT_BLANK();
   }
-
-  edge_idxs.clear();
 
   return true;
 }/*}}}*/
@@ -1148,8 +1129,7 @@ method shortest_path
   BIC_CREATE_NEW_LOCATION(lengths_location,c_bi_class_array,lengths_ptr);
 
   // - edge indexes array -
-  ui_array_s edge_idxs;
-  edge_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,edge_idxs);
 
   switch (graph_ptr->type)
   {
@@ -1159,7 +1139,6 @@ method shortest_path
       if (!graph_ptr->shortest_path_graph_dijkstra(src_vertex_idx,trg_vertex_idx,*lengths_ptr,edge_idxs))
       {
         it.release_location_ptr(lengths_location);
-        edge_idxs.clear();
 
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_SHORTEST_PATH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -1173,7 +1152,6 @@ method shortest_path
       if (!graph_ptr->shortest_path_digraph_dijkstra(src_vertex_idx,trg_vertex_idx,*lengths_ptr,edge_idxs))
       {
         it.release_location_ptr(lengths_location);
-        edge_idxs.clear();
 
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_SHORTEST_PATH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -1185,7 +1163,6 @@ method shortest_path
   default:
 
     it.release_location_ptr(lengths_location);
-    edge_idxs.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_GRAPH_UNRECOGNIZED_GRAPH_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1207,7 +1184,6 @@ method shortest_path
 
   // - swap edge indexes -
   gp_ptr->edge_idxs.swap(edge_idxs);
-  edge_idxs.clear();
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_graph_paths,gp_ptr);
@@ -1243,8 +1219,7 @@ method BFS
     trg_vertex_idx = c_idx_not_exist;
   }
 
-  ui_array_s edge_idxs;
-  edge_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,edge_idxs);
 
   switch (graph_ptr->type)
   {
@@ -1253,7 +1228,6 @@ method BFS
       // - ERROR -
       if (!graph_ptr->BFS_graph(src_vertex_idx,trg_vertex_idx,edge_idxs))
       {
-        edge_idxs.clear();
 
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_BREADTH_FIRST_SEARCH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -1266,7 +1240,6 @@ method BFS
       // - ERROR -
       if (!graph_ptr->BFS_digraph(src_vertex_idx,trg_vertex_idx,edge_idxs))
       {
-        edge_idxs.clear();
 
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_BREADTH_FIRST_SEARCH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -1276,8 +1249,6 @@ method BFS
 
   // - ERROR -
   default:
-
-    edge_idxs.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_GRAPH_UNRECOGNIZED_GRAPH_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1289,7 +1260,6 @@ method BFS
 
   // - swap edge indexes -
   sg_ptr->edge_idxs.swap(edge_idxs);
-  edge_idxs.clear();
 
   // - create reference to graph -
   dst_location->v_reference_cnt.atomic_inc();
@@ -1329,8 +1299,7 @@ method DFS
     trg_vertex_idx = c_idx_not_exist;
   }
 
-  ui_array_s edge_idxs;
-  edge_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,edge_idxs);
 
   switch (graph_ptr->type)
   {
@@ -1339,7 +1308,6 @@ method DFS
       // - ERROR -
       if (!graph_ptr->DFS_graph(src_vertex_idx,trg_vertex_idx,edge_idxs))
       {
-        edge_idxs.clear();
 
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_DEPTH_FIRST_SEARCH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -1352,7 +1320,6 @@ method DFS
       // - ERROR -
       if (!graph_ptr->DFS_digraph(src_vertex_idx,trg_vertex_idx,edge_idxs))
       {
-        edge_idxs.clear();
 
         exception_s::throw_exception(it,module.error_base + c_error_GRAPH_DEPTH_FIRST_SEARCH_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -1362,8 +1329,6 @@ method DFS
 
   // - ERROR -
   default:
-
-    edge_idxs.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_GRAPH_UNRECOGNIZED_GRAPH_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1375,7 +1340,6 @@ method DFS
 
   // - swap edge indexes -
   sg_ptr->edge_idxs.swap(edge_idxs);
-  edge_idxs.clear();
 
   // - create reference to graph -
   dst_location->v_reference_cnt.atomic_inc();
@@ -1401,13 +1365,11 @@ bool bic_graph_method_strongly_connected_components_0(interpreter_thread_s &it,u
     return false;
   }
 
-  ui_array_s comp_idxs;
-  comp_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,comp_idxs);
 
   // - ERROR -
   if (!graph_ptr->strongly_connected_components_tarjans(comp_idxs))
   {
-    comp_idxs.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_GRAPH_STRONGLY_CONNECTED_COMPONENTS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1428,8 +1390,6 @@ bool bic_graph_method_strongly_connected_components_0(interpreter_thread_s &it,u
       array_ptr->push(new_location);
     } while(++ci_ptr < ci_ptr_end);
   }
-
-  comp_idxs.clear();
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
@@ -1628,15 +1588,13 @@ bool bic_graph_method_vertex_idxs_1(interpreter_thread_s &it,unsigned stack_base
   vertex_s search_vertex;
   search_vertex.value = src_0_location;
 
-  ui_array_s vertex_idxs;
-  vertex_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,vertex_idxs);
 
   // - retrieve vertex indexes -
   graph_ptr->vertices.get_idxs(search_vertex,vertex_idxs);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
   {
-    vertex_idxs.clear();
 
     return false;
   }
@@ -1653,8 +1611,6 @@ bool bic_graph_method_vertex_idxs_1(interpreter_thread_s &it,unsigned stack_base
       array_ptr->push(new_location);
     } while(++ptr < ptr_end);
   }
-
-  vertex_idxs.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
@@ -1921,15 +1877,13 @@ bool bic_graph_method_edge_idxs_1(interpreter_thread_s &it,unsigned stack_base,u
   edge_s search_edge;
   search_edge.value = src_0_location;
 
-  ui_array_s edge_idxs;
-  edge_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,edge_idxs);
 
   // - retrieve edge indexes -
   graph_ptr->edges.get_idxs(search_edge,edge_idxs);
 
   if (((location_s *)it.exception_location)->v_type != c_bi_class_blank)
   {
-    edge_idxs.clear();
 
     return false;
   }
@@ -1946,8 +1900,6 @@ bool bic_graph_method_edge_idxs_1(interpreter_thread_s &it,unsigned stack_base,u
       array_ptr->push(new_location);
     } while(++ptr < ptr_end);
   }
-
-  edge_idxs.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
@@ -2365,8 +2317,7 @@ bool bic_graph_vertex_method_adjacent_idxs_0(interpreter_thread_s &it,unsigned s
 
   BIC_GRAPH_VERTEX_CHECK_INDEX();
 
-  ui_array_s vertex_idxs;
-  vertex_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,vertex_idxs);
 
   // - retrieve adjacent vertices -
   graph_ptr->adjacent_vertices(gv_ptr->vertex_idx,vertex_idxs);
@@ -2384,8 +2335,6 @@ bool bic_graph_vertex_method_adjacent_idxs_0(interpreter_thread_s &it,unsigned s
     } while(++ptr < ptr_end);
   }
 
-  vertex_idxs.clear();
-
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);
 
@@ -2401,8 +2350,7 @@ bool bic_graph_vertex_method_incident_idxs_0(interpreter_thread_s &it,unsigned s
 
   BIC_GRAPH_VERTEX_CHECK_INDEX();
 
-  ui_array_s edge_idxs;
-  edge_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,edge_idxs);
 
   // - retrieve incident edges -
   graph_ptr->incident_edges(gv_ptr->vertex_idx,edge_idxs);
@@ -2419,8 +2367,6 @@ bool bic_graph_vertex_method_incident_idxs_0(interpreter_thread_s &it,unsigned s
       array_ptr->push(new_location);
     } while(++ptr < ptr_end);
   }
-
-  edge_idxs.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);

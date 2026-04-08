@@ -78,7 +78,7 @@ Class describing 64bit real numbers.
 
 <a name="Float#0" />
 
-### Constructor [`Float#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3898)
+### Constructor [`Float#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3894)
 
 Creates default object of class `Float`.
 
@@ -94,7 +94,7 @@ obj: 0.000000
 
 <a name="Float#1" />
 
-### Constructor [`Float#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3903)
+### Constructor [`Float#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3899)
 
 Creates object of class `Float` from method parameter.
 
@@ -127,7 +127,7 @@ obj: 255.000000
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3408)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3404)
 
 Assignment operator `=`. Object of class `Float` is replaced by method parameter.
 
@@ -154,7 +154,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3598)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3594)
 
 Add and assign operator `+=`. Operator adds value of method parameter to value of object of class `Float`.
 
@@ -187,7 +187,7 @@ obj: 785.434000
 
 <a name="operator_binary_minus_equal#1" />
 
-### Operator [`operator_binary_minus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3605)
+### Operator [`operator_binary_minus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3601)
 
 Subtract and assign operator `-=`. Operator subtracts value of method parameter from value of object of class `Float`.
 
@@ -220,7 +220,7 @@ obj: 312.966000
 
 <a name="operator_binary_asterisk_equal#1" />
 
-### Operator [`operator_binary_asterisk_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3612)
+### Operator [`operator_binary_asterisk_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3608)
 
 Multiply and assign operator `*=`. Operator multiplies value of object of class `Float` by value of method parameter.
 
@@ -253,7 +253,7 @@ obj: 83469053.714400
 
 <a name="operator_binary_slash_equal#1" />
 
-### Operator [`operator_binary_slash_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3619)
+### Operator [`operator_binary_slash_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3615)
 
 Divide and assign operator `/=`. Operator divides value of object of class `Float` by value of method parameter.
 
@@ -286,7 +286,7 @@ obj: 4641755.490436
 
 <a name="operator_binary_double_ampersand#1" />
 
-### Operator [`operator_binary_double_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3686)
+### Operator [`operator_binary_double_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3682)
 
 Logical AND operator `&&`.  If object of class
 `Float` is non-zero and value of method parameter is also non-zero
@@ -320,7 +320,7 @@ obj_1 && 1: 1
 
 <a name="operator_binary_double_pipe#1" />
 
-### Operator [`operator_binary_double_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3693)
+### Operator [`operator_binary_double_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3689)
 
 Logical OR operator `||`.  If object of class
 `Float` is non-zero or value of method parameter is non-zero
@@ -354,7 +354,7 @@ obj_1 || 1: 1
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3700)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3696)
 
 Comparison operator `==`. Compares object of class `Float` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -384,7 +384,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3714)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3710)
 
 Comparison operator `!=`. Compares object of class `Float` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -414,7 +414,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_rs_br#1" />
 
-### Operator [`operator_binary_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3729)
+### Operator [`operator_binary_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3725)
 
 Greater test operator `>`. Test if value of object of class `Float` is greater than value of method parameter.
 
@@ -446,7 +446,7 @@ obj > 12.234: 1
 
 <a name="operator_binary_ls_br#1" />
 
-### Operator [`operator_binary_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3736)
+### Operator [`operator_binary_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3732)
 
 Lesser test operator `<`. Test if value of object of class `Float` is lesser than value of method parameter.
 
@@ -478,7 +478,7 @@ obj < 12.234: 0
 
 <a name="operator_binary_rs_br_equal#1" />
 
-### Operator [`operator_binary_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3743)
+### Operator [`operator_binary_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3739)
 
 Greater or equal test operator `>=`. Test if value of object of class `Float` is greater or equal than value of method parameter.
 
@@ -510,7 +510,7 @@ obj >= 12.234: 1
 
 <a name="operator_binary_ls_br_equal#1" />
 
-### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3750)
+### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3746)
 
 Lesser or equal test operator `<=`. Test if value of object of class `Float` is lesser or equal than value of method parameter.
 
@@ -542,7 +542,7 @@ obj <= 12.234: 0
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3757)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3753)
 
 Add operator `+`. Operator adds value of method parameter to value of object of class `Float`.
 
@@ -575,7 +575,7 @@ res: 561.434000
 
 <a name="operator_binary_minus#1" />
 
-### Operator [`operator_binary_minus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3764)
+### Operator [`operator_binary_minus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3760)
 
 Subtract operator `-`. Operator subtracts value of method parameter from value of object of class `Float`.
 
@@ -608,7 +608,7 @@ res: 536.966000
 
 <a name="operator_binary_asterisk#1" />
 
-### Operator [`operator_binary_asterisk#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3771)
+### Operator [`operator_binary_asterisk#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3767)
 
 Multiply operator `*`. It multiplies value of object of class `Float` by value of method parameter.
 
@@ -641,7 +641,7 @@ res: 30.976488
 
 <a name="operator_binary_slash#1" />
 
-### Operator [`operator_binary_slash#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3778)
+### Operator [`operator_binary_slash#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3774)
 
 Divide operator `/`. Operator divides value of object of class `Float` by value of method parameter.
 
@@ -674,7 +674,7 @@ res: 216.903633
 
 <a name="operator_unary_post_double_plus#0" />
 
-### Operator [`operator_unary_post_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3845)
+### Operator [`operator_unary_post_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3841)
 
 Post increment operator `++`. Increase value of object of class `Float` by one.
 
@@ -698,7 +698,7 @@ obj: 13.234000
 
 <a name="operator_unary_post_double_minus#0" />
 
-### Operator [`operator_unary_post_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3852)
+### Operator [`operator_unary_post_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3848)
 
 Post decrement operator `--`. Decrease value of object of class `Float` by one.
 
@@ -722,7 +722,7 @@ obj: 11.234000
 
 <a name="operator_unary_pre_double_plus#0" />
 
-### Operator [`operator_unary_pre_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3859)
+### Operator [`operator_unary_pre_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3855)
 
 Pre increment operator `++`. Increase value of object of class `Float` by one.
 
@@ -746,7 +746,7 @@ obj: 13.234000
 
 <a name="operator_unary_pre_double_minus#0" />
 
-### Operator [`operator_unary_pre_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3866)
+### Operator [`operator_unary_pre_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3862)
 
 Pre decrement operator `--`. Decrease value of object of class `Float` by one.
 
@@ -770,7 +770,7 @@ obj: 11.234000
 
 <a name="operator_unary_pre_plus#0" />
 
-### Operator [`operator_unary_pre_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3873)
+### Operator [`operator_unary_pre_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3869)
 
 Unary operator `+`. Return value of object of class `Float`.
 
@@ -793,7 +793,7 @@ obj: 12.234000
 
 <a name="operator_unary_pre_minus#0" />
 
-### Operator [`operator_unary_pre_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3880)
+### Operator [`operator_unary_pre_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3876)
 
 Unary negative operator `-`. Return negative value of object of class `Float`.
 
@@ -816,7 +816,7 @@ obj: -12.234000
 
 <a name="operator_unary_pre_exclamation#0" />
 
-### Operator [`operator_unary_pre_exclamation#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3887)
+### Operator [`operator_unary_pre_exclamation#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3883)
 
 Logical NOT operator `!`. Reverse logical state of value of object of class `Float`.
 
@@ -843,7 +843,7 @@ obj: 0
 
 <a name="sin#0" />
 
-### Method [`sin#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3947)
+### Method [`sin#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3943)
 
 Compute sine of value of object of class `Float`. Angle is given in radians.
 
@@ -869,7 +869,7 @@ res: 0.707107
 
 <a name="cos#0" />
 
-### Method [`cos#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3954)
+### Method [`cos#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3950)
 
 Compute cosine of value of object of class `Float`. Angle is given in radians.
 
@@ -895,7 +895,7 @@ res: -0.707107
 
 <a name="tan#0" />
 
-### Method [`tan#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3961)
+### Method [`tan#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3957)
 
 Compute tangent of value of object of class `Float`. Angle is given in radians.
 
@@ -921,7 +921,7 @@ res: -1.000000
 
 <a name="asin#0" />
 
-### Method [`asin#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3968)
+### Method [`asin#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3964)
 
 Compute principal value of arc sine of value of object of class `Float`. Result
 value represents angle in radians whose sine is equal to value of object of class
@@ -947,7 +947,7 @@ res: 0.500000
 
 <a name="acos#0" />
 
-### Method [`acos#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3975)
+### Method [`acos#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3971)
 
 Compute principal value of arc cosine of value of object of class `Float`. Result
 value represents angle in radians whose cosine is equal to value of object of class
@@ -973,7 +973,7 @@ res: 0.000000
 
 <a name="atan#0" />
 
-### Method [`atan#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3982)
+### Method [`atan#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3978)
 
 Compute principal value of arc tangent of value of object of class `Float`. Result
 value represents angle in radians whose tangent is equal to value of object of class
@@ -999,7 +999,7 @@ res: 0.250000
 
 <a name="exp#0" />
 
-### Method [`exp#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3989)
+### Method [`exp#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3985)
 
 Compute value of e (the base  of  natural  logarithms) raised to the power
 determined by value of object of class `Float`.
@@ -1023,7 +1023,7 @@ res: 22026.465795
 
 <a name="log#0" />
 
-### Method [`log#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3996)
+### Method [`log#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3992)
 
 Compute natural logarithm of value of object of class `Float`.
 
@@ -1046,7 +1046,7 @@ res: 10.000000
 
 <a name="pow#1" />
 
-### Method [`pow#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4003)
+### Method [`pow#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3999)
 
 Compute power of value of object of class `Float` raised to the value given by method parameter.
 
@@ -1076,7 +1076,7 @@ res: 8649633.346304
 
 <a name="sqrt#0" />
 
-### Method [`sqrt#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4010)
+### Method [`sqrt#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4006)
 
 Compute nonnegative square root of value of object of class `Float`.
 
@@ -1099,7 +1099,7 @@ res: 3.316625
 
 <a name="cbrt#0" />
 
-### Method [`cbrt#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4017)
+### Method [`cbrt#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4013)
 
 Compute real cube root of value of object of class `Float`.
 
@@ -1122,7 +1122,7 @@ res: 2.223980
 
 <a name="hypot#1" />
 
-### Method [`hypot#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4024)
+### Method [`hypot#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4020)
 
 Compute length of the hypotenuse of a right-angled triangle with sides
 determined by value of object of class `Float` and method parameter.
@@ -1153,7 +1153,7 @@ res: 549.336246
 
 <a name="classify#0" />
 
-### Method [`classify#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4031)
+### Method [`classify#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4027)
 
 Return `Integer` identifying float number class.
 
@@ -1178,7 +1178,7 @@ res: 4
 
 <a name="isnan#0" />
 
-### Method [`isnan#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4042)
+### Method [`isnan#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4038)
 
 Test if value of object of class `Float` is not an number.
 
@@ -1199,7 +1199,7 @@ res: 1
 
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4053)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4049)
 
 Compare object of class `Float` with method parameter.
 
@@ -1230,7 +1230,7 @@ obj_0.compare(obj_0): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4077)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4073)
 
 Convert object of class `Float` to object of class `String`.
 
@@ -1250,7 +1250,7 @@ obj.to_string(): 12.234000
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4086)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L4082)
 
 Print string representation of object of class `Float` to standard output.
 

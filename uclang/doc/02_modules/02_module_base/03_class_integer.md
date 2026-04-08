@@ -64,7 +64,7 @@ Class describing signed 64bit integer numbers.
 
 <a name="Integer#0" />
 
-### Constructor [`Integer#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2919)
+### Constructor [`Integer#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2915)
 
 Creates default object of class `Integer`.
 
@@ -80,7 +80,7 @@ obj: 0
 
 <a name="Integer#1" />
 
-### Constructor [`Integer#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2924)
+### Constructor [`Integer#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2920)
 
 Creates object of class `Integer` from method parameter.
 
@@ -107,7 +107,7 @@ obj: 255
 
 <a name="Integer#2" />
 
-### Constructor [`Integer#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2970)
+### Constructor [`Integer#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2966)
 
 Creates object of class `Integer` from its string representation.
 
@@ -139,7 +139,7 @@ obj: 4095
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2168)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2164)
 
 Assignment operator `=`. Object of class `Integer` is replaced by method parameter.
 
@@ -166,7 +166,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2478)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2474)
 
 Add and assign operator `+=`. Operator adds value of method parameter to value of object of class `Integer`.
 
@@ -199,7 +199,7 @@ obj: 803
 
 <a name="operator_binary_minus_equal#1" />
 
-### Operator [`operator_binary_minus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2485)
+### Operator [`operator_binary_minus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2481)
 
 Subtract and assign operator `-=`. Operator subtracts value of method parameter from value of object of class `Integer`.
 
@@ -232,7 +232,7 @@ obj: 330
 
 <a name="operator_binary_asterisk_equal#1" />
 
-### Operator [`operator_binary_asterisk_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2492)
+### Operator [`operator_binary_asterisk_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2488)
 
 Multiply and assign operator `*=`. Operator multiplies value of object of class `Integer` by value of method parameter.
 
@@ -265,7 +265,7 @@ obj: 86174350
 
 <a name="operator_binary_slash_equal#1" />
 
-### Operator [`operator_binary_slash_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2499)
+### Operator [`operator_binary_slash_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2495)
 
 Divide and assign operator `/=`. Operator divides value of object of class `Integer` by value of method parameter.
 
@@ -298,7 +298,7 @@ obj: 351068113
 
 <a name="operator_binary_percent_equal#1" />
 
-### Operator [`operator_binary_percent_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2566)
+### Operator [`operator_binary_percent_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2562)
 
 Modulus and assign operator `%=`. Operator computes modulus of value of object of class `Integer` divided by value of method parameter.
 
@@ -327,7 +327,7 @@ obj: 75
 
 <a name="operator_binary_double_ls_br_equal#1" />
 
-### Operator [`operator_binary_double_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2573)
+### Operator [`operator_binary_double_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2569)
 
 Left shift and assign operator `<<=`. Value of object of class `Integer` is shifted to left by count of bits given by method parameter.
 
@@ -357,7 +357,7 @@ obj: 9072
 
 <a name="operator_binary_double_rs_br_equal#1" />
 
-### Operator [`operator_binary_double_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2580)
+### Operator [`operator_binary_double_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2576)
 
 Right shift and assign operator `>>=`. Value of object of class `Integer` is shifted to right by count of bits given by method parameter.
 
@@ -387,7 +387,7 @@ obj: 35
 
 <a name="operator_binary_ampersand_equal#1" />
 
-### Operator [`operator_binary_ampersand_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2587)
+### Operator [`operator_binary_ampersand_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2583)
 
 Bitwise AND and assign operator `&=`. Value of
 object of class `Integer` is modified according to value given by
@@ -419,7 +419,7 @@ obj: 51
 
 <a name="operator_binary_pipe_equal#1" />
 
-### Operator [`operator_binary_pipe_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2594)
+### Operator [`operator_binary_pipe_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2590)
 
 Bitwise OR and assign operator `|=`. Value of
 object of class `Integer` is modified according to value given by
@@ -451,7 +451,7 @@ obj: 639
 
 <a name="operator_binary_circumflex_equal#1" />
 
-### Operator [`operator_binary_circumflex_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2601)
+### Operator [`operator_binary_circumflex_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2597)
 
 Bitwise XOR and assign operator `^=`. Value of
 object of class `Integer` is modified according to value given by
@@ -483,7 +483,7 @@ obj: 588
 
 <a name="operator_binary_double_ampersand#1" />
 
-### Operator [`operator_binary_double_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2608)
+### Operator [`operator_binary_double_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2604)
 
 Logical AND operator `&&`.  If object of class
 `Integer` is non-zero and value of method parameter is also non-zero
@@ -517,7 +517,7 @@ obj_1 && 1: 1
 
 <a name="operator_binary_double_pipe#1" />
 
-### Operator [`operator_binary_double_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2615)
+### Operator [`operator_binary_double_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2611)
 
 Logical OR operator `||`.  If object of class
 `Integer` is non-zero or value of method parameter is non-zero
@@ -551,7 +551,7 @@ obj_1 || 1: 1
 
 <a name="operator_binary_ampersand#1" />
 
-### Operator [`operator_binary_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2622)
+### Operator [`operator_binary_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2618)
 
 Bitwise AND operator `&`. Bit in result value is set, if it exists in object of class `Integer` and in method parameter.
 
@@ -577,7 +577,7 @@ obj & 123: 51
 
 <a name="operator_binary_pipe#1" />
 
-### Operator [`operator_binary_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2629)
+### Operator [`operator_binary_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2625)
 
 Bitwise OR operator `|`. Bit in result value is set, if it exists in object of class `Integer` or in method parameter.
 
@@ -603,7 +603,7 @@ obj | 123: 639
 
 <a name="operator_binary_circumflex#1" />
 
-### Operator [`operator_binary_circumflex#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2636)
+### Operator [`operator_binary_circumflex#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2632)
 
 Bitwise XOR operator `^`. Bit in result value is set, if it exists in object of class `Integer` or in method parameter, but not both.
 
@@ -629,7 +629,7 @@ obj ^ 123: 588
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2643)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2639)
 
 Comparison operator `==`. Compares object of class `Integer` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -659,7 +659,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2657)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2653)
 
 Comparison operator `!=`. Compares object of class `Integer` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -689,7 +689,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_rs_br#1" />
 
-### Operator [`operator_binary_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2672)
+### Operator [`operator_binary_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2668)
 
 Greater test operator `>`. Test if value of object of class `Integer` is greater than value of method parameter.
 
@@ -721,7 +721,7 @@ obj > 12.234: 1
 
 <a name="operator_binary_ls_br#1" />
 
-### Operator [`operator_binary_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2679)
+### Operator [`operator_binary_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2675)
 
 Lesser test operator `<`. Test if value of object of class `Integer` is lesser than value of method parameter.
 
@@ -753,7 +753,7 @@ obj < 12.234: 0
 
 <a name="operator_binary_rs_br_equal#1" />
 
-### Operator [`operator_binary_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2686)
+### Operator [`operator_binary_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2682)
 
 Greater or equal test operator `>=`. Test if value of object of class `Integer` is greater or equal than value of method parameter.
 
@@ -785,7 +785,7 @@ obj >= 12.234: 1
 
 <a name="operator_binary_ls_br_equal#1" />
 
-### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2693)
+### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2689)
 
 Lesser or equal test operator `<=`. Test if value of object of class `Integer` is lesser or equal than value of method parameter.
 
@@ -817,7 +817,7 @@ obj <= 12.234: 0
 
 <a name="operator_binary_double_rs_br#1" />
 
-### Operator [`operator_binary_double_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2700)
+### Operator [`operator_binary_double_rs_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2696)
 
 Right shift operator `>>`. Value of object of class `Integer` is shifted to right by count of bits given by method parameter.
 
@@ -847,7 +847,7 @@ res: 141
 
 <a name="operator_binary_double_ls_br#1" />
 
-### Operator [`operator_binary_double_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2707)
+### Operator [`operator_binary_double_ls_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2703)
 
 Left shift operator `<<`. Value of object of class `Integer` is shifted to left by count of bits given by method parameter.
 
@@ -877,7 +877,7 @@ res: 2268
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2714)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2710)
 
 Add operator `+`. Operator adds value of method parameter to value of object of class `Integer`.
 
@@ -910,7 +910,7 @@ res: 579.234000
 
 <a name="operator_binary_minus#1" />
 
-### Operator [`operator_binary_minus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2721)
+### Operator [`operator_binary_minus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2717)
 
 Subtract operator `-`. Operator subtracts value of method parameter from value of object of class `Integer`.
 
@@ -943,7 +943,7 @@ res: 554.766000
 
 <a name="operator_binary_asterisk#1" />
 
-### Operator [`operator_binary_asterisk#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2728)
+### Operator [`operator_binary_asterisk#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2724)
 
 Multiply operator `*`. It multiplies value of object of class `Integer` by value of method parameter.
 If method parameter is object of class `String`, then result will be created as repeated concatenation of this string.
@@ -980,7 +980,7 @@ res: Hi world!Hi world!
 
 <a name="operator_binary_slash#1" />
 
-### Operator [`operator_binary_slash#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2785)
+### Operator [`operator_binary_slash#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2781)
 
 Divide operator `/`. Operator divides value of object of class `Integer` by value of method parameter.
 
@@ -1013,7 +1013,7 @@ res: 223.933649
 
 <a name="operator_binary_percent#1" />
 
-### Operator [`operator_binary_percent#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2856)
+### Operator [`operator_binary_percent#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2852)
 
 Modulus operator `%`. Operator computes modulus of value of object of class `Integer` divided by value of method parameter.
 
@@ -1043,7 +1043,7 @@ res: 75
 
 <a name="operator_unary_post_double_plus#0" />
 
-### Operator [`operator_unary_post_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2863)
+### Operator [`operator_unary_post_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2859)
 
 Post increment operator `++`. Increase value of object of class `Integer` by one.
 
@@ -1067,7 +1067,7 @@ obj: 124
 
 <a name="operator_unary_post_double_minus#0" />
 
-### Operator [`operator_unary_post_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2870)
+### Operator [`operator_unary_post_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2866)
 
 Post decrement operator `--`. Decrease value of object of class `Integer` by one.
 
@@ -1091,7 +1091,7 @@ obj: 122
 
 <a name="operator_unary_pre_double_plus#0" />
 
-### Operator [`operator_unary_pre_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2877)
+### Operator [`operator_unary_pre_double_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2873)
 
 Pre increment operator `++`. Increase value of object of class `Integer` by one.
 
@@ -1115,7 +1115,7 @@ obj: 124
 
 <a name="operator_unary_pre_double_minus#0" />
 
-### Operator [`operator_unary_pre_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2884)
+### Operator [`operator_unary_pre_double_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2880)
 
 Pre decrement operator `--`. Decrease value of object of class `Integer` by one.
 
@@ -1139,7 +1139,7 @@ obj: 122
 
 <a name="operator_unary_pre_plus#0" />
 
-### Operator [`operator_unary_pre_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2891)
+### Operator [`operator_unary_pre_plus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2887)
 
 Unary operator `+`. Return value of object of class `Integer`.
 
@@ -1162,7 +1162,7 @@ obj: 123
 
 <a name="operator_unary_pre_minus#0" />
 
-### Operator [`operator_unary_pre_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2898)
+### Operator [`operator_unary_pre_minus#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2894)
 
 Unary negative operator `-`. Return negative value of object of class `Integer`.
 
@@ -1185,7 +1185,7 @@ obj: -123
 
 <a name="operator_unary_pre_exclamation#0" />
 
-### Operator [`operator_unary_pre_exclamation#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2905)
+### Operator [`operator_unary_pre_exclamation#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2901)
 
 Logical NOT operator `!`. Reverse logical state of value of object of class `Integer`.
 
@@ -1208,7 +1208,7 @@ obj: 0
 
 <a name="operator_unary_pre_tilde#0" />
 
-### Operator [`operator_unary_pre_tilde#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2912)
+### Operator [`operator_unary_pre_tilde#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L2908)
 
 Bitwise complement operator `~`. Return binary complement of value of object of class `Integer`.
 
@@ -1235,7 +1235,7 @@ obj: -124
 
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3029)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3025)
 
 Compare object of class `Integer` with method parameter.
 
@@ -1266,7 +1266,7 @@ obj_0.compare(obj_0): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3053)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3049)
 
 Convert object of class `Integer` to object of class `String`.
 
@@ -1286,7 +1286,7 @@ obj.to_string(): 123
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3062)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L3058)
 
 Print string representation of object of class `Integer` to standard output.
 

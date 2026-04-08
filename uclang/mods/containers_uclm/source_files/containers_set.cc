@@ -1510,7 +1510,7 @@ bool bic_set_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
 
   pointer_tree_s *tree_ptr = (pointer_tree_s *)dst_location->v_data_ptr;
 
-  string_array_s strings;
+  CONT_CLEAR(string_array_s,strings);
   strings.init_size(tree_ptr->count);
   strings.used = strings.size;
 
@@ -1527,7 +1527,6 @@ bool bic_set_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
     do
     {
       BIC_CALL_TO_STRING(it,tree_ptr->data[t_idx].object,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
       t_idx = tree_ptr->get_stack_next_idx(t_idx,&stack_ptr,stack);
@@ -1538,9 +1537,6 @@ bool bic_set_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli
   string_s *string_ptr = it.get_new_string_ptr();
 
   BIC_CONT_TO_STRING_0_CONSTRUCT();
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -1559,7 +1555,7 @@ method to_string
   pointer_tree_s *tree_ptr = (pointer_tree_s *)dst_location->v_data_ptr;
   string_s *del_string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  string_array_s strings;
+  CONT_CLEAR(string_array_s,strings);
   strings.init_size(tree_ptr->count);
   strings.used = strings.size;
 
@@ -1576,7 +1572,6 @@ method to_string
     do
     {
       BIC_CALL_TO_STRING(it,tree_ptr->data[t_idx].object,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
       t_idx = tree_ptr->get_stack_next_idx(t_idx,&stack_ptr,stack);
@@ -1587,9 +1582,6 @@ method to_string
   string_s *string_ptr = it.get_new_string_ptr();
 
   BIC_CONT_TO_STRING_1_CONSTRUCT();
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

@@ -68,6 +68,11 @@ struct dynlib_s
   inline const char *get_error();
 };
 
+inline void dynlib_s_clear(dynlib_s *a_this)
+{/*{{{*/
+  a_this->clear();
+}/*}}}*/
+
 /*
  * inline methods of structure dynlib_s
  */

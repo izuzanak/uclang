@@ -45,8 +45,7 @@ void gf_uclvar_get_string(interpreter_thread_s &it,unsigned source_pos,void *a_v
       );
 
   // - process result string -
-  bc_array_s buff;
-  buff.init();
+  CONT_INIT_CLEAR(bc_array_s,buff);
   buff.push('"');
 
   if (a_string.size > 1)
@@ -74,6 +73,7 @@ void gf_uclvar_get_string(interpreter_thread_s &it,unsigned source_pos,void *a_v
   a_string.clear();
   a_string.data = buff.data;
   a_string.size = buff.used;
+  buff.init();
 }/*}}}*/
 
 /*
@@ -584,8 +584,7 @@ bool graph_s::minimum_spanning_tree_kruskals(ui_array_s &a_edge_idxs)
   a_edge_idxs.fill(c_idx_not_exist);\
 \
   /* - create value vertex index set - */\
-  value_idx_rb_tree_s vvi_set;\
-  vvi_set.init();\
+  CONT_INIT_CLEAR(value_idx_rb_tree_s,vvi_set);\
   vvi_set.ucl_prepare(it,source_pos);\
 \
   unsigned *vi_vvi_map = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));\
@@ -672,7 +671,6 @@ bool graph_s::minimum_spanning_tree_kruskals(ui_array_s &a_edge_idxs)
 \
   cfree(v_done);\
   cfree(vi_vvi_map);\
-  vvi_set.clear();\
 \
   return true;\
 }/*}}}*/
@@ -755,8 +753,7 @@ bool graph_s::shortest_path_digraph_dijkstra(unsigned a_src_vertex_idx,unsigned 
   bool *v_used = (bool *)cmalloc(vertices.used*sizeof(bool));\
   memset(v_used,false,vertices.used*sizeof(bool));\
 \
-  ui_queue_s v_queue;\
-  v_queue.init();\
+  CONT_INIT_CLEAR(ui_queue_s,v_queue);\
 \
   v_queue.insert(a_src_vertex_idx);\
   v_used[a_src_vertex_idx] = true;\
@@ -766,7 +763,6 @@ bool graph_s::shortest_path_digraph_dijkstra(unsigned a_src_vertex_idx,unsigned 
 \
     if (sv_idx == a_trg_vertex_idx)\
     {\
-      v_queue.clear();\
       cfree(v_used);\
 \
       return true;\
@@ -794,7 +790,6 @@ bool graph_s::shortest_path_digraph_dijkstra(unsigned a_src_vertex_idx,unsigned 
 \
   } while(v_queue.used > 0);\
 \
-  v_queue.clear();\
   cfree(v_used);\
 \
   return true;\
@@ -861,8 +856,7 @@ bool graph_s::BFS_digraph(unsigned a_src_vertex_idx,unsigned a_trg_vertex_idx,ui
 \
   unsigned *v_edge_idx = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));\
 \
-  ui_array_s v_stack;\
-  v_stack.init();\
+  CONT_INIT_CLEAR(ui_array_s,v_stack);\
 \
   DFS_PUSH_VERTEX(a_src_vertex_idx);\
 \
@@ -872,7 +866,6 @@ bool graph_s::BFS_digraph(unsigned a_src_vertex_idx,unsigned a_trg_vertex_idx,ui
     /* - requested vertex was found - */\
     if (sv_idx == a_trg_vertex_idx)\
     {\
-      v_stack.clear();\
       cfree(v_edge_idx);\
       cfree(v_used);\
 \
@@ -899,7 +892,6 @@ bool graph_s::BFS_digraph(unsigned a_src_vertex_idx,unsigned a_trg_vertex_idx,ui
 \
   } while(v_stack.used > 0);\
 \
-  v_stack.clear();\
   cfree(v_edge_idx);\
   cfree(v_used);\
 \
@@ -960,8 +952,7 @@ bool graph_s::strongly_connected_components_tarjans(ui_array_s &a_comp_idxs)
 
   unsigned *v_edge_idx = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));
 
-  ui_array_s v_stack;
-  v_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,v_stack);
 
   unsigned mark = 0;
 
@@ -1043,7 +1034,6 @@ bool graph_s::strongly_connected_components_tarjans(ui_array_s &a_comp_idxs)
   }
   while(v_idx != c_idx_not_exist);
 
-  v_stack.clear();
   cfree(v_edge_idx);
 
   return true;
@@ -1065,8 +1055,7 @@ bool graph_s::is_weakly_connected_graph()
   // - traverse throught all edges, closure incident to vertices of first edge -
   if (edges.root_idx != c_idx_not_exist)
   {
-    ui_array_s edge_stack;
-    edge_stack.init();
+    CONT_INIT_CLEAR(ui_array_s,edge_stack);
 
     // - push first edge on stack and mark it -
     e_map[edges.root_idx] = true;
@@ -1136,8 +1125,6 @@ bool graph_s::is_weakly_connected_graph()
 
     }
     while(edge_stack.used > 0);
-
-    edge_stack.clear();
   }
 
   // - test if all vertices was accesed (if not graph is not connected) -
@@ -1179,8 +1166,7 @@ bool graph_s::is_strongly_connected_graph_tarjans()
 
   unsigned *v_edge_idx = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));
 
-  ui_array_s v_stack;
-  v_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,v_stack);
   v_stack.push(vertices.root_idx);
 
   unsigned mark = 0;
@@ -1243,8 +1229,6 @@ bool graph_s::is_strongly_connected_graph_tarjans()
     } while(true);
 
   } while(v_stack.used > 0);
-
-  v_stack.clear();
 
   // - test if all vertices fall in one component -
   {
@@ -1416,14 +1400,12 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
 
 void graph_s::get_dot_code_params(string_s &a_string,const char *a_header,const char *a_node_prefix,const char *a_indent)
 {/*{{{*/
-  string_array_s str_array;
-  str_array.init();
+  CONT_INIT_CLEAR(string_array_s,str_array);
 
   str_array.push_blank();
   str_array.last().setf("%s",a_header);
 
-  string_s value_str;
-  value_str.init();
+  CONT_INIT_CLEAR(string_s,value_str);
 
   // - traverse thought vertices and print their values to output -
   if (vertices.root_idx != c_idx_not_exist)
@@ -1485,19 +1467,15 @@ void graph_s::get_dot_code_params(string_s &a_string,const char *a_header,const 
     while(e_idx != c_idx_not_exist);
   }
 
-  value_str.clear();
-
   str_array.push_blank();
   str_array.last().setf("%s}\n",a_indent);
 
   str_array.join(a_string);
-  str_array.clear();
 }/*}}}*/
 
 void graph_s::get_dot_code(string_s &a_string)
 {/*{{{*/
-  string_array_s str_array;
-  str_array.init();
+  CONT_INIT_CLEAR(string_array_s,str_array);
 
   switch (type)
   {
@@ -1524,7 +1502,6 @@ void graph_s::get_dot_code(string_s &a_string)
   get_dot_code_params(str_array.last(),"","","");
 
   str_array.join(a_string);
-  str_array.clear();
 }/*}}}*/
 
 // -- value_idx_s --

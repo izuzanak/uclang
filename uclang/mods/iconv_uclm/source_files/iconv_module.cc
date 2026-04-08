@@ -219,7 +219,7 @@ method convert
   }
 
   // - create target buffer -
-  bc_array_s output;
+  CONT_CLEAR(bc_array_s,output);
   output.init_size(input_ptr->size - 1);
   output.used = output.size;
 
@@ -254,8 +254,6 @@ method convert
       case EILSEQ:
       case EINVAL:
         {
-          output.clear();
-
           // - reset conversion state -
           iconv(ic_ptr->ic_ptr,nullptr,nullptr,nullptr,nullptr);
 
@@ -280,6 +278,7 @@ method convert
   string_s *output_ptr = it.get_new_string_ptr();
   output_ptr->data = output.data;
   output_ptr->size = output.used;
+  output.init();
 
   BIC_SET_RESULT_STRING(output_ptr);
 

@@ -197,8 +197,7 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -656,11 +655,8 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
 #endif
 
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -2038,8 +2034,7 @@ built_in_variable_s pipe_variables[] =
   const unsigned c_buffer_add = 4096;\
 \
   /* - target data buffer - */\
-  bc_array_s data_buffer;\
-  data_buffer.init();\
+  CONT_INIT_CLEAR(bc_array_s,data_buffer);\
 \
   unsigned read_cnt;\
   do\
@@ -2053,8 +2048,6 @@ built_in_variable_s pipe_variables[] =
   /* - ERROR - */\
   if (ferror(f))\
   {\
-    data_buffer.clear();\
-\
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
@@ -2064,8 +2057,6 @@ built_in_variable_s pipe_variables[] =
   /* - was any data read from file - */\
   if (data_buffer.used == 0)\
   {\
-    data_buffer.clear();\
-\
     BIC_SET_RESULT_BLANK();\
   }\
   else\
@@ -2076,6 +2067,7 @@ built_in_variable_s pipe_variables[] =
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->data = data_buffer.data;\
     string_ptr->size = data_buffer.used;\
+    data_buffer.init();\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
     BIC_SET_RESULT(new_location);\
@@ -3735,7 +3727,7 @@ bool bic_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
   const unsigned c_init_buffer_size = 1024;\
 \
   /* - target data buffer - */\
-  bc_array_s line_buffer;\
+  CONT_CLEAR(bc_array_s,line_buffer);\
   line_buffer.init_size(c_init_buffer_size);\
 \
   int ch;\
@@ -3772,16 +3764,12 @@ bool bic_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
     /* - ERROR - */\
     if (ferror(f))\
     {\
-      line_buffer.clear();\
-\
       exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
 \
     if (feof(f) && line_buffer.used == 0)\
     {\
-      line_buffer.clear();\
-\
       BIC_SET_RESULT_BLANK();\
     }\
     else {\
@@ -3791,6 +3779,7 @@ bool bic_socket_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli 
       string_s *string_ptr = it.get_new_string_ptr();\
       string_ptr->data = line_buffer.data;\
       string_ptr->size = line_buffer.used;\
+      line_buffer.init();\
 \
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
       BIC_SET_RESULT(new_location)\
@@ -3817,16 +3806,12 @@ location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_p
   // - ERROR -
   if (ferror(f))
   {
-    line_buffer.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,source_pos,(location_s *)it.blank_location);
     return nullptr;
   }
 
   if ((feof(f) && line_buffer.used == 0))
   {
-    line_buffer.clear();
-
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
@@ -3837,6 +3822,7 @@ location_s *bic_stream_next_item(interpreter_thread_s &it,location_s *location_p
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->data = line_buffer.data;
   string_ptr->size = line_buffer.used;
+  line_buffer.init();
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
@@ -3928,8 +3914,7 @@ method read
   }
 
   // - target data string -
-  string_s data_string;
-  data_string.init();
+  CONT_INIT_CLEAR(string_s,data_string);
   data_string.create(byte_cnt);
 
   unsigned read_cnt = fread(data_string.data,1,byte_cnt,f);
@@ -3937,8 +3922,6 @@ method read
   // - ERROR -
   if (read_cnt < byte_cnt)
   {
-    data_string.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -3946,7 +3929,6 @@ method read
   // - return data string -
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->swap(data_string);
-  data_string.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);
@@ -3983,8 +3965,7 @@ method read_max
   }
 
   // - target data string -
-  string_s data_string;
-  data_string.init();
+  CONT_INIT_CLEAR(string_s,data_string);
   data_string.create(byte_cnt);
 
   unsigned read_cnt = fread(data_string.data,1,byte_cnt,f);
@@ -3994,8 +3975,6 @@ method read_max
     // - ERROR -
     if (ferror(f))
     {
-      data_string.clear();
-
       exception_s::throw_exception(it,module.error_base + c_error_STREAM_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -4008,7 +3987,6 @@ method read_max
   // - return data string -
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->swap(data_string);
-  data_string.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);
@@ -4056,7 +4034,7 @@ bool bic_stream_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,
   const unsigned c_init_buffer_size = 1024;\
 \
   /* - create target line buffer - */\
-  bc_array_s line_buffer;\
+  CONT_CLEAR(bc_array_s,line_buffer);\
   line_buffer.init_size(c_init_buffer_size);\
 \
   char ch;\
@@ -4096,16 +4074,12 @@ bool bic_stream_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,
   /* - ERROR - */\
   if (read_cnt == -1)\
   {\
-    line_buffer.clear();\
-\
     exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
   if (read_cnt == 0 && line_buffer.used == 0)\
   {\
-    line_buffer.clear();\
-\
     BIC_SET_RESULT_BLANK();\
   }\
   else\
@@ -4116,6 +4090,7 @@ bool bic_stream_method_next_item_0(interpreter_thread_s &it,unsigned stack_base,
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->data = line_buffer.data;\
     string_ptr->size = line_buffer.used;\
+    line_buffer.init();\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
     BIC_SET_RESULT(new_location)\
@@ -4142,16 +4117,12 @@ location_s *bic_fd_next_item(interpreter_thread_s &it,location_s *location_ptr,u
   // - ERROR -
   if (read_cnt == -1)
   {
-    line_buffer.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,source_pos,(location_s *)it.blank_location);
     return nullptr;
   }
 
   if (read_cnt == 0 && line_buffer.used == 0)
   {
-    line_buffer.clear();
-
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
@@ -4162,6 +4133,7 @@ location_s *bic_fd_next_item(interpreter_thread_s &it,location_s *location_ptr,u
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->data = line_buffer.data;
   string_ptr->size = line_buffer.used;
+  line_buffer.init();
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
@@ -4227,8 +4199,7 @@ bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
   const long int c_buffer_add = 4096;
 
   // - target data buffer -
-  bc_array_s data_buffer;
-  data_buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,data_buffer);
 
   int inq_cnt;
   long int read_cnt;
@@ -4240,8 +4211,6 @@ bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
     // - ERROR -
     if (read_cnt == -1)
     {
-      data_buffer.clear();
-
       exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -4251,8 +4220,6 @@ bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
     // - ERROR -
     if (ioctl(fd,TIOCINQ,&inq_cnt) == -1)
     {
-      data_buffer.clear();
-
       exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -4262,8 +4229,6 @@ bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
   // - was any data read -
   if (data_buffer.used == 0)
   {
-    data_buffer.clear();
-
     BIC_SET_RESULT_BLANK();
   }
   else
@@ -4274,6 +4239,7 @@ bool bic_fd_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *oper
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->data = data_buffer.data;
     string_ptr->size = data_buffer.used;
+    data_buffer.init();
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     BIC_SET_RESULT(new_location);
@@ -4316,8 +4282,7 @@ method read
   }
 
   // - target data string -
-  string_s data_string;
-  data_string.init();
+  CONT_INIT_CLEAR(string_s,data_string);
   data_string.create(byte_cnt);
 
   unsigned readed = 0;
@@ -4330,8 +4295,6 @@ method read
     // - ERROR -
     if (read_cnt == -1)
     {
-      data_string.clear();
-
       exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -4343,8 +4306,6 @@ method read
   // - ERROR -
   if (readed < byte_cnt)
   {
-    data_string.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_FD_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -4352,7 +4313,6 @@ method read
   // - return data string -
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->swap(data_string);
-  data_string.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);

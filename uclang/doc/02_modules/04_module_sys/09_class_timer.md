@@ -56,7 +56,7 @@ class Main
 
 <a name="Timer#0" />
 
-### Constructor [`Timer#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5154)
+### Constructor [`Timer#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5114)
 
 Creates object of class `Timer`.
 
@@ -76,7 +76,7 @@ obj: Timer
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5142)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5102)
 
 Assignment operator `=`. Object of class `Timer` is replaced by method parameter.
 
@@ -107,7 +107,7 @@ obj: New value
 
 <a name="schedule#3" />
 
-### Method [`schedule#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5167)
+### Method [`schedule#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5127)
 
 Schedules callback to be called after given delay. Returns record index that
 can be used to cancel scheduled callback.
@@ -138,7 +138,7 @@ timer_cb: data
 
 <a name="cancel#1" />
 
-### Method [`cancel#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5214)
+### Method [`cancel#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5174)
 
 Cancels scheduled timer callback identified by record index.
 
@@ -160,7 +160,7 @@ cancelled
 
 <a name="process#0" />
 
-### Method [`process#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5302)
+### Method [`process#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5262)
 
 Fires all scheduled callbacks whose delay has expired.
 
@@ -178,7 +178,7 @@ timer_cb: hello
 
 <a name="remain#0" />
 
-### Method [`remain#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5250)
+### Method [`remain#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5210)
 
 Returns time remaining in milliseconds until next scheduled event, or object
 of class `Blank` if no timers are scheduled.
@@ -200,7 +200,7 @@ type: Integer
 
 <a name="timeout#0" />
 
-### Method [`timeout#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5275)
+### Method [`timeout#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5235)
 
 Returns time remaining in milliseconds until next scheduled event. Returns
 `0` if a timer has already expired.
@@ -222,7 +222,7 @@ type: Integer
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5363)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5323)
 
 Convert object of class `Timer` to object of class `String`.
 This method returns name of class `Timer`.
@@ -242,7 +242,7 @@ Timer.to_string(): Timer
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5372)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5332)
 
 Print string representation of object of class `Timer` to standard output.
 This method prints name of class `Timer`.

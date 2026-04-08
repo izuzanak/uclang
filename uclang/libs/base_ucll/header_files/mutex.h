@@ -65,6 +65,11 @@ struct mutex_s
   inline unsigned unlock();
 };
 
+inline void mutex_s_clear(mutex_s *a_this)
+{/*{{{*/
+  a_this->clear();
+}/*}}}*/
+
 /*
  * inline methods of structure mutex_s
  */

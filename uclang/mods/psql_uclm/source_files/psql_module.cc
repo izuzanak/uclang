@@ -1088,8 +1088,7 @@ method PSqlValues
   pointer_array_s *array_ptr = (pointer_array_s *)src_0_location->v_data_ptr;
 
   // - oid array -
-  ui_array_s oid_array;
-  oid_array.init();
+  CONT_INIT_CLEAR(ui_array_s,oid_array);
 
   if (array_ptr->used != 0)
   {
@@ -1103,8 +1102,6 @@ method PSqlValues
       // - ERROR -
       if (oid_location->v_type != c_bi_class_integer)
       {
-        oid_array.clear();
-
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_OID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(ptr - array_ptr->data);
 
@@ -1128,8 +1125,6 @@ method PSqlValues
 
         // - ERROR -
         default:
-          oid_array.clear();
-
           exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_OID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
           new_exception->params.push(ptr - array_ptr->data);
 
@@ -1146,7 +1141,6 @@ method PSqlValues
   values_ptr->init();
 
   values_ptr->oid_array.swap(oid_array);
-  oid_array.clear();
 
   // - retrieve psql values pointer -
   dst_location->v_data_ptr = (psql_values_s *)values_ptr;
@@ -1176,8 +1170,7 @@ method format
   }
 
   // - initialize character buffer -
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   if (oid_array->used != 0)
   {
@@ -1201,8 +1194,6 @@ method format
           // - ERROR -
           if (!it.retrieve_integer(item_location,value))
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(oid_ptr - oid_array->data);
 
@@ -1222,8 +1213,6 @@ method format
               // - ERROR -
               if (value < INT16_MIN || value > INT16_MAX)
               {
-                buffer.clear();
-
                 exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
                 new_exception->params.push(oid_ptr - oid_array->data);
 
@@ -1236,8 +1225,6 @@ method format
               // - ERROR -
               if (value < INT32_MIN || value > INT32_MAX)
               {
-                buffer.clear();
-
                 exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
                 new_exception->params.push(oid_ptr - oid_array->data);
 
@@ -1252,8 +1239,6 @@ method format
               // - ERROR -
               if (char_cnt < 0 || char_cnt > c_number_format_size)
               {
-                buffer.clear();
-
                 exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_VALUE_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
                 new_exception->params.push(oid_ptr - oid_array->data);
 
@@ -1274,8 +1259,6 @@ method format
           // - ERROR -
           if (item_location->v_type != c_bi_class_string)
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(oid_ptr - oid_array->data);
 
@@ -1318,8 +1301,6 @@ method format
           // - ERROR -
           if (!it.retrieve_float(item_location,value))
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_VALUE_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(oid_ptr - oid_array->data);
 
@@ -1332,8 +1313,6 @@ method format
           // - ERROR -
           if (char_cnt < 0 || char_cnt > c_number_format_size)
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_VALUE_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(oid_ptr - oid_array->data);
 
@@ -1346,8 +1325,6 @@ method format
 
       // - ERROR -
       default:
-        buffer.clear();
-
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PSQL_VALUES_INVALID_OID_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(oid_ptr - oid_array->data);
 
@@ -1372,6 +1349,7 @@ method format
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->size = buffer.used;
   string_ptr->data = buffer.data;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

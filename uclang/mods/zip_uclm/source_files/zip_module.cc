@@ -892,8 +892,7 @@ built_in_variable_s zip_file_variables[] =
   const unsigned c_buffer_add = 4096;\
 \
   /* - target data buffer - */\
-  bc_array_s data_buffer;\
-  data_buffer.init();\
+  CONT_INIT_CLEAR(bc_array_s,data_buffer);\
 \
   zip_int64_t read_cnt;\
   do\
@@ -907,8 +906,6 @@ built_in_variable_s zip_file_variables[] =
   /* - ERROR - */\
   if (read_cnt == -1)\
   {\
-    data_buffer.clear();\
-\
     exception_s::throw_exception(it,module.error_base + c_error_ZIP_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
@@ -918,8 +915,6 @@ built_in_variable_s zip_file_variables[] =
   /* - was any data read from file - */\
   if (data_buffer.used == 0)\
   {\
-    data_buffer.clear();\
-\
     BIC_SET_RESULT_BLANK();\
   }\
   else\
@@ -930,6 +925,7 @@ built_in_variable_s zip_file_variables[] =
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->data = data_buffer.data;\
     string_ptr->size = data_buffer.used;\
+    data_buffer.init();\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
     BIC_SET_RESULT(new_location);\
@@ -1032,8 +1028,7 @@ method read
   }
 
   // - target data string -
-  string_s data_string;
-  data_string.init();
+  CONT_INIT_CLEAR(string_s,data_string);
   data_string.create(byte_cnt);
 
   unsigned read_cnt = zip_fread(zf_ptr->file,data_string.data,byte_cnt);
@@ -1041,8 +1036,6 @@ method read
   // - ERROR -
   if (read_cnt < byte_cnt)
   {
-    data_string.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_ZIP_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1050,7 +1043,6 @@ method read
   // - return data string -
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->swap(data_string);
-  data_string.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);

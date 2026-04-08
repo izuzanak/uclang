@@ -128,8 +128,7 @@ bool base_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type)
   {
@@ -598,11 +597,8 @@ bool base_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -4592,16 +4588,10 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
   string_s *format_string_ptr = (string_s *)dst_location->v_data_ptr;
 
   // - result formatted character buffer -
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   // - format string buffer -
-  bc_array_s format_buffer;
-  format_buffer.init();
-
-#define SF_CLEAR_DATA() \
-  format_buffer.clear();\
-  buffer.clear()
+  CONT_INIT_CLEAR(bc_array_s,format_buffer);
 
   // - index of element in argument array -
   unsigned element_idx = 0;
@@ -4644,8 +4634,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             // - ERROR -
             if (flags_done)
             {
-              SF_CLEAR_DATA();
-
               exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_FORMAT_SPECIFIER,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }
@@ -4663,8 +4651,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             // - ERROR -
             if (flags_done)
             {
-              SF_CLEAR_DATA();
-
               exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_FORMAT_SPECIFIER,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }
@@ -4693,8 +4679,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
           {/*{{{*/
             if (array_ptr->used <= element_idx)
             {
-              SF_CLEAR_DATA();
-
               exception_s::throw_exception(it,c_error_STRING_FORMAT_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }
@@ -4703,8 +4687,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             location_s *element_location = it.get_location_value(array_ptr->data[element_idx++]);
             if (element_location->v_type != c_bi_class_integer)
             {
-              SF_CLEAR_DATA();
-
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
               new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_integer);
@@ -4726,8 +4708,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             // - ERROR -
             if (dot_done)
             {
-              SF_CLEAR_DATA();
-
               exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_FORMAT_SPECIFIER,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }
@@ -4753,8 +4733,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
 
             if (array_ptr->used <= element_idx)
             {
-              SF_CLEAR_DATA();
-
               exception_s::throw_exception(it,c_error_STRING_FORMAT_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }
@@ -4763,8 +4741,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             location_s *element_location = it.get_location_value(array_ptr->data[element_idx++]);
             if (element_location->v_type != c_bi_class_char)
             {
-              SF_CLEAR_DATA();
-
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
               new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_char);
@@ -4788,8 +4764,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             int char_cnt = snprintf(buffer.data + old_used,max_length,format_buffer.data,width,precision,argument);
             if (char_cnt < 0 || char_cnt >= max_length)
             {
-              SF_CLEAR_DATA();
-
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_ARGUMENT_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
               new_exception->params.push(element_idx - 1);
 
@@ -4808,8 +4782,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
 
             if (array_ptr->used <= element_idx)
             {
-              SF_CLEAR_DATA();
-
               exception_s::throw_exception(it,c_error_STRING_FORMAT_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }
@@ -4818,8 +4790,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             location_s *element_location = it.get_location_value(array_ptr->data[element_idx++]);
             if (element_location->v_type != c_bi_class_integer)
             {
-              SF_CLEAR_DATA();
-
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
               new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_integer);
@@ -4841,8 +4811,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             int char_cnt = snprintf(buffer.data + old_used,max_length,format_buffer.data,width,precision,argument);
             if (char_cnt < 0 || char_cnt >= max_length)
             {
-              SF_CLEAR_DATA();
-
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_ARGUMENT_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
               new_exception->params.push(element_idx - 1);
 
@@ -4861,8 +4829,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
 
             if (array_ptr->used <= element_idx)
             {
-              SF_CLEAR_DATA();
-
               exception_s::throw_exception(it,c_error_STRING_FORMAT_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }
@@ -4871,8 +4837,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             location_s *element_location = it.get_location_value(array_ptr->data[element_idx++]);
             if (element_location->v_type != c_bi_class_float)
             {
-              SF_CLEAR_DATA();
-
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
               new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_float);
@@ -4896,8 +4860,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             int char_cnt = snprintf(buffer.data + old_used,max_length,format_buffer.data,width,precision,argument);
             if (char_cnt < 0 || char_cnt >= max_length)
             {
-              SF_CLEAR_DATA();
-
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_ARGUMENT_FORMAT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
               new_exception->params.push(element_idx - 1);
 
@@ -4913,8 +4875,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
           {/*{{{*/
             if (array_ptr->used <= element_idx)
             {
-              SF_CLEAR_DATA();
-
               exception_s::throw_exception(it,c_error_STRING_FORMAT_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
               return false;
             }
@@ -4923,8 +4883,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
             location_s *element_location = it.get_location_value(array_ptr->data[element_idx++]);
             if (element_location->v_type != c_bi_class_string)
             {
-              SF_CLEAR_DATA();
-
               exception_s *new_exception = exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
               new_exception->params.push(element_idx - 1);
               new_exception->params.push(c_bi_class_string);
@@ -4973,8 +4931,6 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
           // - ERROR -
           default:
           {/*{{{*/
-            SF_CLEAR_DATA();
-
             exception_s::throw_exception(it,c_error_STRING_FORMAT_WRONG_FORMAT_SPECIFIER,operands[c_source_pos_idx],(location_s *)it.blank_location);
             return false;
           }/*}}}*/
@@ -4993,13 +4949,9 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
     while(f_ptr < f_ptr_end);
   }
 
-  format_buffer.clear();
-
   // - test if all parameters were used -
   if (element_idx != array_ptr->used)
   {
-    buffer.clear();
-
     exception_s::throw_exception(it,c_error_STRING_FORMAT_NOT_ALL_ARGUMENTS_CONVERTED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -5011,6 +4963,7 @@ bool bic_string_operator_binary_percent(interpreter_thread_s &it,unsigned stack_
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->data = buffer.data;
   string_ptr->size = buffer.used;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -5204,8 +5157,7 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
     return false;
   }
 
-  string_array_s strings;
-  strings.init();
+  CONT_INIT_CLEAR(string_array_s,strings);
 
   unsigned strings_size = 0;
 
@@ -5218,7 +5170,6 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
 \
     /* - convert item to string - */\
     BIC_CALL_TO_STRING(it,item_location,operands[c_source_pos_idx],\
-                       strings.clear();\
                        return false;\
                       );\
 \
@@ -5233,7 +5184,6 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
     // - retrieve first index -
     BIC_CALL_FIRST_IDX(it,src_0_location,index,operands[c_source_pos_idx],
-                       strings.clear();
                        return false;
                       );
 
@@ -5241,7 +5191,6 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
     {
       // - retrieve item location -
       BIC_CALL_ITEM(it,src_0_location,index,item_location,operands[c_source_pos_idx],
-                    strings.clear();
                     return false;
                    );
 
@@ -5249,7 +5198,6 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
 
       // - retrieve next index -
       BIC_CALL_NEXT_IDX(it,src_0_location,index,index,operands[c_source_pos_idx],
-                        strings.clear();
                         return false;
                        );
     }
@@ -5262,7 +5210,6 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
     {
       // - retrieve next item location -
       BIC_CALL_NEXT_ITEM(it,src_0_location,item_location,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
 
@@ -5287,9 +5234,6 @@ bool bic_string_method_join_1(interpreter_thread_s &it,unsigned stack_base,uli *
   string_s *string_ptr = it.get_new_string_ptr();
 
   BIC_CONT_TO_STRING_1_CONSTRUCT();
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -5502,8 +5446,7 @@ method replace
   string_s *newstr_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - create target buffer -
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   // - replace old string by new string -
   {
@@ -5542,6 +5485,7 @@ method replace
   string_s *result_ptr = it.get_new_string_ptr();
   result_ptr->data = buffer.data;
   result_ptr->size = buffer.used;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(result_ptr);
 
@@ -6612,8 +6556,7 @@ bool bic_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,ul
 
   pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
 
-  ui_array_s idxs_array;
-  idxs_array.init();
+  CONT_INIT_CLEAR(ui_array_s,idxs_array);
 
   long long int result;
 
@@ -6638,8 +6581,6 @@ bool bic_array_method_get_idxs_1(interpreter_thread_s &it,unsigned stack_base,ul
   pointer_array_s *res_array_ptr = it.get_new_array_ptr();
 
   BIC_CONT_CONSTRUCT_IDXS_ARRAY();
-
-  idxs_array.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,res_array_ptr);
   BIC_SET_RESULT(new_location);
@@ -6804,8 +6745,8 @@ bool bic_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
 
   pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
 
-  string_array_s strings;
-  strings.init_size(array_ptr->used);
+  CONT_INIT_CLEAR(string_array_s,strings);
+  strings.copy_resize(array_ptr->used);
   strings.used = strings.size;
 
   unsigned strings_size = 0;
@@ -6819,7 +6760,6 @@ bool bic_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
     do
     {
       BIC_CALL_TO_STRING(it,*e_ptr,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
     }
@@ -6829,9 +6769,6 @@ bool bic_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
   string_s *string_ptr = it.get_new_string_ptr();
 
   BIC_CONT_TO_STRING_0_CONSTRUCT();
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -6850,8 +6787,8 @@ method to_string
   pointer_array_s *array_ptr = (pointer_array_s *)dst_location->v_data_ptr;
   string_s *del_string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  string_array_s strings;
-  strings.init_size(array_ptr->used);
+  CONT_INIT_CLEAR(string_array_s,strings);
+  strings.copy_resize(array_ptr->used);
   strings.used = strings.size;
 
   unsigned strings_size = 0;
@@ -6865,7 +6802,6 @@ method to_string
     do
     {
       BIC_CALL_TO_STRING(it,*e_ptr,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
     }
@@ -6875,9 +6811,6 @@ method to_string
   string_s *string_ptr = it.get_new_string_ptr();
 
   BIC_CONT_TO_STRING_1_CONSTRUCT();
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

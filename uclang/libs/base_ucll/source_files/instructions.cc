@@ -1241,7 +1241,7 @@ int inst_slice_range(inst_params_s *params)
   // - reverse values requested -
   if (reverse && array_ptr->used > 0)
   {
-    pointer_array_s reverse_array;
+    CONT_CLEAR(pointer_array_s,reverse_array);
     reverse_array.init_size(array_ptr->used);
 
     // - reverse order of result array -
@@ -1255,7 +1255,6 @@ int inst_slice_range(inst_params_s *params)
 
     // - swap reverse and result arrays -
     array_ptr->swap(reverse_array);
-    reverse_array.clear();
   }
 
   class_record_s &class_record = IT_INTERPRETER->class_records[src_location->v_type];

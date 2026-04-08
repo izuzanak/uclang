@@ -95,17 +95,9 @@ void *run_interpreter(void *data)
     }
 #endif
 
-    // - init source -
-    source_s source;
-    source.init();
-
-    // - init modules path -
-    string_s mods_path;
-    mods_path.init();
-
-    // - init argument list -
-    string_array_s arg_list;
-    arg_list.init();
+    CONT_INIT_CLEAR(source_s,source);
+    CONT_INIT_CLEAR(string_s,mods_path);
+    CONT_INIT_CLEAR(string_array_s,arg_list);
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_DSP
     int argc = 1;
@@ -231,9 +223,7 @@ void *run_interpreter(void *data)
       exit(125);
     }
 
-    // - creation of parser object -
-    script_parser_s parser;
-    parser.init();
+    CONT_INIT_CLEAR(script_parser_s,parser);
 
     debug_message_1(fprintf(stderr,"main: script_parser, initialization\n"); tm_mark_time());
     parser.initialize_parser(source,mods_path);
@@ -410,8 +400,7 @@ void *run_interpreter(void *data)
                 //parser.DEBUG_show_class_im_codes();
                 //parser.DEBUG_show_method_im_codes();
 
-                interpreter_s interpreter;
-                interpreter.init();
+                CONT_INIT_CLEAR(interpreter_s,interpreter);
 
                 debug_message_1(fprintf(stderr,"main: interpreter initialization from script parser\n"); tm_mark_time());
                 interpreter.create_from_script_parser(parser);
@@ -440,9 +429,6 @@ void *run_interpreter(void *data)
                 // - remove global pointer to interpreter -
                 interpreter_ptr = nullptr;
 
-                debug_message_1(fprintf(stderr,"main: interpreter remove\n"); tm_mark_time());
-                interpreter.clear();
-                debug_message_1(fprintf(stderr,"main: interpreter remove (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
               }
             }
           }
@@ -450,13 +436,6 @@ void *run_interpreter(void *data)
       }
     }
 
-    // - release parser -
-    debug_message_1(fprintf(stderr,"main: parser remove\n"); tm_mark_time());
-    parser.clear();
-    debug_message_1(fprintf(stderr,"main: parser remove (%" HOST_LL_FORMAT "d us) DONE\n" MP_COMMA tm_time_diff()));
-
-    // - release argument list -
-    arg_list.clear();
   }
 
 #if !defined(ANDROID)

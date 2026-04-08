@@ -61,8 +61,7 @@ bool pack_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -183,11 +182,8 @@ bool pack_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -273,23 +269,13 @@ bool bic_pack_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
 
   // - initialize location stack -
-  pointer_array_s loc_stack;
-  loc_stack.init();
+  CONT_INIT_CLEAR(pointer_array_s,loc_stack);
 
   // - initialize value stream buffer -
-  bc_array_s value_stream;
-  value_stream.init();
+  CONT_INIT_CLEAR(bc_array_s,value_stream);
 
   // - initialize class pack -
-  class_pack_s class_pack;
-  class_pack.init();
-
-#define PACK_RELEASE() \
-  {/*{{{*/\
-    loc_stack.clear();\
-    value_stream.clear();\
-    class_pack.clear();\
-  }/*}}}*/
+  CONT_INIT_CLEAR(class_pack_s,class_pack);
 
   // - push initial value to location stack -
   loc_stack.push((pointer)src_0_location);
@@ -317,8 +303,6 @@ bool bic_pack_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *op
         // - ERROR -
         if (class_record.bi_class_ptr->pack_caller == nullptr)
         {
-          PACK_RELEASE();
-
           exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_BUILT_IN_NOT_DEFINED_PACK,operands[c_source_pos_idx],(location_s *)it.blank_location);
           new_exception->params.push(location->v_type);
 
@@ -328,8 +312,6 @@ bool bic_pack_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *op
         // - ERROR -
         if (!class_record.bi_class_ptr->pack_caller(location,value_stream,loc_stack))
         {
-          PACK_RELEASE();
-
           exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_PACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
           new_exception->params.push(location->v_type);
 
@@ -341,8 +323,6 @@ bool bic_pack_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *op
         // - ERROR -
         if (!bi_object_pack(location,value_stream,loc_stack))
         {
-          PACK_RELEASE();
-
           exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_PACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);
           new_exception->params.push(location->v_type);
 
@@ -368,9 +348,6 @@ bool bic_pack_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *op
     value_stream.append(sizeof(unsigned),(const char *)&class_stream.used);
   }
 
-  loc_stack.clear();
-  class_pack.clear();
-
   // - insert byte order test value -
   unsigned short byte_order_test = 0x00ff;
   value_stream.append(sizeof(unsigned short),(const char *)&byte_order_test);
@@ -382,6 +359,7 @@ bool bic_pack_method_pack_1(interpreter_thread_s &it,unsigned stack_base,uli *op
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->data = value_stream.data;
   string_ptr->size = value_stream.used;
+  value_stream.init();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);
@@ -407,17 +385,13 @@ static_method
   value_stream.used = value_stream.size;
 
   // - initialize location stack -
-  pointer_array_s loc_stack;
-  loc_stack.init();
+  CONT_INIT_CLEAR(pointer_array_s,loc_stack);
 
   // - initialize class unpack -
-  class_unpack_s class_unpack;
-  class_unpack.init();
+  CONT_INIT_CLEAR(class_unpack_s,class_unpack);
 
 #define UNPACK_RELEASE() \
   {/*{{{*/\
-    class_unpack.clear();\
-\
     if (loc_stack.used != 0)\
     {\
       /* - release locations from location stack - */\
@@ -428,8 +402,6 @@ static_method
         it.release_location_ptr((location_s *)*l_ptr);\
       } while(++l_ptr < l_ptr_end);\
     }\
-\
-    loc_stack.clear();\
   }/*}}}*/
 
 #define UNPACK_ERROR_TEST(CONDITION) \
@@ -581,9 +553,6 @@ static_method
 
   BIC_SET_RESULT(loc_stack.pop());
 
-  class_unpack.clear();
-  loc_stack.clear();
-
   return true;
 }/*}}}*/
 
@@ -621,11 +590,7 @@ static_method
   }
 
   // - result character buffer -
-  bc_array_s buffer;
-  buffer.init();
-
-#define PC_CLEAR_DATA() \
-  buffer.clear()
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
 #define PC_PROCESS_ELEMENT(TYPE,CLASS_TYPE,RETRIEVE_CODE) \
   {/*{{{*/\
@@ -660,8 +625,6 @@ static_method
         /* - ERROR - */\
         if (array_ptr->used <= element_idx)\
         {\
-          PC_CLEAR_DATA();\
-\
           exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);\
           return false;\
         }\
@@ -672,8 +635,6 @@ static_method
         /* - ERROR - */\
         if (element_location->v_type != CLASS_TYPE)\
         {\
-          PC_CLEAR_DATA();\
-\
           exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
           new_exception->params.push(element_idx - 1);\
           new_exception->params.push(CLASS_TYPE);\
@@ -721,7 +682,6 @@ static_method
       // - ERROR -
       if (ret_term == c_idx_not_exist)
       {
-        PC_CLEAR_DATA();
 
         exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_FORMAT_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
         new_exception->params.push(old_f_ptr - format_string_ptr->data);
@@ -735,8 +695,6 @@ static_method
   /* - ERROR - */\
   if (string_length > count)\
   {\
-    PC_CLEAR_DATA();\
-\
     exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_STRING_LENGTH_EXCEEDS_TARGET_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
@@ -853,8 +811,6 @@ static_method
           // - ERROR -
           if (array_ptr->used <= element_idx)
           {
-            PC_CLEAR_DATA();
-
             exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
             return false;
           }
@@ -865,8 +821,6 @@ static_method
           // - ERROR -
           if (element_location->v_type != c_bi_class_string)
           {
-            PC_CLEAR_DATA();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(element_idx - 1);
             new_exception->params.push(c_bi_class_string);
@@ -924,8 +878,6 @@ static_method
           // - ERROR -
           if (array_ptr->used <= element_idx)
           {
-            PC_CLEAR_DATA();
-
             exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_NOT_ENOUGH_ARGUMENTS,operands[c_source_pos_idx],(location_s *)it.blank_location);
             return false;
           }
@@ -936,8 +888,6 @@ static_method
           // - ERROR -
           if (element_location->v_type != c_bi_class_string)
           {
-            PC_CLEAR_DATA();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_WRONG_ARGUMENT_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(element_idx - 1);
             new_exception->params.push(c_bi_class_string);
@@ -1012,8 +962,6 @@ PCD_WRITE_DATA:
   // - ERROR -
   if (element_idx < array_ptr->used)
   {
-    PC_CLEAR_DATA();
-
     exception_s::throw_exception(it,module.error_base + c_error_PACK_CODE_NOT_ALL_ARGUMENTS_CONVERTED,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1025,6 +973,7 @@ PCD_WRITE_DATA:
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->data = buffer.data;
   string_ptr->size = buffer.used;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

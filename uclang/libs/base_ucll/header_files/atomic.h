@@ -85,6 +85,11 @@ struct atomic_s
   inline bool atomic_inc_and_test(int a_test);
 };
 
+inline void atomic_s_clear(atomic_s *a_this)
+{/*{{{*/
+  a_this->clear();
+}/*}}}*/
+
 /*
  * inline methods of structure atomic_s
  */

@@ -888,7 +888,7 @@ obj.to_string(): [One:1,Two:2,Three:3]
 
 <a name="to_string#1" />
 
-### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1416)
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1411)
 
 Convert object of class `Dict` to object of class `String`.
 Each key and element of object of class `Dict` is converted to string by call of
@@ -917,7 +917,7 @@ obj.to_string("<->"): One:1<->Two:2<->Three:3
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1514)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_dict.cc#L1504)
 
 Print string representation of object of class `Dict` to standard output.
 Each key and element of object of class `Dict` is printed by call of its

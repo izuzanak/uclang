@@ -859,8 +859,7 @@ void script_parser_s::DEBUG_show_classes()
 
 void script_parser_s::DEBUG_show_namespaces()
 {/*{{{*/
-  ui_array_s namespace_stack;
-  namespace_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,namespace_stack);
 
   // - insert global namespace index, first index -
   namespace_stack.push(0);
@@ -916,8 +915,6 @@ void script_parser_s::DEBUG_show_namespaces()
     }
 
   } while(namespace_stack.used > 0);
-
-  namespace_stack.clear();
 }/*}}}*/
 
 void script_parser_s::DEBUG_print_spaces(unsigned space_cnt)
@@ -936,12 +933,10 @@ void script_parser_s::DEBUG_show_expression(expression_s &exp)
 {/*{{{*/
   printf("## EXPRESSION TREE ##\n");
 
-  ui_array_s exp_stack;
-  exp_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,exp_stack);
   exp_stack.push(exp.start_node_idx);
 
-  ui_array_s deep_stack;
-  deep_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,deep_stack);
   deep_stack.push(1);
 
   do
@@ -1528,9 +1523,6 @@ void script_parser_s::DEBUG_show_expression(expression_s &exp)
     }
   }
   while(exp_stack.used > 0);
-
-  deep_stack.clear();
-  exp_stack.clear();
 }/*}}}*/
 
 void script_parser_s::DEBUG_show_flow_graph(exp_flow_graph_s &fg)
@@ -1623,8 +1615,7 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
     "   node [shape=ellipse];\n"
   );
 
-  ui_array_s exp_stack;
-  exp_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,exp_stack);
   exp_stack.push(exp.start_node_idx);
 
   do
@@ -2188,8 +2179,6 @@ void script_parser_s::DEBUG_show_dot_format_expression(expression_s &exp)
 
   }
   while(exp_stack.used > 0);
-
-  exp_stack.clear();
 
   printf("}\n");
 }/*}}}*/
@@ -3410,15 +3399,13 @@ bool script_parser_s::import_module(built_in_module_s *a_module_ptr)
 
 bool script_parser_s::load_module(const char *a_file_name)
 {/*{{{*/
-  dynlib_s dl;
-  dl.init();
+  CONT_INIT_CLEAR(dynlib_s,dl);
 
   // - open dynamic library -
   if (!dl.open(a_file_name,0))
   {
     //fprintf(stderr,"DL ERROR: %s\n",dl.get_error());
 
-    dl.clear();
     return false;
   }
 
@@ -3427,14 +3414,12 @@ bool script_parser_s::load_module(const char *a_file_name)
   // - get module symbol address -
   if (!dl.get_symbol_addr("module",(void **)&module_ptr))
   {
-    dl.clear();
     return false;
   }
 
   // import classes from module
   if (!import_module(module_ptr))
   {
-    dl.clear();
     return false;
   }
 
@@ -3455,8 +3440,7 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
 
   // - process import path -
   {
-    string_array_s tmp_module_dirs;
-    tmp_module_dirs.init();
+    CONT_INIT_CLEAR(string_array_s,tmp_module_dirs);
     tmp_module_dirs.split(a_mods_path,1,":");
 
     if (tmp_module_dirs.used != 0)
@@ -3476,7 +3460,6 @@ void script_parser_s::initialize_parser(source_s &a_source,string_s &a_mods_path
       while(++s_ptr < s_ptr_end);
     }
 
-    tmp_module_dirs.clear();
   }
 
   sources.clear();
@@ -8099,8 +8082,7 @@ void script_parser_s::parse_script(unsigned a_source_idx)
   {
     string_s &source = sources[source_idx].source_string;
 
-    cipher_s cipher;
-    cipher.init();
+    CONT_INIT_CLEAR(cipher_s,cipher);
 
     // - if source code is cryptical -
     if (cipher.is_cipher(source.size - 1,source.data))
@@ -8111,8 +8093,6 @@ void script_parser_s::parse_script(unsigned a_source_idx)
       cipher.process((source.size - 1) - c_cm_length,source.data + c_cm_length);
       input_idx = c_cm_length;
     }
-
-    cipher.clear();
   }
 
   do
@@ -8194,8 +8174,7 @@ void script_parser_s::parse_script(unsigned a_source_idx)
 
 void script_parser_s::process_modules()
 {/*{{{*/
-  string_s file_name;
-  file_name.init();
+  CONT_INIT_CLEAR(string_s,file_name);
 
   if (module_idx < module_names.used)
   {
@@ -8221,7 +8200,6 @@ void script_parser_s::process_modules()
       // - if some errors has been occurred -
       if (error_code.used != 0)
       {
-        file_name.clear();
         return;
       }
 
@@ -8234,8 +8212,7 @@ void script_parser_s::process_modules()
         {
           file_name.setf("%s/%s.ucl",md_ptr->data,module_names[module_idx].data);
 
-          string_s source_string;
-          source_string.init();
+          CONT_INIT_CLEAR(string_s,source_string);
 
           // - read source string from file -
           if (source_string.load_text_file(file_name.data))
@@ -8246,11 +8223,9 @@ void script_parser_s::process_modules()
 
             // - set source file name -
             source.file_name.swap(file_name);
-            file_name.clear();
 
             // - set source source string -
             source.source_string.swap(source_string);
-            source_string.clear();
 
             // - parse module source string -
             parse_script(sources.used - 1);
@@ -8265,8 +8240,6 @@ void script_parser_s::process_modules()
 
             break;
           }
-
-          source_string.clear();
         }
         while(++md_ptr < md_ptr_end);
 
@@ -8282,14 +8255,11 @@ void script_parser_s::process_modules()
       error_code.push(module_names_positions[module_idx].ui_first);
       error_code.push(module_idx);
 
-      file_name.clear();
       return;
 
     }
     while(++module_idx < module_names.used);
   }
-
-  file_name.clear();
 }/*}}}*/
 
 void script_parser_s::extended_classes_search()
@@ -8834,8 +8804,7 @@ void script_parser_s::generate_intermediate_code()
   im_descr.cv_count = im_descr.cv_type_base + class_records.used + static_const_element_cnt;
 
   // - queue for storing indexes of top classes -
-  ui_queue_s top_class_queue;
-  top_class_queue.init();
+  CONT_INIT_CLEAR(ui_queue_s,top_class_queue);
 
   // - find index of non built in classes with no parent -
   if (class_records.used != 0)
@@ -8855,13 +8824,11 @@ void script_parser_s::generate_intermediate_code()
   // - test if any classes was defined -
   if (top_class_queue.used <= 0)
   {
-    top_class_queue.clear();
     return;
   }
 
   // - queue for storing indexes of searched classes -
-  ui_queue_s class_queue;
-  class_queue.init();
+  CONT_INIT_CLEAR(ui_queue_s,class_queue);
 
   im_descr.var_name_fo_map.copy_resize(variable_symbol_names.used);
   im_descr.var_name_fo_map.used = variable_symbol_names.used;
@@ -8924,8 +8891,6 @@ void script_parser_s::generate_intermediate_code()
                 // - reset class using namespaces -
                 class_record.using_namespace_idxs.swap(using_namespace_idxs);
 
-                class_queue.clear();
-                top_class_queue.clear();
                 return;
               }
 
@@ -8969,12 +8934,6 @@ void script_parser_s::generate_intermediate_code()
     // - set stack size -
     stack_size = im_descr.stack_idx_max;
   }
-
-  // - clear classes queue -
-  class_queue.clear();
-
-  // - clear top classes queue -
-  top_class_queue.clear();
 
   // - cycle through records of all classes -
   unsigned cr_idx = 0;
@@ -9139,8 +9098,7 @@ void script_parser_s::generate_intermediate_code()
 
 void script_parser_s::process_errors()
 {/*{{{*/
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   if (error_code.used != 0)
   {
@@ -9593,7 +9551,6 @@ void script_parser_s::process_errors()
 
   }
 
-  class_stack.clear();
 }/*}}}*/
 
 /*

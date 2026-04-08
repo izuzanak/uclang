@@ -71,8 +71,7 @@ bool protobuf_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -112,11 +111,8 @@ bool protobuf_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -445,8 +441,7 @@ method pack
   tree_ptr->it_ptr = &it;
   tree_ptr->source_pos = operands[c_source_pos_idx];
 
-  bc_arrays_s buffers;
-  buffers.init();
+  CONT_INIT_CLEAR(bc_arrays_s,buffers);
 
   buffers.push_blank();
   buffers.last().copy_resize(pmd_ptr->msg_descriptor->sizeof_message);
@@ -455,8 +450,6 @@ method pack
   // - ERROR -
   if (!ps_ptr->pack_message(it,pmd_ptr->msg_descriptor,tree_ptr,buffers,msg_data))
   {
-    buffers.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_PROTO_MSG_DESCR_MESSAGE_PACK_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -470,8 +463,6 @@ method pack
 
   // - pack message -
   pmd_ptr->msg_pack(msg_data,(uint8_t *)string_ptr->data);
-
-  buffers.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

@@ -55,7 +55,7 @@ Class providing access to system specific parameters and functions.
 
 <a name="sleep#1" />
 
-### Method `static` [`sleep#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L954)
+### Method `static` [`sleep#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L950)
 
 Suspends execution for the given number of milliseconds.
 
@@ -71,13 +71,13 @@ Sys.sleep(250);
 ("time: %d ms\n" % new Time().milli_sec()).print();
 ```
 ```
-time: 1773320560734 ms
-time: 1773320560985 ms
+time: 1775557797369 ms
+time: 1775557797619 ms
 ```
 
 <a name="srand#1" />
 
-### Method `static` [`srand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L986)
+### Method `static` [`srand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L982)
 
 Seeds the pseudo-random number generator.
 
@@ -99,7 +99,7 @@ rand: 858300821
 
 <a name="rand#0" />
 
-### Method `static` [`rand#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1004)
+### Method `static` [`rand#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1000)
 
 Returns a pseudo-random integer in range from `0` to `Sys.RAND_MAX`.
 
@@ -123,7 +123,7 @@ rand: 357768173
 
 <a name="getpid#0" />
 
-### Method `static` [`getpid#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1012)
+### Method `static` [`getpid#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1008)
 
 Returns process identifier of current process.
 
@@ -142,7 +142,7 @@ type: Integer
 
 <a name="getuid#0" />
 
-### Method `static` [`getuid#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1032)
+### Method `static` [`getuid#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1028)
 
 Returns user identifier of current process.
 
@@ -161,7 +161,7 @@ type: Integer
 
 <a name="getgid#0" />
 
-### Method `static` [`getgid#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1050)
+### Method `static` [`getgid#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1046)
 
 Returns group identifier of current process.
 
@@ -180,7 +180,7 @@ type: Integer
 
 <a name="system#1" />
 
-### Method `static` [`system#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1068)
+### Method `static` [`system#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1064)
 
 Executes shell command described by string parameter.
 
@@ -205,7 +205,7 @@ exit status: 0
 
 <a name="exit#1" />
 
-### Method `static` [`exit#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1086)
+### Method `static` [`exit#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1082)
 
 Terminates current process with given exit code.
 
@@ -227,7 +227,7 @@ this would not be reached
 
 <a name="open#2" />
 
-### Method `static` [`open#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1104)
+### Method `static` [`open#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1100)
 
 Opens file and returns object of class `File`.
 
@@ -255,7 +255,7 @@ Hello world
 
 <a name="popen#2" />
 
-### Method `static` [`popen#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1114)
+### Method `static` [`popen#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1110)
 
 Opens process pipe and returns object of class `Pipe`.
 
@@ -281,7 +281,7 @@ Hello from pipe
 
 <a name="pipe#0" />
 
-### Method `static` [`pipe#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1124)
+### Method `static` [`pipe#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1120)
 
 Creates anonymous pipe and returns array of two objects of class `Pipe`. First
 element is read end, second is write end.
@@ -304,7 +304,7 @@ Hello pipe
 
 <a name="mkdir#1" />
 
-### Method `static` [`mkdir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1191)
+### Method `static` [`mkdir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1187)
 
 Creates directory in file system.
 
@@ -325,7 +325,7 @@ is_dir: 1
 
 <a name="rmdir#1" />
 
-### Method `static` [`rmdir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1227)
+### Method `static` [`rmdir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1223)
 
 Removes empty directory from file system.
 
@@ -348,7 +348,7 @@ is_dir: 0
 
 <a name="chdir#1" />
 
-### Method `static` [`chdir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1263)
+### Method `static` [`chdir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1259)
 
 Changes current working directory.
 
@@ -372,7 +372,7 @@ cwd changed: 1
 
 <a name="listdir#1" />
 
-### Method `static` [`listdir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1299)
+### Method `static` [`listdir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1295)
 
 Returns list of entries in directory.
 
@@ -402,7 +402,7 @@ entries: [a.txt,b.txt]
 
 <a name="mkfifo#1" />
 
-### Method `static` [`mkfifo#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1403)
+### Method `static` [`mkfifo#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1399)
 
 Creates named pipe (FIFO) in file system.
 
@@ -423,7 +423,7 @@ is_file: 1
 
 <a name="chmod#2" />
 
-### Method `static` [`chmod#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1438)
+### Method `static` [`chmod#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1434)
 
 Changes file permissions.
 
@@ -446,7 +446,7 @@ done
 
 <a name="remove#1" />
 
-### Method `static` [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1474)
+### Method `static` [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1470)
 
 Deletes file or directory from file system.
 
@@ -469,7 +469,7 @@ Sys.is_file(): 0
 
 <a name="rename#2" />
 
-### Method `static` [`rename#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1510)
+### Method `static` [`rename#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1506)
 
 Renames file or directory.
 
@@ -494,7 +494,7 @@ new exists: 1
 
 <a name="link#2" />
 
-### Method `static` [`link#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1559)
+### Method `static` [`link#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1555)
 
 Creates hard link to file.
 
@@ -518,7 +518,7 @@ link exists: 1
 
 <a name="getcwd#0" />
 
-### Method `static` [`getcwd#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1606)
+### Method `static` [`getcwd#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1602)
 
 Returns current working directory path.
 
@@ -537,7 +537,7 @@ type: String
 
 <a name="setenv#2" />
 
-### Method `static` [`setenv#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1639)
+### Method `static` [`setenv#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1635)
 
 Sets environment variable.
 
@@ -558,7 +558,7 @@ TEST_VAR: hello
 
 <a name="getenv#1" />
 
-### Method `static` [`getenv#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1681)
+### Method `static` [`getenv#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1677)
 
 Returns value of environment variable.
 
@@ -582,7 +582,7 @@ TEST_VAR: hello
 
 <a name="is_file#1" />
 
-### Method `static` [`is_file#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1721)
+### Method `static` [`is_file#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1717)
 
 Tests whether given path refers to a regular file.
 
@@ -609,7 +609,7 @@ is_file: 0
 
 <a name="is_dir#1" />
 
-### Method `static` [`is_dir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1753)
+### Method `static` [`is_dir#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1749)
 
 Tests whether given path refers to a directory.
 
@@ -636,7 +636,7 @@ is_dir: 0
 
 <a name="size#1" />
 
-### Method `static` [`size#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1785)
+### Method `static` [`size#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1781)
 
 Returns size of file in bytes.
 
@@ -661,7 +661,7 @@ size: 12
 
 <a name="time#0" />
 
-### Method `static` [`time#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1835)
+### Method `static` [`time#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1831)
 
 Returns current Unix time in seconds.
 
@@ -680,7 +680,7 @@ type: Integer
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1868)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1864)
 
 Convert object of class `Sys` to object of class `String`.
 This method returns name of class `Sys`.
@@ -700,7 +700,7 @@ Sys.to_string(): Sys
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1877)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L1873)
 
 Print string representation of object of class `Sys` to standard output.
 This method prints name of class `Sys`.

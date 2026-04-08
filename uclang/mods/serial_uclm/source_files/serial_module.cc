@@ -50,8 +50,7 @@ bool serial_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -84,11 +83,8 @@ bool serial_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -495,8 +491,7 @@ bool bic_serial_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *
   const long int c_buffer_add = 4096;
 
   // - target data buffer -
-  bc_array_s data_buffer;
-  data_buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,data_buffer);
 
   int inq_cnt;
   long int read_cnt;
@@ -508,8 +503,6 @@ bool bic_serial_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *
     // - ERROR -
     if (read_cnt == -1)
     {
-      data_buffer.clear();
-
       exception_s::throw_exception(it,module.error_base + c_error_SERIAL_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -519,8 +512,6 @@ bool bic_serial_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *
     // - ERROR -
     if (ioctl(serial_ptr->fd,TIOCINQ,&inq_cnt) == -1)
     {
-      data_buffer.clear();
-
       exception_s::throw_exception(it,module.error_base + c_error_SERIAL_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -530,8 +521,6 @@ bool bic_serial_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *
   // - was any data read -
   if (data_buffer.used == 0)
   {
-    data_buffer.clear();
-
     BIC_SET_RESULT_BLANK();
   }
   else
@@ -542,6 +531,7 @@ bool bic_serial_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli *
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->data = data_buffer.data;
     string_ptr->size = data_buffer.used;
+    data_buffer.init();
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     BIC_SET_RESULT(new_location);

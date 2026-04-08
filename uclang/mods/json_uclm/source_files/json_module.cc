@@ -66,8 +66,7 @@ bool json_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -91,11 +90,8 @@ bool json_print_exception(interpreter_s &it,exception_s &exception)
     break;
   }
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -188,12 +184,10 @@ static_method
 ; @end
 
   // - initialize character buffer -
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   // - initialize create stack -
-  create_stack_s create_stack;
-  create_stack.init();
+  CONT_INIT_CLEAR(create_stack_s,create_stack);
 
   // - insert source location to create stack -
   create_stack.push_blank();
@@ -232,9 +226,6 @@ static_method
           // - ERROR -
           if (key_location->v_type != c_bi_class_string)
           {
-            buffer.clear();
-            create_stack.clear();
-
             exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_NO_STRING_DICT_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
             return false;
           }
@@ -348,9 +339,6 @@ static_method
       // - ERROR -
       default:
         BIC_CALL_TO_JSON(it,location_ptr,operands[c_source_pos_idx],
-            buffer.clear();
-            create_stack.clear();
-
             return false;
             );
 
@@ -359,9 +347,6 @@ static_method
     }
   } while(create_stack.used > 0);
 
-  // - release create stack -
-  create_stack.clear();
-
   // - push terminating character to buffer -
   buffer.push('\0');
 
@@ -369,6 +354,7 @@ static_method
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->size = buffer.used;
   string_ptr->data = buffer.data;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -391,20 +377,15 @@ static_method
   string_s *tabulator_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - create empty indentation string -
-  string_s indent;
-  indent.init();
+  CONT_INIT_CLEAR(string_s,indent);
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   bool ok = json_creator_s::create_nice(it,src_0_location,*tabulator_ptr,indent,buffer,operands[c_source_pos_idx]);
-  indent.clear();
 
   // - ERROR -
   if (!ok)
   {
-    buffer.clear();
-
     return false;
   }
 
@@ -412,6 +393,7 @@ static_method
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->size = buffer.used;
   string_ptr->data = buffer.data;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -437,16 +419,13 @@ static_method
   // - retrieve indentation pointer -
   string_s *indent_ptr = (string_s *)src_2_location->v_data_ptr;
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   bool ok = json_creator_s::create_nice(it,src_0_location,*tabulator_ptr,*indent_ptr,buffer,operands[c_source_pos_idx]);
 
   // - ERROR -
   if (!ok)
   {
-    buffer.clear();
-
     return false;
   }
 
@@ -454,6 +433,7 @@ static_method
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->size = buffer.used;
   string_ptr->data = buffer.data;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -474,8 +454,7 @@ static_method
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - create json parser -
-  json_parser_s json_parser;
-  json_parser.init();
+  CONT_INIT_CLEAR(json_parser_s,json_parser);
 
   // - ERROR -
   if (!json_parser.parse_source(it,*string_ptr))
@@ -483,7 +462,6 @@ static_method
     unsigned old_input_idx = json_parser.old_input_idx;
 
     json_parser.release_locations();
-    json_parser.clear();
 
     exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_JSON_PARSE_ERROR,operands[c_source_pos_idx],src_0_location);
     new_exception->params.push(old_input_idx);
@@ -496,7 +474,6 @@ static_method
   BIC_SET_RESULT(obj_location);
 
   json_parser.release_locations();
-  json_parser.clear();
 
   return true;
 }/*}}}*/

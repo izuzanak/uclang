@@ -22,11 +22,8 @@ bool log_file_s::rotate()
   fclose((FILE *)file);
   file = nullptr;
 
-  bc_array_s old_buff;
-  old_buff.init();
-
-  bc_array_s new_buff;
-  new_buff.init();
+  CONT_INIT_CLEAR(bc_array_s,old_buff);
+  CONT_INIT_CLEAR(bc_array_s,new_buff);
 
   unsigned new_idx = max_count - 1;
   do
@@ -55,9 +52,6 @@ bool log_file_s::rotate()
         // - ERROR -
         if (unlink(old_buff.data))
         {
-          old_buff.clear();
-          new_buff.clear();
-
           return false;
         }
       }
@@ -68,9 +62,6 @@ bool log_file_s::rotate()
         // - ERROR -
         if (rename(new_buff.data,old_buff.data))
         {
-          old_buff.clear();
-          new_buff.clear();
-
           return false;
         }
       }
@@ -83,9 +74,6 @@ bool log_file_s::rotate()
         // - ERROR -
         if (unlink(new_buff.data))
         {
-          old_buff.clear();
-          new_buff.clear();
-
           return false;
         }
       }
@@ -96,14 +84,8 @@ bool log_file_s::rotate()
   // - open new log file -
   if ((file = fopen(new_buff.data,"a")) == nullptr)
   {
-    old_buff.clear();
-    new_buff.clear();
-
     return false;
   }
-
-  old_buff.clear();
-  new_buff.clear();
 
   return true;
 }/*}}}*/
@@ -128,13 +110,11 @@ bool logger_s::add_file(unsigned a_level,string_s &a_path,
     return false;
   }
 
-  log_file_s log_file;
-  log_file.init();
+  CONT_INIT_CLEAR(log_file_s,log_file);
   log_file.set(a_level,a_path,a_max_size,a_max_count,file);
 
   // - add log file to logger -
   files.swap_insert(log_file);
-  log_file.clear();
 
   return true;
 }/*}}}*/

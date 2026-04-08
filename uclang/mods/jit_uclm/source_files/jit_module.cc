@@ -360,8 +360,7 @@ method create_fun
   jit_context_build_start(jc_ptr->context);
 
   // - create jit parser -
-  jit_parser_s parser;
-  parser.init();
+  CONT_INIT_CLEAR(jit_parser_s,parser);
 
   parser.it_ptr = &it;
   parser.ucl_context = jc_ptr;
@@ -372,8 +371,6 @@ method create_fun
 
   if (!parser.parse_source())
   {
-    parser.clear();
-
     // - end function build -
     jit_context_build_end(jc_ptr->context);
 
@@ -417,9 +414,6 @@ method create_fun
 
           BIC_CREATE_NEW_LOCATION_REFS(new_location,c_bi_class_string,string_ptr,0);
 
-          // - release parser -
-          parser.clear();
-
           // - end function build -
           jit_context_build_end(jc_ptr->context);
 
@@ -450,9 +444,6 @@ method create_fun
 
   // - store function pointer in context -
   jc_ptr->fun_records.last().swap(parser.fun_record);
-
-  // - release jit parser -
-  parser.clear();
 
   // - end function build -
   jit_context_build_end(jc_ptr->context);

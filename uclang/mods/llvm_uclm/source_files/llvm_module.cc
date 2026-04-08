@@ -372,8 +372,7 @@ method create_fun
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - create llvm parser -
-  llvm_parser_s parser;
-  parser.init();
+  CONT_INIT_CLEAR(llvm_parser_s,parser);
 
   parser.it_ptr = &it;
 
@@ -382,8 +381,6 @@ method create_fun
 
   if (!parser.parse_source())
   {
-    parser.clear();
-
     // - retrieve thrown exception -
     exception_s *exception = (exception_s *)((location_s *)it.exception_location)->v_data_ptr;
 
@@ -398,9 +395,6 @@ method create_fun
 
     return false;
   }
-
-  // - release llvm parser -
-  parser.clear();
 
   BIC_SET_RESULT_DESTINATION();
 

@@ -53,8 +53,7 @@ bool pcre_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -94,11 +93,8 @@ bool pcre_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -570,8 +566,7 @@ method replace
   string_s *newstr_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - create target buffer -
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   // - replace regex matches by new string -
   {
@@ -587,8 +582,6 @@ method replace
         // - ERROR -
         if (match.rm_so == match.rm_eo)
         {
-          buffer.clear();
-
           exception_s::throw_exception(it,module.error_base + c_error_PCRE_UNEXPECTED_EMPTY_MATCH,operands[c_source_pos_idx],(location_s *)it.blank_location);
           return false;
         }
@@ -624,6 +617,7 @@ method replace
   string_s *result_ptr = it.get_new_string_ptr();
   result_ptr->data = buffer.data;
   result_ptr->size = buffer.used;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(result_ptr);
 

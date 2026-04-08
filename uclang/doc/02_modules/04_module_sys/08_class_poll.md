@@ -39,7 +39,7 @@ Class providing access to system poll mechanism for monitoring multiple file des
 
 <a name="Poll#1" />
 
-### Constructor [`Poll#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4862)
+### Constructor [`Poll#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4822)
 
 Creates object of class `Poll` from array of alternating file descriptor and
 event pairs.
@@ -67,7 +67,7 @@ obj: Poll
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4850)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4810)
 
 Assignment operator `=`. Object of class `Poll` is replaced by method parameter.
 
@@ -100,7 +100,7 @@ obj: New value
 
 <a name="ready#1" />
 
-### Method [`ready#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4929)
+### Method [`ready#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4889)
 
 Polls file descriptors with given timeout. Returns `1` if any file descriptor
 is ready, `0` if timeout expired.
@@ -128,7 +128,7 @@ ready: 1
 
 <a name="poll#1" />
 
-### Method [`poll#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4966)
+### Method [`poll#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4926)
 
 Polls file descriptors with given timeout. Returns array of revents values
 for each file descriptor, or object of class `Blank` on timeout.
@@ -157,7 +157,7 @@ poll: [17]
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5023)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4983)
 
 Convert object of class `Poll` to object of class `String`.
 This method returns name of class `Poll`.
@@ -177,7 +177,7 @@ Poll.to_string(): Poll
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5032)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4992)
 
 Print string representation of object of class `Poll` to standard output.
 This method prints name of class `Poll`.

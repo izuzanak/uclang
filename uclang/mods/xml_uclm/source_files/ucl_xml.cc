@@ -65,8 +65,7 @@ void xml_creator_s::create_nice(interpreter_thread_s &it,pointer a_node_ptr,stri
 }/*}}}*/
 
   // - initialize indent buffer -
-  bc_array_s indent_buffer;
-  indent_buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,indent_buffer);
 
   indent_buffer.append(a_indent.size - 1,a_indent.data);
 
@@ -74,8 +73,7 @@ void xml_creator_s::create_nice(interpreter_thread_s &it,pointer a_node_ptr,stri
   unsigned indent_size = indent_buffer.used;
 
   // - initialize create stack -
-  create_stack_s create_stack;
-  create_stack.init();
+  CONT_INIT_CLEAR(create_stack_s,create_stack);
 
   // - insert root node to create stack -
   create_stack.push_blank();
@@ -209,12 +207,6 @@ void xml_creator_s::create_nice(interpreter_thread_s &it,pointer a_node_ptr,stri
     create_stack.pop();
 
   } while(create_stack.used > 0);
-
-  // - release create stack -
-  create_stack.clear();
-
-  // - release indent buffer -
-  indent_buffer.clear();
 
   // - push terminating character to buffer -
   a_buffer.push('\0');

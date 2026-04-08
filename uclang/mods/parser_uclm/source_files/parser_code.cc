@@ -357,23 +357,18 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
   clear();
 
   // - queue of new states descriptions -
-  fa_state_descr_queue_s queue;
-  queue.init();
+  CONT_INIT_CLEAR(fa_state_descr_queue_s,queue);
 
-  fa_state_reg_states_s state_descrs;
-  state_descrs.init();
+  CONT_INIT_CLEAR(fa_state_reg_states_s,state_descrs);
 
   // - array of moves used by one state -
-  fa_state_moves_array_s moves_array;
-  moves_array.init();
+  CONT_INIT_CLEAR(fa_state_moves_array_s,moves_array);
 
   // - work stack shared by called functions -
-  ui_array_s work_stack;
-  work_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,work_stack);
 
   // - description of new produced automata state -
-  fa_state_descr_s new_state_descr;
-  new_state_descr.init();
+  CONT_INIT_CLEAR(fa_state_descr_s,new_state_descr);
 
   // - insert first record to queue of new states description -
   {
@@ -399,8 +394,7 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
   do
   {
     // - retrieve description of next state from queue -
-    fa_state_descr_s q_state_descr = {};
-    q_state_descr.init();
+    CONT_INIT_CLEAR(fa_state_descr_s,q_state_descr);
     q_state_descr.swap(queue.next());
 
     // - test if such state is not defined already -
@@ -423,7 +417,6 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
       cassert(move_idx != c_idx_not_exist);
       state.moves[move_idx].value = state_descr_idx;
 
-      q_state_descr.clear();
       continue;
     }
 
@@ -615,20 +608,12 @@ void final_automata_s::create_new(fa_states_array_s &states_array)
     // - store description of accepted state, for state existence control -
     state_descrs.push_blank();
     state_descrs.last().swap(q_state_descr.reg_states);
-    q_state_descr.clear();
 
   }
   while(queue.used > 0);
 
   // - flush redundant memory -
   states.flush();
-
-  // - release dynamically allocated memory -
-  new_state_descr.clear();
-  work_stack.clear();
-  moves_array.clear();
-  state_descrs.clear();
-  queue.clear();
 
   /*
    * creates effective set of transitions
@@ -2300,11 +2285,9 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
   states.clear();
 
   // - array containing starts and ends of final automata parts -
-  ui_array_s begin_idxs;
-  begin_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,begin_idxs);
 
-  ui_array_s end_idxs;
-  end_idxs.init();
+  CONT_INIT_CLEAR(ui_array_s,end_idxs);
 
   // - variables used while parsing regular expression -
   unsigned old_input_idx = 0;
@@ -2323,9 +2306,6 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
       // - ERROR -
       if (ret_term == c_idx_not_exist)
       {
-        end_idxs.clear();
-        begin_idxs.clear();
-
         return false;
       }
 
@@ -2341,9 +2321,6 @@ bool reg_parser_s::parse_reg_exp(string_s &source_string)
     // - ERROR -
     if (parse_action == c_idx_not_exist)
     {
-      end_idxs.clear();
-      begin_idxs.clear();
-
       return false;
     }
 
@@ -2571,9 +2548,6 @@ c_reduce_char_lbl:
         // - ERROR -
         if (begin_char > end_char)
         {
-          end_idxs.clear();
-          begin_idxs.clear();
-
           return false;
         }
 
@@ -2640,8 +2614,7 @@ c_reduce_char_lbl:
         char *ptr = source_string.data + lse.terminal_start + 1;
         char *ptr_end = source_string.data + lse.terminal_end - 1;
 
-        us_array_s char_array;
-        char_array.init();
+        CONT_INIT_CLEAR(us_array_s,char_array);
 
         do
         {
@@ -2698,8 +2671,6 @@ c_reduce_char_lbl:
           }
         }
 
-        char_array.clear();
-
         begin_idxs.push(begin_state_idx);
         end_idxs.push(end_state_idx);
         }/*}}}*/
@@ -2723,9 +2694,6 @@ c_reduce_char_lbl:
   // - mark final states -
   states[end_idxs.pop()].final = 1;
 
-  end_idxs.clear();
-  begin_idxs.clear();
-
   return true;
 }/*}}}*/
 
@@ -2736,32 +2704,26 @@ bool reg_parser_s::NKA_to_DKA()
   unsigned nka_fas_idx = fas_idx;
   fas_idx = 0;
 
-  fa_states_s nka_states;
-  nka_states.init();
+  CONT_INIT_CLEAR(fa_states_s,nka_states);
   nka_states.swap(states);
 
   // - sets of epsilon closures of NFA states -
-  ui_array_sets_s eps_closures;
-  eps_closures.init();
+  CONT_INIT_CLEAR(ui_array_sets_s,eps_closures);
 
   // - list of already processed multi states with their indexes in target DFA -
-  reg_mul_state_map_array_s ms_map_array;
-  ms_map_array.init();
+  CONT_INIT_CLEAR(reg_mul_state_map_array_s,ms_map_array);
 
   // - queue of potentially unprocessed states -
-  reg_mul_state_move_queue_s msm_queue;
-  msm_queue.init();
+  CONT_INIT_CLEAR(reg_mul_state_move_queue_s,msm_queue);
 
   // - compute epsilon closures of states, and states finality -
   {
     eps_closures.copy_resize(nka_states.used);
     eps_closures.used = nka_states.used;
 
-    ui_array_s state_idx_stack;
-    state_idx_stack.init();
+    CONT_INIT_CLEAR(ui_array_s,state_idx_stack);
 
-    bb_array_s processed_states;
-    processed_states.init();
+    CONT_INIT_CLEAR(bb_array_s,processed_states);
     processed_states.copy_resize(nka_states.used);
 
     // - loop through all states of NFA -
@@ -2837,8 +2799,6 @@ bool reg_parser_s::NKA_to_DKA()
     }
     while(++s_idx < nka_states.used);
 
-    processed_states.clear();
-    state_idx_stack.clear();
   }
 
   // - insert first state {0} to input queue -
@@ -2851,11 +2811,9 @@ bool reg_parser_s::NKA_to_DKA()
     mul_state_move.mul_state = eps_closures[nka_fas_idx];
   }
 
-  reg_mul_state_move_s mul_state_move = {};
-  mul_state_move.init();
+  CONT_INIT_CLEAR(reg_mul_state_move_s,mul_state_move);
 
-  reg_mul_state_move_array_s new_mul_state_moves;
-  new_mul_state_moves.init();
+  CONT_INIT_CLEAR(reg_mul_state_move_array_s,new_mul_state_moves);
 
   do
   {
@@ -2958,14 +2916,6 @@ bool reg_parser_s::NKA_to_DKA()
     mul_state_move.clear();
   }
   while(msm_queue.used > 0);
-
-  new_mul_state_moves.clear();
-  mul_state_move.clear();
-
-  eps_closures.clear();
-  ms_map_array.clear();
-  msm_queue.clear();
-  nka_states.clear();
 
   return true;
 }/*}}}*/
@@ -3138,11 +3088,9 @@ methods p_creat_descr_s
 
 bool p_creat_descr_s::load_final_automata_set_new()
 {/*{{{*/
-  fa_states_array_s states_array;
-  states_array.init();
+  CONT_INIT_CLEAR(fa_states_array_s,states_array);
 
-  reg_parser_s reg_parser;
-  reg_parser.init();
+  CONT_INIT_CLEAR(reg_parser_s,reg_parser);
 
   // - process regular expressions for parsing of rule file -
   {
@@ -3185,9 +3133,6 @@ bool p_creat_descr_s::load_final_automata_set_new()
 
   key_terminals_fa.clear();
   key_terminals_fa.create_new(states_array);
-
-  reg_parser.clear();
-  states_array.clear();
 
   return true;
 }/*}}}*/
@@ -3263,8 +3208,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
   // - process terminals -
   {
     unsigned terminal_state = 0;
-    p_terminal_s new_terminal;
-    new_terminal.init();
+    CONT_INIT_CLEAR(p_terminal_s,new_terminal);
 
     do
     {
@@ -3287,8 +3231,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
         // - ERROR -
         if (ret_term != rt_identifier)
         {
-          new_terminal.clear();
-
           LOAD_FROM_RULE_CHAR_PTR_SYNTAX_ERROR();
         }
 
@@ -3298,8 +3240,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
         // - ERROR -
         if (terminals.get_map_idx(new_terminal) != c_idx_not_exist)
         {
-          new_terminal.clear();
-
           interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
           exception_s *new_exception = exception_s::throw_exception(it,c_error_PARSER_CREATE_RULES_DUPLICATE_TERMINAL,0,(location_s *)it.blank_location);
           new_exception->params.push(old_input_idx);
@@ -3316,8 +3256,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
         // - ERROR -
         if (ret_term != rt_code)
         {
-          new_terminal.clear();
-
           LOAD_FROM_RULE_CHAR_PTR_SYNTAX_ERROR();
         }
 
@@ -3330,8 +3268,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
       }
     }
     while(true);
-
-    new_terminal.clear();
   }
 
   // - ERROR -
@@ -3345,8 +3281,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
 
   // - process nonterminal -
   {
-    p_nonterminal_s new_nonterminal;
-    new_nonterminal.init();
+    CONT_INIT_CLEAR(p_nonterminal_s,new_nonterminal);
 
     do
     {
@@ -3366,8 +3301,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
       // - ERROR -
       if (ret_term != rt_nonterm_id)
       {
-        new_nonterminal.clear();
-
         LOAD_FROM_RULE_CHAR_PTR_SYNTAX_ERROR();
       }
 
@@ -3377,8 +3310,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
       // - ERROR -
       if (nonterminals.get_idx(new_nonterminal) != c_idx_not_exist)
       {
-        new_nonterminal.clear();
-
         interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
         exception_s *new_exception = exception_s::throw_exception(it,c_error_PARSER_CREATE_RULES_DUPLICATE_NONTERMINAL,0,(location_s *)it.blank_location);
         new_exception->params.push(old_input_idx);
@@ -3391,8 +3322,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
 
     }
     while(true);
-
-    new_nonterminal.clear();
   }
 
   // - ERROR -
@@ -3408,8 +3337,7 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
   {
     unsigned rule_head_index = 0;
     unsigned rule_state = 0;
-    p_rule_s new_rule;
-    new_rule.init();
+    CONT_INIT_CLEAR(p_rule_s,new_rule);
 
     do
     {
@@ -3433,8 +3361,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
           // - ERROR -
           if (ret_term != rt_nonterm_id)
           {
-            new_rule.clear();
-
             LOAD_FROM_RULE_CHAR_PTR_SYNTAX_ERROR();
           }
 
@@ -3443,8 +3369,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
           // - ERROR -
           if (idx == c_idx_not_exist)
           {
-            new_rule.clear();
-
             interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
             exception_s *new_exception = exception_s::throw_exception(it,c_error_PARSER_CREATE_RULES_UNDEFINED_NONTERMINAL,0,(location_s *)it.blank_location);
             new_exception->params.push(old_input_idx);
@@ -3463,8 +3387,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
           // - ERROR -
           if (ret_term != rt_div_0)
           {
-            new_rule.clear();
-
             LOAD_FROM_RULE_CHAR_PTR_SYNTAX_ERROR();
           }
 
@@ -3484,8 +3406,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
             // - ERROR -
             if (idx == c_idx_not_exist)
             {
-              new_rule.clear();
-
               interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
               exception_s *new_exception = exception_s::throw_exception(it,c_error_PARSER_CREATE_RULES_UNDEFINED_TERMINAL,0,(location_s *)it.blank_location);
               new_exception->params.push(old_input_idx);
@@ -3502,8 +3422,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
             // - ERROR -
             if (idx == c_idx_not_exist)
             {
-              new_rule.clear();
-
               interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
               exception_s *new_exception = exception_s::throw_exception(it,c_error_PARSER_CREATE_RULES_UNDEFINED_NONTERMINAL,0,(location_s *)it.blank_location);
               new_exception->params.push(old_input_idx);
@@ -3520,15 +3438,12 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
             // - ERROR -
             if (new_rule.body.used <= 0)
             {
-              new_rule.clear();
               return false;
             }
 
             // - ERROR -
             if (ret_term != rt_div_1)
             {
-              new_rule.clear();
-
               LOAD_FROM_RULE_CHAR_PTR_SYNTAX_ERROR();
             }
 
@@ -3542,8 +3457,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
           // - ERROR -
           if (ret_term != rt_code)
           {
-            new_rule.clear();
-
             LOAD_FROM_RULE_CHAR_PTR_SYNTAX_ERROR();
           }
 
@@ -3552,8 +3465,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
           // - ERROR -
           if (rules.get_idx(new_rule) != c_idx_not_exist)
           {
-            new_rule.clear();
-
             interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
             exception_s *new_exception = exception_s::throw_exception(it,c_error_PARSER_CREATE_RULES_DUPLICATE_RULE,0,(location_s *)it.blank_location);
             new_exception->params.push(rule_head_index);
@@ -3570,8 +3481,6 @@ bool p_creat_descr_s::load_from_rule_char_ptr(unsigned a_length,char *a_data)
 
     }
     while(true);
-
-    new_rule.clear();
   }
 
   // - ERROR -
@@ -3639,11 +3548,9 @@ bool p_creat_descr_s::create_final_automata_new(final_automata_s &final_automata
 {/*{{{*/
   cassert(terminals.used != 0);
 
-  fa_states_array_s states_array;
-  states_array.init();
+  CONT_INIT_CLEAR(fa_states_array_s,states_array);
 
-  reg_parser_s reg_parser;
-  reg_parser.init();
+  CONT_INIT_CLEAR(reg_parser_s,reg_parser);
 
   {
     unsigned t_idx = 0;
@@ -3652,9 +3559,6 @@ bool p_creat_descr_s::create_final_automata_new(final_automata_s &final_automata
       // - ERROR -
       if (!reg_parser.process_reg_exp(terminals[t_idx].value))
       {
-        reg_parser.clear();
-        states_array.clear();
-
         interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
         exception_s *new_exception = exception_s::throw_exception(it,c_error_PARSER_CREATE_TERMINAL_REGULAR_EXPRESSION_PARSE_ERROR,0,(location_s *)it.blank_location);
         new_exception->params.push(terminals[t_idx].source_pos);
@@ -3671,9 +3575,6 @@ bool p_creat_descr_s::create_final_automata_new(final_automata_s &final_automata
   final_automata.clear();
   final_automata.create_new(states_array);
 
-  reg_parser.clear();
-  states_array.clear();
-
   return true;
 }/*}}}*/
 
@@ -3684,11 +3585,9 @@ bool p_creat_descr_s::compute_firsts()
   firsts.used = 0;
   first_rules.used = 0;
 
-  p_first_set_s first_set;
-  first_set.init();
+  CONT_INIT_CLEAR(p_first_set_s,first_set);
 
-  p_rule_idxs_sets_s first_rule_idxs_sets;
-  first_rule_idxs_sets.init();
+  CONT_INIT_CLEAR(p_rule_idxs_sets_s,first_rule_idxs_sets);
 
   // - compute firsts set for nonterminal symbols -
   {
@@ -3749,9 +3648,6 @@ bool p_creat_descr_s::compute_firsts()
     }
     while(++non_idx < nonterminals.used);
   }
-
-  first_set.clear();
-  first_rule_idxs_sets.clear();
 
   return true;
 }/*}}}*/
@@ -3847,20 +3743,16 @@ bool p_creat_descr_s::compute_follows()
   follows.copy_resize(nonterminals.used);
 
   {
-    p_follow_set_s follow_set;
-    follow_set.init();
+    CONT_INIT_CLEAR(p_follow_set_s,follow_set);
 
     follows.fill(follow_set);
-
-    follow_set.clear();
   }
 
-  bb_array_s follows_created;
+  CONT_CLEAR(bb_array_s,follows_created);
   follows_created.init_size(nonterminals.used);
   follows_created.fill(false);
 
-  ui_array_s nonterm_used;
-  nonterm_used.init();
+  CONT_INIT_CLEAR(ui_array_s,nonterm_used);
 
   unsigned non_idx = 0;
 
@@ -3876,9 +3768,6 @@ bool p_creat_descr_s::compute_follows()
     }
   }
   while(++non_idx < nonterminals.used);
-
-  nonterm_used.clear();
-  follows_created.clear();
 
   return true;
 }/*}}}*/
@@ -3898,12 +3787,11 @@ bool p_creat_descr_s::compute_kernels()
     rule_dots.last().set(0,0);
   }
 
-  p_first_set_s terminal_first;
+  CONT_CLEAR(p_first_set_s,terminal_first);
   terminal_first.init_size(1);
   terminal_first.used = 1;
 
-  p_kernel_s new_kernel;
-  new_kernel.init();
+  CONT_INIT_CLEAR(p_kernel_s,new_kernel);
 
   unsigned k_idx = 0;
 
@@ -4014,9 +3902,6 @@ bool p_creat_descr_s::compute_kernels()
     }
   }
   while(++k_idx < kernels.used);
-
-  new_kernel.clear();
-  terminal_first.clear();
 
   return true;
 }/*}}}*/
@@ -4179,8 +4064,7 @@ bool parser_s::create_from_rule_string(string_s &rule_string)
 {/*{{{*/
   clear();
 
-  p_creat_descr_s creat_descr;
-  creat_descr.init();
+  CONT_INIT_CLEAR(p_creat_descr_s,creat_descr);
 
   // - set interpreter thread pointer -
   creat_descr.it_ptr = it_ptr;
@@ -4191,8 +4075,6 @@ bool parser_s::create_from_rule_string(string_s &rule_string)
   // - read terminals, nonterminals and rules from string -
   if (!creat_descr.load_from_rule_string(rule_string))
   {
-    creat_descr.clear();
-
     interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
 
     // - throw exception if not thrown yet -
@@ -4214,8 +4096,6 @@ bool parser_s::create_from_rule_string(string_s &rule_string)
         && creat_descr.compute_kernels()
         && creat_descr.create_lalr_table(lalr_table)))
   {
-    creat_descr.clear();
-
     interpreter_thread_s &it = *((interpreter_thread_s *)it_ptr);
 
     // - throw exception if not thrown yet -
@@ -4253,8 +4133,6 @@ bool parser_s::create_from_rule_string(string_s &rule_string)
       rule_descrs.used = rules.used;
     }
   }
-
-  creat_descr.clear();
 
   return true;
 }/*}}}*/

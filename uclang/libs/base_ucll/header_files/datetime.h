@@ -100,6 +100,10 @@ struct datetime_s
   static inline bool is_leap_year(unsigned a_year);
 };
 
+inline void datetime_s_clear(datetime_s *a_this)
+{/*{{{*/
+  a_this->clear();
+}/*}}}*/
 
 /*
  * inline methods of structure datetime_s

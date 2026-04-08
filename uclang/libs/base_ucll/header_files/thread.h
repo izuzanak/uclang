@@ -89,6 +89,11 @@ struct thread_s
   inline static unsigned yield();
 };
 
+inline void thread_s_clear(thread_s *a_this)
+{/*{{{*/
+  a_this->clear();
+}/*}}}*/
+
 /*
  * inline methods of structure thread_s
  */

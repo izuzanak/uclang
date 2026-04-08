@@ -1323,7 +1323,7 @@ bool bic_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
 
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
 
-  string_array_s strings;
+  CONT_CLEAR(string_array_s,strings);
   strings.init_size(tree_ptr->count << 1);
   strings.used = strings.size;
 
@@ -1342,13 +1342,11 @@ bool bic_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
       pointer_map_s &map = tree_ptr->data[t_idx].object;
 
       BIC_CALL_TO_STRING(it,map.key,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
       ++s_ptr;
 
       BIC_CALL_TO_STRING(it,map.value,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
       ++s_ptr;
@@ -1405,9 +1403,6 @@ bool bic_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
     *rs_ptr = '\0';
   }
 
-  // - release string array -
-  strings.clear();
-
   BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
@@ -1425,7 +1420,7 @@ method to_string
   pointer_map_tree_s *tree_ptr = (pointer_map_tree_s *)dst_location->v_data_ptr;
   string_s *del_string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  string_array_s strings;
+  CONT_CLEAR(string_array_s,strings);
   strings.init_size(tree_ptr->count << 1);
   strings.used = strings.size;
 
@@ -1444,13 +1439,11 @@ method to_string
       pointer_map_s &map = tree_ptr->data[t_idx].object;
 
       BIC_CALL_TO_STRING(it,map.key,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
       ++s_ptr;
 
       BIC_CALL_TO_STRING(it,map.value,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
       ++s_ptr;
@@ -1502,9 +1495,6 @@ method to_string
       *rs_ptr = '\0';
     }
   }
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

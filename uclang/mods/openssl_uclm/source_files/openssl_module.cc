@@ -658,8 +658,7 @@ bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
   const long int c_buffer_add = 4096;
 
   // - target data buffer -
-  bc_array_s data_buffer;
-  data_buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,data_buffer);
 
   int read_cnt;
   do
@@ -676,8 +675,6 @@ bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
       }
       else
       {
-        data_buffer.clear();
-
         exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
@@ -690,8 +687,6 @@ bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
   // - was any data read -
   if (data_buffer.used == 0)
   {
-    data_buffer.clear();
-
     BIC_SET_RESULT_BLANK();
   }
   else
@@ -702,6 +697,7 @@ bool bic_ssl_conn_method_read_0(interpreter_thread_s &it,unsigned stack_base,uli
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->data = data_buffer.data;
     string_ptr->size = data_buffer.used;
+    data_buffer.init();
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     BIC_SET_RESULT(new_location);
@@ -731,8 +727,7 @@ method read
   }
 
   // - target data string -
-  string_s data_string;
-  data_string.init();
+  CONT_INIT_CLEAR(string_s,data_string);
   data_string.create(byte_cnt);
 
   unsigned readed = 0;
@@ -745,8 +740,6 @@ method read
     // - ERROR -
     if (read_cnt <= 0)
     {
-      data_string.clear();
-
       exception_s::throw_exception(it,module.error_base + c_error_SSL_CONN_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -758,7 +751,6 @@ method read
   // - return data string -
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->swap(data_string);
-  data_string.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);

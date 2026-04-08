@@ -5,6 +5,17 @@
 #define ENABLED 1
 #define MP_COMMA ,
 
+#define CONT_INIT(TYPE,NAME) \
+  TYPE NAME = {};\
+  NAME.init();
+
+#define CONT_CLEAR(TYPE,NAME) \
+  __attribute__((cleanup(TYPE ## _clear))) TYPE NAME;
+
+#define CONT_INIT_CLEAR(TYPE,NAME) \
+  __attribute__((cleanup(TYPE ## _clear))) TYPE NAME = {};\
+  NAME.init();
+
 // - GCC un/likely macros -
 #ifdef __GNUC__
 #define likely(x) __builtin_expect(!!(x),1)

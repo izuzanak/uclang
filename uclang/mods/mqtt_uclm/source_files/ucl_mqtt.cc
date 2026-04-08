@@ -594,8 +594,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
           );
 
           // - send puback packet -
-          bc_array_s buffer;
-          buffer.init();
+          CONT_INIT_CLEAR(bc_array_s,buffer);
           buffer.reserve(4);
 
           buffer.push(0x40); // PUBACK
@@ -608,12 +607,8 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
 
           if (schedule_message(&buffer))
           {
-            buffer.clear();
-
             return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
           }
-
-          buffer.clear();
         }
         break;
         case 2:
@@ -638,8 +633,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
           }
 
           // - send pubrec packet -
-          bc_array_s buffer;
-          buffer.init();
+          CONT_INIT_CLEAR(bc_array_s,buffer);
           buffer.reserve(4);
 
           buffer.push(0x50); // PUBREC
@@ -652,12 +646,8 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
 
           if (schedule_message(&buffer))
           {
-            buffer.clear();
-
             return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
           }
-
-          buffer.clear();
         }
         break;
       }
@@ -852,8 +842,7 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
       // - send pubcomp packet -
       uint32_t remaining_length = 2 + (reason_code == 0x00 ? 0 : 1);
 
-      bc_array_s buffer;
-      buffer.init();
+      CONT_INIT_CLEAR(bc_array_s,buffer);
       buffer.reserve(2 + remaining_length);
 
       buffer.push(0x70);  // PUBCOMP
@@ -872,12 +861,8 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
 
       if (schedule_message(&buffer))
       {
-        buffer.clear();
-
         return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
       }
-
-      buffer.clear();
     }/*}}}*/
     break;
     case MQTT_PACKET_TYPE_PUBCOMP:
@@ -1255,15 +1240,12 @@ int mqtt_conn_s::send_connect()
     return MQTT_INVALID_CONNECT_PACKET;
   }
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
   buffer.reserve(buffer_size);
 
   buffer.push(0x10);  // CONNECT
   if (var_byte_enc(remaining_length,&buffer))
   {
-    buffer.clear();
-
     return MQTT_INVALID_CONNECT_PACKET;
   }
 
@@ -1286,8 +1268,6 @@ int mqtt_conn_s::send_connect()
   // - properties length -
   if (var_byte_enc(connect_props.size - 1,&buffer))
   {
-    buffer.clear();
-
     return MQTT_INVALID_CONNECT_PACKET;
   }
 
@@ -1303,8 +1283,6 @@ int mqtt_conn_s::send_connect()
     // - will properties length -
     if (var_byte_enc(will_props_ptr->size - 1,&buffer))
     {
-      buffer.clear();
-
       return MQTT_INVALID_CONNECT_PACKET;
     }
 
@@ -1337,12 +1315,8 @@ int mqtt_conn_s::send_connect()
 
   if (schedule_message(&buffer))
   {
-    buffer.clear();
-
     return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
   }
-
-  buffer.clear();
 
   return 0;
 }/*}}}*/
@@ -1370,8 +1344,7 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
     return MQTT_INVALID_PUBLISH_PACKET;
   }
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
   buffer.reserve(buffer_size);
 
   buffer.push(0x30 |    // PUBLISH
@@ -1381,8 +1354,6 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
 
   if (var_byte_enc(remaining_length,&buffer))
   {
-    buffer.clear();
-
     return MQTT_INVALID_PUBLISH_PACKET;
   }
 
@@ -1398,8 +1369,6 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
   // - properties length -
   if (var_byte_enc(props_ptr->size - 1,&buffer))
   {
-    buffer.clear();
-
     return MQTT_INVALID_PUBLISH_PACKET;
   }
 
@@ -1413,12 +1382,8 @@ int mqtt_conn_s::send_publish(mqtt_publish_s *a_publish,int a_dup)
 
   if (schedule_message(&buffer))
   {
-    buffer.clear();
-
     return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
   }
-
-  buffer.clear();
 
   return 0;
 }/*}}}*/
@@ -1427,8 +1392,7 @@ int mqtt_conn_s::send_pubrel(uint16_t a_packet_id,uint8_t a_reason_code)
 {/*{{{*/
   uint32_t remaining_length = 2 + (a_reason_code != 0x00 ? 1 : 0);
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
   buffer.reserve(2 + remaining_length);
 
   buffer.push(0x62); // PUBREL
@@ -1447,12 +1411,8 @@ int mqtt_conn_s::send_pubrel(uint16_t a_packet_id,uint8_t a_reason_code)
 
   if (schedule_message(&buffer))
   {
-    buffer.clear();
-
     return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
   }
-
-  buffer.clear();
 
   return 0;
 }/*}}}*/
@@ -1489,8 +1449,7 @@ int mqtt_conn_s::send_subscribe(mqtt_subscribe_s *a_subscribe)
     return MQTT_INVALID_SUBSCRIBE_PACKET;
   }
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
   buffer.reserve(buffer_size);
 
   buffer.push(0x82); // SUBSCRIBE
@@ -1537,12 +1496,8 @@ int mqtt_conn_s::send_subscribe(mqtt_subscribe_s *a_subscribe)
 
   if (schedule_message(&buffer))
   {
-    buffer.clear();
-
     return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
   }
-
-  buffer.clear();
 
   return 0;
 }/*}}}*/
@@ -1579,16 +1534,13 @@ int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
     return MQTT_INVALID_UNSUBSCRIBE_PACKET;
   }
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
   buffer.reserve(buffer_size);
 
   buffer.push(0xa2); // UNSUBSCRIBE
 
   if (var_byte_enc(remaining_length,&buffer))
   {
-    buffer.clear();
-
     return MQTT_INVALID_UNSUBSCRIBE_PACKET;
   }
 
@@ -1598,8 +1550,6 @@ int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
   // Properties length
   if (var_byte_enc(props_ptr->size - 1,&buffer))
   {
-    buffer.clear();
-
     return MQTT_INVALID_UNSUBSCRIBE_PACKET;
   }
 
@@ -1625,12 +1575,8 @@ int mqtt_conn_s::send_unsubscribe(mqtt_subscribe_s *a_subscribe)
 
   if (schedule_message(&buffer))
   {
-    buffer.clear();
-
     return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
   }
-
-  buffer.clear();
 
   return 0;
 }/*}}}*/
@@ -1689,8 +1635,7 @@ int mqtt_conn_s::publish(location_s *a_topic,location_s *a_payload,
   {
     if (mqtt_connected)
     {
-      mqtt_publish_s publish;
-      publish.init();
+      CONT_INIT_CLEAR(mqtt_publish_s,publish);
 
       publish.packet_id = packet_id;
       publish.released = 0;
@@ -1701,8 +1646,6 @@ int mqtt_conn_s::publish(location_s *a_topic,location_s *a_payload,
       publish.props_loc = a_props;
 
       int send_err = send_publish(&publish,0);
-
-      publish.clear();
 
       if (send_err)
       {
@@ -1806,8 +1749,7 @@ int mqtt_conn_s::disconnect()
 {/*{{{*/
   if (mqtt_connected)
   {
-    bc_array_s buffer;
-    buffer.init();
+    CONT_INIT_CLEAR(bc_array_s,buffer);
     buffer.reserve(2);
 
     buffer.push(0xe0);  // DISCONNECT
@@ -1817,12 +1759,8 @@ int mqtt_conn_s::disconnect()
 
     if (schedule_message(&buffer))
     {
-      buffer.clear();
-
       return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
     }
-
-    buffer.clear();
   }
 
   mqtt_connected = false;
@@ -1836,8 +1774,7 @@ int mqtt_conn_s::pingreq()
   if (mqtt_connected)
   {
     // - send pingreq packet -
-    bc_array_s buffer;
-    buffer.init();
+    CONT_INIT_CLEAR(bc_array_s,buffer);
     buffer.reserve(2);
 
     buffer.push(0xc0);  // PINGREQ
@@ -1847,12 +1784,8 @@ int mqtt_conn_s::pingreq()
 
     if (schedule_message(&buffer))
     {
-      buffer.clear();
-
       return MQTT_CONN_SCHEDULE_MESSAGE_ERROR;
     }
-
-    buffer.clear();
   }
 
   return 0;

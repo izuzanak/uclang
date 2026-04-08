@@ -205,12 +205,10 @@ method create
 static_method
 ; @end
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   // - initialize create stack -
-  create_stack_s create_stack;
-  create_stack.init();
+  CONT_INIT_CLEAR(create_stack_s,create_stack);
 
   // - insert root node to create stack -
   create_stack.push_blank();
@@ -324,9 +322,6 @@ static_method
 
   } while(create_stack.used > 0);
 
-  // - release create stack -
-  create_stack.clear();
-
   // - push terminating character to buffer -
   buffer.push('\0');
 
@@ -334,6 +329,7 @@ static_method
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->size = buffer.used;
   string_ptr->data = buffer.data;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -356,19 +352,17 @@ static_method
   string_s *tabulator_ptr = (string_s *)src_1_location->v_data_ptr;
 
   // - create empty indentation string -
-  string_s indent;
-  indent.init();
+  CONT_INIT_CLEAR(string_s,indent);
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   xml_creator_s::create_nice(it,src_0_location->v_data_ptr,*tabulator_ptr,indent,buffer);
-  indent.clear();
 
   // - create result string from buffer -
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->size = buffer.used;
   string_ptr->data = buffer.data;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -394,8 +388,7 @@ static_method
   // - retrieve indentation pointer -
   string_s *indent_ptr = (string_s *)src_2_location->v_data_ptr;
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   xml_creator_s::create_nice(it,src_0_location->v_data_ptr,*tabulator_ptr,*indent_ptr,buffer);
 
@@ -403,6 +396,7 @@ static_method
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->size = buffer.used;
   string_ptr->data = buffer.data;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -438,8 +432,7 @@ static_method
   sax.fatalError = xml_fatal_error;
 
   // - create sax_parser object -
-  sax_parser_s sp;
-  sp.init();
+  CONT_INIT_CLEAR(sax_parser_s,sp);
 
   // - initialize sax parser -
   sp.it_ptr = (pointer)&it;
@@ -457,7 +450,6 @@ static_method
   if (res != 0)
   {
     sp.release_locations();
-    sp.clear();
 
     exception_s::throw_exception(it,module.error_base + c_error_XML_ERROR_PARSING_DATA,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -469,7 +461,6 @@ static_method
   BIC_SET_RESULT(root_loc);
 
   sp.release_locations();
-  sp.clear();
 
   return true;
 }/*}}}*/
@@ -868,8 +859,7 @@ bool bic_xml_node_method_update_node_dict_0(interpreter_thread_s &it,unsigned st
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
 
-  pointer_array_s node_stack;
-  node_stack.init();
+  CONT_INIT_CLEAR(pointer_array_s,node_stack);
 
   // - push node to node stack -
   node_stack.push(dst_location->v_data_ptr);
@@ -900,10 +890,11 @@ bool bic_xml_node_method_update_node_dict_0(interpreter_thread_s &it,unsigned st
         pointer *n_ptr = nodes_array->data;
         pointer *n_ptr_end = n_ptr + nodes_array->used;
         do {
-          xml_node_s *node_ptr = (xml_node_s *)((location_s *)*n_ptr)->v_data_ptr;
+          location_s *node_location = it.get_location_value((location_s *)*n_ptr);
+          xml_node_s *node_ptr = (xml_node_s *)node_location->v_data_ptr;
 
           // - add node to node dictionary -
-          xml_node_s::add_node_to_node_dict(it,*tree_ptr,node_ptr->name,(location_s *)*n_ptr);
+          xml_node_s::add_node_to_node_dict(it,*tree_ptr,node_ptr->name,node_location);
 
           // - push node to node stack -
           node_stack.push(node_ptr);
@@ -913,8 +904,6 @@ bool bic_xml_node_method_update_node_dict_0(interpreter_thread_s &it,unsigned st
     }
 
   } while(node_stack.used > 0);
-
-  node_stack.clear();
 
   BIC_SET_RESULT_DESTINATION();
 

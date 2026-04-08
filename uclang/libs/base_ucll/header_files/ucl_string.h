@@ -196,6 +196,11 @@ struct string_s
   unsigned get_character_line_end(unsigned c_idx);
 };
 
+inline void string_s_clear(string_s *a_this)
+{/*{{{*/
+  a_this->clear();
+}/*}}}*/
+
 /*
  * inline methods of structure string_s
  */

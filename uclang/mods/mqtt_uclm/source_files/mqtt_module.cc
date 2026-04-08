@@ -68,8 +68,7 @@ bool mqtt_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -228,11 +227,8 @@ bool mqtt_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -785,8 +781,7 @@ static_method
     return false;
   }
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   if (array_ptr->used != 0)
   {
@@ -801,8 +796,6 @@ static_method
       // - ERROR -
       if (!it.retrieve_integer(code_location,code))
       {
-        buffer.clear();
-
         exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_CODE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
@@ -812,8 +805,6 @@ static_method
       // - ERROR -
       if (code >= c_packet_prop_cnt || (prop_descr = &g_mqtt_packet_props[code])->code != code)
       {
-        buffer.clear();
-
         exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_CODE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
       }
@@ -830,8 +821,6 @@ static_method
           // - ERROR -
           if (!it.retrieve_integer(value_location,value))
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(code);
 
@@ -865,8 +854,6 @@ static_method
           // - ERROR -
           if (value_location->v_type != c_bi_class_string)
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(code);
 
@@ -878,8 +865,6 @@ static_method
           // - ERROR -
           if (string_ptr->size - 1 > UINT16_MAX)
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(code);
 
@@ -897,8 +882,6 @@ static_method
           // - ERROR -
           if (value_location->v_type != c_bi_class_array)
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(code);
 
@@ -910,8 +893,6 @@ static_method
           // - ERROR -
           if (pair_ptr->used != 2)
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(code);
 
@@ -925,8 +906,6 @@ static_method
           if (pair_key_location->v_type != c_bi_class_string ||
               pair_value_location->v_type != c_bi_class_string)
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(code);
 
@@ -940,8 +919,6 @@ static_method
           if (pair_key_ptr->size - 1 > UINT16_MAX ||
               pair_value_ptr->size - 1 > UINT16_MAX)
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(code);
 
@@ -963,8 +940,6 @@ static_method
           // - ERROR -
           if (!it.retrieve_data_buffer(value_location,data_ptr,data_size))
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(code);
 
@@ -974,8 +949,6 @@ static_method
           // - ERROR -
           if (data_size > UINT16_MAX)
           {
-            buffer.clear();
-
             exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_VALUE_SIZE,operands[c_source_pos_idx],(location_s *)it.blank_location);
             new_exception->params.push(code);
 
@@ -1001,6 +974,7 @@ static_method
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->size = buffer.used;
   string_ptr->data = buffer.data;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

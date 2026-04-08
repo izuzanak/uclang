@@ -41,8 +41,7 @@ methods proto_enum_tree_s
 
 void proto_source_s::update_init_descr_enum(interpreter_thread_s &it,ProtobufCEnumDescriptor *descr)
 {/*{{{*/
-  proto_enum_s proto_enum;
-  proto_enum.init();
+  CONT_INIT_CLEAR(proto_enum_s,proto_enum);
 
   proto_enum.descr = descr;
 
@@ -74,8 +73,6 @@ void proto_source_s::update_init_descr_enum(interpreter_thread_s &it,ProtobufCEn
     // - insert enum to enum tree -
     enum_tree.swap_insert(proto_enum);
   }
-
-  proto_enum.clear();
 }/*}}}*/
 
 void proto_source_s::update_init_descr_message(interpreter_thread_s &it,ProtobufCMessageDescriptor *descr)

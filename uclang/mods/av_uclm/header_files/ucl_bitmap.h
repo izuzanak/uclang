@@ -72,6 +72,11 @@ struct bitmap_s
   bool data_string(string_s &a_target);
 };
 
+inline void bitmap_s_clear(bitmap_s *a_this)
+{/*{{{*/
+  a_this->clear();
+}/*}}}*/
+
 /*
  * inline methods of structure bitmap_s
  */

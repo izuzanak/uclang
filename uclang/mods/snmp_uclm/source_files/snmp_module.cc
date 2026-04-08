@@ -1058,15 +1058,12 @@ method add_object
   snmp_oid_s *snmpo_ptr = (snmp_oid_s *)src_1_location->v_data_ptr;
 
   // - create new object description -
-  snmp_object_s object;
-  object.init();
+  CONT_INIT_CLEAR(snmp_object_s,object);
   object.set(*name_ptr,value_type,nullptr);
 
   // - ERROR -
   if (snmpa_ptr->objects.get_idx(object) != c_idx_not_exist)
   {
-    object.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_SNMP_AGENT_OBJECT_ALREADY_EXISTS,operands[c_source_pos_idx],src_0_location);
     return false;
   }
@@ -1114,8 +1111,6 @@ method add_object
   // - ERROR -
   if ((handler = netsnmp_get_watcher_handler()) == nullptr)
   {
-    object.clear();
-
     free(reginfo);
     free(watchinfo);
 
@@ -1130,15 +1125,12 @@ method add_object
   if (netsnmp_inject_handler(reginfo,handler) != SNMPERR_SUCCESS ||
       netsnmp_register_instance(reginfo) != SNMPERR_SUCCESS)
   {
-    object.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_SNMP_AGENT_INJECT_OBJECT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - insert object to agent structure -
   unsigned index = snmpa_ptr->objects.swap_insert(object);
-  object.clear();
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,index);
 

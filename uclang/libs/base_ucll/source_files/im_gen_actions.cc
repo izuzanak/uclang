@@ -1250,13 +1250,12 @@ bool im_new_object(expression_s &exp,uli_array_s &begin_code,uli_array_s &code,s
     string_s &class_name = _this.class_symbol_names[class_record.name_idx];
     unsigned method_name_max_length = class_name.size - 1 + max_number_string_length;
 
-    string_s name_string;
+    CONT_INIT_CLEAR(string_s,name_string);
     name_string.data = (char *)cmalloc(method_name_max_length);
     name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#%u",class_name.data,parm_cnt);
 
     // - get index of method name -
     unsigned method_name_idx = _this.get_method_name_idx_swap(name_string);
-    name_string.clear();
 
     // - retrieve constructor record index -
     unsigned method_ri = _this.method_snri_map[(class_record_idx << _this.method_sn_pow) + method_name_idx];
@@ -1362,13 +1361,12 @@ bool im_new_objects_array(expression_s &exp,uli_array_s &begin_code,uli_array_s 
     string_s &class_name = _this.class_symbol_names[class_record.name_idx];
     unsigned method_name_max_length = class_name.size - 1 + max_number_string_length;
 
-    string_s name_string;
+    CONT_INIT_CLEAR(string_s,name_string);
     name_string.data = (char *)cmalloc(method_name_max_length);
     name_string.size = 1 + snprintf(name_string.data,method_name_max_length,"%s#0",class_name.data);
 
     // - get index of method name -
     unsigned method_name_idx = _this.get_method_name_idx_swap(name_string);
-    name_string.clear();
 
     // - retrieve constructor record index -
     unsigned method_ri = _this.method_snri_map[(class_record_idx << _this.method_sn_pow) + method_name_idx];

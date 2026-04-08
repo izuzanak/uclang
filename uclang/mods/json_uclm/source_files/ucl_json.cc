@@ -104,12 +104,6 @@ bool json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_location
     string_s &a_tabulator,string_s &a_indent,bc_array_s &buffer,unsigned a_source_pos)
 {/*{{{*/
 
-#define JSON_CREATE_NICE_CLEAR() \
-{/*{{{*/\
-  create_stack.clear();\
-  indent_buffer.clear();\
-}/*}}}*/
-
 #define JSON_CREATE_NICE_PUSH_TAB() \
 {/*{{{*/\
   if ((indent_size += a_tabulator.size - 1) > indent_buffer.used)\
@@ -130,8 +124,7 @@ bool json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_location
 }/*}}}*/
 
   // - initialize indent buffer -
-  bc_array_s indent_buffer;
-  indent_buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,indent_buffer);
 
   indent_buffer.append(a_indent.size - 1,a_indent.data);
 
@@ -139,8 +132,7 @@ bool json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_location
   unsigned indent_size = indent_buffer.used;
 
   // - initialize create stack -
-  create_stack_s create_stack;
-  create_stack.init();
+  CONT_INIT_CLEAR(create_stack_s,create_stack);
 
   // - insert source location to create stack -
   create_stack.push_blank();
@@ -196,8 +188,6 @@ bool json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_location
           // - ERROR -
           if (key_location->v_type != c_bi_class_string)
           {
-            JSON_CREATE_NICE_CLEAR();
-
             exception_s::throw_exception(it,module.error_base + c_error_JSON_CREATE_NO_STRING_DICT_KEY,a_source_pos,(location_s *)it.blank_location);
             return false;
           }
@@ -343,8 +333,6 @@ bool json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_location
       // - ERROR -
       default:
         BIC_CALL_TO_JSON(it,location_ptr,a_source_pos,
-            JSON_CREATE_NICE_CLEAR();
-
             return false;
             );
 
@@ -352,12 +340,6 @@ bool json_creator_s::create_nice(interpreter_thread_s &it,location_s *a_location
       }
     }
   } while(create_stack.used > 0);
-
-  // - release create stack -
-  create_stack.clear();
-
-  // - release indent buffer -
-  indent_buffer.clear();
 
   // - push terminating character to buffer -
   buffer.push('\0');

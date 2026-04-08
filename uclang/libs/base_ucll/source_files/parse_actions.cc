@@ -1251,7 +1251,7 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
   // - creation of space for method name -
   unsigned method_name_max_length = (tmp_name_pos.ui_second - tmp_name_pos.ui_first) + max_number_string_length;
 
-  string_s name_string;
+  CONT_CLEAR(string_s,name_string);
   name_string.data = (char *)cmalloc(method_name_max_length);
 
   // - creation of complete method name -
@@ -1275,7 +1275,6 @@ bool pa_method_parameters_done(string_s &source_string,script_parser_s &_this)
 
   // - get index of method name -
   unsigned name_idx = _this.get_method_name_idx_swap(name_string);
-  name_string.clear();
 
   // - test uniqueness of method in parent class -
   ui_array_s &class_mr_idxs = parent_record.method_record_idxs;
@@ -2376,8 +2375,7 @@ bool pa_for_expression(string_s &source_string,script_parser_s &_this)
 
   // *****
 
-  expression_descr_s id_ed;
-  id_ed.init();
+  CONT_INIT_CLEAR(expression_descr_s,id_ed);
 
   // - retrieve identifier expression -
   id_ed = ed;
@@ -2423,7 +2421,6 @@ bool pa_for_expression(string_s &source_string,script_parser_s &_this)
 
   debug_message_4(fprintf(stderr,"script_parser: parse_action: pa_for_expression\n"));
 
-  id_ed.clear();
   return true;
 }/*}}}*/
 
@@ -3946,7 +3943,7 @@ bool pa_this_method_call(string_s &source_string,script_parser_s &_this)
   // - creation of space for method name -
   unsigned method_name_max_length = (lse.terminal_end - lse.terminal_start) + max_number_string_length;
 
-  string_s name_string;
+  CONT_CLEAR(string_s,name_string);
   name_string.data = (char *)cmalloc(method_name_max_length);
 
   // - creation of complete method name -
@@ -3959,7 +3956,6 @@ bool pa_this_method_call(string_s &source_string,script_parser_s &_this)
 
   // - get index of method name -
   unsigned name_idx = _this.get_method_name_idx_swap(name_string);
-  name_string.clear();
 
   // - position of created expression node -
   unsigned tmp_node_idx = ed.tmp_expression.used;
@@ -4012,7 +4008,7 @@ bool pa_object_method_call(string_s &source_string,script_parser_s &_this)
   // - creation of space for method name -
   unsigned method_name_max_length = (tmp_name_pos.ui_second - tmp_name_pos.ui_first) + max_number_string_length;
 
-  string_s name_string;
+  CONT_CLEAR(string_s,name_string);
   name_string.data = (char *)cmalloc(method_name_max_length);
 
   // - creation of complete method name -
@@ -4025,7 +4021,6 @@ bool pa_object_method_call(string_s &source_string,script_parser_s &_this)
 
   // - get index of method name -
   unsigned name_idx = _this.get_method_name_idx_swap(name_string);
-  name_string.clear();
 
   PA_OBJECT_METHOD_CALL(name_idx,m_parameter_cnt,_this.old_input_idx);
 
@@ -4748,13 +4743,12 @@ bool pa_const_string_register(string_s &source_string,script_parser_s &_this)
   // - modification of character buffer -
   char_buffer.data[char_buffer.used] = '\0';
 
-  string_s const_str;
+  CONT_CLEAR(string_s,const_str);
   const_str.size = char_buffer.used + 1;
   const_str.data = char_buffer.data;
 
   // - get constant position in array -
   unsigned cs_idx = const_strings.unique_swap_insert(const_str);
-  const_str.clear();
 
   // - store node position -
   unsigned tmp_node_idx = ed.tmp_expression.used;

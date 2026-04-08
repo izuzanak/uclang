@@ -479,13 +479,12 @@ bool pa_json_string(json_parser_s &_this)
   // - modification of character buffer -
   char_buffer.data[char_buffer.used] = '\0';
 
-  string_s const_str;
+  CONT_CLEAR(string_s,const_str);
   const_str.size = char_buffer.used + 1;
   const_str.data = char_buffer.data;
 
   // - get constant position in array -
   unsigned cs_idx = const_strings.unique_swap_insert(const_str);
-  const_str.clear();
 
   if (cs_idx >= string_locations.used)
   {

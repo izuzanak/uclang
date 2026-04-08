@@ -1383,8 +1383,7 @@ void interpreter_s::release_constant_and_static_locations()
 {/*{{{*/
 
   // - create dummy interpreter thread -
-  interpreter_thread_s dummy_thread;
-  dummy_thread.init();
+  CONT_INIT_CLEAR(interpreter_thread_s,dummy_thread);
 
   // - set thread pointer to interpreter -
   dummy_thread.interpreter_ptr = this;
@@ -1438,7 +1437,6 @@ void interpreter_s::release_constant_and_static_locations()
 
   // - clear dummy thread -
   dummy_thread.free_variables_clear();
-  dummy_thread.clear();
 }/*}}}*/
 
 #if SYSTEM_TYPE != SYSTEM_TYPE_DSP

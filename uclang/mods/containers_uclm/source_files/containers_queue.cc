@@ -988,7 +988,7 @@ bool bic_queue_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
 
   pointer_queue_s *queue_ptr = (pointer_queue_s *)dst_location->v_data_ptr;
 
-  string_array_s strings;
+  CONT_CLEAR(string_array_s,strings);
   strings.init_size(queue_ptr->used);
   strings.used = strings.size;
 
@@ -1017,7 +1017,6 @@ bool bic_queue_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
     do
     {
       BIC_CALL_TO_STRING(it,*e_ptr,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
     }
@@ -1031,7 +1030,6 @@ bool bic_queue_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
       do
       {
         BIC_CALL_TO_STRING(it,*e_ptr,operands[c_source_pos_idx],
-                           strings.clear();
                            return false;
                           );
       }
@@ -1042,9 +1040,6 @@ bool bic_queue_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,u
   string_s *string_ptr = it.get_new_string_ptr();
 
   BIC_CONT_TO_STRING_0_CONSTRUCT();
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -1063,7 +1058,7 @@ method to_string
   pointer_queue_s *queue_ptr = (pointer_queue_s *)dst_location->v_data_ptr;
   string_s *del_string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  string_array_s strings;
+  CONT_CLEAR(string_array_s,strings);
   strings.init_size(queue_ptr->used);
   strings.used = strings.size;
 
@@ -1092,7 +1087,6 @@ method to_string
     do
     {
       BIC_CALL_TO_STRING(it,*e_ptr,operands[c_source_pos_idx],
-                         strings.clear();
                          return false;
                         );
     }
@@ -1106,7 +1100,6 @@ method to_string
       do
       {
         BIC_CALL_TO_STRING(it,*e_ptr,operands[c_source_pos_idx],
-                           strings.clear();
                            return false;
                           );
       }
@@ -1117,9 +1110,6 @@ method to_string
   string_s *string_ptr = it.get_new_string_ptr();
 
   BIC_CONT_TO_STRING_1_CONSTRUCT();
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

@@ -101,6 +101,10 @@ struct cipher_s
   inline bool is_cipher(unsigned a_length,char *a_data);
 };
 
+inline void cipher_s_clear(cipher_s *a_this)
+{/*{{{*/
+  a_this->clear();
+}/*}}}*/
 
 /*
  * inline methods of structure cipher_s

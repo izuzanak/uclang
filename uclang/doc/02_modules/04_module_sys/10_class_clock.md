@@ -30,7 +30,7 @@ Class providing access to POSIX clock functions.
 
 <a name="getres#1" />
 
-### Method `static` [`getres#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5469)
+### Method `static` [`getres#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5429)
 
 Returns resolution of given clock as array of seconds and nanoseconds.
 
@@ -54,7 +54,7 @@ resolution: 1
 
 <a name="gettime#1" />
 
-### Method `static` [`gettime#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5496)
+### Method `static` [`gettime#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5456)
 
 Returns current time of given clock as array of seconds and nanoseconds.
 
@@ -73,12 +73,12 @@ time = Clock.gettime(Clock.CLOCK_MONOTONIC);
 ("time: %s\n" % $time).print();
 ```
 ```
-time: 37083454950383895
+time: 38097469273557869
 ```
 
 <a name="settime#2" />
 
-### Method `static` [`settime#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5523)
+### Method `static` [`settime#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5483)
 
 Sets time of given clock.
 
@@ -99,7 +99,7 @@ Clock class
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5558)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5518)
 
 Convert object of class `Clock` to object of class `String`.
 This method returns name of class `Clock`.
@@ -119,7 +119,7 @@ Clock.to_string(): Clock
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5567)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L5527)
 
 Print string representation of object of class `Clock` to standard output.
 This method prints name of class `Clock`.

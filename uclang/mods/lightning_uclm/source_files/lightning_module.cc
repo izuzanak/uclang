@@ -236,8 +236,7 @@ method create_fun
   string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
 
   // - create lightning parser -
-  ltg_parser_s parser;
-  parser.init();
+  CONT_INIT_CLEAR(ltg_parser_s,parser);
 
   parser.it_ptr = &it;
   parser.ucl_jit_state = js_ptr;
@@ -252,8 +251,6 @@ method create_fun
 
   if (!parser.parse_source())
   {
-    parser.clear();
-
     // - destroy jit state -
     jit_state_t_ptr _jit = (jit_state_t *)js_ptr->jit_states.pop();
     jit_clear_state();
@@ -292,9 +289,6 @@ method create_fun
 
   // FIXME debug output
   jit_disassemble();
-
-  // - release lightning parser -
-  parser.clear();
 
   BIC_SET_RESULT_DESTINATION();
 

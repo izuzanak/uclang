@@ -67,8 +67,7 @@ bool signal_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -94,11 +93,8 @@ bool signal_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -247,8 +243,7 @@ static_method
     return false;
   }
 
-  search_results_s results;
-  results.init();
+  CONT_INIT_CLEAR(search_results_s,results);
 
   data_signal_s::search_2d(data_arrays,window_arrays,
       search_step,search_dist,dist_max,dist_cnt,results);
@@ -271,8 +266,6 @@ static_method
       array_ptr->push(end_location);
     } while(++r_ptr < r_ptr_end);
   }
-
-  results.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,array_ptr);
   BIC_SET_RESULT(new_location);

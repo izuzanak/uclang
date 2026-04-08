@@ -1402,8 +1402,7 @@ bool bic_av_picture_method_bmp_data_0(interpreter_thread_s &it,unsigned stack_ba
   BIC_SET_RESULT_STRING(string_ptr);
 
   // - create bitmap object -
-  bitmap_s bitmap;
-  bitmap.init();
+  CONT_INIT_CLEAR(bitmap_s,bitmap);
 
   switch (avp_ptr->format)
   {
@@ -1426,15 +1425,12 @@ bool bic_av_picture_method_bmp_data_0(interpreter_thread_s &it,unsigned stack_ba
     // - ERROR -
     default:
     {
-      bitmap.clear();
-
       exception_s::throw_exception(it,module.error_base + c_error_AV_PICTURE_UNSUPPORTED_PIXEL_FORMAT,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
   }
 
   bitmap.data_string(*string_ptr);
-  bitmap.clear();
 
   return true;
 }/*}}}*/

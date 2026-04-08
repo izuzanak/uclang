@@ -74,8 +74,7 @@ bool binbits_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -163,11 +162,8 @@ bool binbits_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -2044,8 +2040,7 @@ method get_idxs
 
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
 
-  ui_array_s idxs_array;
-  idxs_array.init();
+  CONT_INIT_CLEAR(ui_array_s,idxs_array);
 
 #define BIC_BIN_ARRAY_METHOD_GET_IDXS(ARRAY_TYPE,TYPE) \
 {/*{{{*/\
@@ -2074,8 +2069,6 @@ method get_idxs
       // - ERROR -
       if (!it.retrieve_integer(src_0_location,value))
       {
-        idxs_array.clear();
-
         exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
         BIC_EXCEPTION_PUSH_METHOD_RI("get_idxs#1");
         new_exception->params.push(1);
@@ -2103,8 +2096,6 @@ method get_idxs
       // - ERROR -
       if (!it.retrieve_float(src_0_location,value))
       {
-        idxs_array.clear();
-
         exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
         BIC_EXCEPTION_PUSH_METHOD_RI("get_idxs#1");
         new_exception->params.push(1);
@@ -2132,8 +2123,6 @@ method get_idxs
   pointer_array_s *res_array_ptr = it.get_new_array_ptr();
 
   BIC_CONT_CONSTRUCT_IDXS_ARRAY();
-
-  idxs_array.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_array,res_array_ptr);
   BIC_SET_RESULT(new_location);
@@ -2362,8 +2351,7 @@ bool bic_bin_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
 
-  string_array_s strings;
-  strings.init();
+  CONT_INIT_CLEAR(string_array_s,strings);
 
   unsigned strings_size = 0;
 
@@ -2410,9 +2398,6 @@ bool bic_bin_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 
   BIC_CONT_TO_STRING_0_CONSTRUCT();
 
-  // - release string array -
-  strings.clear();
-
   BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
@@ -2430,8 +2415,7 @@ method to_string
   bin_array_s *ba_ptr = (bin_array_s *)dst_location->v_data_ptr;
   string_s *del_string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  string_array_s strings;
-  strings.init();
+  CONT_INIT_CLEAR(string_array_s,strings);
 
   unsigned strings_size = 0;
 
@@ -2456,9 +2440,6 @@ method to_string
   string_s *string_ptr = it.get_new_string_ptr();
 
   BIC_CONT_TO_STRING_1_CONSTRUCT();
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 
@@ -4236,8 +4217,7 @@ bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
 
-  string_array_s strings;
-  strings.init();
+  CONT_INIT_CLEAR(string_array_s,strings);
 
   unsigned strings_size = 0;
 
@@ -4283,9 +4263,6 @@ bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
 
   BIC_CONT_TO_STRING_0_CONSTRUCT();
 
-  // - release string array -
-  strings.clear();
-
   BIC_SET_RESULT_STRING(string_ptr);
 
   return true;
@@ -4303,8 +4280,7 @@ method to_string
   bin_dict_s *bd_ptr = (bin_dict_s *)dst_location->v_data_ptr;
   string_s *del_string_ptr = (string_s *)src_0_location->v_data_ptr;
 
-  string_array_s strings;
-  strings.init();
+  CONT_INIT_CLEAR(string_array_s,strings);
 
   unsigned strings_size = 0;
 
@@ -4323,9 +4299,6 @@ method to_string
   string_s *string_ptr = it.get_new_string_ptr();
 
   BIC_CONT_TO_STRING_1_CONSTRUCT();
-
-  // - release string array -
-  strings.clear();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

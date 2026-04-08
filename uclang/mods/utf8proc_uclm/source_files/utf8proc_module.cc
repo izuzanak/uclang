@@ -207,7 +207,7 @@ built_in_variable_s utf8proc_variables[] =
 /*{{{*/\
 \
   /* - create target buffer - */\
-  bc_array_s buffer;\
+  CONT_CLEAR(bc_array_s,buffer);\
   buffer.init_size(source_ptr->size);\
 \
   if (source_ptr->size > 1)\
@@ -224,8 +224,6 @@ built_in_variable_s utf8proc_variables[] =
       /* - ERROR - */\
       if (code_point < 0)\
       {\
-        buffer.clear();\
-\
         exception_s::throw_exception(it,module.error_base + c_error_UTF8PROC_UTF8_SEQUENCE_INVALID_CODE_POINT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
         return false;\
       }\
@@ -246,6 +244,7 @@ built_in_variable_s utf8proc_variables[] =
   string_s *target_ptr = it.get_new_string_ptr();\
   target_ptr->data = buffer.data;\
   target_ptr->size = buffer.used;\
+  buffer.init();\
 /*}}}*/
 
 void bic_utf8proc_consts(location_array_s &const_locations)
@@ -1542,14 +1541,11 @@ bool bic_unicode_string_method_to_string_0(interpreter_thread_s &it,unsigned sta
 
   ui_array_s *ustring_ptr = (ui_array_s *)dst_location->v_data_ptr;
 
-  bc_array_s buffer;
-  buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,buffer);
 
   // - ERROR -
   if (!utf8proc_s::unicode_to_utf8(*ustring_ptr,buffer))
   {
-    buffer.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_UNICODE_STRING_UTF8_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1559,6 +1555,7 @@ bool bic_unicode_string_method_to_string_0(interpreter_thread_s &it,unsigned sta
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->data = buffer.data;
   string_ptr->size = buffer.used;
+  buffer.init();
 
   BIC_SET_RESULT_STRING(string_ptr);
 

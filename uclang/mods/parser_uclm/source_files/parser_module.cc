@@ -372,11 +372,8 @@ method FinalAutomata
     return false;
   }
 
-  fa_states_array_s states_array;
-  states_array.init();
-
-  reg_parser_s reg_parser;
-  reg_parser.init();
+  CONT_INIT_CLEAR(fa_states_array_s,states_array);
+  CONT_INIT_CLEAR(reg_parser_s,reg_parser);
 
   pointer *p_ptr = array_ptr->data;
   pointer *p_ptr_end = p_ptr + array_ptr->used;
@@ -386,9 +383,6 @@ method FinalAutomata
     // - ERROR -
     if (item_location->v_type != c_bi_class_string)
     {
-      reg_parser.clear();
-      states_array.clear();
-
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FINAL_AUTOMATA_REGULAR_EXPRESSION_NOT_STRING,operands[c_source_pos_idx],(location_s *)it.blank_location);
       new_exception->params.push(p_ptr - array_ptr->data);
 
@@ -398,9 +392,6 @@ method FinalAutomata
     // - ERROR -
     if (!reg_parser.process_reg_exp(*((string_s *)item_location->v_data_ptr)))
     {
-      reg_parser.clear();
-      states_array.clear();
-
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_FINAL_AUTOMATA_REGULAR_EXPRESSION_PARSE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       new_exception->params.push(p_ptr - array_ptr->data);
 
@@ -418,9 +409,6 @@ method FinalAutomata
 
   // - create final automata -
   fa_ptr->create_new(states_array);
-
-  reg_parser.clear();
-  states_array.clear();
 
   dst_location->v_data_ptr = (final_automata_s *)fa_ptr;
 

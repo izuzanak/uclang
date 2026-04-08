@@ -5,8 +5,7 @@ include "encipher.h"
 
 void encipher_file(int argc,char **argv)
 {/*{{{*/
-  string_s text;
-  text.init();
+  CONT_INIT_CLEAR(string_s,text);
 
   // - read source text file -
   if (!text.load_text_file(argv[1]))
@@ -23,8 +22,7 @@ void encipher_file(int argc,char **argv)
   // - denote if source text is cipher -
   bool source_is_cipher = false;
 
-  cipher_s cipher;
-  cipher.init();
+  CONT_INIT_CLEAR(cipher_s,cipher);
 
   // - test if text is cipher -
   if (cipher.is_cipher(text_length,text_buff))
@@ -39,7 +37,6 @@ void encipher_file(int argc,char **argv)
 
   cipher.create(c_ck_length,(char *)c_ck_value);
   cipher.process(text_length,text_buff);
-  cipher.clear();
 
   // - open target file -
   FILE *f = fopen(argv[2],"w");
@@ -79,7 +76,6 @@ void encipher_file(int argc,char **argv)
   }
 
   fclose(f);
-  text.clear();
 }/*}}}*/
 
 int main(int argc,char **argv)

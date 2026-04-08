@@ -30,7 +30,7 @@ Class implementing POSIX regular expression matching.
 
 <a name="Regex#1" />
 
-### Constructor [`Regex#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L219)
+### Constructor [`Regex#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L215)
 
 Creates object of class `Regex` from regular expression pattern string.
 
@@ -54,7 +54,7 @@ obj: Regex
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L207)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L203)
 
 Assignment operator `=`. Object of class `Regex` is replaced by method parameter.
 
@@ -85,7 +85,7 @@ obj: New value
 
 <a name="match#1" />
 
-### Method [`match#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L249)
+### Method [`match#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L245)
 
 Matches regular expression against input string. Returns array with start
 and end positions of match, or object of class `Blank` if no match found.
@@ -114,7 +114,7 @@ match: <blank>
 
 <a name="match#2" />
 
-### Method [`match#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L306)
+### Method [`match#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L302)
 
 Matches regular expression against input string with capture groups. Returns
 array of sub-arrays with start and end positions for each group, or object
@@ -142,7 +142,7 @@ match: <blank>
 
 <a name="match_from#2" />
 
-### Method [`match_from#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L396)
+### Method [`match_from#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L392)
 
 Matches regular expression against input string starting at given byte offset.
 Returns array with start and end positions (absolute), or object of class
@@ -170,7 +170,7 @@ match: <blank>
 
 <a name="split#1" />
 
-### Method [`split#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L463)
+### Method [`split#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L459)
 
 Splits input string by regular expression pattern.
 
@@ -195,7 +195,7 @@ parts: [one, two, three]
 
 <a name="replace#2" />
 
-### Method [`replace#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L549)
+### Method [`replace#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L545)
 
 Replaces all occurrences of regular expression pattern in input string with
 replacement string.
@@ -222,7 +222,7 @@ result: abc 123 def 456
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L633)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L627)
 
 Convert object of class `Regex` to object of class `String`.
 This method returns name of class `Regex`.
@@ -242,7 +242,7 @@ Regex.to_string(): Regex
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L642)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/regex_uclm/source_files/regex_module.cc#L636)
 
 Print string representation of object of class `Regex` to standard output.
 This method prints name of class `Regex`.

@@ -953,7 +953,7 @@ obj.to_string(): [1,2,3,4,5]
 
 <a name="to_string#1" />
 
-### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1550)
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1546)
 
 Convert object of class `Set` to object of class `String`.
 Each element of object of class `Set` is converted to string by call of its
@@ -981,7 +981,7 @@ obj.to_string("<->"): 1<->2<->3<->4<->5
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1599)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1591)
 
 Print string representation of object of class `Set` to standard output.
 Each element of object of class `Set` is printed by call of its `print#0`

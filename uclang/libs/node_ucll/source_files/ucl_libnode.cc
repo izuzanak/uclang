@@ -16,17 +16,13 @@ UclNode g_UclNode;
 bool UclNode::Initialize(const char **a_modules)
 {/*{{{*/
 
-  // - source initialization -
-  source_s source;
-  source.init();
+  CONT_INIT_CLEAR(source_s,source);
 
   // - set empty source file -
   source.file_name.set(strlen("none"),"none");
   source.source_string.set(strlen("\n"),"\n");
 
-  // - modules path initialization -
-  string_s mods_path;
-  mods_path.init();
+  CONT_INIT_CLEAR(string_s,mods_path);
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_UNIX || SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
 
@@ -51,9 +47,6 @@ bool UclNode::Initialize(const char **a_modules)
       sizeof(double)        != 8)
   {
     fprintf(stderr,"Not tested on non 32bit system, sorry\n");
-
-    mods_path.clear();
-    source.clear();
 
     return false;
   }

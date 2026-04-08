@@ -480,8 +480,7 @@ built_in_variable_s gz_file_variables[] =
   const int c_buffer_add = 4096;\
 \
   /* - target data buffer - */\
-  bc_array_s data_buffer;\
-  data_buffer.init();\
+  CONT_INIT_CLEAR(bc_array_s,data_buffer);\
 \
   int read_cnt;\
   do\
@@ -494,8 +493,6 @@ built_in_variable_s gz_file_variables[] =
 \
   if (read_cnt < 0 || (read_cnt == 0 && !gzeof(gzf_ptr)))\
   {\
-    data_buffer.clear();\
-\
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
@@ -505,8 +502,6 @@ built_in_variable_s gz_file_variables[] =
   /* - was any data read from file - */\
   if (data_buffer.used == 0)\
   {\
-    data_buffer.clear();\
-\
     BIC_SET_RESULT_BLANK();\
   }\
   else\
@@ -517,6 +512,7 @@ built_in_variable_s gz_file_variables[] =
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->data = data_buffer.data;\
     string_ptr->size = data_buffer.used;\
+    data_buffer.init();\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
     BIC_SET_RESULT(new_location);\
@@ -541,7 +537,7 @@ built_in_variable_s gz_file_variables[] =
   const unsigned c_init_buffer_size = 1024;\
 \
   /* - target data buffer - */\
-  bc_array_s line_buffer;\
+  CONT_CLEAR(bc_array_s,line_buffer);\
   line_buffer.init_size(c_init_buffer_size);\
 \
   int ch;\
@@ -578,16 +574,12 @@ built_in_variable_s gz_file_variables[] =
   /* - ERROR - */\
   if (ch == -1 && !gzeof(gzf_ptr))\
   {\
-    line_buffer.clear();\
-\
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
 \
   if (gzeof(gzf_ptr) && line_buffer.used == 0)\
   {\
-    line_buffer.clear();\
-\
     BIC_SET_RESULT_BLANK();\
   }\
   else {\
@@ -597,6 +589,7 @@ built_in_variable_s gz_file_variables[] =
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->data = line_buffer.data;\
     string_ptr->size = line_buffer.used;\
+    line_buffer.init();\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
     BIC_SET_RESULT(new_location)\
@@ -658,16 +651,12 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
   // - ERROR -
   if (ch == -1 && !gzeof(gzf_ptr)) // lgtm [cpp/constant-comparison]
   {
-    line_buffer.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,source_pos,(location_s *)it.blank_location);
     return nullptr;
   }
 
   if (gzeof(gzf_ptr) && line_buffer.used == 0)
   {
-    line_buffer.clear();
-
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
@@ -678,6 +667,7 @@ location_s *bic_gz_file_next_item(interpreter_thread_s &it,location_s *location_
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->data = line_buffer.data;
   string_ptr->size = line_buffer.used;
+  line_buffer.init();
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
@@ -876,8 +866,7 @@ method read
   }
 
   // - target data string -
-  string_s data_string;
-  data_string.init();
+  CONT_INIT_CLEAR(string_s,data_string);
   data_string.create(byte_cnt);
 
   int read_cnt = gzread(gzf_ptr,data_string.data,byte_cnt);
@@ -885,8 +874,6 @@ method read
   // - ERROR -
   if (read_cnt < byte_cnt)
   {
-    data_string.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_GZ_FILE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -894,7 +881,6 @@ method read
   // - return data string -
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->swap(data_string);
-  data_string.clear();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);

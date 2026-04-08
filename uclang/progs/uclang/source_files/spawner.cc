@@ -536,15 +536,11 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
     // - initialize pollfd structure -
     pollfd pfd = {fd,POLLIN | POLLPRI,0};
 
-    // - line data buffer -
-    bc_array_s line_buffer;
-    line_buffer.init();
+    CONT_INIT_CLEAR(bc_array_s,line_buffer);
 
 #define RUN_SPAWNER_FIFO_READ_ERROR() \
 {/*{{{*/\
   fprintf(stderr,"%s: Error while reading from spawner fifo\n",proc_name);\
-\
-  line_buffer.clear();\
 \
   /* - delete spawner fifo - */\
   remove(spawner_path);\
@@ -619,8 +615,6 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
         if (!g_spawner_running.value() ||
             strcmp("uclang-spawner-stop",cmd_begin) == 0)
         {
-          line_buffer.clear();
-
           // - delete spawner fifo -
           if (remove(spawner_path) != 0)
           {
@@ -649,17 +643,12 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
           spawn_cmd.size = (cmd_end - cmd_begin) + 1;
           spawn_cmd.data = cmd_begin;
 
-          // - create spawn parser -
-          spawn_parser_s spawn_parser;
-          spawn_parser.init();
+          CONT_INIT_CLEAR(spawn_parser_s,spawn_parser);
 
           // - parse spawn command -
           if (!spawn_parser.parse_source(spawn_cmd) ||
               spawn_parser.arguments.used == 0)
           {
-            spawn_parser.clear();
-            line_buffer.clear();
-
             fprintf(stderr,"%s: Invalid spawn command\n",proc_name);
 
             return -1;
@@ -667,9 +656,6 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
 
           // - retrieve spawn arguments -
           spawn_args.swap(spawn_parser.arguments);
-
-          spawn_parser.clear();
-          line_buffer.clear();
 
           return 1;
         }
@@ -679,8 +665,6 @@ int run_spawner(const char *proc_name,const char *spawner_path,string_array_s &s
       cmd_begin = cmd_end + 1;
 
     } while(cmd_begin < buffer_end);
-
-    line_buffer.clear();
 
   } while(true);
 }/*}}}*/

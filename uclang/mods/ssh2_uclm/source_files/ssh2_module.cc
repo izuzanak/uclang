@@ -1317,8 +1317,8 @@ built_in_variable_s sftp_handle_variables[] =
   const unsigned c_init_buffer_size = 1024;\
 \
   /* - target data buffer - */\
-  bc_array_s line_buffer;\
-  line_buffer.init_size(c_init_buffer_size);\
+  CONT_INIT_CLEAR(bc_array_s,line_buffer);\
+  line_buffer.copy_resize(c_init_buffer_size);\
 \
   ssize_t read_cnt;\
   do\
@@ -1358,8 +1358,6 @@ built_in_variable_s sftp_handle_variables[] =
     /* - ERROR - */\
     if (read_cnt < 0)\
     {\
-      line_buffer.clear();\
-\
       exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
       return false;\
     }\
@@ -1367,8 +1365,6 @@ built_in_variable_s sftp_handle_variables[] =
     /* - was any data read from file - */\
     if (read_cnt == 0 && line_buffer.used == 0)\
     {\
-      line_buffer.clear();\
-\
       BIC_SET_RESULT_BLANK();\
     }\
     else\
@@ -1379,6 +1375,7 @@ built_in_variable_s sftp_handle_variables[] =
       string_s *string_ptr = it.get_new_string_ptr();\
       string_ptr->data = line_buffer.data;\
       string_ptr->size = line_buffer.used;\
+      line_buffer.init();\
 \
       BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
       BIC_SET_RESULT(new_location);\
@@ -1426,16 +1423,12 @@ location_s *bic_sftp_handle_next_item(interpreter_thread_s &it,location_s *locat
   // - ERROR -
   if (read_cnt < 0)
   {
-    line_buffer.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_READ_ERROR,source_pos,(location_s *)it.blank_location);
     return nullptr;
   }
 
   if (read_cnt == 0 && line_buffer.used == 0)
   {
-    line_buffer.clear();
-
     ((location_s *)it.blank_location)->v_reference_cnt.atomic_inc();
     return ((location_s *)it.blank_location);
   }
@@ -1446,6 +1439,7 @@ location_s *bic_sftp_handle_next_item(interpreter_thread_s &it,location_s *locat
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->data = line_buffer.data;
   string_ptr->size = line_buffer.used;
+  line_buffer.init();
 
   // - create result location -
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
@@ -1564,8 +1558,7 @@ bool bic_sftp_handle_method_read_0(interpreter_thread_s &it,unsigned stack_base,
   const unsigned c_buffer_add = 32768;
 
   // - target data buffer -
-  bc_array_s data_buffer;
-  data_buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,data_buffer);
 
   ssize_t read_cnt;
   do
@@ -1581,8 +1574,6 @@ bool bic_sftp_handle_method_read_0(interpreter_thread_s &it,unsigned stack_base,
 
   if (read_cnt < 0)
   {
-    data_buffer.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1590,8 +1581,6 @@ bool bic_sftp_handle_method_read_0(interpreter_thread_s &it,unsigned stack_base,
   // - was any data read from file -
   if (data_buffer.used == 0)
   {
-    data_buffer.clear();
-
     BIC_SET_RESULT_BLANK();
   }
   else
@@ -1602,6 +1591,7 @@ bool bic_sftp_handle_method_read_0(interpreter_thread_s &it,unsigned stack_base,
     string_s *string_ptr = it.get_new_string_ptr();
     string_ptr->data = data_buffer.data;
     string_ptr->size = data_buffer.used;
+    data_buffer.init();
 
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
     BIC_SET_RESULT(new_location);
@@ -1644,8 +1634,7 @@ method read
   }
 
   // - target data buffer -
-  bc_array_s data_buffer;
-  data_buffer.init();
+  CONT_INIT_CLEAR(bc_array_s,data_buffer);
 
   ssize_t read_cnt;
   do
@@ -1662,8 +1651,6 @@ method read
   // - if all requested bytes were not read -
   if (data_buffer.used < byte_cnt)
   {
-    data_buffer.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_SFTP_HANDLE_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -1674,6 +1661,7 @@ method read
   string_s *string_ptr = it.get_new_string_ptr();
   string_ptr->data = data_buffer.data;
   string_ptr->size = data_buffer.used;
+  data_buffer.init();
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
   BIC_SET_RESULT(new_location);
@@ -1786,8 +1774,7 @@ built_in_variable_s ssh2_channel_variables[] =
   const int c_buffer_add = 4096;\
 \
   /* - target data buffer - */\
-  bc_array_s data_buffer;\
-  data_buffer.init();\
+  CONT_INIT_CLEAR(bc_array_s,data_buffer);\
 \
   ssize_t read_cnt;\
   do\
@@ -1801,8 +1788,6 @@ built_in_variable_s ssh2_channel_variables[] =
   /* - ERROR - */\
   if (read_cnt < 0)\
   {\
-    data_buffer.clear();\
-\
     exception_s::throw_exception(it,module.error_base + c_error_SSH2_CHANNEL_READ_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);\
     return false;\
   }\
@@ -1812,8 +1797,6 @@ built_in_variable_s ssh2_channel_variables[] =
   /* - was any data read from file - */\
   if (data_buffer.used == 0)\
   {\
-    data_buffer.clear();\
-\
     BIC_SET_RESULT_BLANK();\
   }\
   else\
@@ -1824,6 +1807,7 @@ built_in_variable_s ssh2_channel_variables[] =
     string_s *string_ptr = it.get_new_string_ptr();\
     string_ptr->data = data_buffer.data;\
     string_ptr->size = data_buffer.used;\
+    data_buffer.init();\
 \
     BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);\
     BIC_SET_RESULT(new_location);\

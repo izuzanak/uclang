@@ -360,8 +360,7 @@ macro
   }\
 \
   /* - create write buffer - */\
-  bc_array_s write_buffer;\
-  write_buffer.init();\
+  CONT_INIT_CLEAR(bc_array_s,write_buffer);\
 \
   curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
   curl_easy_setopt(curl_ptr,CURLOPT_WRITEFUNCTION,cb_write_buffer);\
@@ -372,7 +371,6 @@ macro
   /* - ERROR - */\
   if (curl_easy_perform(curl_ptr) != CURLE_OK)\
   {\
-    write_buffer.clear();\
     curl_easy_cleanup(curl_ptr);\
 \
     exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);\
@@ -387,6 +385,7 @@ macro
 \
   res_data_ptr->size = write_buffer.used;\
   res_data_ptr->data = write_buffer.data;\
+  write_buffer.init();\
 \
   /* - create curl_result object - */\
   curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));\
@@ -436,8 +435,7 @@ macro
   read_buffer.init(data_ptr,data_size);\
 \
   /* - create write buffer - */\
-  bc_array_s write_buffer;\
-  write_buffer.init();\
+  CONT_INIT_CLEAR(bc_array_s,write_buffer);\
 \
   curl_easy_setopt(curl_ptr,CURLOPT_URL,address_ptr->data);\
   curl_easy_setopt(curl_ptr,CURLOPT_READFUNCTION,cb_read_buffer);\
@@ -450,7 +448,6 @@ macro
   /* - ERROR - */\
   if (curl_easy_perform(curl_ptr) != CURLE_OK)\
   {\
-    write_buffer.clear();\
     curl_easy_cleanup(curl_ptr);\
 \
     exception_s::throw_exception(it,module.error_base + c_error_CURL_ERROR_WHILE_PERFORMING_HTTP_REQUEST,operands[c_source_pos_idx],(location_s *)it.blank_location);\
@@ -465,6 +462,7 @@ macro
 \
   res_data_ptr->size = write_buffer.used;\
   res_data_ptr->data = write_buffer.data;\
+  write_buffer.init();\
 \
   /* - create curl_result object - */\
   curl_result_s *res_ptr = (curl_result_s *)cmalloc(sizeof(curl_result_s));\
@@ -1278,8 +1276,7 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
       curl_easy_setopt(curl_ptr,CURLOPT_PRIVATE,nullptr);
 
       // - retrieve write buffer -
-      bc_array_s write_buffer;
-      write_buffer.init();
+      CONT_INIT_CLEAR(bc_array_s,write_buffer);
       write_buffer.swap(curl_props->write_buffer);
 
       // - push terminating character -
@@ -1290,6 +1287,7 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
 
       res_data_ptr->size = write_buffer.used;
       res_data_ptr->data = write_buffer.data;
+      write_buffer.init();
 
       // - remove curl from list -
       cm_ptr->curl_list.remove(curl_props->index);

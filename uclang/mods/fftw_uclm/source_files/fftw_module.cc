@@ -59,8 +59,7 @@ bool fftw_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -107,11 +106,8 @@ bool fftw_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -346,8 +342,7 @@ method FftwPlan
     return false;
   }
 
-  bi_array_s dimensions;
-  dimensions.init();
+  CONT_INIT_CLEAR(bi_array_s,dimensions);
 
   pointer *a_ptr = array_ptr->data;
   pointer *a_ptr_end = a_ptr + array_ptr->used;
@@ -357,8 +352,6 @@ method FftwPlan
     long long int dimension;
     if (!it.retrieve_integer(it.get_location_value(*a_ptr),dimension))
     {
-      dimensions.clear();
-
       exception_s::throw_exception(it,module.error_base + c_error_FFTW_PLAN_INVALID_DIMENSION_TYPE,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -372,8 +365,6 @@ method FftwPlan
   // - ERROR -
   if (plan == nullptr)
   {
-    dimensions.clear();
-
     exception_s::throw_exception(it,module.error_base + c_error_FFTW_PLAN_CREATE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
@@ -386,7 +377,6 @@ method FftwPlan
 
   // - store plan dimensions -
   fp_ptr->dimensions.swap(dimensions);
-  dimensions.clear();
 
   // - store plan flags -
   fp_ptr->flags = flags;

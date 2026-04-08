@@ -80,8 +80,7 @@ bool validator_print_exception(interpreter_s &it,exception_s &exception)
   unsigned source_pos = GET_SRC_POS(exception.position);
   source_s &source = it.sources[GET_SRC_IDX(exception.position)];
 
-  ui_array_s class_stack;
-  class_stack.init();
+  CONT_INIT_CLEAR(ui_array_s,class_stack);
 
   switch (exception.type - module.error_base)
   {
@@ -163,11 +162,8 @@ bool validator_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
-    class_stack.clear();
     return false;
   }
-
-  class_stack.clear();
 
   return true;
 }/*}}}*/
@@ -360,8 +356,7 @@ method validate
     src_0_location->v_reference_cnt.atomic_inc();
     ((pointer_array_s *)val_ptr->props_stack->v_data_ptr)->push(src_0_location);
 
-    pointer_array_s new_array;
-    new_array.init();
+    CONT_INIT_CLEAR(pointer_array_s,new_array);
 
 #define BIC_VALIDATOR_METHOD_VALIDATE_REVERSE_STACK(LOCATION) \
 {/*{{{*/\
@@ -385,8 +380,6 @@ method validate
 
     // - reverse props stack -
     BIC_VALIDATOR_METHOD_VALIDATE_REVERSE_STACK(val_ptr->props_stack);
-
-    new_array.clear();
 
     return false;
   }

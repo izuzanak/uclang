@@ -120,7 +120,7 @@ class Main
 
 <a name="Socket#2" />
 
-### Constructor [`Socket#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3051)
+### Constructor [`Socket#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3043)
 
 Creates object of class `Socket` with given domain and type.
 
@@ -146,7 +146,7 @@ obj: Socket
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3039)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3031)
 
 Assignment operator `=`. Object of class `Socket` is replaced by method parameter.
 
@@ -178,7 +178,7 @@ obj: New value
 
 <a name="listen#2" />
 
-### Method [`listen#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3076)
+### Method [`listen#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3068)
 
 Binds socket to address and starts listening for incoming connections.
 
@@ -200,7 +200,7 @@ obj: Socket
 
 <a name="accept#0" />
 
-### Method [`accept#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3142)
+### Method [`accept#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3134)
 
 Accepts incoming connection on listening socket. Returns array containing
 new connected socket and address of connecting peer.
@@ -222,7 +222,7 @@ obj: Socket
 
 <a name="connect#1" />
 
-### Method [`connect#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3229)
+### Method [`connect#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3221)
 
 Connects socket to given address.
 
@@ -243,7 +243,7 @@ obj: Socket
 
 <a name="bind#1" />
 
-### Method [`bind#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3286)
+### Method [`bind#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3278)
 
 Binds socket to given local address.
 
@@ -265,7 +265,7 @@ obj: Socket
 
 <a name="sendto#2" />
 
-### Method [`sendto#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3340)
+### Method [`sendto#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3332)
 
 Sends data to given address using connectionless socket.
 
@@ -288,7 +288,7 @@ obj: Socket
 
 <a name="recvfrom#0" />
 
-### Method [`recvfrom#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3385)
+### Method [`recvfrom#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3377)
 
 Receives data from connectionless socket. Returns array containing received
 data string and sender address.
@@ -311,7 +311,7 @@ obj: Socket
 
 <a name="close#0" />
 
-### Method [`close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3474)
+### Method [`close#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3466)
 
 Closes socket and releases associated resources.
 
@@ -328,7 +328,7 @@ closed
 
 <a name="set_timeout#2" />
 
-### Method [`set_timeout#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3502)
+### Method [`set_timeout#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3494)
 
 Sets socket send/receive timeout.
 
@@ -351,7 +351,7 @@ timeout set
 
 <a name="sockopt#3" />
 
-### Method [`sockopt#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3538)
+### Method [`sockopt#3`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3530)
 
 Sets socket option.
 
@@ -375,7 +375,7 @@ option set
 
 <a name="sockopt#2" />
 
-### Method [`sockopt#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3648)
+### Method [`sockopt#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3640)
 
 Retrieves socket option value.
 
@@ -401,7 +401,7 @@ SO_SNDBUF: 16384
 
 <a name="write#1" />
 
-### Method [`write#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4172)
+### Method [`write#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4144)
 
 Writes data to connected socket.
 
@@ -423,7 +423,7 @@ written
 
 <a name="read#0" />
 
-### Method [`read#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4213)
+### Method [`read#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4185)
 
 Reads all available data from socket.
 
@@ -447,7 +447,7 @@ Data line 2
 
 <a name="read#1" />
 
-### Method [`read#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4290)
+### Method [`read#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4256)
 
 Reads exactly given number of bytes from socket.
 
@@ -473,7 +473,7 @@ data: Data
 
 <a name="get_fd#0" />
 
-### Method [`get_fd#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4363)
+### Method [`get_fd#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4323)
 
 Returns underlying file descriptor of socket.
 
@@ -494,7 +494,7 @@ type: Integer
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3712)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3704)
 
 Convert object of class `Socket` to object of class `String`.
 This method returns name of class `Socket`.
@@ -514,7 +514,7 @@ Socket.to_string(): Socket
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3721)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L3713)
 
 Print string representation of object of class `Socket` to standard output.
 This method prints name of class `Socket`.
