@@ -1,0 +1,307 @@
+
+import binbits;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // === BinArray errors ===
+
+    // - unknown data type (1-arg) -
+    caught = 0;
+    try {
+      new BinArray(999);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("BinArray unknown type did not throw").throw();
+    }
+
+    // - unknown data type (2-arg) -
+    caught = 0;
+    try {
+      new BinArray(999,[1]);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("BinArray unknown type 2-arg did not throw").throw();
+    }
+
+    // - index exceeds range (item) -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+      arr.item(10);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("item(10) did not throw").throw();
+    }
+
+    // - index exceeds range ([] operator) -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+      arr[10];
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("arr[10] did not throw").throw();
+    }
+
+    // - index exceeds range (head) -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+      arr.head(10);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("head(10) did not throw").throw();
+    }
+
+    // - index exceeds range (tail) -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+      arr.tail(10);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("tail(10) did not throw").throw();
+    }
+
+    // - wrong range indexes (reversed) -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+      arr.range(2,0);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("range(2,0) did not throw").throw();
+    }
+
+    // - wrong range indexes (out of bounds) -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+      arr.range(0,10);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("range(0,10) did not throw").throw();
+    }
+
+    // - cannot resize to smaller -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+      arr.resize(1);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("resize(1) smaller did not throw").throw();
+    }
+
+    // - no elements (pop) -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32);
+      arr.pop();
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("pop empty did not throw").throw();
+    }
+
+    // - no elements (last) -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32);
+      arr.last();
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("last empty did not throw").throw();
+    }
+
+    // - unsupported type of source iterable item -
+    caught = 0;
+    try {
+      new BinArray(BinArray.TYPE_INT32,["hello"]);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("BinArray from string iterable did not throw").throw();
+    }
+
+    // - BinArrayRef invalid reference -
+    caught = 0;
+    try {
+      arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+      ref = arr[2];
+      arr.clear();
+      ref.value();
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("BinArrayRef invalid ref did not throw").throw();
+    }
+
+    // === BinDict errors ===
+
+    // - unknown data type -
+    caught = 0;
+    try {
+      new BinDict(999);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("BinDict unknown type did not throw").throw();
+    }
+
+    // - invalid key (remove_key) -
+    caught = 0;
+    try {
+      dict = new BinDict(BinDict.TYPE_INT64_INT64);
+      dict[10] = 100;
+      dict.remove_key(999);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("remove_key(999) did not throw").throw();
+    }
+
+    // - invalid key (next_key) -
+    caught = 0;
+    try {
+      dict = new BinDict(BinDict.TYPE_INT64_INT64);
+      dict[10] = 100;
+      dict.next_key(999);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("next_key(999) did not throw").throw();
+    }
+
+    // - invalid key (prev_key) -
+    caught = 0;
+    try {
+      dict = new BinDict(BinDict.TYPE_INT64_INT64);
+      dict[10] = 100;
+      dict.prev_key(999);
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("prev_key(999) did not throw").throw();
+    }
+
+    // - BinDictRef invalid reference (value) -
+    caught = 0;
+    try {
+      dict = new BinDict(BinDict.TYPE_INT64_INT64);
+      dict[10] = 100;
+      idx = dict.first_idx();
+      ref = dict.item(idx);
+      dict.remove_key(10);
+      ref.value();
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("BinDictRef invalid value did not throw").throw();
+    }
+
+    // - BinDictRef invalid reference (key) -
+    caught = 0;
+    try {
+      dict = new BinDict(BinDict.TYPE_INT64_INT64);
+      dict[10] = 100;
+      idx = dict.first_idx();
+      ref = dict.item(idx);
+      dict.remove_key(10);
+      ref.key();
+    }
+    catch (err)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("BinDictRef invalid key did not throw").throw();
+    }
+  }/*}}}*/
+}

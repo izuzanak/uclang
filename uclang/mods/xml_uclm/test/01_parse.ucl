@@ -1,0 +1,159 @@
+
+import containers;
+import xml;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - parse simple element with text -
+    root = Xml.parse("<item>hello</item>");
+    if (root.name() != "item")
+    {
+      new Exception("parse name: expected item, got %s" % root.name()).throw();
+    }
+    if (root.text() != "hello")
+    {
+      new Exception("parse text: expected hello, got %s" % root.text()).throw();
+    }
+
+    // - parse self-closing element -
+    root = Xml.parse("<empty/>");
+    if (root.name() != "empty")
+    {
+      new Exception("parse empty: expected name empty, got %s" % root.name()).throw();
+    }
+    if (Xml.create(root) != "<empty/>")
+    {
+      new Exception("parse empty: expected <empty/>, got %s" % Xml.create(root)).throw();
+    }
+
+    // - parse element with attributes -
+    root = Xml.parse("<item id=\"1\" type=\"test\"/>");
+    if (root.name() != "item")
+    {
+      new Exception("parse attrs: expected name item, got %s" % root.name()).throw();
+    }
+    attrs = root.attributes();
+    if (attrs["id"] != "1")
+    {
+      new Exception("parse attrs: expected id=1, got %s" % attrs["id"]).throw();
+    }
+    if (attrs["type"] != "test")
+    {
+      new Exception("parse attrs: expected type=test, got %s" % attrs["type"]).throw();
+    }
+
+    // - parse nested structure via update_node_dict + bracket access -
+    root = Xml.parse("<root><child1>t1</child1><child2>t2</child2></root>");
+    if (root.name() != "root")
+    {
+      new Exception("parse nested: expected name root, got %s" % root.name()).throw();
+    }
+    root.update_node_dict();
+    if (root.has_key("child1") != 1)
+    {
+      new Exception("has_key child1: expected 1").throw();
+    }
+    if (root.has_key("nonexistent") != 0)
+    {
+      new Exception("has_key nonexistent: expected 0").throw();
+    }
+    if (root["child1"].text() != "t1")
+    {
+      new Exception("bracket access child1: expected t1, got %s" % root["child1"].text()).throw();
+    }
+    if (root["child2"].text() != "t2")
+    {
+      new Exception("bracket access child2: expected t2, got %s" % root["child2"].text()).throw();
+    }
+
+    // - contain() alias -
+    if (root.contain("child1") != 1)
+    {
+      new Exception("contain child1: expected 1").throw();
+    }
+    if (root.contain("missing") != 0)
+    {
+      new Exception("contain missing: expected 0").throw();
+    }
+
+    // - duplicate child names produce array in node_dict -
+    root = Xml.parse("<root><item>a</item><item>b</item></root>");
+    root.update_node_dict();
+    nd = root.node_dict();
+    items = nd["item"];
+    if (items.length() != 2)
+    {
+      new Exception("dup children: expected array of 2, got %d" % items.length()).throw();
+    }
+    if (items[0].text() != "a")
+    {
+      new Exception("dup children: expected a, got %s" % items[0].text()).throw();
+    }
+    if (items[1].text() != "b")
+    {
+      new Exception("dup children: expected b, got %s" % items[1].text()).throw();
+    }
+
+    // - XML entities decoded by parser -
+    root = Xml.parse("<d>&lt;&gt;&amp;&apos;&quot;</d>");
+    if (root.text() != "<>&'\"")
+    {
+      new Exception("entities: expected <>&'\" got %s" % root.text()).throw();
+    }
+
+    // - texts() accessor -
+    root = Xml.parse("<node>hello world</node>");
+    if (root.texts().length() != 1)
+    {
+      new Exception("texts: expected length 1, got %d" % root.texts().length()).throw();
+    }
+    if (root.texts()[0] != "hello world")
+    {
+      new Exception("texts: expected hello world, got %s" % root.texts()[0]).throw();
+    }
+
+    // - content() on mixed content -
+    root = Xml.parse("<r>text1<c/>text2</r>");
+    if (root.content().length() != 3)
+    {
+      new Exception("content: expected 3 items, got %d" % root.content().length()).throw();
+    }
+
+    // - deep nesting via update_node_dict -
+    root = Xml.parse("<a><b><c>deep</c></b></a>");
+    root.update_node_dict();
+    b = root["b"];
+    if (b["c"].text() != "deep")
+    {
+      new Exception("deep nesting: expected deep").throw();
+    }
+
+    // - to_string -
+    if ($Xml != "Xml")
+    {
+      new Exception("to_string: expected Xml, got %s" % $Xml).throw();
+    }
+    if ($XmlNode != "XmlNode")
+    {
+      new Exception("to_string: expected XmlNode, got %s" % $XmlNode).throw();
+    }
+
+    // - parse error must throw -
+    caught = 0;
+    try {
+      Xml.parse("<broken");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse invalid XML did not throw").throw();
+    }
+  }/*}}}*/
+}
+

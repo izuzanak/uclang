@@ -1,0 +1,127 @@
+
+import containers;
+import json;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - create from null -
+    result = Json.create(new Blank());
+    if (result != "null")
+    {
+      new Exception("create null: expected \"null\", got %s" % result).throw();
+    }
+
+    // - create from integer -
+    result = Json.create(123);
+    if (result != "123")
+    {
+      new Exception("create int: expected \"123\", got %s" % result).throw();
+    }
+
+    // - create from zero -
+    result = Json.create(0);
+    if (result != "0")
+    {
+      new Exception("create zero: expected \"0\", got %s" % result).throw();
+    }
+
+    // - create from negative integer -
+    result = Json.create(-5);
+    if (result != "-5")
+    {
+      new Exception("create neg int: expected \"-5\", got %s" % result).throw();
+    }
+
+    // - create from float -
+    result = Json.create(3.14);
+    if (result != "3.140000")
+    {
+      new Exception("create float: expected \"3.140000\", got %s" % result).throw();
+    }
+
+    // - create from string -
+    result = Json.create("hello world");
+    if (result != "\"hello world\"")
+    {
+      new Exception("create string: expected '\"hello world\"', got %s" % result).throw();
+    }
+
+    // - create from empty string -
+    result = Json.create("");
+    if (result != "\"\"")
+    {
+      new Exception("create empty string: expected '\"\"', got %s" % result).throw();
+    }
+
+    // - create from array -
+    result = Json.create([1,2,"three",new Blank()]);
+    if (result != "[1,2,\"three\",null]")
+    {
+      new Exception("create array: expected '[1,2,\"three\",null]', got %s" % result).throw();
+    }
+
+    // - create from empty array -
+    result = Json.create([]);
+    if (result != "[]")
+    {
+      new Exception("create empty array: expected '[]', got %s" % result).throw();
+    }
+
+    // - create from dict -
+    d = new Dict();
+    d["name"] = "Alice";
+    d["age"] = 30;
+    result = Json.create(d);
+    if (result != "{\"name\":\"Alice\",\"age\":30}")
+    {
+      new Exception("create dict: expected '{\"name\":\"Alice\",\"age\":30}', got %s" % result).throw();
+    }
+
+    // - create from empty dict -
+    result = Json.create(new Dict());
+    if (result != "{}")
+    {
+      new Exception("create empty dict: expected '{}', got %s" % result).throw();
+    }
+
+    // - create nested structure -
+    d2 = new Dict();
+    d2["users"] = [d];
+    d2["count"] = 1;
+    result = Json.create(d2);
+    if (result != "{\"users\":[{\"name\":\"Alice\",\"age\":30}],\"count\":1}")
+    {
+      new Exception("create nested: got %s" % result).throw();
+    }
+
+    // - string escaping -
+    result = Json.create("hello\t\"world\"\n");
+    if (result != "\"hello\\t\\\"world\\\"\\n\"")
+    {
+      new Exception("create escape: got %s" % result).throw();
+    }
+
+    // - comprehensive object (inspired by C lib test) -
+    obj = new Dict();
+    obj["null"] = new Blank();
+    obj["integer"] = 123;
+    obj["float"] = 123.4;
+    obj["string"] = "Hello world!";
+    obj["array"] = [0,1,2,3,4,5,6,7,8,9];
+    inner = new Dict();
+    inner["first"] = 0;
+    inner["second"] = 1;
+    inner["third"] = 2;
+    obj["object"] = inner;
+    result = Json.create(obj);
+    expected = "{\"null\":null,\"integer\":123,\"float\":123.400000,\"string\":\"Hello world!\",\"array\":[0,1,2,3,4,5,6,7,8,9],\"object\":{\"first\":0,\"second\":1,\"third\":2}}";
+    if (result != expected)
+    {
+      new Exception("create comprehensive: got %s" % result).throw();
+    }
+  }/*}}}*/
+}
+

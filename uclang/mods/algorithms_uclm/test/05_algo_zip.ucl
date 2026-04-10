@@ -1,0 +1,89 @@
+
+import containers;
+import algorithms;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - zip two arrays -
+    result = Algo.zip([[1,2,3],["a","b","c"]]);
+    if (result != [1,"a",2,"b",3,"c"])
+    {
+      new Exception("zip two: expected [1,a,2,b,3,c], got %s" % $result).throw();
+    }
+
+    // - zip three arrays -
+    result = Algo.zip([[1,2],[10,20],[100,200]]);
+    if (result != [1,10,100,2,20,200])
+    {
+      new Exception("zip three: expected [1,10,100,2,20,200], got %s" % $result).throw();
+    }
+
+    // - zip unequal lengths stops at shortest -
+    result = Algo.zip([[1,2,3],["a","b"]]);
+    if (result != [1,"a",2,"b"])
+    {
+      new Exception("zip unequal: expected [1,a,2,b], got %s" % $result).throw();
+    }
+
+    // - zip single array -
+    result = Algo.zip([[1,2,3]]);
+    if (result != [1,2,3])
+    {
+      new Exception("zip single: expected [1,2,3], got %s" % $result).throw();
+    }
+
+    // - zip with empty inner array -
+    result = Algo.zip([[1,2,3],[]]);
+    if (result != [])
+    {
+      new Exception("zip empty inner: expected [], got %s" % $result).throw();
+    }
+
+    // - tuple_zip two arrays -
+    result = Algo.tuple_zip([[1,2,3],["a","b","c"]]);
+    if (result[0] != [1,"a"])
+    {
+      new Exception("tuple_zip [0]: expected [1,a], got %s" % $result[0]).throw();
+    }
+    if (result[1] != [2,"b"])
+    {
+      new Exception("tuple_zip [1]: expected [2,b], got %s" % $result[1]).throw();
+    }
+    if (result[2] != [3,"c"])
+    {
+      new Exception("tuple_zip [2]: expected [3,c], got %s" % $result[2]).throw();
+    }
+
+    // - tuple_zip unequal lengths -
+    result = Algo.tuple_zip([[1,2,3],["x","y"]]);
+    if (result.length() != 2)
+    {
+      new Exception("tuple_zip unequal: expected length 2, got %d" % result.length()).throw();
+    }
+    if (result[0] != [1,"x"])
+    {
+      new Exception("tuple_zip unequal [0]: expected [1,x]").throw();
+    }
+
+    // - zip with Range iterables -
+    result = Algo.zip([new Range(0,2),new Range(10,12)]);
+    if (result != [0,10,1,11,2,12])
+    {
+      new Exception("zip Range: expected [0,10,1,11,2,12], got %s" % $result).throw();
+    }
+
+    // - tuple_zip with Range -
+    result = Algo.tuple_zip([new Range(0,2),new Range(10,12)]);
+    if (result[0] != [0,10])
+    {
+      new Exception("tuple_zip Range [0]: expected [0,10]").throw();
+    }
+    if (result[2] != [2,12])
+    {
+      new Exception("tuple_zip Range [2]: expected [2,12]").throw();
+    }
+  }/*}}}*/
+}

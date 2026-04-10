@@ -1,0 +1,72 @@
+
+import containers;
+import xml;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - parse nested structure via nodes() accessor -
+    root = Xml.parse("<root><child1>t1</child1><child2>t2</child2></root>");
+    if (root.nodes().length() != 2)
+    {
+      new Exception("nodes length: expected 2, got %d" % root.nodes().length()).throw();
+    }
+    if (root.nodes()[0].name() != "child1")
+    {
+      new Exception("nodes[0] name: expected child1, got %s" % root.nodes()[0].name()).throw();
+    }
+    if (root.nodes()[0].text() != "t1")
+    {
+      new Exception("nodes[0] text: expected t1, got %s" % root.nodes()[0].text()).throw();
+    }
+    if (root.nodes()[1].name() != "child2")
+    {
+      new Exception("nodes[1] name: expected child2, got %s" % root.nodes()[1].name()).throw();
+    }
+    if (root.nodes()[1].text() != "t2")
+    {
+      new Exception("nodes[1] text: expected t2, got %s" % root.nodes()[1].text()).throw();
+    }
+
+    // - deep nesting via nodes() -
+    root = Xml.parse("<a><b><c>deep</c></b></a>");
+    if (root.nodes()[0].nodes()[0].text() != "deep")
+    {
+      new Exception("deep nesting: expected deep").throw();
+    }
+
+    // - nodes() with attributes -
+    root = Xml.parse("<list><item id=\"1\">a</item><item id=\"2\">b</item></list>");
+    children = root.nodes();
+    if (children.length() != 2)
+    {
+      new Exception("nodes with attrs: expected 2, got %d" % children.length()).throw();
+    }
+    if (children[0].attributes()["id"] != "1")
+    {
+      new Exception("nodes[0] attr: expected 1, got %s" % children[0].attributes()["id"]).throw();
+    }
+    if (children[0].text() != "a")
+    {
+      new Exception("nodes[0] text: expected a, got %s" % children[0].text()).throw();
+    }
+    if (children[1].attributes()["id"] != "2")
+    {
+      new Exception("nodes[1] attr: expected 2, got %s" % children[1].attributes()["id"]).throw();
+    }
+    if (children[1].text() != "b")
+    {
+      new Exception("nodes[1] text: expected b, got %s" % children[1].text()).throw();
+    }
+
+    // - nodes() on self-closing (no children) -
+    root = Xml.parse("<empty/>");
+    if (Xml.create(root) != "<empty/>")
+    {
+      new Exception("empty nodes: expected <empty/>").throw();
+    }
+  }/*}}}*/
+}
+

@@ -1,0 +1,144 @@
+
+import containers;
+import validator;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - ref pass -
+    schema = new Dict([
+      "base", ["type", type Integer, ">=", 0],
+      "ref_entry", ["ref", "base"]
+    ]);
+    v = new Validator(schema);
+    v.validate("ref_entry", 10);
+
+    // - ref fail (value fails referenced rule) -
+    caught = 0;
+    try {
+      v.validate("ref_entry", -1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ref should reject -1 via base rule").throw();
+    }
+
+    // - ref fail (type mismatch in referenced rule) -
+    caught = 0;
+    try {
+      v.validate("ref_entry", "string_val");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ref should reject string via base type rule").throw();
+    }
+
+    // - chained refs: a -> b -> c -
+    schema = new Dict([
+      "base", ["==", 42],
+      "mid", ["ref", "base"],
+      "top", ["ref", "mid"]
+    ]);
+    v = new Validator(schema);
+    v.validate("top", 42);
+
+    caught = 0;
+    try {
+      v.validate("top", 99);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("chained ref should reject 99").throw();
+    }
+
+    // - ref-if: key present triggers validation of entire value -
+    // ref-if validates the whole Dict against the referenced schema
+    // when the specified key exists in the Dict
+    schema = new Dict([
+      "with_addr", ["type", type Dict, "items", [
+        "address", ["type", type String, "length >=", 1]
+      ]],
+      "entry", ["ref-if", ["with_addr", "address"]]
+    ]);
+    v = new Validator(schema);
+
+    // key present - whole dict validated against with_addr
+    v.validate("entry", new Dict(["address", "123 Main St"]));
+
+    // key absent - validation is skipped, passes
+    v.validate("entry", new Dict(["other", "value"]));
+
+    // key present with invalid value
+    caught = 0;
+    try {
+      v.validate("entry", new Dict(["address", ""]));
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ref-if should reject empty address").throw();
+    }
+
+    // - ref-if requires Dict -
+    caught = 0;
+    try {
+      v.validate("entry", "not_a_dict");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ref-if should reject non-Dict value").throw();
+    }
+
+    // - ref-type: constructs lookup name from ref + "-" + dict[key] -
+    schema = new Dict([
+      "widget-button", ["type", type Dict, "items", ["label", ["type", type String]]],
+      "widget-text", ["type", type Dict, "items", ["content", ["type", type String]]],
+      "entry", ["ref-type", ["widget", "kind"]]
+    ]);
+    v = new Validator(schema);
+
+    // button type
+    v.validate("entry", new Dict(["kind", "button", "label", "Click"]));
+
+    // text type
+    v.validate("entry", new Dict(["kind", "text", "content", "Hello"]));
+
+    // key absent - validation is skipped
+    v.validate("entry", new Dict(["other", "data"]));
+
+    // - ref-type requires Dict -
+    caught = 0;
+    try {
+      v.validate("entry", "not_a_dict");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ref-type should reject non-Dict value").throw();
+    }
+  }/*}}}*/
+}

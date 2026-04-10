@@ -1,0 +1,68 @@
+
+import containers;
+import validator;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - test delegate pass -
+    schema = new Dict(["positive", ["test", :(val) { return val > 0; }]]);
+    v = new Validator(schema);
+    v.validate("positive", 5);
+
+    // - test delegate fail -
+    caught = 0;
+    try {
+      v.validate("positive", -1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("test delegate should reject -1").throw();
+    }
+
+    // - return 0 means fail -
+    schema = new Dict(["always_fail", ["test", :(val) { return 0; }]]);
+    v = new Validator(schema);
+    caught = 0;
+    try {
+      v.validate("always_fail", 42);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("delegate returning 0 should fail").throw();
+    }
+
+    // - return nonzero means pass -
+    schema = new Dict(["always_pass", ["test", :(val) { return 1; }]]);
+    v = new Validator(schema);
+    v.validate("always_pass", 42);
+
+    // - delegate with string value -
+    schema = new Dict(["long_str", ["test", :(val) { return val.length() > 3; }]]);
+    v = new Validator(schema);
+    v.validate("long_str", "hello");
+
+    caught = 0;
+    try {
+      v.validate("long_str", "hi");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("delegate length check should reject 'hi'").throw();
+    }
+  }/*}}}*/
+}

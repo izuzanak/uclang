@@ -1,0 +1,72 @@
+
+import containers;
+import json;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - parse invalid JSON -
+    caught = 0;
+    try {
+      Json.parse("{invalid}");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse {invalid} did not throw").throw();
+    }
+
+    // - parse empty string -
+    caught = 0;
+    try {
+      Json.parse("");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse empty string did not throw").throw();
+    }
+
+    // - parse truncated array -
+    caught = 0;
+    try {
+      Json.parse("[1,2,");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse truncated array did not throw").throw();
+    }
+
+    // - parse missing value -
+    caught = 0;
+    try {
+      Json.parse("{\"a\":}");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse missing value did not throw").throw();
+    }
+
+    // - to_string returns class name -
+    if ($Json != "Json")
+    {
+      new Exception("to_string: expected Json, got %s" % $Json).throw();
+    }
+  }/*}}}*/
+}

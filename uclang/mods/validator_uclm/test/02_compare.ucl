@@ -1,0 +1,174 @@
+
+import containers;
+import validator;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    schema = new Dict([
+      "eq", ["==", 10],
+      "ne", ["!=", 10],
+      "lt", ["<", 10],
+      "gt", [">", 10],
+      "le", ["<=", 10],
+      "ge", [">=", 10]
+    ]);
+    v = new Validator(schema);
+
+    // - == pass -
+    v.validate("eq", 10);
+
+    // - == fail -
+    caught = 0;
+    try {
+      v.validate("eq", 5);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("== should reject 5").throw();
+    }
+
+    // - != pass -
+    v.validate("ne", 5);
+
+    // - != fail -
+    caught = 0;
+    try {
+      v.validate("ne", 10);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("!= should reject 10").throw();
+    }
+
+    // - < pass -
+    v.validate("lt", 5);
+
+    // - < fail (equal) -
+    caught = 0;
+    try {
+      v.validate("lt", 10);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("< should reject 10").throw();
+    }
+
+    // - < fail (greater) -
+    caught = 0;
+    try {
+      v.validate("lt", 15);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("< should reject 15").throw();
+    }
+
+    // - > pass -
+    v.validate("gt", 15);
+
+    // - > fail (equal) -
+    caught = 0;
+    try {
+      v.validate("gt", 10);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("> should reject 10").throw();
+    }
+
+    // - > fail (lesser) -
+    caught = 0;
+    try {
+      v.validate("gt", 5);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("> should reject 5").throw();
+    }
+
+    // - <= pass (equal) -
+    v.validate("le", 10);
+
+    // - <= pass (less) -
+    v.validate("le", 5);
+
+    // - <= fail -
+    caught = 0;
+    try {
+      v.validate("le", 15);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("<= should reject 15").throw();
+    }
+
+    // - >= pass (equal) -
+    v.validate("ge", 10);
+
+    // - >= pass (greater) -
+    v.validate("ge", 15);
+
+    // - >= fail -
+    caught = 0;
+    try {
+      v.validate("ge", 5);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception(">= should reject 5").throw();
+    }
+
+    // - == with strings -
+    schema = new Dict(["str_eq", ["==", "hello"]]);
+    v = new Validator(schema);
+    v.validate("str_eq", "hello");
+
+    caught = 0;
+    try {
+      v.validate("str_eq", "world");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("== string should reject 'world'").throw();
+    }
+  }/*}}}*/
+}

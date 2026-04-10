@@ -1,0 +1,131 @@
+
+import binbits;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - first_idx non-empty -
+    arr = new BinArray(BinArray.TYPE_INT32,[10,20,30]);
+    if (arr.first_idx() != 0)
+    {
+      new Exception("first_idx: expected 0, got %s" % $arr.first_idx()).throw();
+    }
+
+    // - first_idx empty -
+    empty = new BinArray(BinArray.TYPE_INT32);
+    if (Blank != empty.first_idx())
+    {
+      new Exception("first_idx empty: expected Blank").throw();
+    }
+
+    // - last_idx non-empty -
+    if (arr.last_idx() != 2)
+    {
+      new Exception("last_idx: expected 2, got %s" % $arr.last_idx()).throw();
+    }
+
+    // - last_idx empty -
+    if (Blank != empty.last_idx())
+    {
+      new Exception("last_idx empty: expected Blank").throw();
+    }
+
+    // - next_idx sequence -
+    collected = [];
+    idx = arr.first_idx();
+    while (Blank != idx)
+    {
+      collected.push(idx);
+      idx = arr.next_idx(idx);
+    }
+    if (collected.length() != 3 || collected[0] != 0 || collected[1] != 1 || collected[2] != 2)
+    {
+      new Exception("next_idx sequence: expected [0,1,2], got %s" % $collected).throw();
+    }
+
+    // - next_idx at last returns Blank -
+    if (Blank != arr.next_idx(2))
+    {
+      new Exception("next_idx(2): expected Blank").throw();
+    }
+
+    // - prev_idx sequence -
+    collected = [];
+    idx = arr.last_idx();
+    while (Blank != idx)
+    {
+      collected.push(idx);
+      idx = arr.prev_idx(idx);
+    }
+    if (collected.length() != 3 || collected[0] != 2 || collected[1] != 1 || collected[2] != 0)
+    {
+      new Exception("prev_idx sequence: expected [2,1,0], got %s" % $collected).throw();
+    }
+
+    // - prev_idx at first returns Blank -
+    if (Blank != arr.prev_idx(0))
+    {
+      new Exception("prev_idx(0): expected Blank").throw();
+    }
+
+    // - for-each iteration -
+    arr = new BinArray(BinArray.TYPE_INT32,[5,10,15]);
+    values = [];
+    for (ref <- arr)
+    {
+      values.push(ref.value());
+    }
+    if (values.length() != 3 || values[0] != 5 || values[1] != 10 || values[2] != 15)
+    {
+      new Exception("for-each: expected [5,10,15], got %s" % $values).throw();
+    }
+
+    // - items returns regular array -
+    items = arr.items();
+    if (items.length() != 3 || items[0] != 5 || items[1] != 10 || items[2] != 15)
+    {
+      new Exception("items: expected [5,10,15], got %s" % $items).throw();
+    }
+
+    // - BinArrayRef value -
+    arr = new BinArray(BinArray.TYPE_INT32,[100,200,300]);
+    ref = arr[1];
+    if (ref.value() != 200)
+    {
+      new Exception("ref value: expected 200, got %s" % $ref.value()).throw();
+    }
+
+    // - BinArrayRef write-through -
+    arr[1] = 42;
+    if (arr[1].value() != 42)
+    {
+      new Exception("ref write: expected 42, got %s" % $arr[1].value()).throw();
+    }
+
+    // - BinArrayRef to_string -
+    if ($arr[0] != "BinArrayRef")
+    {
+      new Exception("ref to_string: expected BinArrayRef, got %s" % $arr[0]).throw();
+    }
+
+    // - length verification -
+    arr = new BinArray(BinArray.TYPE_INT32);
+    if (arr.length() != 0)
+    {
+      new Exception("length empty: expected 0").throw();
+    }
+    arr.push(1);
+    arr.push(2);
+    if (arr.length() != 2)
+    {
+      new Exception("length after push: expected 2, got %d" % arr.length()).throw();
+    }
+    arr.pop();
+    if (arr.length() != 1)
+    {
+      new Exception("length after pop: expected 1, got %d" % arr.length()).throw();
+    }
+  }/*}}}*/
+}

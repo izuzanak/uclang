@@ -1,0 +1,142 @@
+
+import containers;
+import json;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - parse integer -
+    val = Json.parse("42");
+    if (val != 42)
+    {
+      new Exception("parse int: expected 42, got %s" % $val).throw();
+    }
+
+    // - parse negative integer -
+    val = Json.parse("-17");
+    if (val != -17)
+    {
+      new Exception("parse neg int: expected -17, got %s" % $val).throw();
+    }
+
+    // - parse zero -
+    val = Json.parse("0");
+    if (val != 0)
+    {
+      new Exception("parse zero: expected 0, got %s" % $val).throw();
+    }
+
+    // - parse float -
+    val = Json.parse("2.718");
+    if ($val != "2.718000")
+    {
+      new Exception("parse float: expected 2.718000, got %s" % $val).throw();
+    }
+
+    // - parse string -
+    val = Json.parse("\"hello\"");
+    if (val != "hello")
+    {
+      new Exception("parse string: expected hello, got %s" % $val).throw();
+    }
+
+    // - parse empty string -
+    val = Json.parse("\"\"");
+    if (val != "")
+    {
+      new Exception("parse empty string: expected empty, got %s" % $val).throw();
+    }
+
+    // - parse boolean true -
+    val = Json.parse("true");
+    if (val != 1)
+    {
+      new Exception("parse true: expected 1, got %s" % $val).throw();
+    }
+
+    // - parse boolean false -
+    val = Json.parse("false");
+    if (val != 0)
+    {
+      new Exception("parse false: expected 0, got %s" % $val).throw();
+    }
+
+    // - parse null -
+    val = Json.parse("null");
+    if ($val != "<blank>")
+    {
+      new Exception("parse null: expected <blank>, got %s" % $val).throw();
+    }
+
+    // - parse array -
+    arr = Json.parse("[1,2,3]");
+    if (arr.length() != 3)
+    {
+      new Exception("parse array: expected length 3, got %d" % arr.length()).throw();
+    }
+    if (arr[0] != 1 || arr[1] != 2 || arr[2] != 3)
+    {
+      new Exception("parse array: element mismatch").throw();
+    }
+
+    // - parse empty array -
+    arr = Json.parse("[]");
+    if (arr.length() != 0)
+    {
+      new Exception("parse empty array: expected length 0, got %d" % arr.length()).throw();
+    }
+
+    // - parse object -
+    obj = Json.parse("{\"a\":1,\"b\":2}");
+    if (obj["a"] != 1 || obj["b"] != 2)
+    {
+      new Exception("parse object failed").throw();
+    }
+
+    // - parse empty object -
+    obj = Json.parse("{}");
+    if (Json.create(obj) != "{}")
+    {
+      new Exception("parse empty object: expected {}, got %s" % Json.create(obj)).throw();
+    }
+
+    // - parse nested structure -
+    obj = Json.parse("{\"arr\":[1,{\"x\":true}]}");
+    if (obj["arr"].length() != 2)
+    {
+      new Exception("parse nested: expected arr length 2").throw();
+    }
+    if (obj["arr"][0] != 1)
+    {
+      new Exception("parse nested: arr[0] expected 1").throw();
+    }
+    if (obj["arr"][1]["x"] != 1)
+    {
+      new Exception("parse nested: arr[1][x] expected 1 (true)").throw();
+    }
+
+    // - parse string with escape sequences -
+    val = Json.parse("\"hello\\nworld\"");
+    if (val != "hello\nworld")
+    {
+      new Exception("parse escape: expected newline in string").throw();
+    }
+
+    // - parse error must throw -
+    caught = 0;
+    try {
+      Json.parse("{invalid}");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse invalid JSON did not throw").throw();
+    }
+  }/*}}}*/
+}
+

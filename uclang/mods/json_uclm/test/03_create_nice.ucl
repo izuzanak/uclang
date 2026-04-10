@@ -1,0 +1,74 @@
+
+import containers;
+import json;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - create_nice with 2-space tab -
+    d = new Dict();
+    d["a"] = 1;
+    d["b"] = [2,3];
+    result = Json.create_nice(d,"  ");
+    expected = "{\n  \"a\": 1,\n  \"b\": [\n    2,\n    3\n  ]\n}";
+    if (result != expected)
+    {
+      new Exception("create_nice 2-space: got %s" % result).throw();
+    }
+
+    // - create_nice with initial indent -
+    result = Json.create_nice(d,"  ","    ");
+    expected = "{\n      \"a\": 1,\n      \"b\": [\n        2,\n        3\n      ]\n    }";
+    if (result != expected)
+    {
+      new Exception("create_nice indent: got %s" % result).throw();
+    }
+
+    // - create_nice empty dict -
+    result = Json.create_nice(new Dict(),"  ");
+    if (result != "{}")
+    {
+      new Exception("create_nice empty dict: expected '{}', got %s" % result).throw();
+    }
+
+    // - create_nice empty array -
+    result = Json.create_nice([],"  ");
+    if (result != "[]")
+    {
+      new Exception("create_nice empty array: expected '[]', got %s" % result).throw();
+    }
+
+    // - create_nice simple value -
+    result = Json.create_nice(42,"  ");
+    if (result != "42")
+    {
+      new Exception("create_nice simple: expected '42', got %s" % result).throw();
+    }
+
+    // - create_nice comprehensive object (inspired by C lib test) -
+    obj = new Dict();
+    obj["null"] = new Blank();
+    obj["integer"] = 123;
+    obj["float"] = 123.4;
+    obj["string"] = "Hello world!";
+    obj["array"] = [0,1,2,3,4,5,6,7,8,9];
+    inner = new Dict();
+    inner["first"] = 0;
+    inner["second"] = 1;
+    inner["third"] = 2;
+    obj["object"] = inner;
+
+    nice = Json.create_nice(obj,"  ");
+
+    // - verify roundtrip: parse nice output, create nice again, must match -
+    parsed = Json.parse(nice);
+    nice2 = Json.create_nice(parsed,"  ");
+    if (nice != nice2)
+    {
+      new Exception("create_nice roundtrip mismatch").throw();
+    }
+  }/*}}}*/
+}
+

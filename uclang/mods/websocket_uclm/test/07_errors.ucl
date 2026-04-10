@@ -1,0 +1,109 @@
+
+import sys;
+import websocket;
+
+class Main
+{
+  public Main() {}
+
+  public on_ws_callback(a_conn) {}
+  public bad_callback_2(a,b) {}
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19700 + (Sys.getpid() % 1000);
+
+    // - empty protocol array -
+    caught = 0;
+    try {
+      new WsContext("127.0.0.1",port,[]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("empty protocol array did not throw").throw();
+    }
+
+    // - odd-length protocol array -
+    caught = 0;
+    try {
+      new WsContext("127.0.0.1",port,["only-name"]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("odd protocol array did not throw").throw();
+    }
+
+    // - wrong pair types (integer instead of delegate) -
+    caught = 0;
+    try {
+      new WsContext("127.0.0.1",port,["name",42]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("wrong pair types did not throw").throw();
+    }
+
+    // - wrong callback delegate param count -
+    caught = 0;
+    try {
+      new WsContext("127.0.0.1",port,
+        ["test",new Delegate(obj,"bad_callback_2",2)]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("wrong callback delegate param count did not throw").throw();
+    }
+
+    // - create valid context for remaining tests -
+    ctx = new WsContext("127.0.0.1",port,
+      ["test-protocol",new Delegate(obj,"on_ws_callback",1)]);
+
+    // - protocol name not found -
+    caught = 0;
+    try {
+      ctx.protocol_idx("nonexistent-protocol");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("protocol name not found did not throw").throw();
+    }
+
+    // - protocol index exceeds range -
+    caught = 0;
+    try {
+      ctx.callback_on_writable(999);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("protocol index exceeds range did not throw").throw();
+    }
+
+    // - release -
+    free ctx;
+  }/*}}}*/
+}

@@ -1,0 +1,138 @@
+
+import containers;
+import xml;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - create empty node (self-closing) -
+    root = new XmlNode("empty");
+    result = Xml.create(root);
+    if (result != "<empty/>")
+    {
+      new Exception("create empty: expected <empty/>, got %s" % result).throw();
+    }
+
+    // - create node with text via text_() -
+    root = new XmlNode("item");
+    root.text_("hello");
+    result = Xml.create(root);
+    if (result != "<item>hello</item>")
+    {
+      new Exception("create text: expected <item>hello</item>, got %s" % result).throw();
+    }
+
+    // - create node with attributes via attr_() chaining -
+    root = new XmlNode("item");
+    root.attr_("id","1").attr_("type","test");
+    result = Xml.create(root);
+    if (result != "<item id=\"1\" type=\"test\"/>")
+    {
+      new Exception("create attrs: expected <item id=\"1\" type=\"test\"/>, got %s" % result).throw();
+    }
+
+    // - create node with attribute and text -
+    root = new XmlNode("item");
+    root.attr_("id","1");
+    root.text_("hello");
+    result = Xml.create(root);
+    if (result != "<item id=\"1\">hello</item>")
+    {
+      new Exception("create attr+text: expected <item id=\"1\">hello</item>, got %s" % result).throw();
+    }
+
+    // - create nested via node() returning child -
+    root = new XmlNode("root");
+    child = root.node("child");
+    child.text_("text");
+    result = Xml.create(root);
+    if (result != "<root><child>text</child></root>")
+    {
+      new Exception("create nested: expected <root><child>text</child></root>, got %s" % result).throw();
+    }
+
+    // - create via node_() chaining (returns parent) -
+    root = new XmlNode("root");
+    root.node_("a","tA").node_("b","tB");
+    result = Xml.create(root);
+    if (result != "<root><a>tA</a><b>tB</b></root>")
+    {
+      new Exception("create chain: expected <root><a>tA</a><b>tB</b></root>, got %s" % result).throw();
+    }
+
+    // - create with node(name,text) shorthand -
+    root = new XmlNode("root");
+    root.node("item","value");
+    result = Xml.create(root);
+    if (result != "<root><item>value</item></root>")
+    {
+      new Exception("create node#2: expected <root><item>value</item></root>, got %s" % result).throw();
+    }
+
+    // - create with append() of separately built node -
+    root = new XmlNode("root");
+    child = new XmlNode("child");
+    child.text_("text");
+    root.append(child);
+    result = Xml.create(root);
+    if (result != "<root><child>text</child></root>")
+    {
+      new Exception("create append: expected <root><child>text</child></root>, got %s" % result).throw();
+    }
+
+    // - XML escaping of text content -
+    root = new XmlNode("data");
+    root.text_("<>&'\"");
+    result = Xml.create(root);
+    if (result != "<data>&lt;&gt;&amp;&apos;&quot;</data>")
+    {
+      new Exception("create escape: expected <data>&lt;&gt;&amp;&apos;&quot;</data>, got %s" % result).throw();
+    }
+
+    // - escape_texts(0) disables escaping -
+    root = new XmlNode("raw");
+    root.escape_texts(0);
+    root.text_("<b>bold</b>");
+    result = Xml.create(root);
+    if (result != "<raw><b>bold</b></raw>")
+    {
+      new Exception("create no-escape: expected <raw><b>bold</b></raw>, got %s" % result).throw();
+    }
+
+    // - comprehensive structure (C-test inspired) -
+    root = new XmlNode("ROOT");
+    c_idx = 0;
+    while (c_idx < 2)
+    {
+      consist = root.node("CONSIST");
+      consist.attr_("id",$c_idx);
+
+      v_idx = 0;
+      while (v_idx < 2)
+      {
+        consist.node("VEHICLE","Description of vehicle %d of consist %d, <>&'\"" % [v_idx,c_idx]);
+        v_idx += 1;
+      }
+
+      c_idx += 1;
+    }
+    result = Xml.create(root);
+    expected = "<ROOT>"
+      + "<CONSIST id=\"0\">"
+      + "<VEHICLE>Description of vehicle 0 of consist 0, &lt;&gt;&amp;&apos;&quot;</VEHICLE>"
+      + "<VEHICLE>Description of vehicle 1 of consist 0, &lt;&gt;&amp;&apos;&quot;</VEHICLE>"
+      + "</CONSIST>"
+      + "<CONSIST id=\"1\">"
+      + "<VEHICLE>Description of vehicle 0 of consist 1, &lt;&gt;&amp;&apos;&quot;</VEHICLE>"
+      + "<VEHICLE>Description of vehicle 1 of consist 1, &lt;&gt;&amp;&apos;&quot;</VEHICLE>"
+      + "</CONSIST>"
+      + "</ROOT>";
+    if (result != expected)
+    {
+      new Exception("create comprehensive: mismatch\ngot:      %s\nexpected: %s" % [result,expected]).throw();
+    }
+  }/*}}}*/
+}
+

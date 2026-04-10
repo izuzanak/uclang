@@ -1,0 +1,208 @@
+
+import sys;
+import channel;
+
+class Main
+{
+  public Main() {}
+
+  // - valid delegate methods -
+  public on_channel_event(a_server,a_conn_idx,a_event) {}
+  public on_channel_message(a_server,a_conn_idx,a_message) {}
+  public on_client_event(a_client,a_event) {}
+  public on_client_message(a_client,a_message) {}
+
+  // - wrong param count delegates -
+  public bad_2(a,b) {}
+  public bad_1(a) {}
+  public bad_3(a,b,c) {}
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19200 + (Sys.getpid() % 1000);
+
+    // - server: wrong event delegate param count -
+    caught = 0;
+    try {
+      new ChannelServer("127.0.0.1",port,
+        new Delegate(obj,"bad_2",2),
+        new Delegate(obj,"on_channel_message",3),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server wrong event delegate did not throw").throw();
+    }
+
+    // - server: wrong message delegate param count -
+    caught = 0;
+    try {
+      new ChannelServer("127.0.0.1",port,
+        new Delegate(obj,"on_channel_event",3),
+        new Delegate(obj,"bad_1",1),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server wrong message delegate did not throw").throw();
+    }
+
+    // - server: invalid IP address -
+    caught = 0;
+    try {
+      new ChannelServer("!!!invalid!!!",port,
+        new Delegate(obj,"on_channel_event",3),
+        new Delegate(obj,"on_channel_message",3),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server invalid IP did not throw").throw();
+    }
+
+    // - client: wrong event delegate param count -
+    caught = 0;
+    try {
+      new ChannelClient("127.0.0.1",port,
+        new Delegate(obj,"bad_3",3),
+        new Delegate(obj,"on_client_message",2),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client wrong event delegate did not throw").throw();
+    }
+
+    // - client: wrong message delegate param count -
+    caught = 0;
+    try {
+      new ChannelClient("127.0.0.1",port,
+        new Delegate(obj,"on_client_event",2),
+        new Delegate(obj,"bad_1",1),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client wrong message delegate did not throw").throw();
+    }
+
+    // - client: invalid IP address -
+    caught = 0;
+    try {
+      new ChannelClient("!!!invalid!!!",port,
+        new Delegate(obj,"on_client_event",2),
+        new Delegate(obj,"on_client_message",2),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client invalid IP did not throw").throw();
+    }
+
+    // - create server for remaining tests -
+    server = new ChannelServer("127.0.0.1",port,
+      new Delegate(obj,"on_channel_event",3),
+      new Delegate(obj,"on_channel_message",3),
+      new Blank());
+
+    // - client: message when not connected -
+    client = new ChannelClient("127.0.0.1",port,
+      new Delegate(obj,"on_client_event",2),
+      new Delegate(obj,"on_client_message",2),
+      new Blank());
+
+    caught = 0;
+    try {
+      client.message("test");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client message when not connected did not throw").throw();
+    }
+
+    // - server: message with invalid connection index -
+    caught = 0;
+    try {
+      server.message(999,"test");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server message invalid conn_index did not throw").throw();
+    }
+
+    // - server: process with invalid fd -
+    caught = 0;
+    try {
+      server.process(99999,1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server process invalid fd did not throw").throw();
+    }
+
+    // - server: invalid max message length -
+    caught = 0;
+    try {
+      server.max_message_length(-1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server max_message_length(-1) did not throw").throw();
+    }
+
+    // - client: invalid max message length -
+    caught = 0;
+    try {
+      client.max_message_length(-1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client max_message_length(-1) did not throw").throw();
+    }
+  }/*}}}*/
+}

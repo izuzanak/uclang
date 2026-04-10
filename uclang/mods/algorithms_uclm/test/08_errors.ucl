@@ -1,0 +1,151 @@
+
+import containers;
+import algorithms;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - wrong delegate for Algo.map (2 params instead of 1) -
+    caught = 0;
+    try {
+      Algo.map([1,2],:(a,b) return a + b;);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Algo.map wrong delegate did not throw").throw();
+    }
+
+    // - wrong delegate for Algo.reduce (1 param instead of 2) -
+    caught = 0;
+    try {
+      Algo.reduce(0,[1,2],:(a) return a;);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Algo.reduce wrong delegate did not throw").throw();
+    }
+
+    // - wrong delegate for Algo.filter (2 params instead of 1) -
+    caught = 0;
+    try {
+      Algo.filter([1,2],:(a,b) return a;);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Algo.filter wrong delegate did not throw").throw();
+    }
+
+    // - wrong delegate for Filter.map (checked eagerly) -
+    caught = 0;
+    try {
+      Filter.map([1,2],:(a,b) return a;);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Filter.map wrong delegate did not throw").throw();
+    }
+
+    // - wrong delegate for Filter.filter (checked eagerly) -
+    caught = 0;
+    try {
+      Filter.filter([1,2],:(a,b) return a;);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Filter.filter wrong delegate did not throw").throw();
+    }
+
+    // - expected integer as array index -
+    caught = 0;
+    try {
+      Algo.map(["hello"],[10,20]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("non-integer array index did not throw").throw();
+    }
+
+    // - index exceeds array range -
+    caught = 0;
+    try {
+      Algo.map([5],[0,1,2]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("index exceeds array range did not throw").throw();
+    }
+
+    // - undefined dictionary key -
+    caught = 0;
+    try {
+      dict = new Dict(["a",1]);
+      Algo.map(["b"],dict);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("undefined dict key did not throw").throw();
+    }
+
+    // - range start/end types differ -
+    caught = 0;
+    try {
+      new Range(0,1.0);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Range type mismatch did not throw").throw();
+    }
+
+    // - range start/end/step types differ -
+    caught = 0;
+    try {
+      new Range(0,1.0,1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Range 3-arg type mismatch did not throw").throw();
+    }
+  }/*}}}*/
+}

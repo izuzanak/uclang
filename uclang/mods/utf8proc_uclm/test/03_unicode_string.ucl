@@ -1,0 +1,96 @@
+
+import utf8proc;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - length full Czech sentence (39 code points) -
+    us = new UnicodeString("Příliš žluťoučký kůň úpěl ďábelské ódy.");
+    if (us.length() != 39)
+    {
+      new Exception("length sentence: expected 39, got %d" % us.length()).throw();
+    }
+
+    // - length shorter Czech string (12 code points) -
+    us = new UnicodeString("Jiří Zuzaňák");
+    if (us.length() != 12)
+    {
+      new Exception("length Czech: expected 12, got %d" % us.length()).throw();
+    }
+
+    // - length empty -
+    us = new UnicodeString("");
+    if (us.length() != 0)
+    {
+      new Exception("length empty: expected 0, got %d" % us.length()).throw();
+    }
+
+    // - roundtrip full sentence -
+    if ($new UnicodeString("Příliš žluťoučký kůň úpěl ďábelské ódy.") != "Příliš žluťoučký kůň úpěl ďábelské ódy.")
+    {
+      new Exception("roundtrip sentence failed").throw();
+    }
+
+    // - roundtrip Czech -
+    if ($new UnicodeString("Jiří Zuzaňák") != "Jiří Zuzaňák")
+    {
+      new Exception("roundtrip Czech failed").throw();
+    }
+
+    // - roundtrip empty -
+    if ($new UnicodeString("") != "")
+    {
+      new Exception("roundtrip empty failed").throw();
+    }
+
+    // - to_lower Czech -
+    if ($new UnicodeString("Jiří Zuzaňák").to_lower() != "jiří zuzaňák")
+    {
+      new Exception("to_lower Czech failed").throw();
+    }
+
+    // - to_upper Czech -
+    if ($new UnicodeString("Jiří Zuzaňák").to_upper() != "JIŘÍ ZUZAŇÁK")
+    {
+      new Exception("to_upper Czech failed").throw();
+    }
+
+    // - to_lower full sentence (already lowercase: idempotent) -
+    if ($new UnicodeString("Příliš žluťoučký kůň úpěl ďábelské ódy.").to_lower() != "příliš žluťoučký kůň úpěl ďábelské ódy.")
+    {
+      new Exception("to_lower sentence failed").throw();
+    }
+
+    // - to_upper full sentence -
+    if ($new UnicodeString("Příliš žluťoučký kůň úpěl ďábelské ódy.").to_upper() != "PŘÍLIŠ ŽLUŤOUČKÝ KŮŇ ÚPĚL ĎÁBELSKÉ ÓDY.")
+    {
+      new Exception("to_upper sentence failed").throw();
+    }
+
+    // - to_lower empty -
+    if ($new UnicodeString("").to_lower() != "")
+    {
+      new Exception("to_lower empty failed").throw();
+    }
+
+    // - to_upper empty -
+    if ($new UnicodeString("").to_upper() != "")
+    {
+      new Exception("to_upper empty failed").throw();
+    }
+
+    // - case conversion preserves length on full sentence (39 chars) -
+    us = new UnicodeString("Příliš žluťoučký kůň úpěl ďábelské ódy.");
+    if (us.to_lower().length() != us.length())
+    {
+      new Exception("to_lower changed length").throw();
+    }
+
+    if (us.to_upper().length() != us.length())
+    {
+      new Exception("to_upper changed length").throw();
+    }
+  }/*}}}*/
+}

@@ -1,0 +1,94 @@
+
+import containers;
+import json;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - roundtrip dict with mixed types -
+    orig = new Dict();
+    orig["items"] = [1,"two",new Blank(),3.5];
+    json_str = Json.create(orig);
+    parsed = Json.parse(json_str);
+    json_str2 = Json.create(parsed);
+    if (json_str != json_str2)
+    {
+      new Exception("roundtrip dict: %s != %s" % [json_str,json_str2]).throw();
+    }
+
+    // - roundtrip array -
+    result = Json.create(Json.parse("[1,2,3]"));
+    if (result != "[1,2,3]")
+    {
+      new Exception("roundtrip array: expected [1,2,3], got %s" % result).throw();
+    }
+
+    // - roundtrip string -
+    result = Json.create(Json.parse("\"hello\""));
+    if (result != "\"hello\"")
+    {
+      new Exception("roundtrip string: got %s" % result).throw();
+    }
+
+    // - roundtrip integer -
+    result = Json.create(Json.parse("42"));
+    if (result != "42")
+    {
+      new Exception("roundtrip int: got %s" % result).throw();
+    }
+
+    // - roundtrip null -
+    result = Json.create(Json.parse("null"));
+    if (result != "null")
+    {
+      new Exception("roundtrip null: got %s" % result).throw();
+    }
+
+    // - boolean roundtrip: true -> 1, serializes as "1" not "true" -
+    result = Json.create(Json.parse("true"));
+    if (result != "1")
+    {
+      new Exception("roundtrip true: expected 1, got %s" % result).throw();
+    }
+
+    // - roundtrip escaped strings -
+    result = Json.create(Json.parse("\"hello\\tworld\\n\""));
+    if (result != "\"hello\\tworld\\n\"")
+    {
+      new Exception("roundtrip escape: got %s" % result).throw();
+    }
+
+    // - comprehensive roundtrip (inspired by C lib test) -
+    obj = new Dict();
+    obj["null"] = new Blank();
+    obj["integer"] = 123;
+    obj["float"] = 123.4;
+    obj["string"] = "Hello world!";
+    obj["array"] = [0,1,2,3,4,5,6,7,8,9];
+    inner = new Dict();
+    inner["first"] = 0;
+    inner["second"] = 1;
+    inner["third"] = 2;
+    obj["object"] = inner;
+
+    json_str = Json.create(obj);
+    parsed = Json.parse(json_str);
+    json_str2 = Json.create(parsed);
+    if (json_str != json_str2)
+    {
+      new Exception("roundtrip comprehensive: mismatch").throw();
+    }
+
+    // - roundtrip with create_nice -
+    nice = Json.create_nice(obj,"  ");
+    parsed = Json.parse(nice);
+    nice2 = Json.create_nice(parsed,"  ");
+    if (nice != nice2)
+    {
+      new Exception("roundtrip nice: mismatch").throw();
+    }
+  }/*}}}*/
+}
+

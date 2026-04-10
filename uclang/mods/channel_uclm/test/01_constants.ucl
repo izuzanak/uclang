@@ -1,0 +1,43 @@
+
+import sys;
+import channel;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - server event type constants -
+    if (ChannelServer.EVENT_ACCEPTED != 0)
+    {
+      new Exception("EVENT_ACCEPTED: expected 0, got %s" % $ChannelServer.EVENT_ACCEPTED).throw();
+    }
+
+    if (ChannelServer.EVENT_DROPPED != 2)
+    {
+      new Exception("EVENT_DROPPED: expected 2, got %s" % $ChannelServer.EVENT_DROPPED).throw();
+    }
+
+    // - server connection index constants -
+    if (ChannelServer.CONN_ALL != -1)
+    {
+      new Exception("CONN_ALL: expected -1, got %s" % $ChannelServer.CONN_ALL).throw();
+    }
+
+    // - client event type constants -
+    if (ChannelClient.EVENT_ERROR != -1)
+    {
+      new Exception("EVENT_ERROR: expected -1, got %s" % $ChannelClient.EVENT_ERROR).throw();
+    }
+
+    if (ChannelClient.EVENT_CONNECTED != 1)
+    {
+      new Exception("EVENT_CONNECTED: expected 1, got %s" % $ChannelClient.EVENT_CONNECTED).throw();
+    }
+
+    if (ChannelClient.EVENT_DROPPED != 2)
+    {
+      new Exception("EVENT_DROPPED: expected 2, got %s" % $ChannelClient.EVENT_DROPPED).throw();
+    }
+  }/*}}}*/
+}

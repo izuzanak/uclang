@@ -1,0 +1,63 @@
+
+import time;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - construct from current time -
+    t = new Time();
+    if (t.value() <= 0)
+    {
+      new Exception("Time#0: expected positive value, got %s" % $t.value()).throw();
+    }
+
+    // - construct from integer (nanoseconds) -
+    t = new Time(946722625000000000);
+    if (t.value() != 946722625000000000)
+    {
+      new Exception("Time#1 int: expected 946722625000000000, got %s" % $t.value()).throw();
+    }
+
+    // - construct from float -
+    t = new Time(946722625000000000.0);
+    if ($t != "2000/01/01 10:30:25")
+    {
+      new Exception("Time#1 float: expected 2000/01/01 10:30:25, got %s" % $t).throw();
+    }
+
+    // - construct from string -
+    t = new Time("20000101103025");
+    if ($t != "2000/01/01 10:30:25")
+    {
+      new Exception("Time#1 string: expected 2000/01/01 10:30:25, got %s" % $t).throw();
+    }
+
+    // - construct from Time (copy) -
+    t1 = new Time("20000101103025");
+    t2 = new Time(t1);
+    if (t2.value() != t1.value())
+    {
+      new Exception("Time#1 copy: values differ, %s vs %s" % [$t1.value(),$t2.value()]).throw();
+    }
+
+    // - construct epoch -
+    t = new Time("19700101000000");
+    if ($t != "1970/01/01 00:00:00")
+    {
+      new Exception("Time#1 epoch string: expected 1970/01/01 00:00:00, got %s" % $t).throw();
+    }
+    if (t.value() != 0)
+    {
+      new Exception("Time#1 epoch value: expected 0, got %s" % $t.value()).throw();
+    }
+
+    // - construct from zero integer -
+    t = new Time(0);
+    if (t.value() != 0)
+    {
+      new Exception("Time#1 zero int: expected 0, got %s" % $t.value()).throw();
+    }
+  }/*}}}*/
+}

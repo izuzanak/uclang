@@ -1,0 +1,58 @@
+
+import time;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - equal times -
+    t1 = new Time("20000101103025");
+    t2 = new Time("20000101103025");
+    if (t1.compare(t2) != 0)
+    {
+      new Exception("compare equal: expected 0, got %s" % $t1.compare(t2)).throw();
+    }
+
+    // - less than -
+    earlier = new Time("19700101000000");
+    later = new Time("20000101103025");
+    if (earlier.compare(later) != -1)
+    {
+      new Exception("compare less: expected -1, got %s" % $earlier.compare(later)).throw();
+    }
+
+    // - greater than -
+    if (later.compare(earlier) != 1)
+    {
+      new Exception("compare greater: expected 1, got %s" % $later.compare(earlier)).throw();
+    }
+
+    // - self comparison -
+    t = new Time("20000101103025");
+    if (t.compare(t) != 0)
+    {
+      new Exception("compare self: expected 0, got %s" % $t.compare(t)).throw();
+    }
+
+    // - copy comparison -
+    t1 = new Time("20000101103025");
+    t2 = new Time(t1);
+    if (t1.compare(t2) != 0)
+    {
+      new Exception("compare copy: expected 0, got %s" % $t1.compare(t2)).throw();
+    }
+
+    // - integer constructed comparison -
+    t1 = new Time(1000);
+    t2 = new Time(2000);
+    if (t1.compare(t2) != -1)
+    {
+      new Exception("compare int less: expected -1, got %s" % $t1.compare(t2)).throw();
+    }
+    if (t2.compare(t1) != 1)
+    {
+      new Exception("compare int greater: expected 1, got %s" % $t2.compare(t1)).throw();
+    }
+  }/*}}}*/
+}

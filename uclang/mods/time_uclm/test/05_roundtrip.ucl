@@ -1,0 +1,55 @@
+
+import time;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - string -> Time -> to_string -
+    t = new Time("20000101103025");
+    if ($t != "2000/01/01 10:30:25")
+    {
+      new Exception("roundtrip string: expected 2000/01/01 10:30:25, got %s" % $t).throw();
+    }
+
+    // - string -> value -> new Time(int) -> to_string -
+    t1 = new Time("20000101103025");
+    v = t1.value();
+    t2 = new Time(v);
+    if ($t2 != "2000/01/01 10:30:25")
+    {
+      new Exception("roundtrip int: expected 2000/01/01 10:30:25, got %s" % $t2).throw();
+    }
+
+    // - integer -> Time -> value -
+    t = new Time(946722625000000000);
+    if (t.value() != 946722625000000000)
+    {
+      new Exception("roundtrip value: expected 946722625000000000, got %s" % $t.value()).throw();
+    }
+
+    // - copy -> value -
+    t1 = new Time("20000101103025");
+    t2 = new Time(t1);
+    if (t2.value() != t1.value())
+    {
+      new Exception("roundtrip copy value: %s vs %s" % [$t1.value(),$t2.value()]).throw();
+    }
+    if ($t2 != $t1)
+    {
+      new Exception("roundtrip copy string: %s vs %s" % [$t1,$t2]).throw();
+    }
+
+    // - epoch roundtrip -
+    t = new Time("19700101000000");
+    if ($t != "1970/01/01 00:00:00")
+    {
+      new Exception("roundtrip epoch: expected 1970/01/01 00:00:00, got %s" % $t).throw();
+    }
+    if (t.value() != 0)
+    {
+      new Exception("roundtrip epoch value: expected 0, got %s" % $t.value()).throw();
+    }
+  }/*}}}*/
+}

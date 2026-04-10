@@ -1,0 +1,211 @@
+
+import sys;
+import containers;
+import algorithms;
+import websocket;
+import epoll;
+
+class Main
+{
+  public Main()
+  {/*{{{*/
+    m_epoll = new Epoll(Epoll.CLOEXEC);
+    m_poll_callbacks = new Dict();
+    m_ws_fd_set = new Set();
+  }/*}}}*/
+
+  // - shared state -
+  static client_established = 0;
+  static received_text = [];
+  static received_binary = [];
+  static client_send_queue = new Queue();
+  static phase = 0;
+
+  public m_epoll;
+  public m_poll_callbacks;
+  public m_ws_fd_set;
+  public m_ctx;
+  public m_ws_client;
+
+  // - websocket protocol callback -
+  public on_ws_event(a_conn)
+  {/*{{{*/
+    reason = a_conn.reason();
+
+    if (reason == WsConn.CB_CLIENT_ESTABLISHED)
+    {
+      client_established = 1;
+    }
+    else if (reason == WsConn.CB_RECEIVE)
+    {
+      // - server: echo back with explicit write type -
+      data = a_conn.received_data();
+
+      if (phase == 0)
+      {
+        // - echo with WRITE_TEXT -
+        a_conn.write(WsConn.WRITE_TEXT,data);
+      }
+      else
+      {
+        // - echo with WRITE_BINARY -
+        a_conn.write(WsConn.WRITE_BINARY,data);
+      }
+    }
+    else if (reason == WsConn.CB_CLIENT_RECEIVE)
+    {
+      data = $a_conn.received_data();
+
+      if (phase == 0)
+      {
+        received_text.push(data);
+      }
+      else
+      {
+        received_binary.push(data);
+      }
+    }
+    else if (reason == WsConn.CB_CLIENT_WRITEABLE)
+    {
+      if (client_send_queue.length() > 0)
+      {
+        a_conn.write(client_send_queue.next());
+      }
+    }
+  }/*}}}*/
+
+  // - fd event handler -
+  public on_ws_fd_event(a_fd,a_event)
+  {/*{{{*/
+    m_ctx.process(0);
+    this.poll_set_update();
+  }/*}}}*/
+
+  // - poll management -
+  public poll_fd_add(a_fd,a_events,a_callback)
+  {/*{{{*/
+    m_epoll.add(a_fd,a_events);
+    m_poll_callbacks[a_fd] = a_callback;
+  }/*}}}*/
+
+  public poll_fd_remove(a_fd)
+  {/*{{{*/
+    m_epoll.del(a_fd);
+    m_poll_callbacks.remove_key(a_fd);
+  }/*}}}*/
+
+  public poll_set_update()
+  {/*{{{*/
+    s_fds = m_ctx.get_fds();
+    new_set = new Set(Algo.tuple_zip([s_fds[::2],s_fds[1::2]]));
+
+    for (pollfd <- m_ws_fd_set - new_set)
+    {
+      m_epoll.del(pollfd[0]);
+      m_poll_callbacks.remove_key(pollfd[0]);
+    }
+
+    for (pollfd <- new_set - m_ws_fd_set)
+    {
+      m_epoll.add(pollfd[0],pollfd[1]);
+      m_poll_callbacks[pollfd[0]] = new Delegate(this,"on_ws_fd_event",2);
+    }
+
+    m_ws_fd_set = new_set;
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19600 + (Sys.getpid() % 1000);
+
+    obj.m_ctx = new WsContext("127.0.0.1",port,
+      ["binary-protocol",new Delegate(obj,"on_ws_event",1)]);
+
+    // - register initial fds -
+    obj.poll_set_update();
+
+    // - create client -
+    obj.m_ws_client = obj.m_ctx.client(
+      "127.0.0.1",port,"/","binary-protocol","bin-ud");
+
+    obj.m_ctx.process(0);
+    obj.poll_set_update();
+
+    // - wait for connection -
+    iterations = 0;
+    while (client_established != 1 and iterations < 500)
+    {
+      events = obj.m_epoll.wait(1,50);
+      if (Blank != events)
+      {
+        obj.m_poll_callbacks[events[0]].call(events);
+      }
+      iterations += 1;
+    }
+
+    if (client_established != 1)
+    {
+      new Exception("client did not establish").throw();
+    }
+
+    // - phase 0: send text message, server echoes with WRITE_TEXT -
+    phase = 0;
+    client_send_queue.insert("text-message");
+    obj.m_ws_client.callback_on_writable();
+    obj.m_ctx.process(0);
+    obj.poll_set_update();
+
+    iterations = 0;
+    while (received_text.length() < 1 and iterations < 500)
+    {
+      events = obj.m_epoll.wait(1,50);
+      if (Blank != events)
+      {
+        obj.m_poll_callbacks[events[0]].call(events);
+      }
+      iterations += 1;
+    }
+
+    if (received_text.length() != 1)
+    {
+      new Exception("text: expected 1 message, got %d" % received_text.length()).throw();
+    }
+    if (received_text[0] != "text-message")
+    {
+      new Exception("text: expected 'text-message', got '%s'" % received_text[0]).throw();
+    }
+
+    // - phase 1: send binary message, server echoes with WRITE_BINARY -
+    phase = 1;
+    client_send_queue.insert("binary-data-payload");
+    obj.m_ws_client.callback_on_writable();
+    obj.m_ctx.process(0);
+    obj.poll_set_update();
+
+    iterations = 0;
+    while (received_binary.length() < 1 and iterations < 500)
+    {
+      events = obj.m_epoll.wait(1,50);
+      if (Blank != events)
+      {
+        obj.m_poll_callbacks[events[0]].call(events);
+      }
+      iterations += 1;
+    }
+
+    if (received_binary.length() != 1)
+    {
+      new Exception("binary: expected 1 message, got %d" % received_binary.length()).throw();
+    }
+    if (received_binary[0] != "binary-data-payload")
+    {
+      new Exception("binary: expected 'binary-data-payload', got '%s'" % received_binary[0]).throw();
+    }
+
+    // - release reference cycles -
+    free obj.m_poll_callbacks;
+    free obj.m_ws_client;
+    free obj.m_ctx;
+  }/*}}}*/
+}

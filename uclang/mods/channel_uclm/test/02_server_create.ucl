@@ -1,0 +1,65 @@
+
+import sys;
+import channel;
+
+class Main
+{
+  public Main() {}
+
+  public on_channel_event(a_server,a_conn_idx,a_event)
+  {/*{{{*/
+  }/*}}}*/
+
+  public on_channel_message(a_server,a_conn_idx,a_message)
+  {/*{{{*/
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19000 + (Sys.getpid() % 1000);
+
+    user = [1,2,3];
+    server = new ChannelServer("127.0.0.1",port,
+      new Delegate(obj,"on_channel_event",3),
+      new Delegate(obj,"on_channel_message",3),
+      user);
+
+    // - to_string -
+    if ($server != "ChannelServer")
+    {
+      new Exception("to_string: expected ChannelServer, got %s" % $server).throw();
+    }
+
+    // - get_fds returns server fd and events -
+    fds = server.get_fds();
+    if (fds.length() < 2)
+    {
+      new Exception("get_fds: expected >= 2 elements, got %d" % fds.length()).throw();
+    }
+
+    if (fds[0] <= 0)
+    {
+      new Exception("get_fds: server fd expected > 0, got %s" % $fds[0]).throw();
+    }
+
+    if (fds[1] <= 0)
+    {
+      new Exception("get_fds: server events expected > 0, got %s" % $fds[1]).throw();
+    }
+
+    // - user_data returns passed value -
+    ud = server.user_data();
+    if ($ud != "[1,2,3]")
+    {
+      new Exception("user_data: expected [1,2,3], got %s" % $ud).throw();
+    }
+
+    // - max_message_length setter -
+    result = server.max_message_length(1024);
+    if ($result != "ChannelServer")
+    {
+      new Exception("max_message_length: expected ChannelServer return, got %s" % $result).throw();
+    }
+  }/*}}}*/
+}

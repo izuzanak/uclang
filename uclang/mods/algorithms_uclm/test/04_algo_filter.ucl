@@ -1,0 +1,64 @@
+
+import containers;
+import algorithms;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - filter with delegate -
+    result = Algo.filter([1,2,3,4,5,6],:(x) return x > 3;);
+    if (result != [4,5,6])
+    {
+      new Exception("filter delegate: expected [4,5,6], got %s" % $result).throw();
+    }
+
+    // - filter all pass -
+    result = Algo.filter([1,2,3],:(x) return 1;);
+    if (result != [1,2,3])
+    {
+      new Exception("filter all pass: expected [1,2,3], got %s" % $result).throw();
+    }
+
+    // - filter none pass -
+    result = Algo.filter([1,2,3],:(x) return 0;);
+    if (result != [])
+    {
+      new Exception("filter none pass: expected [], got %s" % $result).throw();
+    }
+
+    // - filter with array -
+    result = Algo.filter([0,1,2],[1,0,1]);
+    if (result != [0,2])
+    {
+      new Exception("filter array: expected [0,2], got %s" % $result).throw();
+    }
+
+    // - filter with dict -
+    dict = new Dict([
+      1,1,
+      2,0,
+      3,1,
+    ]);
+    result = Algo.filter([1,2,3],dict);
+    if (result != [1,3])
+    {
+      new Exception("filter dict: expected [1,3], got %s" % $result).throw();
+    }
+
+    // - filter empty iterable -
+    result = Algo.filter([],:(x) return 1;);
+    if (result != [])
+    {
+      new Exception("filter empty: expected [], got %s" % $result).throw();
+    }
+
+    // - filter Range for odd numbers -
+    result = Algo.filter(new Range(0,9),:(x) return x & 0x01;);
+    if (result != [1,3,5,7,9])
+    {
+      new Exception("filter Range odd: expected [1,3,5,7,9], got %s" % $result).throw();
+    }
+  }/*}}}*/
+}

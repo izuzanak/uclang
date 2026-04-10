@@ -1,0 +1,91 @@
+
+import containers;
+import validator;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - regex simple match pass -
+    schema = new Dict(["uint", ["regex", "^[0-9][0-9]*$"]]);
+    v = new Validator(schema);
+    v.validate("uint", "123");
+
+    // - regex simple match fail -
+    caught = 0;
+    try {
+      v.validate("uint", "abc");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("regex uint should reject 'abc'").throw();
+    }
+
+    // - regex pattern pass -
+    schema = new Dict(["email", ["regex", "^[a-z]*@[a-z]*\\.[a-z]*$"]]);
+    v = new Validator(schema);
+    v.validate("email", "user@example.com");
+
+    // - regex pattern fail -
+    caught = 0;
+    try {
+      v.validate("email", "not-an-email");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("regex email should reject 'not-an-email'").throw();
+    }
+
+    // - regex value must be string -
+    schema = new Dict(["str_only", ["regex", "^[0-9]*$"]]);
+    v = new Validator(schema);
+    caught = 0;
+    try {
+      v.validate("str_only", 123);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("regex should reject non-string value").throw();
+    }
+
+    // - multiple regex rules (both must match) -
+    schema = new Dict(["multi", [
+      "regex", "^Hello[123]*$",
+      "regex", "^.*$"
+    ]]);
+    v = new Validator(schema);
+    v.validate("multi", "Hello123");
+
+    caught = 0;
+    try {
+      v.validate("multi", "Hello124");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("multiple regex should reject 'Hello124'").throw();
+    }
+
+    // - regex reuse (cached) -
+    schema = new Dict(["cached", ["regex", "^[a-z]*$"]]);
+    v = new Validator(schema);
+    v.validate("cached", "abc");
+    v.validate("cached", "xyz");
+  }/*}}}*/
+}

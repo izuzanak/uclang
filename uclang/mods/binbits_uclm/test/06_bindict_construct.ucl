@@ -1,0 +1,117 @@
+
+import binbits;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - construct TYPE_INT64_INT64 empty -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    if (dict.length() != 0)
+    {
+      new Exception("INT64_INT64 empty: expected length 0, got %d" % dict.length()).throw();
+    }
+
+    // - construct TYPE_INT64_FLOAT64 empty -
+    dict = new BinDict(BinDict.TYPE_INT64_FLOAT64);
+    if (dict.length() != 0)
+    {
+      new Exception("INT64_FLOAT64 empty: expected length 0, got %d" % dict.length()).throw();
+    }
+
+    // - type constants are distinct -
+    if (BinDict.TYPE_INT64_INT64 == BinDict.TYPE_INT64_FLOAT64)
+    {
+      new Exception("type constants not distinct").throw();
+    }
+
+    // - insert via [] operator -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[10] = 100;
+    if (dict.length() != 1)
+    {
+      new Exception("insert []: expected length 1, got %d" % dict.length()).throw();
+    }
+
+    // - insert multiple keys -
+    dict[20] = 200;
+    dict[30] = 300;
+    if (dict.length() != 3)
+    {
+      new Exception("insert multi: expected length 3, got %d" % dict.length()).throw();
+    }
+
+    // - overwrite existing key -
+    dict[10] = 999;
+    if (dict[10].value() != 999)
+    {
+      new Exception("overwrite: expected 999, got %s" % $dict[10].value()).throw();
+    }
+    if (dict.length() != 3)
+    {
+      new Exception("overwrite: length changed to %d" % dict.length()).throw();
+    }
+
+    // - default value on first access INT64_INT64 -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[10];
+    if (dict[10].value() != 0)
+    {
+      new Exception("default int: expected 0, got %s" % $dict[10].value()).throw();
+    }
+
+    // - default value on first access INT64_FLOAT64 -
+    dict = new BinDict(BinDict.TYPE_INT64_FLOAT64);
+    dict[10];
+    if ($dict[10].value() != "0.000000")
+    {
+      new Exception("default float: expected 0.000000, got %s" % $dict[10].value()).throw();
+    }
+
+    // - clear resets dict -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[1] = 10;
+    dict[2] = 20;
+    dict.clear();
+    if (dict.length() != 0)
+    {
+      new Exception("clear: expected length 0, got %d" % dict.length()).throw();
+    }
+
+    // - to_string empty -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    if ($dict != "[]")
+    {
+      new Exception("to_string empty: expected [], got %s" % $dict).throw();
+    }
+
+    // - to_string INT64_INT64 -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[1] = 10;
+    dict[2] = 20;
+    dict[3] = 30;
+    if ($dict != "[1:10,2:20,3:30]")
+    {
+      new Exception("to_string int: expected [1:10,2:20,3:30], got %s" % $dict).throw();
+    }
+
+    // - to_string INT64_FLOAT64 -
+    dict = new BinDict(BinDict.TYPE_INT64_FLOAT64);
+    dict[1] = 1.5;
+    if ($dict != "[1:1.500000]")
+    {
+      new Exception("to_string float: expected [1:1.500000], got %s" % $dict).throw();
+    }
+
+    // - to_string with separator -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[1] = 10;
+    dict[2] = 20;
+    dict[3] = 30;
+    if (dict.to_string("|") != "1:10|2:20|3:30")
+    {
+      new Exception("to_string sep: expected 1:10|2:20|3:30, got %s" % dict.to_string("|")).throw();
+    }
+  }/*}}}*/
+}

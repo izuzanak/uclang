@@ -1,0 +1,64 @@
+
+import containers;
+import algorithms;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - map with delegate -
+    result = Algo.map([1,2,3],:(x) return x * 2;);
+    if (result != [2,4,6])
+    {
+      new Exception("map delegate: expected [2,4,6], got %s" % $result).throw();
+    }
+
+    // - map with array (sequential indices) -
+    result = Algo.map([0,1,2],["a","b","c"]);
+    if (result != ["a","b","c"])
+    {
+      new Exception("map array sequential: expected [a,b,c], got %s" % $result).throw();
+    }
+
+    // - map with array (reorder) -
+    result = Algo.map([2,0,1],["x","y","z"]);
+    if (result != ["z","x","y"])
+    {
+      new Exception("map array reorder: expected [z,x,y], got %s" % $result).throw();
+    }
+
+    // - map with dict -
+    dict = new Dict([
+      1,"one",
+      2,"two",
+      3,"three",
+    ]);
+    result = Algo.map([1,2,3],dict);
+    if (result != ["one","two","three"])
+    {
+      new Exception("map dict: expected [one,two,three], got %s" % $result).throw();
+    }
+
+    // - map empty iterable -
+    result = Algo.map([],:(x) return x;);
+    if (result != [])
+    {
+      new Exception("map empty: expected [], got %s" % $result).throw();
+    }
+
+    // - map single element -
+    result = Algo.map([5],:(x) return x + 10;);
+    if (result != [15])
+    {
+      new Exception("map single: expected [15], got %s" % $result).throw();
+    }
+
+    // - map with Range as iterable -
+    result = Algo.map(new Range(0,4),:(x) return x * x;);
+    if (result != [0,1,4,9,16])
+    {
+      new Exception("map Range: expected [0,1,4,9,16], got %s" % $result).throw();
+    }
+  }/*}}}*/
+}

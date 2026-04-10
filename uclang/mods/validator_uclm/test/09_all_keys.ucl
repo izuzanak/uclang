@@ -1,0 +1,59 @@
+
+import containers;
+import validator;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - all-keys type check pass -
+    schema = new Dict(["str_keys", ["all-keys", ["type", type String]]]);
+    v = new Validator(schema);
+    v.validate("str_keys", new Dict(["alpha", 1, "beta", 2]));
+
+    // - all-keys regex pass -
+    schema = new Dict(["lc_keys", ["all-keys", ["regex", "^[a-z]*$"]]]);
+    v = new Validator(schema);
+    v.validate("lc_keys", new Dict(["first", 10, "second", 10, "third", 10]));
+
+    // - all-keys regex fail with stack -
+    caught = 0;
+    try {
+      v.validate("lc_keys", new Dict(["first", 10, "second", 10, "third1", 10]));
+    }
+    catch (e)
+    {
+      caught = 1;
+      if (v.props_stack() != ["lc_keys", "all-keys", "third1", "regex"])
+      {
+        new Exception("expected props_stack [lc_keys,all-keys,third1,regex], got %s" % $v.props_stack()).throw();
+      }
+      if (v.value_stack() != ["third1"])
+      {
+        new Exception("expected value_stack [third1], got %s" % $v.value_stack()).throw();
+      }
+    }
+    if (caught != 1)
+    {
+      new Exception("all-keys should reject 'third1'").throw();
+    }
+
+    // - all-keys non-dict fail -
+    caught = 0;
+    try {
+      v.validate("lc_keys", [1, 2, 3]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("all-keys should reject non-Dict").throw();
+    }
+
+    // - all-keys empty dict pass -
+    v.validate("lc_keys", new Dict());
+  }/*}}}*/
+}

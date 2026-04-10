@@ -1,0 +1,100 @@
+
+import utf8proc;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - version returns non-empty string -
+    ver = Utf8Proc.version();
+    if (ver.length() == 0)
+    {
+      new Exception("version returned empty string").throw();
+    }
+
+    // - to_lower Czech string (from C test) -
+    result = Utf8Proc.to_lower("Jiří Zuzaňák");
+    if (result != "jiří zuzaňák")
+    {
+      new Exception("to_lower Czech: expected 'jiří zuzaňák', got '%s'" % result).throw();
+    }
+
+    // - to_upper Czech string (from C test) -
+    result = Utf8Proc.to_upper("Jiří Zuzaňák");
+    if (result != "JIŘÍ ZUZAŇÁK")
+    {
+      new Exception("to_upper Czech: expected 'JIŘÍ ZUZAŇÁK', got '%s'" % result).throw();
+    }
+
+    // - to_lower full Czech sentence (already lowercase: idempotent) -
+    result = Utf8Proc.to_lower("Příliš žluťoučký kůň úpěl ďábelské ódy.");
+    if (result != "příliš žluťoučký kůň úpěl ďábelské ódy.")
+    {
+      new Exception("to_lower sentence: expected 'příliš žluťoučký kůň úpěl ďábelské ódy.', got '%s'" % result).throw();
+    }
+
+    // - to_upper full Czech sentence -
+    result = Utf8Proc.to_upper("Příliš žluťoučký kůň úpěl ďábelské ódy.");
+    if (result != "PŘÍLIŠ ŽLUŤOUČKÝ KŮŇ ÚPĚL ĎÁBELSKÉ ÓDY.")
+    {
+      new Exception("to_upper sentence: expected 'PŘÍLIŠ ŽLUŤOUČKÝ KŮŇ ÚPĚL ĎÁBELSKÉ ÓDY.', got '%s'" % result).throw();
+    }
+
+    // - map with stripmark + decompose + casefold (from C test) -
+    opts = Utf8Proc.OPT_NULLTERM | Utf8Proc.OPT_STABLE | Utf8Proc.OPT_STRIPMARK | Utf8Proc.OPT_DECOMPOSE | Utf8Proc.OPT_CASEFOLD;
+    result = Utf8Proc.map("Jiří Zuzaňák",opts);
+    if (result != "jiri zuzanak")
+    {
+      new Exception("map stripmark: expected 'jiri zuzanak', got '%s'" % result).throw();
+    }
+
+    // - map full sentence with stripmark + decompose + casefold -
+    opts = Utf8Proc.OPT_NULLTERM | Utf8Proc.OPT_STABLE | Utf8Proc.OPT_STRIPMARK | Utf8Proc.OPT_DECOMPOSE | Utf8Proc.OPT_CASEFOLD;
+    result = Utf8Proc.map("Příliš žluťoučký kůň úpěl ďábelské ódy.",opts);
+    if (result != "prilis zlutoucky kun upel dabelske ody.")
+    {
+      new Exception("map sentence stripmark: expected 'prilis zlutoucky kun upel dabelske ody.', got '%s'" % result).throw();
+    }
+
+    // - map casefold only on Czech word -
+    opts = Utf8Proc.OPT_NULLTERM | Utf8Proc.OPT_STABLE | Utf8Proc.OPT_CASEFOLD;
+    result = Utf8Proc.map("Příliš",opts);
+    if (result != "příliš")
+    {
+      new Exception("map casefold: expected 'příliš', got '%s'" % result).throw();
+    }
+
+    // - to_string -
+    if ($Utf8Proc != "Utf8Proc")
+    {
+      new Exception("to_string: expected 'Utf8Proc', got '%s'" % $Utf8Proc).throw();
+    }
+
+    // - constants are distinct integers -
+    opts = new Set([
+      Utf8Proc.OPT_NULLTERM,
+      Utf8Proc.OPT_STABLE,
+      Utf8Proc.OPT_COMPAT,
+      Utf8Proc.OPT_COMPOSE,
+      Utf8Proc.OPT_DECOMPOSE,
+      Utf8Proc.OPT_IGNORE,
+      Utf8Proc.OPT_REJECTNA,
+      Utf8Proc.OPT_NLF2LS,
+      Utf8Proc.OPT_NLF2PS,
+      Utf8Proc.OPT_NLF2LF,
+      Utf8Proc.OPT_STRIPCC,
+      Utf8Proc.OPT_CASEFOLD,
+      Utf8Proc.OPT_CHARBOUND,
+      Utf8Proc.OPT_LUMP,
+      Utf8Proc.OPT_STRIPMARK,
+      Utf8Proc.OPT_STRIPNA,
+    ]);
+
+    if (opts.length() != 16)
+    {
+      new Exception("OPT constants are not distinct").throw();
+    }
+  }/*}}}*/
+}

@@ -1,0 +1,60 @@
+
+import time;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - reference: 2000/01/01 10:30:25 -
+    t = new Time("20000101103025");
+
+    // - value -
+    if (t.value() != 946722625000000000)
+    {
+      new Exception("value: expected 946722625000000000, got %s" % $t.value()).throw();
+    }
+
+    // - nano_sec -
+    if (t.nano_sec() != 946722625000000000)
+    {
+      new Exception("nano_sec: expected 946722625000000000, got %s" % $t.nano_sec()).throw();
+    }
+
+    // - micro_sec -
+    if (t.micro_sec() != 946722625000000)
+    {
+      new Exception("micro_sec: expected 946722625000000, got %s" % $t.micro_sec()).throw();
+    }
+
+    // - milli_sec -
+    if (t.milli_sec() != 946722625000)
+    {
+      new Exception("milli_sec: expected 946722625000, got %s" % $t.milli_sec()).throw();
+    }
+
+    // - seconds -
+    if (t.seconds() != 946722625)
+    {
+      new Exception("seconds: expected 946722625, got %s" % $t.seconds()).throw();
+    }
+
+    // - minutes -
+    if (t.minutes() != 15778710)
+    {
+      new Exception("minutes: expected 15778710, got %s" % $t.minutes()).throw();
+    }
+
+    // - hours -
+    if (t.hours() != 262978)
+    {
+      new Exception("hours: expected 262978, got %s" % $t.hours()).throw();
+    }
+
+    // - days -
+    if (t.days() != 10957)
+    {
+      new Exception("days: expected 10957, got %s" % $t.days()).throw();
+    }
+  }/*}}}*/
+}

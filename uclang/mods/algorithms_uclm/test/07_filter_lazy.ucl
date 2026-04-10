@@ -1,0 +1,98 @@
+
+import containers;
+import algorithms;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Filter.map with delegate -
+    result = Filter.map([1,2,3],:(x) return x * 10;)[::];
+    if (result != [10,20,30])
+    {
+      new Exception("Filter.map delegate: expected [10,20,30], got %s" % $result).throw();
+    }
+
+    // - Filter.map with array -
+    result = Filter.map([0,2,1],["a","b","c"])[::];
+    if (result != ["a","c","b"])
+    {
+      new Exception("Filter.map array: expected [a,c,b], got %s" % $result).throw();
+    }
+
+    // - Filter.map with dict -
+    dict = new Dict([
+      1,"x",
+      3,"z",
+    ]);
+    result = Filter.map([1,3],dict)[::];
+    if (result != ["x","z"])
+    {
+      new Exception("Filter.map dict: expected [x,z], got %s" % $result).throw();
+    }
+
+    // - Filter.filter with delegate -
+    result = Filter.filter([1,2,3,4,5],:(x) return x > 2;)[::];
+    if (result != [3,4,5])
+    {
+      new Exception("Filter.filter delegate: expected [3,4,5], got %s" % $result).throw();
+    }
+
+    // - Filter.filter with array -
+    result = Filter.filter([0,1,2],[0,1,0])[::];
+    if (result != [1])
+    {
+      new Exception("Filter.filter array: expected [1], got %s" % $result).throw();
+    }
+
+    // - manual next_item on Filter -
+    f = Filter.map([10,20,30],:(x) return x + 1;);
+    v1 = f.next_item();
+    v2 = f.next_item();
+    v3 = f.next_item();
+    v4 = f.next_item();
+    if (v1 != 11 || v2 != 21 || v3 != 31)
+    {
+      new Exception("Filter next_item: expected 11,21,31 got %s,%s,%s" % [$v1,$v2,$v3]).throw();
+    }
+    if (Blank != v4)
+    {
+      new Exception("Filter next_item exhausted: expected Blank, got %s" % $v4).throw();
+    }
+
+    // - to_string returns class name -
+    if ($Filter != "Filter")
+    {
+      new Exception("to_string: expected Filter, got %s" % $Filter).throw();
+    }
+
+    // - Filter with Range source -
+    result = Filter.filter(new Range(0,9),:(x) return x > 5;)[::];
+    if (result != [6,7,8,9])
+    {
+      new Exception("Filter Range: expected [6,7,8,9], got %s" % $result).throw();
+    }
+
+    // - empty source -
+    result = Filter.map([],:(x) return x;)[::];
+    if (result != [])
+    {
+      new Exception("Filter empty: expected [], got %s" % $result).throw();
+    }
+
+    // - pipeline: Filter as input to Algo.reduce -
+    result = Algo.reduce(0,Filter.map(new Range(1,5),:(x) return x * x;),:(a,b) return a + b;);
+    if (result != 55)
+    {
+      new Exception("pipeline reduce: expected 55, got %s" % $result).throw();
+    }
+
+    // - pipeline: Range -> Filter.map -> Algo.filter -
+    result = Algo.filter(Filter.map(new Range(0,9),:(x) return x * 3;),:(x) return x > 10;);
+    if (result != [12,15,18,21,24,27])
+    {
+      new Exception("pipeline filter: expected [12,15,18,21,24,27], got %s" % $result).throw();
+    }
+  }/*}}}*/
+}

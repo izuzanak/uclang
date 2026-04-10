@@ -137,3 +137,28 @@ process_components("uclang/progs")
 # - process modules -
 process_components("uclang/mods")
 
+# - module tests -
+set(TEST_RUNNER "${CMAKE_CURRENT_SOURCE_DIR}/build/scripts/test.ucl")
+if(EXISTS "${TEST_RUNNER}")
+  file(GLOB MODULE_TEST_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/uclang/mods/*/test")
+  foreach(TEST_DIR ${MODULE_TEST_DIRS})
+    get_filename_component(MOD_DIR ${TEST_DIR} DIRECTORY)
+    get_filename_component(MOD_NAME ${MOD_DIR} NAME)
+    string(REGEX REPLACE "_uclm$" "" MOD_SHORT_NAME ${MOD_NAME})
+
+    add_test(
+      NAME "mod_${MOD_SHORT_NAME}"
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/uclang
+              ${TEST_RUNNER}
+              ${CMAKE_CURRENT_SOURCE_DIR}/uclang/mods
+              ${CMAKE_CURRENT_BINARY_DIR}
+              ${MOD_SHORT_NAME}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+    set_tests_properties("mod_${MOD_SHORT_NAME}" PROPERTIES
+      ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_CURRENT_BINARY_DIR};PATH=${CMAKE_CURRENT_BINARY_DIR}:$ENV{PATH}"
+      SKIP_RETURN_CODE 77
+    )
+  endforeach()
+endif()
+

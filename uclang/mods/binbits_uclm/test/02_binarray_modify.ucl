@@ -1,0 +1,137 @@
+
+import binbits;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - push single value -
+    arr = new BinArray(BinArray.TYPE_INT32);
+    arr.push(42);
+    if (arr.length() != 1)
+    {
+      new Exception("push single: expected length 1, got %d" % arr.length()).throw();
+    }
+    if (arr.item(0).value() != 42)
+    {
+      new Exception("push single: expected 42, got %s" % $arr.item(0).value()).throw();
+    }
+
+    // - push multiple values -
+    arr = new BinArray(BinArray.TYPE_INT32);
+    arr.push(1);
+    arr.push(2);
+    arr.push(3);
+    if (arr.length() != 3)
+    {
+      new Exception("push multi: expected length 3, got %d" % arr.length()).throw();
+    }
+    if ($arr != "[1,2,3]")
+    {
+      new Exception("push multi: expected [1,2,3], got %s" % $arr).throw();
+    }
+
+    // - push to double array -
+    arr = new BinArray(BinArray.TYPE_DOUBLE);
+    arr.push(1.5);
+    if (arr.length() != 1)
+    {
+      new Exception("push double: expected length 1, got %d" % arr.length()).throw();
+    }
+
+    // - pop from INT32 array -
+    arr = new BinArray(BinArray.TYPE_INT32,[10,20,30]);
+    val = arr.pop();
+    if (val != 30)
+    {
+      new Exception("pop: expected 30, got %s" % $val).throw();
+    }
+    if (arr.length() != 2)
+    {
+      new Exception("pop: expected length 2, got %d" % arr.length()).throw();
+    }
+
+    // - pop from DOUBLE array -
+    arr = new BinArray(BinArray.TYPE_DOUBLE,[1.5,2.5]);
+    val = arr.pop();
+    if ($val != "2.500000")
+    {
+      new Exception("pop double: expected 2.500000, got %s" % $val).throw();
+    }
+
+    // - last returns last element -
+    arr = new BinArray(BinArray.TYPE_INT32,[10,20,30]);
+    val = arr.last();
+    if (val != 30)
+    {
+      new Exception("last: expected 30, got %s" % $val).throw();
+    }
+    if (arr.length() != 3)
+    {
+      new Exception("last: expected length 3 (non-destructive), got %d" % arr.length()).throw();
+    }
+
+    // - clear resets array -
+    arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+    arr.clear();
+    if (arr.length() != 0)
+    {
+      new Exception("clear: expected length 0, got %d" % arr.length()).throw();
+    }
+
+    // - clear then push -
+    arr.push(99);
+    if (arr.length() != 1)
+    {
+      new Exception("clear+push: expected length 1, got %d" % arr.length()).throw();
+    }
+    if (arr.item(0).value() != 99)
+    {
+      new Exception("clear+push: expected 99, got %s" % $arr.item(0).value()).throw();
+    }
+
+    // - resize to larger -
+    arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+    arr.resize(5);
+    if (arr.length() != 5)
+    {
+      new Exception("resize: expected length 5, got %d" % arr.length()).throw();
+    }
+
+    // - resize fills with zeros -
+    if (arr.item(3).value() != 0 || arr.item(4).value() != 0)
+    {
+      new Exception("resize: new elements not zero").throw();
+    }
+    if (arr.item(0).value() != 1 || arr.item(1).value() != 2 || arr.item(2).value() != 3)
+    {
+      new Exception("resize: existing elements changed").throw();
+    }
+
+    // - fill sets all elements -
+    arr = new BinArray(BinArray.TYPE_INT32,[0,0,0,0]);
+    arr.fill(99);
+    if ($arr != "[99,99,99,99]")
+    {
+      new Exception("fill: expected [99,99,99,99], got %s" % $arr).throw();
+    }
+
+    // - fill double array -
+    arr = new BinArray(BinArray.TYPE_DOUBLE);
+    arr.resize(3);
+    arr.fill(2.5);
+    if ($arr != "[2.500000,2.500000,2.500000]")
+    {
+      new Exception("fill double: expected [2.500000,2.500000,2.500000], got %s" % $arr).throw();
+    }
+
+    // - buffer returns Buffer -
+    arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+    buf = arr.buffer();
+    if (Blank == buf)
+    {
+      new Exception("buffer: returned Blank").throw();
+    }
+  }/*}}}*/
+}

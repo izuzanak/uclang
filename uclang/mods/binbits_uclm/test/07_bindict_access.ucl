@@ -1,0 +1,189 @@
+
+import binbits;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - has_key existing -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[10] = 100;
+    if (dict.has_key(10) != 1)
+    {
+      new Exception("has_key existing: expected 1").throw();
+    }
+
+    // - has_key missing -
+    if (dict.has_key(99) != 0)
+    {
+      new Exception("has_key missing: expected 0").throw();
+    }
+
+    // - remove_key -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[10] = 100;
+    dict[20] = 200;
+    dict[30] = 300;
+    dict.remove_key(20);
+    if (dict.length() != 2)
+    {
+      new Exception("remove_key: expected length 2, got %d" % dict.length()).throw();
+    }
+    if (dict.has_key(20) != 0)
+    {
+      new Exception("remove_key: key 20 still present").throw();
+    }
+
+    // - keys returns sorted array -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[30] = 300;
+    dict[10] = 100;
+    dict[20] = 200;
+    keys = dict.keys();
+    if (keys.length() != 3 || keys[0] != 10 || keys[1] != 20 || keys[2] != 30)
+    {
+      new Exception("keys: expected [10,20,30], got %s" % $keys).throw();
+    }
+
+    // - items returns values in key order -
+    vals = dict.items();
+    if (vals.length() != 3 || vals[0] != 100 || vals[1] != 200 || vals[2] != 300)
+    {
+      new Exception("items int: expected [100,200,300], got %s" % $vals).throw();
+    }
+
+    // - items INT64_FLOAT64 -
+    fdict = new BinDict(BinDict.TYPE_INT64_FLOAT64);
+    fdict[1] = 1.5;
+    fdict[2] = 2.5;
+    vals = fdict.items();
+    if (vals.length() != 2)
+    {
+      new Exception("items float: expected length 2, got %d" % vals.length()).throw();
+    }
+
+    // - first_key non-empty -
+    if (dict.first_key() != 10)
+    {
+      new Exception("first_key: expected 10, got %s" % $dict.first_key()).throw();
+    }
+
+    // - first_key empty -
+    edict = new BinDict(BinDict.TYPE_INT64_INT64);
+    if (Blank != edict.first_key())
+    {
+      new Exception("first_key empty: expected Blank").throw();
+    }
+
+    // - last_key non-empty -
+    if (dict.last_key() != 30)
+    {
+      new Exception("last_key: expected 30, got %s" % $dict.last_key()).throw();
+    }
+
+    // - last_key empty -
+    if (Blank != edict.last_key())
+    {
+      new Exception("last_key empty: expected Blank").throw();
+    }
+
+    // - next_key sequence -
+    next = dict.next_key(10);
+    if (next != 20)
+    {
+      new Exception("next_key(10): expected 20, got %s" % $next).throw();
+    }
+    next = dict.next_key(20);
+    if (next != 30)
+    {
+      new Exception("next_key(20): expected 30, got %s" % $next).throw();
+    }
+    next = dict.next_key(30);
+    if (Blank != next)
+    {
+      new Exception("next_key(30): expected Blank").throw();
+    }
+
+    // - prev_key sequence -
+    prev = dict.prev_key(30);
+    if (prev != 20)
+    {
+      new Exception("prev_key(30): expected 20, got %s" % $prev).throw();
+    }
+    prev = dict.prev_key(20);
+    if (prev != 10)
+    {
+      new Exception("prev_key(20): expected 10, got %s" % $prev).throw();
+    }
+    prev = dict.prev_key(10);
+    if (Blank != prev)
+    {
+      new Exception("prev_key(10): expected Blank").throw();
+    }
+
+    // - lee_key exact match -
+    lee = dict.lee_key(20);
+    if (lee != 20)
+    {
+      new Exception("lee_key(20): expected 20, got %s" % $lee).throw();
+    }
+
+    // - lee_key between keys -
+    lee = dict.lee_key(15);
+    if (lee != 10)
+    {
+      new Exception("lee_key(15): expected 10, got %s" % $lee).throw();
+    }
+
+    // - lee_key below all -
+    lee = dict.lee_key(5);
+    if (Blank != lee)
+    {
+      new Exception("lee_key(5): expected Blank").throw();
+    }
+
+    // - lee_key above all -
+    lee = dict.lee_key(35);
+    if (lee != 30)
+    {
+      new Exception("lee_key(35): expected 30, got %s" % $lee).throw();
+    }
+
+    // - gre_key exact match -
+    gre = dict.gre_key(20);
+    if (gre != 20)
+    {
+      new Exception("gre_key(20): expected 20, got %s" % $gre).throw();
+    }
+
+    // - gre_key between keys -
+    gre = dict.gre_key(15);
+    if (gre != 20)
+    {
+      new Exception("gre_key(15): expected 20, got %s" % $gre).throw();
+    }
+
+    // - gre_key below all -
+    gre = dict.gre_key(5);
+    if (gre != 10)
+    {
+      new Exception("gre_key(5): expected 10, got %s" % $gre).throw();
+    }
+
+    // - gre_key above all -
+    gre = dict.gre_key(35);
+    if (Blank != gre)
+    {
+      new Exception("gre_key(35): expected Blank").throw();
+    }
+
+    // - item via first_idx -
+    idx = dict.first_idx();
+    ref = dict.item(idx);
+    if (ref.key() != 10)
+    {
+      new Exception("item(first_idx): expected key 10, got %s" % $ref.key()).throw();
+    }
+  }/*}}}*/
+}

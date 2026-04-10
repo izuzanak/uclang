@@ -1,0 +1,184 @@
+
+import sys;
+import websocket;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - WsContext constants -
+    if (type WsContext.PORT_NO_LISTEN != type 0)
+    {
+      new Exception("PORT_NO_LISTEN: expected Integer type").throw();
+    }
+
+    // - WsConn WRITE constants (6) -
+    write_consts = [
+      WsConn.WRITE_TEXT,
+      WsConn.WRITE_BINARY,
+      WsConn.WRITE_CONTINUATION,
+      WsConn.WRITE_HTTP,
+      WsConn.WRITE_PING,
+      WsConn.WRITE_PONG,
+    ];
+
+    if (write_consts.length() != 6)
+    {
+      new Exception("WRITE constants: expected 6, got %d" % write_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < write_consts.length())
+    {
+      if (type write_consts[idx] != type 0)
+      {
+        new Exception("WRITE constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - WsConn CB constants (27) -
+    cb_consts = [
+      WsConn.CB_ESTABLISHED,
+      WsConn.CB_CLIENT_CONNECTION_ERROR,
+      WsConn.CB_CLIENT_FILTER_PRE_ESTABLISH,
+      WsConn.CB_CLIENT_ESTABLISHED,
+      WsConn.CB_CLOSED,
+      WsConn.CB_CLIENT_CLOSED,
+      WsConn.CB_RECEIVE,
+      WsConn.CB_RECEIVE_PONG,
+      WsConn.CB_CLIENT_RECEIVE,
+      WsConn.CB_CLIENT_RECEIVE_PONG,
+      WsConn.CB_CLIENT_WRITEABLE,
+      WsConn.CB_SERVER_WRITEABLE,
+      WsConn.CB_HTTP,
+      WsConn.CB_HTTP_FILE_COMPLETION,
+      WsConn.CB_FILTER_NETWORK_CONNECTION,
+      WsConn.CB_FILTER_PROTOCOL_CONNECTION,
+      WsConn.CB_OPENSSL_LOAD_EXTRA_CLIENT_VERIFY_CERTS,
+      WsConn.CB_OPENSSL_LOAD_EXTRA_SERVER_VERIFY_CERTS,
+      WsConn.CB_OPENSSL_PERFORM_CLIENT_CERT_VERIFICATION,
+      WsConn.CB_CLIENT_APPEND_HANDSHAKE_HEADER,
+      WsConn.CB_CONFIRM_EXTENSION_OKAY,
+      WsConn.CB_CLIENT_CONFIRM_EXTENSION_SUPPORTED,
+      WsConn.CB_PROTOCOL_INIT,
+      WsConn.CB_PROTOCOL_DESTROY,
+      WsConn.CB_ADD_POLL_FD,
+      WsConn.CB_DEL_POLL_FD,
+      WsConn.CB_CHANGE_MODE_POLL_FD,
+    ];
+
+    if (cb_consts.length() != 27)
+    {
+      new Exception("CB constants: expected 27, got %d" % cb_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < cb_consts.length())
+    {
+      if (type cb_consts[idx] != type 0)
+      {
+        new Exception("CB constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - WsConn TIMEOUT constants (9) -
+    timeout_consts = [
+      WsConn.TIMEOUT_NO_PENDING,
+      WsConn.TIMEOUT_AWAITING_PROXY_RESPONSE,
+      WsConn.TIMEOUT_AWAITING_CONNECT_RESPONSE,
+      WsConn.TIMEOUT_ESTABLISH_WITH_SERVER,
+      WsConn.TIMEOUT_AWAITING_SERVER_RESPONSE,
+      WsConn.TIMEOUT_AWAITING_PING,
+      WsConn.TIMEOUT_CLOSE_ACK,
+      WsConn.TIMEOUT_SENT_CLIENT_HANDSHAKE,
+      WsConn.TIMEOUT_SSL_ACCEPT,
+    ];
+
+    if (timeout_consts.length() != 9)
+    {
+      new Exception("TIMEOUT constants: expected 9, got %d" % timeout_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < timeout_consts.length())
+    {
+      if (type timeout_consts[idx] != type 0)
+      {
+        new Exception("TIMEOUT constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - WsConn TOKEN constants (50) -
+    token_consts = [
+      WsConn.TOKEN_GET_URI,
+      WsConn.TOKEN_POST_URI,
+      WsConn.TOKEN_HOST,
+      WsConn.TOKEN_CONNECTION,
+      WsConn.TOKEN_UPGRADE,
+      WsConn.TOKEN_ORIGIN,
+      WsConn.TOKEN_CHALLENGE,
+      WsConn.TOKEN_HTTP,
+      WsConn.TOKEN_HTTP_ACCEPT,
+      WsConn.TOKEN_HTTP_IF_MODIFIED_SINCE,
+      WsConn.TOKEN_HTTP_IF_NONE_MATCH,
+      WsConn.TOKEN_HTTP_ACCEPT_ENCODING,
+      WsConn.TOKEN_HTTP_ACCEPT_LANGUAGE,
+      WsConn.TOKEN_HTTP_PRAGMA,
+      WsConn.TOKEN_HTTP_CACHE_CONTROL,
+      WsConn.TOKEN_HTTP_AUTHORIZATION,
+      WsConn.TOKEN_HTTP_COOKIE,
+      WsConn.TOKEN_HTTP_CONTENT_LENGTH,
+      WsConn.TOKEN_HTTP_CONTENT_TYPE,
+      WsConn.TOKEN_HTTP_DATE,
+      WsConn.TOKEN_HTTP_RANGE,
+      WsConn.TOKEN_HTTP_ACCEPT_RANGES,
+      WsConn.TOKEN_HTTP_AGE,
+      WsConn.TOKEN_HTTP_ALLOW,
+      WsConn.TOKEN_HTTP_CONTENT_DISPOSITION,
+      WsConn.TOKEN_HTTP_CONTENT_ENCODING,
+      WsConn.TOKEN_HTTP_CONTENT_LANGUAGE,
+      WsConn.TOKEN_HTTP_CONTENT_LOCATION,
+      WsConn.TOKEN_HTTP_CONTENT_RANGE,
+      WsConn.TOKEN_HTTP_ETAG,
+      WsConn.TOKEN_HTTP_EXPECT,
+      WsConn.TOKEN_HTTP_EXPIRES,
+      WsConn.TOKEN_HTTP_FROM,
+      WsConn.TOKEN_HTTP_IF_MATCH,
+      WsConn.TOKEN_HTTP_IF_RANGE,
+      WsConn.TOKEN_HTTP_IF_UNMODIFIED_SINCE,
+      WsConn.TOKEN_HTTP_LAST_MODIFIED,
+      WsConn.TOKEN_HTTP_LINK,
+      WsConn.TOKEN_HTTP_LOCATION,
+      WsConn.TOKEN_HTTP_REFRESH,
+      WsConn.TOKEN_HTTP_RETRY_AFTER,
+      WsConn.TOKEN_HTTP_SERVER,
+      WsConn.TOKEN_HTTP_SET_COOKIE,
+      WsConn.TOKEN_HTTP_TRANSFER_ENCODING,
+      WsConn.TOKEN_HTTP_URI_ARGS,
+      WsConn.TOKEN_HTTP1_0,
+      WsConn.TOKEN_X_FORWARDED_FOR,
+      WsConn.TOKEN_CONNECT,
+      WsConn.TOKEN_HEAD_URI,
+      WsConn.TOKEN_X_AUTH_TOKEN,
+    ];
+
+    if (token_consts.length() != 50)
+    {
+      new Exception("TOKEN constants: expected 50, got %d" % token_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < token_consts.length())
+    {
+      if (type token_consts[idx] != type 0)
+      {
+        new Exception("TOKEN constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+  }/*}}}*/
+}

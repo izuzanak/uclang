@@ -1,0 +1,317 @@
+
+import sys;
+import regex;
+import containers;
+
+class Main
+{
+  static COMP_REGEX = new Regex("^[0-9][0-9]_[^.]*\\.ucl$");
+  static HELPER_REGEX = new Regex("_helper\\.ucl$");
+
+  // - output formatting -
+  static COL_GREEN = "\x1b[32m";
+  static COL_YELLOW = "\x1b[33m";
+  static COL_RED = "\x1b[31m";
+  static COL_CYAN = "\x1b[36m";
+  static COL_RESET = "\x1b[0m";
+
+  // - discover modules with test/ directories -
+  static private module_list(a_mods_dir)
+  {/*{{{*/
+    modules = new Dict();
+
+    dirs = Sys.listdir(a_mods_dir);
+
+    for (dir <- dirs)
+    {
+      // - check for _uclm suffix -
+      if (dir.length() < 6 || dir[dir.length() - 5::] != "_uclm")
+      {
+        continue;
+      }
+
+      // - check for test/ subdirectory -
+      test_dir = "%s/%s/test" % [a_mods_dir,dir];
+      if (!Sys.is_dir(test_dir))
+      {
+        continue;
+      }
+
+      // - strip _uclm suffix for module name -
+      mod_name = dir[0:dir.length() - 6:];
+      modules[mod_name] = test_dir;
+    }
+
+    return modules;
+  }/*}}}*/
+
+  // - discover test components in a module test/ directory -
+  static private component_list(a_test_dir)
+  {/*{{{*/
+    components = new Dict();
+
+    files = Sys.listdir(a_test_dir);
+
+    for (file <- files)
+    {
+      // - match NN_*.ucl but exclude *_helper.ucl -
+      if (Blank != COMP_REGEX.match(file) and Blank == HELPER_REGEX.match(file))
+      {
+        // - strip NN_ prefix and .ucl suffix -
+        comp_name = file[3:file.length() - 5:];
+        components[comp_name] = file;
+      }
+    }
+
+    return components;
+  }/*}}}*/
+
+  // - check if module shared library exists in build directory -
+  static private module_available(a_build_dir,a_mod_name)
+  {/*{{{*/
+    lib_path = "%s/lib%s_uclm.so" % [a_build_dir,a_mod_name];
+    return Sys.is_file(lib_path);
+  }/*}}}*/
+
+  // - run a single test, return 1=pass, 0=fail, 2=warn -
+  static private run_test(a_test_dir,a_file_name)
+  {/*{{{*/
+    test_path = "%s/%s" % [a_test_dir,a_file_name];
+    tmp = "/tmp/ucltest_%d.out" % Sys.getpid();
+
+    // - run test, capture output to temp file -
+    rc = Sys.system("uclang %s > %s 2>&1" % [test_path,tmp]);
+
+    // - read captured output -
+    output = new File(tmp,"r").read_close();
+    Sys.remove(tmp);
+
+    // - determine result -
+    result = 0;
+
+    switch (1)
+    {
+      case rc != 0:
+      {
+        (" %sFAIL%s\n" % [COL_RED,COL_RESET]).print();
+      }
+
+      case Blank != output:
+      {
+        (" %sWARN%s\n" % [COL_YELLOW,COL_RESET]).print();
+        result = 2;
+      }
+
+      default:
+      {
+        (" %sPASS%s\n" % [COL_GREEN,COL_RESET]).print();
+        result = 1;
+      }
+    }
+
+    if (Blank != output)
+    {
+      ("    %s\n" % output).print();
+    }
+
+    return result;
+  }/*}}}*/
+
+  // - run all components of a module -
+  static private run_module(a_mod_name,a_test_dir,a_build_dir,a_comp_names)
+  {/*{{{*/
+    components = component_list(a_test_dir);
+
+    pass = 0;
+    fail = 0;
+    warn = 0;
+    skip = 0;
+
+    if (components.length() == 0)
+    {
+      ("Module %s: no test components found\n" % a_mod_name).print();
+    }
+    else if (!module_available(a_build_dir,a_mod_name))
+    {
+      // - module not compiled, skip all components -
+      ("%s: %sSKIP (not compiled)%s\n\n" % [a_mod_name,COL_CYAN,COL_RESET]).print();
+      skip = components.length();
+    }
+    else
+    {
+      // - determine component names to run -
+      if (Blank != a_comp_names)
+      {
+        run_names = a_comp_names;
+
+        // - compute column width from longest name -
+        max_len = 0;
+        for (comp_name <- run_names)
+        {
+          label_len = a_mod_name.length() + 1 + comp_name.length();
+          if (label_len > max_len)
+          {
+            max_len = label_len;
+          }
+        }
+      }
+      else
+      {
+        run_names = components.unordered_keys();
+
+        // - longest key is last in dict ordering -
+        max_len = a_mod_name.length() + 1 + components.last_key().length();
+      }
+      fmt = "%%-%ds" % (max_len + 2);
+
+      // - run tests -
+      for (comp_name <- run_names)
+      {
+        if (!components.has_key(comp_name))
+        {
+          ("Module %s: unknown component \"%s\"\n" % [a_mod_name,comp_name]).print();
+          fail += 1;
+          continue;
+        }
+
+        (fmt % ("%s:%s" % [a_mod_name,comp_name])).print();
+        result = run_test(a_test_dir,components[comp_name]);
+
+        switch (result)
+        {
+          case 1: { pass += 1; }
+          case 2: { warn += 1; }
+          default: { fail += 1; }
+        }
+      }
+
+      ("\n").print();
+    }
+
+    return [pass,fail,warn,skip];
+  }/*}}}*/
+
+  // - main entry point -
+  static public main(argv)
+  {/*{{{*/
+    if (argv.length() < 4)
+    {
+      ("Usage: uclang test.ucl <mods_dir> <build_dir> <command[:args]> ...\n").print();
+      ("Commands:\n").print();
+      ("  all                          - run all module tests\n").print();
+      ("  list                         - list modules with tests\n").print();
+      ("  <module>                     - run all tests for module\n").print();
+      ("  <module>:list                - list components of module\n").print();
+      ("  <module>:<comp1>:<comp2>     - run specific components\n").print();
+
+      Sys.exit(0);
+    }
+
+    mods_dir = argv[1];
+    build_dir = argv[2];
+    modules = module_list(mods_dir);
+
+    total_pass = 0;
+    total_fail = 0;
+    total_warn = 0;
+    total_skip = 0;
+
+    for (arg <- argv[3::])
+    {
+      item_idx = 0;
+      items = arg.split(":");
+
+      option = items[item_idx++];
+      switch (option)
+      {
+        case "all":
+        {/*{{{*/
+          for (mod_name <- modules.unordered_keys())
+          {
+            result = run_module(mod_name,modules[mod_name],build_dir,new Blank());
+            total_pass += result[0];
+            total_fail += result[1];
+            total_warn += result[2];
+            total_skip += result[3];
+          }
+        }/*}}}*/
+
+        case "list":
+        {/*{{{*/
+          for (mod_name <- modules.unordered_keys())
+          {
+            comps = component_list(modules[mod_name]);
+            ("%s (%d components)\n" % [mod_name,comps.length()]).print();
+          }
+          ("\n").print();
+        }/*}}}*/
+
+        default:
+        {/*{{{*/
+
+          // - treat as module name -
+          mod_name = option;
+
+          if (!modules.has_key(mod_name))
+          {
+            new Exception("Unknown module: \"%s\"" % mod_name).throw();
+          }
+
+          test_dir = modules[mod_name];
+
+          if (item_idx < items.length() and items[item_idx] == "list")
+          {
+            // - list components -
+            components = component_list(test_dir);
+            ("%s components:\n" % mod_name).print();
+            for (comp_name <- components.unordered_keys())
+            {
+              ("  %s\n" % comp_name).print();
+            }
+            ("\n").print();
+          }
+          else
+          {
+            // - run module tests -
+            comp_names = new Blank();
+            if (item_idx < items.length())
+            {
+              comp_names = items[item_idx::];
+            }
+
+            result = run_module(mod_name,test_dir,build_dir,comp_names);
+            total_pass += result[0];
+            total_fail += result[1];
+            total_warn += result[2];
+            total_skip += result[3];
+          }
+        }/*}}}*/
+      }
+    }
+
+    // - print summary if tests were run -
+    total = total_pass + total_fail + total_warn + total_skip;
+    if (total > 0)
+    {
+      ("=== Test Results ===\n").print();
+      fail_col = total_fail > 0 ? COL_RED : "";
+      fail_rst = total_fail > 0 ? COL_RESET : "";
+      warn_col = total_warn > 0 ? COL_YELLOW : "";
+      warn_rst = total_warn > 0 ? COL_RESET : "";
+      skip_col = total_skip > 0 ? COL_CYAN : "";
+      skip_rst = total_skip > 0 ? COL_RESET : "";
+      ("%sPassed: %d%s, %sWarned: %d%s, %sFailed: %d%s, %sSkipped: %d%s, Total: %d\n" %
+        [COL_GREEN,total_pass,COL_RESET,warn_col,total_warn,warn_rst,fail_col,total_fail,fail_rst,skip_col,total_skip,skip_rst,total]).print();
+
+      if (total_fail > 0)
+      {
+        Sys.exit(1);
+      }
+
+      if (total_skip > 0)
+      {
+        Sys.exit(77);
+      }
+    }
+  }/*}}}*/
+}

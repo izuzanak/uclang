@@ -1,0 +1,52 @@
+
+import containers;
+import algorithms;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - sum -
+    result = Algo.reduce(0,[1,2,3,4,5],:(a,b) return a + b;);
+    if (result != 15)
+    {
+      new Exception("reduce sum: expected 15, got %s" % $result).throw();
+    }
+
+    // - product -
+    result = Algo.reduce(1,[1,2,3,4,5],:(a,b) return a * b;);
+    if (result != 120)
+    {
+      new Exception("reduce product: expected 120, got %s" % $result).throw();
+    }
+
+    // - string concatenation -
+    result = Algo.reduce("",["a","b","c"],:(a,b) return a + b;);
+    if (result != "abc")
+    {
+      new Exception("reduce concat: expected abc, got %s" % result).throw();
+    }
+
+    // - empty iterable returns initial value -
+    result = Algo.reduce(42,[],:(a,b) return a + b;);
+    if (result != 42)
+    {
+      new Exception("reduce empty: expected 42, got %s" % $result).throw();
+    }
+
+    // - single element -
+    result = Algo.reduce(0,[10],:(a,b) return a + b;);
+    if (result != 10)
+    {
+      new Exception("reduce single: expected 10, got %s" % $result).throw();
+    }
+
+    // - sum of Range 1..100 = 5050 -
+    result = Algo.reduce(0,new Range(1,100),:(a,b) return a + b;);
+    if (result != 5050)
+    {
+      new Exception("reduce Range sum: expected 5050, got %s" % $result).throw();
+    }
+  }/*}}}*/
+}

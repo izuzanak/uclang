@@ -1,0 +1,165 @@
+
+import utf8proc;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - default constructor -
+    uc = new UnicodeChar();
+    if (uc.value() != 0)
+    {
+      new Exception("default ctor: expected value 0, got %d" % uc.value()).throw();
+    }
+
+    // - construct from Char -
+    uc = new UnicodeChar('A');
+    if (uc.value() != 65)
+    {
+      new Exception("from Char: expected 65, got %d" % uc.value()).throw();
+    }
+
+    // - construct from Integer -
+    uc = new UnicodeChar(0x159);
+    if (uc.value() != 345)
+    {
+      new Exception("from Integer: expected 345, got %d" % uc.value()).throw();
+    }
+
+    // - construct from UnicodeChar -
+    uc1 = new UnicodeChar(65);
+    uc2 = new UnicodeChar(uc1);
+    if (uc2.value() != 65)
+    {
+      new Exception("from UnicodeChar: expected 65, got %d" % uc2.value()).throw();
+    }
+
+    // - to_string ASCII -
+    if ($new UnicodeChar('A') != "A")
+    {
+      new Exception("to_string 'A' failed").throw();
+    }
+
+    // - to_string multi-byte -
+    if ($new UnicodeChar(0x159) != "ř")
+    {
+      new Exception("to_string ř failed").throw();
+    }
+
+    // - to_lower ASCII -
+    if (new UnicodeChar('A').to_lower().value() != 97)
+    {
+      new Exception("to_lower A: expected 97").throw();
+    }
+
+    // - to_upper ASCII -
+    if (new UnicodeChar('a').to_upper().value() != 65)
+    {
+      new Exception("to_upper a: expected 65").throw();
+    }
+
+    // - already lowercase unchanged -
+    if (new UnicodeChar('a').to_lower().value() != 97)
+    {
+      new Exception("to_lower a: expected 97").throw();
+    }
+
+    // - Czech: Ž (0x17D) to_lower -> ž (0x17E) -
+    if (new UnicodeChar(0x17D).to_lower().value() != 0x17E)
+    {
+      new Exception("to_lower Ž: expected 0x17E").throw();
+    }
+
+    // - Czech: ž (0x17E) to_upper -> Ž (0x17D) -
+    if (new UnicodeChar(0x17E).to_upper().value() != 0x17D)
+    {
+      new Exception("to_upper ž: expected 0x17D").throw();
+    }
+
+    // - digit unchanged by case conversion -
+    if (new UnicodeChar('1').to_lower().value() != new UnicodeChar('1').value())
+    {
+      new Exception("to_lower digit: should be unchanged").throw();
+    }
+
+    // - compare: less -
+    if (new UnicodeChar('a').compare(new UnicodeChar('b')) != -1)
+    {
+      new Exception("compare a < b: expected -1").throw();
+    }
+
+    // - compare: greater -
+    if (new UnicodeChar('b').compare(new UnicodeChar('a')) != 1)
+    {
+      new Exception("compare b > a: expected 1").throw();
+    }
+
+    // - compare: equal -
+    if (new UnicodeChar('a').compare(new UnicodeChar('a')) != 0)
+    {
+      new Exception("compare a == a: expected 0").throw();
+    }
+
+    // - == with Integer -
+    if (new UnicodeChar(65) != 65)
+    {
+      new Exception("== Integer: UnicodeChar(65) should == 65").throw();
+    }
+
+    // - == with Char -
+    if (new UnicodeChar('A') != 'A')
+    {
+      new Exception("== Char: UnicodeChar('A') should == 'A'").throw();
+    }
+
+    // - == with UnicodeChar -
+    if (new UnicodeChar(65) != new UnicodeChar('A'))
+    {
+      new Exception("== UnicodeChar: should be equal").throw();
+    }
+
+    // - != different values -
+    if (!(new UnicodeChar(65) != new UnicodeChar(66)))
+    {
+      new Exception("!= should be true for different values").throw();
+    }
+
+    // - != same values -
+    if (new UnicodeChar(65) != new UnicodeChar(65))
+    {
+      new Exception("!= should be false for same values").throw();
+    }
+
+    // - to_string roundtrip for Czech code points appearing in the sentence -
+    if ($new UnicodeChar(0x161) != "š")
+    {
+      new Exception("to_string š (0x161) failed").throw();
+    }
+
+    if ($new UnicodeChar(0x165) != "ť")
+    {
+      new Exception("to_string ť (0x165) failed").throw();
+    }
+
+    if ($new UnicodeChar(0x10D) != "č")
+    {
+      new Exception("to_string č (0x10D) failed").throw();
+    }
+
+    if ($new UnicodeChar(0x16F) != "ů")
+    {
+      new Exception("to_string ů (0x16F) failed").throw();
+    }
+
+    if ($new UnicodeChar(0x148) != "ň")
+    {
+      new Exception("to_string ň (0x148) failed").throw();
+    }
+
+    if ($new UnicodeChar(0x10F) != "ď")
+    {
+      new Exception("to_string ď (0x10F) failed").throw();
+    }
+  }/*}}}*/
+}

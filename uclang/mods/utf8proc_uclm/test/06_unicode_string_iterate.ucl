@@ -1,0 +1,124 @@
+
+import utf8proc;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    us = new UnicodeString("kůň");
+
+    // - first_idx on non-empty -
+    if (us.first_idx() != 0)
+    {
+      new Exception("first_idx: expected 0, got %s" % $us.first_idx()).throw();
+    }
+
+    // - next_idx chain -
+    if (us.next_idx(0) != 1)
+    {
+      new Exception("next_idx(0): expected 1").throw();
+    }
+
+    if (us.next_idx(1) != 2)
+    {
+      new Exception("next_idx(1): expected 2").throw();
+    }
+
+    // - next_idx past end returns Blank -
+    if (Blank != us.next_idx(2))
+    {
+      new Exception("next_idx(2): expected Blank").throw();
+    }
+
+    // - first_idx on empty returns Blank -
+    empty = new UnicodeString("");
+    if (Blank != empty.first_idx())
+    {
+      new Exception("first_idx empty: expected Blank").throw();
+    }
+
+    // - manual index iteration over multi-byte chars 'kůň' -
+    values = [];
+    idx = us.first_idx();
+    while (Blank != idx)
+    {
+      values.push(us.item(idx).value());
+      idx = us.next_idx(idx);
+    }
+
+    if (values.length() != 3)
+    {
+      new Exception("manual iteration: expected 3 items, got %d" % values.length()).throw();
+    }
+
+    // - k=107, ů=0x16F (367), ň=0x148 (328) -
+    if (values[0] != 107 or values[1] != 0x16F or values[2] != 0x148)
+    {
+      new Exception("manual iteration: wrong values").throw();
+    }
+
+    // - for-each iteration over 'kůň' -
+    values = [];
+    for (ch <- us)
+    {
+      values.push(ch.value());
+    }
+
+    if (values.length() != 3)
+    {
+      new Exception("for-each: expected 3 items, got %d" % values.length()).throw();
+    }
+
+    if (values[0] != 107 or values[1] != 0x16F or values[2] != 0x148)
+    {
+      new Exception("for-each: wrong values").throw();
+    }
+
+    // - for-each on 'Příliš' -
+    us_cz = new UnicodeString("Příliš");
+    values = [];
+    for (ch <- us_cz)
+    {
+      values.push(ch.value());
+    }
+
+    if (values.length() != 6)
+    {
+      new Exception("for-each 'Příliš': expected 6 items, got %d" % values.length()).throw();
+    }
+
+    // - P=80, ř=0x159, í=0xED, l=108, i=105, š=0x161 -
+    if (values[0] != 80)
+    {
+      new Exception("for-each 'Příliš'[0]: expected 80 (P), got %d" % values[0]).throw();
+    }
+
+    if (values[1] != 0x159)
+    {
+      new Exception("for-each 'Příliš'[1]: expected 0x159 (ř), got %d" % values[1]).throw();
+    }
+
+    if (values[2] != 0xED)
+    {
+      new Exception("for-each 'Příliš'[2]: expected 0xED (í), got %d" % values[2]).throw();
+    }
+
+    if (values[5] != 0x161)
+    {
+      new Exception("for-each 'Příliš'[5]: expected 0x161 (š), got %d" % values[5]).throw();
+    }
+
+    // - for-each on empty -
+    count = 0;
+    for (ch <- new UnicodeString(""))
+    {
+      count += 1;
+    }
+
+    if (count != 0)
+    {
+      new Exception("for-each empty: expected 0 iterations").throw();
+    }
+  }/*}}}*/
+}

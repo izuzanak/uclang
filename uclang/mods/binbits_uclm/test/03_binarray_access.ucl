@@ -1,0 +1,153 @@
+
+import binbits;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - item access -
+    arr = new BinArray(BinArray.TYPE_INT32,[10,20,30]);
+    if (arr.item(0).value() != 10)
+    {
+      new Exception("item(0): expected 10, got %s" % $arr.item(0).value()).throw();
+    }
+    if (arr.item(1).value() != 20)
+    {
+      new Exception("item(1): expected 20, got %s" % $arr.item(1).value()).throw();
+    }
+    if (arr.item(2).value() != 30)
+    {
+      new Exception("item(2): expected 30, got %s" % $arr.item(2).value()).throw();
+    }
+
+    // - [] operator access -
+    if (arr[0].value() != 10 || arr[1].value() != 20 || arr[2].value() != 30)
+    {
+      new Exception("[] operator: element mismatch").throw();
+    }
+
+    // - [] write-through -
+    arr[1] = 99;
+    if (arr[1].value() != 99)
+    {
+      new Exception("[] write: expected 99, got %s" % $arr[1].value()).throw();
+    }
+
+    // - head -
+    arr = new BinArray(BinArray.TYPE_INT32,[10,20,30,40,50]);
+    head_res = arr.head(3);
+    if ($head_res != "[10,20,30]")
+    {
+      new Exception("head(3): expected [10,20,30], got %s" % $head_res).throw();
+    }
+
+    // - head(0) -
+    head_res = arr.head(0);
+    if (head_res.length() != 0)
+    {
+      new Exception("head(0): expected length 0, got %d" % head_res.length()).throw();
+    }
+
+    // - head negative -
+    head_res = arr.head(-1);
+    if ($head_res != "[10,20,30,40]")
+    {
+      new Exception("head(-1): expected [10,20,30,40], got %s" % $head_res).throw();
+    }
+
+    // - tail -
+    tail_res = arr.tail(2);
+    if ($tail_res != "[40,50]")
+    {
+      new Exception("tail(2): expected [40,50], got %s" % $tail_res).throw();
+    }
+
+    // - tail(0) -
+    tail_res = arr.tail(0);
+    if (tail_res.length() != 0)
+    {
+      new Exception("tail(0): expected length 0, got %d" % tail_res.length()).throw();
+    }
+
+    // - tail negative -
+    tail_res = arr.tail(-2);
+    if ($tail_res != "[30,40,50]")
+    {
+      new Exception("tail(-2): expected [30,40,50], got %s" % $tail_res).throw();
+    }
+
+    // - range inclusive -
+    range_res = arr.range(1,3);
+    if ($range_res != "[20,30,40]")
+    {
+      new Exception("range(1,3): expected [20,30,40], got %s" % $range_res).throw();
+    }
+
+    // - range single element -
+    range_res = arr.range(2,2);
+    if ($range_res != "[30]")
+    {
+      new Exception("range(2,2): expected [30], got %s" % $range_res).throw();
+    }
+
+    // - range negative indices -
+    range_res = arr.range(-3,-1);
+    if ($range_res != "[30,40,50]")
+    {
+      new Exception("range(-3,-1): expected [30,40,50], got %s" % $range_res).throw();
+    }
+
+    // - get_idx found -
+    arr = new BinArray(BinArray.TYPE_INT32,[10,20,30,20]);
+    idx = arr.get_idx(20);
+    if (idx != 1)
+    {
+      new Exception("get_idx(20): expected 1, got %s" % $idx).throw();
+    }
+
+    // - get_idx not found -
+    idx = arr.get_idx(99);
+    if (Blank != idx)
+    {
+      new Exception("get_idx(99): expected Blank, got %s" % $idx).throw();
+    }
+
+    // - get_idxs found -
+    idxs = arr.get_idxs(20);
+    if (idxs.length() != 2)
+    {
+      new Exception("get_idxs(20): expected 2 results, got %d" % idxs.length()).throw();
+    }
+    if (idxs[0] != 1 || idxs[1] != 3)
+    {
+      new Exception("get_idxs(20): expected [1,3], got %s" % $idxs).throw();
+    }
+
+    // - get_idxs not found -
+    idxs = arr.get_idxs(99);
+    if (idxs.length() != 0)
+    {
+      new Exception("get_idxs(99): expected 0 results, got %d" % idxs.length()).throw();
+    }
+
+    // - contain found -
+    if (arr.contain(30) != 1)
+    {
+      new Exception("contain(30): expected 1").throw();
+    }
+
+    // - contain not found -
+    if (arr.contain(99) != 0)
+    {
+      new Exception("contain(99): expected 0").throw();
+    }
+
+    // - to_string with separator -
+    arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
+    if (arr.to_string("|") != "1|2|3")
+    {
+      new Exception("to_string sep: expected 1|2|3, got %s" % arr.to_string("|")).throw();
+    }
+  }/*}}}*/
+}

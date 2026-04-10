@@ -1,0 +1,198 @@
+
+import time;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - too short string -
+    caught = 0;
+    try {
+      new Time("2000010110302");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("too short string did not throw").throw();
+    }
+
+    // - too long string -
+    caught = 0;
+    try {
+      new Time("200001011030250");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("too long string did not throw").throw();
+    }
+
+    // - empty string -
+    caught = 0;
+    try {
+      new Time("");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("empty string did not throw").throw();
+    }
+
+    // - non-numeric characters -
+    caught = 0;
+    try {
+      new Time("2000010110302X");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("non-numeric string did not throw").throw();
+    }
+
+    // - invalid month 0 -
+    caught = 0;
+    try {
+      new Time("20000001103025");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("month 0 did not throw").throw();
+    }
+
+    // - invalid month 13 -
+    caught = 0;
+    try {
+      new Time("20001301103025");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("month 13 did not throw").throw();
+    }
+
+    // - invalid day 0 -
+    caught = 0;
+    try {
+      new Time("20000100103025");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("day 0 did not throw").throw();
+    }
+
+    // - invalid day 32 -
+    caught = 0;
+    try {
+      new Time("20000132103025");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("day 32 did not throw").throw();
+    }
+
+    // - invalid hour 24 -
+    caught = 0;
+    try {
+      new Time("20000101240025");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("hour 24 did not throw").throw();
+    }
+
+    // - invalid minute 60 -
+    caught = 0;
+    try {
+      new Time("20000101106025");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("minute 60 did not throw").throw();
+    }
+
+    // - invalid second 60 -
+    caught = 0;
+    try {
+      new Time("20000101103060");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("second 60 did not throw").throw();
+    }
+
+    // - year before 1970 -
+    caught = 0;
+    try {
+      new Time("19690101000000");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("year 1969 did not throw").throw();
+    }
+
+    // - feb 29 non-leap year -
+    caught = 0;
+    try {
+      new Time("20010229103025");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("feb 29 non-leap did not throw").throw();
+    }
+
+    // - feb 29 leap year (valid, must not throw) -
+    t = new Time("20000229103025");
+    if ($t != "2000/02/29 10:30:25")
+    {
+      new Exception("feb 29 leap: expected 2000/02/29 10:30:25, got %s" % $t).throw();
+    }
+  }/*}}}*/
+}

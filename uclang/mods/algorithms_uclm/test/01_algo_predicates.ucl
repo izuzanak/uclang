@@ -1,0 +1,88 @@
+
+import containers;
+import algorithms;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - all_true with all truthy elements -
+    if (Algo.all_true([1,2,3]) != 1)
+    {
+      new Exception("all_true [1,2,3]: expected 1").throw();
+    }
+
+    // - all_true with one falsy element -
+    if (Algo.all_true([1,0,3]) != 0)
+    {
+      new Exception("all_true [1,0,3]: expected 0").throw();
+    }
+
+    // - all_true empty array (vacuous truth) -
+    if (Algo.all_true([]) != 1)
+    {
+      new Exception("all_true []: expected 1").throw();
+    }
+
+    // - all_true single falsy -
+    if (Algo.all_true([0]) != 0)
+    {
+      new Exception("all_true [0]: expected 0").throw();
+    }
+
+    // - all_true single truthy -
+    if (Algo.all_true([1]) != 1)
+    {
+      new Exception("all_true [1]: expected 1").throw();
+    }
+
+    // - any_true all falsy -
+    if (Algo.any_true([0,0,0]) != 0)
+    {
+      new Exception("any_true [0,0,0]: expected 0").throw();
+    }
+
+    // - any_true one truthy -
+    if (Algo.any_true([0,1,0]) != 1)
+    {
+      new Exception("any_true [0,1,0]: expected 1").throw();
+    }
+
+    // - any_true empty array -
+    if (Algo.any_true([]) != 0)
+    {
+      new Exception("any_true []: expected 0").throw();
+    }
+
+    // - any_true single falsy -
+    if (Algo.any_true([0]) != 0)
+    {
+      new Exception("any_true [0]: expected 0").throw();
+    }
+
+    // - any_true single truthy -
+    if (Algo.any_true([1]) != 1)
+    {
+      new Exception("any_true [1]: expected 1").throw();
+    }
+
+    // - all_true with Range iterable -
+    if (Algo.all_true(new Range(1,5)) != 1)
+    {
+      new Exception("all_true Range(1,5): expected 1").throw();
+    }
+
+    // - any_true with Range starting from zero -
+    if (Algo.any_true(new Range(0,3)) != 1)
+    {
+      new Exception("any_true Range(0,3): expected 1").throw();
+    }
+
+    // - to_string returns class name -
+    if ($Algo != "Algo")
+    {
+      new Exception("to_string: expected Algo, got %s" % $Algo).throw();
+    }
+  }/*}}}*/
+}

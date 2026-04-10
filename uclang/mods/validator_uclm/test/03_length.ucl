@@ -1,0 +1,159 @@
+
+import containers;
+import validator;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    schema = new Dict([
+      "leq", ["length ==", 5],
+      "lne", ["length !=", 5],
+      "llt", ["length <", 5],
+      "lgt", ["length >", 5],
+      "lle", ["length <=", 5],
+      "lge", ["length >=", 5]
+    ]);
+    v = new Validator(schema);
+
+    // - length == string pass -
+    v.validate("leq", "hello");
+
+    // - length == array pass -
+    v.validate("leq", [1,2,3,4,5]);
+
+    // - length == fail -
+    caught = 0;
+    try {
+      v.validate("leq", "hi");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("length == should reject 'hi'").throw();
+    }
+
+    // - length != pass -
+    v.validate("lne", "hi");
+
+    // - length != fail -
+    caught = 0;
+    try {
+      v.validate("lne", "hello");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("length != should reject length 5").throw();
+    }
+
+    // - length < pass -
+    v.validate("llt", "hi");
+
+    // - length < fail (equal) -
+    caught = 0;
+    try {
+      v.validate("llt", "hello");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("length < should reject length 5").throw();
+    }
+
+    // - length < fail (greater) -
+    caught = 0;
+    try {
+      v.validate("llt", "hello!");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("length < should reject length 6").throw();
+    }
+
+    // - length > pass -
+    v.validate("lgt", "hello!");
+
+    // - length > fail (equal) -
+    caught = 0;
+    try {
+      v.validate("lgt", "hello");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("length > should reject length 5").throw();
+    }
+
+    // - length > fail (lesser) -
+    caught = 0;
+    try {
+      v.validate("lgt", "hi");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("length > should reject length 2").throw();
+    }
+
+    // - length <= pass (equal) -
+    v.validate("lle", "hello");
+
+    // - length <= pass (less) -
+    v.validate("lle", "hi");
+
+    // - length <= fail -
+    caught = 0;
+    try {
+      v.validate("lle", "hello!");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("length <= should reject length 6").throw();
+    }
+
+    // - length >= pass (equal) -
+    v.validate("lge", "hello");
+
+    // - length >= pass (greater) -
+    v.validate("lge", "hello!");
+
+    // - length >= fail -
+    caught = 0;
+    try {
+      v.validate("lge", "hi");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("length >= should reject length 2").throw();
+    }
+  }/*}}}*/
+}

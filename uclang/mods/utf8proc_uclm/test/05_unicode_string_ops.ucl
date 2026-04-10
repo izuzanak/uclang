@@ -1,0 +1,137 @@
+
+import utf8proc;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - == equal -
+    if (!(new UnicodeString("Příliš") == new UnicodeString("Příliš")))
+    {
+      new Exception("== equal: should be true").throw();
+    }
+
+    // - == unequal -
+    if (new UnicodeString("Příliš") == new UnicodeString("žluťoučký"))
+    {
+      new Exception("== unequal: should be false").throw();
+    }
+
+    // - != different -
+    if (!(new UnicodeString("kůň") != new UnicodeString("úpěl")))
+    {
+      new Exception("!= different: should be true").throw();
+    }
+
+    // - != same -
+    if (new UnicodeString("kůň") != new UnicodeString("kůň"))
+    {
+      new Exception("!= same: should be false").throw();
+    }
+
+    // - + two UnicodeStrings -
+    result = new UnicodeString("Pří") + new UnicodeString("liš");
+    if ($result != "Příliš")
+    {
+      new Exception("+ UnicodeStrings: expected 'Příliš', got '%s'" % $result).throw();
+    }
+
+    // - + UnicodeString with String -
+    result = new UnicodeString("Pří") + "liš";
+    if ($result != "Příliš")
+    {
+      new Exception("+ String: expected 'Příliš', got '%s'" % $result).throw();
+    }
+
+    // - + does not modify original -
+    us1 = new UnicodeString("kůň");
+    us2 = new UnicodeString("úpěl");
+    us3 = us1 + us2;
+    if (us1.length() != 3)
+    {
+      new Exception("+ modified original").throw();
+    }
+
+    // - += in-place -
+    us = new UnicodeString("Příliš");
+    us += new UnicodeString(" žluťoučký");
+    if ($us != "Příliš žluťoučký")
+    {
+      new Exception("+= : expected 'Příliš žluťoučký', got '%s'" % $us).throw();
+    }
+
+    // - += with String -
+    us = new UnicodeString("kůň");
+    us += " úpěl";
+    if ($us != "kůň úpěl")
+    {
+      new Exception("+= String: expected 'kůň úpěl', got '%s'" % $us).throw();
+    }
+
+    // - * repetition with multi-byte chars -
+    result = new UnicodeString("kůň") * 3;
+    if ($result != "kůňkůňkůň")
+    {
+      new Exception("* 3: expected 'kůňkůňkůň', got '%s'" % $result).throw();
+    }
+
+    // - * 1 -
+    result = new UnicodeString("ďábelské") * 1;
+    if ($result != "ďábelské")
+    {
+      new Exception("* 1: expected 'ďábelské', got '%s'" % $result).throw();
+    }
+
+    // - * 0 gives empty -
+    result = new UnicodeString("ódy.") * 0;
+    if (result.length() != 0)
+    {
+      new Exception("* 0: expected empty, got length %d" % result.length()).throw();
+    }
+
+    // - *= in-place on single multi-byte char -
+    us = new UnicodeString("ř");
+    us *= 4;
+    if ($us != "řřřř")
+    {
+      new Exception("*= 4: expected 'řřřř', got '%s'" % $us).throw();
+    }
+
+    // - compare equal -
+    if (new UnicodeString("Příliš").compare(new UnicodeString("Příliš")) != 0)
+    {
+      new Exception("compare equal: expected 0").throw();
+    }
+
+    // - compare less ('P'=80 < 'ž'=382) -
+    if (new UnicodeString("Příliš").compare(new UnicodeString("žluťoučký")) != -1)
+    {
+      new Exception("compare less: expected -1").throw();
+    }
+
+    // - compare greater ('ž'=382 > 'P'=80) -
+    if (new UnicodeString("žluťoučký").compare(new UnicodeString("Příliš")) != 1)
+    {
+      new Exception("compare greater: expected 1").throw();
+    }
+
+    // - compare different lengths: shorter is less -
+    if (new UnicodeString("Příli").compare(new UnicodeString("Příliš")) != -1)
+    {
+      new Exception("compare shorter: expected -1").throw();
+    }
+
+    // - compare different lengths: longer is greater -
+    if (new UnicodeString("Příliš").compare(new UnicodeString("Příli")) != 1)
+    {
+      new Exception("compare longer: expected 1").throw();
+    }
+
+    // - compare empty strings -
+    if (new UnicodeString("").compare(new UnicodeString("")) != 0)
+    {
+      new Exception("compare empty: expected 0").throw();
+    }
+  }/*}}}*/
+}

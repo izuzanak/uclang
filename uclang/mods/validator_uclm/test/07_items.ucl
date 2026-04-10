@@ -1,0 +1,167 @@
+
+import containers;
+import validator;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - items dict pass -
+    schema = new Dict([
+      "person", ["items", [
+        "name", ["type", type String],
+        "age", ["type", type Integer]
+      ]]
+    ]);
+    v = new Validator(schema);
+    v.validate("person", new Dict(["name", "Alice", "age", 30]));
+
+    // - items dict fail -
+    caught = 0;
+    try {
+      v.validate("person", new Dict(["name", "Alice", "age", "thirty"]));
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("items should reject string age").throw();
+    }
+
+    // - items dict fail: stack verification -
+    schema = new Dict([
+      "entry", ["items", [
+        "name", ["type", type String],
+        "age", ["type", type Integer, ">=", 0]
+      ]]
+    ]);
+    v = new Validator(schema);
+    try {
+      v.validate("entry", new Dict(["name", "Bob", "age", -5]));
+    }
+    catch (e)
+    {
+      if (v.props_stack() != ["entry", "items", "age", ">="])
+      {
+        new Exception("expected props_stack [entry,items,age,>=], got %s" % $v.props_stack()).throw();
+      }
+      if (v.value_stack() != ["age"])
+      {
+        new Exception("expected value_stack [age], got %s" % $v.value_stack()).throw();
+      }
+    }
+
+    // - items array pass -
+    schema = new Dict([
+      "arr", ["items", [
+        0, ["==", 0],
+        1, ["==", 0],
+        2, ["==", "Hello"]
+      ]]
+    ]);
+    v = new Validator(schema);
+    v.validate("arr", [0, 0, "Hello"]);
+
+    // - items array fail with stack -
+    caught = 0;
+    try {
+      v.validate("arr", [0, 0, 0]);
+    }
+    catch (e)
+    {
+      caught = 1;
+      if (v.props_stack() != ["arr", "items", 2, "=="])
+      {
+        new Exception("expected props_stack [arr,items,2,==], got %s" % $v.props_stack()).throw();
+      }
+      if (v.value_stack() != [2])
+      {
+        new Exception("expected value_stack [2], got %s" % $v.value_stack()).throw();
+      }
+    }
+    if (caught != 1)
+    {
+      new Exception("items array should reject [0,0,0]").throw();
+    }
+
+    // - items dict pass (from C test) -
+    schema = new Dict([
+      "test", ["items", [
+        0, ["==", 0],
+        1, ["==", 0],
+        2, ["==", "Hello"]
+      ]]
+    ]);
+    v = new Validator(schema);
+    v.validate("test", new Dict([0, 0, 1, 0, 2, "Hello"]));
+
+    // - items dict fail with stack -
+    caught = 0;
+    try {
+      v.validate("test", new Dict([0, 0, 1, 1, 2, "Hello"]));
+    }
+    catch (e)
+    {
+      caught = 1;
+      if (v.props_stack() != ["test", "items", 1, "=="])
+      {
+        new Exception("expected props_stack [test,items,1,==], got %s" % $v.props_stack()).throw();
+      }
+      if (v.value_stack() != [1])
+      {
+        new Exception("expected value_stack [1], got %s" % $v.value_stack()).throw();
+      }
+    }
+    if (caught != 1)
+    {
+      new Exception("items dict should reject value 1 at key 1").throw();
+    }
+
+    // - opt-items all present pass -
+    schema = new Dict([
+      "opt", ["opt-items", [
+        "email", ["type", type String],
+        "phone", ["type", type String]
+      ]]
+    ]);
+    v = new Validator(schema);
+    v.validate("opt", new Dict(["email", "a@b.c", "phone", "123"]));
+
+    // - opt-items partial pass -
+    v.validate("opt", new Dict(["email", "a@b.c"]));
+
+    // - opt-items none present pass -
+    v.validate("opt", new Dict(["other", "value"]));
+
+    // - opt-items fail -
+    caught = 0;
+    try {
+      v.validate("opt", new Dict(["email", 123]));
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("opt-items should reject integer email").throw();
+    }
+
+    // - opt-items requires Dict -
+    caught = 0;
+    try {
+      v.validate("opt", [1, 2, 3]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("opt-items should reject non-Dict").throw();
+    }
+  }/*}}}*/
+}

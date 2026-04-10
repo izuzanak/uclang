@@ -1,0 +1,238 @@
+
+import sys;
+import containers;
+import algorithms;
+import websocket;
+import epoll;
+
+class Main
+{
+  public Main()
+  {/*{{{*/
+    m_epoll = new Epoll(Epoll.CLOEXEC);
+    m_poll_callbacks = new Dict();
+    m_ws_fd_set = new Set();
+  }/*}}}*/
+
+  // - shared state -
+  static server_established = 0;
+  static client_established = [0,0,0];
+  static client_received = [[],[],[]];
+  static client_send_queues = [new Queue(),new Queue(),new Queue()];
+  static ctx_user_data_values = [];
+
+  public m_epoll;
+  public m_poll_callbacks;
+  public m_ws_fd_set;
+  public m_ctx;
+  public m_ws_clients;
+
+  // - websocket protocol callback -
+  public on_ws_event(a_conn)
+  {/*{{{*/
+    reason = a_conn.reason();
+
+    if (reason == WsConn.CB_ESTABLISHED)
+    {
+      server_established += 1;
+    }
+    else if (reason == WsConn.CB_CLIENT_ESTABLISHED)
+    {
+      // - identify client by user_data -
+      ud = a_conn.user_data();
+      client_established[ud] = 1;
+
+      // - record ctx_user_data -
+      ctx_user_data_values.push($a_conn.ctx_user_data());
+    }
+    else if (reason == WsConn.CB_RECEIVE)
+    {
+      // - server echo: prepend client user_data identifier -
+      data = a_conn.received_data();
+      a_conn.write("ECHO:%s" % data);
+    }
+    else if (reason == WsConn.CB_CLIENT_RECEIVE)
+    {
+      ud = a_conn.user_data();
+      client_received[ud].push($a_conn.received_data());
+    }
+    else if (reason == WsConn.CB_CLIENT_WRITEABLE)
+    {
+      ud = a_conn.user_data();
+      if (client_send_queues[ud].length() > 0)
+      {
+        a_conn.write(client_send_queues[ud].next());
+      }
+    }
+  }/*}}}*/
+
+  // - fd event handler -
+  public on_ws_fd_event(a_fd,a_event)
+  {/*{{{*/
+    m_ctx.process(0);
+    this.poll_set_update();
+  }/*}}}*/
+
+  // - poll management -
+  public poll_fd_add(a_fd,a_events,a_callback)
+  {/*{{{*/
+    m_epoll.add(a_fd,a_events);
+    m_poll_callbacks[a_fd] = a_callback;
+  }/*}}}*/
+
+  public poll_fd_remove(a_fd)
+  {/*{{{*/
+    m_epoll.del(a_fd);
+    m_poll_callbacks.remove_key(a_fd);
+  }/*}}}*/
+
+  public poll_set_update()
+  {/*{{{*/
+    s_fds = m_ctx.get_fds();
+    new_set = new Set(Algo.tuple_zip([s_fds[::2],s_fds[1::2]]));
+
+    for (pollfd <- m_ws_fd_set - new_set)
+    {
+      m_epoll.del(pollfd[0]);
+      m_poll_callbacks.remove_key(pollfd[0]);
+    }
+
+    for (pollfd <- new_set - m_ws_fd_set)
+    {
+      m_epoll.add(pollfd[0],pollfd[1]);
+      m_poll_callbacks[pollfd[0]] = new Delegate(this,"on_ws_fd_event",2);
+    }
+
+    m_ws_fd_set = new_set;
+  }/*}}}*/
+
+  static private all_connected()
+  {/*{{{*/
+    return client_established[0] == 1
+       and client_established[1] == 1
+       and client_established[2] == 1;
+  }/*}}}*/
+
+  static private total_received()
+  {/*{{{*/
+    return client_received[0].length()
+         + client_received[1].length()
+         + client_received[2].length();
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19500 + (Sys.getpid() % 1000);
+
+    // - set context user_data -
+    obj.m_ctx = new WsContext("127.0.0.1",port,
+      ["multi-protocol",new Delegate(obj,"on_ws_event",1)]);
+    obj.m_ctx.user_data() = "ctx-shared";
+
+    // - register initial fds -
+    obj.poll_set_update();
+
+    // - create 3 clients with index as user_data -
+    obj.m_ws_clients = [];
+    ci = 0;
+    while (ci < 3)
+    {
+      cl = obj.m_ctx.client("127.0.0.1",port,"/","multi-protocol",ci);
+      obj.m_ws_clients.push(cl);
+      ci += 1;
+    }
+
+    // - initial process after client creation -
+    obj.m_ctx.process(0);
+    obj.poll_set_update();
+
+    // - wait for all clients to connect -
+    iterations = 0;
+    while ((!all_connected() or server_established < 3) and iterations < 500)
+    {
+      events = obj.m_epoll.wait(1,50);
+      if (Blank != events)
+      {
+        obj.m_poll_callbacks[events[0]].call(events);
+      }
+      iterations += 1;
+    }
+
+    if (!all_connected())
+    {
+      new Exception("not all clients connected").throw();
+    }
+
+    if (server_established != 3)
+    {
+      new Exception("server_established: expected 3, got %d" % server_established).throw();
+    }
+
+    // - verify ctx_user_data was accessible from callbacks -
+    if (ctx_user_data_values.length() != 3)
+    {
+      new Exception("ctx_user_data_values: expected 3, got %d" % ctx_user_data_values.length()).throw();
+    }
+
+    ci = 0;
+    while (ci < ctx_user_data_values.length())
+    {
+      if (ctx_user_data_values[ci] != "ctx-shared")
+      {
+        new Exception("ctx_user_data[%d]: expected ctx-shared, got %s" %
+          [ci,ctx_user_data_values[ci]]).throw();
+      }
+      ci += 1;
+    }
+
+    // - send one message per client -
+    test_messages = ["msg-from-0","msg-from-1","msg-from-2"];
+    ci = 0;
+    while (ci < 3)
+    {
+      client_send_queues[ci].insert(test_messages[ci]);
+      obj.m_ws_clients[ci].callback_on_writable();
+      ci += 1;
+    }
+
+    obj.m_ctx.process(0);
+    obj.poll_set_update();
+
+    // - wait for all echoes -
+    iterations = 0;
+    while (total_received() < 3 and iterations < 500)
+    {
+      events = obj.m_epoll.wait(1,50);
+      if (Blank != events)
+      {
+        obj.m_poll_callbacks[events[0]].call(events);
+      }
+      iterations += 1;
+    }
+
+    // - verify each client received its echo -
+    ci = 0;
+    while (ci < 3)
+    {
+      if (client_received[ci].length() != 1)
+      {
+        new Exception("client %d: expected 1 message, got %d" %
+          [ci,client_received[ci].length()]).throw();
+      }
+
+      expected = "ECHO:%s" % test_messages[ci];
+      if (client_received[ci][0] != expected)
+      {
+        new Exception("client %d: expected '%s', got '%s'" %
+          [ci,expected,client_received[ci][0]]).throw();
+      }
+      ci += 1;
+    }
+
+    // - release reference cycles -
+    free obj.m_poll_callbacks;
+    free obj.m_ws_clients;
+    free obj.m_ctx;
+  }/*}}}*/
+}

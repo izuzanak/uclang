@@ -1,0 +1,285 @@
+
+import sys;
+import containers;
+import algorithms;
+import channel;
+import epoll;
+
+class Main
+{
+  public Main()
+  {/*{{{*/
+    m_epoll = new Epoll(Epoll.CLOEXEC);
+    m_poll_callbacks = new Dict();
+    m_server_fd_set = new Set();
+  }/*}}}*/
+
+  // - server state -
+  static server_conn_idxs = [];
+
+  // - client state (per-client arrays indexed by client_id) -
+  static client_connected = [0,0,0];
+  static client_messages = [[],[],[]];
+
+  public m_epoll;
+  public m_poll_callbacks;
+  public m_server_fd_set;
+  public m_server;
+  public m_clients;
+
+  // - server callbacks -
+  public on_channel_event(a_server,a_conn_idx,a_event)
+  {/*{{{*/
+    if (a_event == ChannelServer.EVENT_ACCEPTED)
+    {
+      server_conn_idxs.push(a_conn_idx);
+    }
+  }/*}}}*/
+
+  public on_channel_message(a_server,a_conn_idx,a_message)
+  {/*{{{*/
+  }/*}}}*/
+
+  // - client callbacks (unified, index bound via papply) -
+  public on_client_event(a_index,a_client,a_event)
+  {/*{{{*/
+    if (a_event == ChannelClient.EVENT_CONNECTED) { client_connected[a_index] = 1; }
+  }/*}}}*/
+
+  public on_client_message(a_index,a_client,a_message)
+  {/*{{{*/
+    client_messages[a_index].push(a_message);
+  }/*}}}*/
+
+  // - fd event handlers -
+  public on_channel_fd_event(a_fd,a_event)
+  {/*{{{*/
+    m_server.process(a_fd,a_event);
+
+    // - update server fd set -
+    this.poll_set_update();
+  }/*}}}*/
+
+  public on_client_fd_event(a_index,a_fd,a_event)
+  {/*{{{*/
+    m_clients[a_index].process(a_fd,a_event);
+
+    // - update client fd -
+    client = m_clients[a_index];
+    ev = client.events();
+    if (ev != 0)
+    {
+      this.poll_fd_add(client.get_fd(),ev,
+          new Delegate(this,"on_client_fd_event",3).papply([a_index]));
+    }
+    else
+    {
+      this.poll_fd_remove(client.get_fd());
+    }
+  }/*}}}*/
+
+  // - poll management -
+  public poll_fd_add(a_fd,a_events,a_callback)
+  {/*{{{*/
+    m_epoll.add(a_fd,a_events);
+    m_poll_callbacks[a_fd] = a_callback;
+  }/*}}}*/
+
+  public poll_fd_remove(a_fd)
+  {/*{{{*/
+    m_epoll.del(a_fd);
+    m_poll_callbacks.remove_key(a_fd);
+  }/*}}}*/
+
+  public poll_set_update()
+  {/*{{{*/
+    s_fds = m_server.get_fds();
+    new_set = new Set(Algo.tuple_zip([s_fds[::2],s_fds[1::2]]));
+
+    // - remove old or modified fds -
+    for (pollfd <- m_server_fd_set - new_set)
+    {
+      m_epoll.del(pollfd[0]);
+      m_poll_callbacks.remove_key(pollfd[0]);
+    }
+
+    // - add new or modified fds -
+    for (pollfd <- new_set - m_server_fd_set)
+    {
+      m_epoll.add(pollfd[0],pollfd[1]);
+      m_poll_callbacks[pollfd[0]] = new Delegate(this,"on_channel_fd_event",2);
+    }
+
+    m_server_fd_set = new_set;
+  }/*}}}*/
+
+  // - event loop helper -
+  public run_loop(a_condition,a_max_iterations)
+  {/*{{{*/
+    iterations = 0;
+    while (iterations < a_max_iterations)
+    {
+      if (a_condition.call([]) == 1) { break; }
+
+      events = m_epoll.wait(1,50);
+
+      if (Blank != events)
+      {
+        m_poll_callbacks[events[0]].call(events);
+      }
+
+      iterations += 1;
+    }
+    return iterations;
+  }/*}}}*/
+
+  static private all_connected()
+  {/*{{{*/
+    return client_connected[0] == 1
+       and client_connected[1] == 1
+       and client_connected[2] == 1;
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19100 + (Sys.getpid() % 1000);
+
+    user_data_val = [100];
+    obj.m_server = new ChannelServer("127.0.0.1",port,
+      new Delegate(obj,"on_channel_event",3),
+      new Delegate(obj,"on_channel_message",3),
+      user_data_val);
+
+    // - register server fds -
+    obj.poll_set_update();
+
+    // - create 3 clients -
+    obj.m_clients = [];
+    ci = 0;
+    while (ci < 3)
+    {
+      cl = new ChannelClient("127.0.0.1",port,
+        new Delegate(obj,"on_client_event",3).papply([ci]),
+        new Delegate(obj,"on_client_message",3).papply([ci]),
+        ci);
+
+      obj.m_clients.push(cl);
+
+      // - register client fd -
+      obj.poll_fd_add(cl.get_fd(),cl.events(),
+          new Delegate(obj,"on_client_fd_event",3).papply([ci]));
+
+      ci += 1;
+    }
+
+    // - run event loop until all connected and server accepted all -
+    obj.run_loop(
+      :(){ return (all_connected() and server_conn_idxs.length() >= 3) ? 1 : 0; },500);
+
+    if (!all_connected())
+    {
+      new Exception("not all clients connected").throw();
+    }
+
+    if (server_conn_idxs.length() != 3)
+    {
+      new Exception("server accepted: expected 3, got %d" % server_conn_idxs.length()).throw();
+    }
+
+    // - broadcast to all clients -
+    obj.m_server.message(ChannelServer.CONN_ALL,"broadcast");
+
+    // - update server fd set after send -
+    obj.poll_set_update();
+
+    // - run event loop to deliver broadcast -
+    obj.run_loop(
+      :(){
+        ci = 0;
+        while (ci < 3)
+        {
+          if (client_messages[ci].length() < 1) { return 0; }
+          ci += 1;
+        }
+        return 1;
+      },500);
+
+    // - verify all clients received broadcast -
+    ci = 0;
+    while (ci < 3)
+    {
+      if (client_messages[ci].length() < 1)
+      {
+        new Exception("client %d: did not receive broadcast" % ci).throw();
+      }
+      if (client_messages[ci][0] != "broadcast")
+      {
+        new Exception("client %d: expected 'broadcast', got '%s'" % [ci,client_messages[ci][0]]).throw();
+      }
+      ci += 1;
+    }
+
+    // - send to array of connection indexes -
+    obj.m_server.message([server_conn_idxs[0],server_conn_idxs[2]],"subset");
+
+    // - update server fd set after send -
+    obj.poll_set_update();
+
+    // - run event loop to deliver subset message -
+    obj.run_loop(
+      :(){
+        got0 = client_messages[0].length() >= 2;
+        got2 = client_messages[2].length() >= 2;
+        return (got0 and got2) ? 1 : 0;
+      },500);
+
+    // - verify subset message delivery -
+    if (client_messages[0].length() < 2 or client_messages[0][1] != "subset")
+    {
+      new Exception("client 0: did not receive subset message").throw();
+    }
+    if (client_messages[2].length() < 2 or client_messages[2][1] != "subset")
+    {
+      new Exception("client 2: did not receive subset message").throw();
+    }
+    if (client_messages[1].length() != 1)
+    {
+      new Exception("client 1: should not receive subset message, got %d msgs" % client_messages[1].length()).throw();
+    }
+
+    // - test out_queue_len -
+    qlen = obj.m_server.out_queue_len(server_conn_idxs[0]);
+    if (qlen < 0)
+    {
+      new Exception("server out_queue_len: expected >= 0, got %d" % qlen).throw();
+    }
+
+    c_qlen = obj.m_clients[0].out_queue_len();
+    if (c_qlen < 0)
+    {
+      new Exception("client out_queue_len: expected >= 0, got %d" % c_qlen).throw();
+    }
+
+    // - test max_message_length per connection -
+    obj.m_server.max_message_length(server_conn_idxs[0],4096);
+
+    // - test user_data reference modification -
+    ud = obj.m_server.user_data();
+    if (ud[0] != 100)
+    {
+      new Exception("user_data: expected 100, got %s" % $ud[0]).throw();
+    }
+
+    c_ud = obj.m_clients[0].user_data();
+    if (c_ud != 0)
+    {
+      new Exception("client user_data: expected 0, got %s" % $c_ud).throw();
+    }
+
+    // - release reference cycles -
+    free obj.m_poll_callbacks;
+    free obj.m_server;
+    free obj.m_clients;
+  }/*}}}*/
+}

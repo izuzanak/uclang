@@ -1,0 +1,158 @@
+
+import utf8proc;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - UnicodeChar: invalid code point (negative) -
+    caught = 0;
+    try {
+      new UnicodeChar(-1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("UnicodeChar(-1) should throw").throw();
+    }
+
+    // - UnicodeChar: invalid code point (above max) -
+    caught = 0;
+    try {
+      new UnicodeChar(0x110000);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("UnicodeChar(0x110000) should throw").throw();
+    }
+
+    // - UnicodeChar: max valid code point must NOT throw -
+    uc = new UnicodeChar(0x10FFFF);
+    if (uc.value() != 0x10FFFF)
+    {
+      new Exception("UnicodeChar(0x10FFFF): expected 0x10FFFF").throw();
+    }
+
+    // - UnicodeString: item index out of range -
+    us = new UnicodeString("kůň");
+
+    caught = 0;
+    try {
+      us.item(10);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("item(10) on 'kůň' should throw").throw();
+    }
+
+    // - UnicodeString: [] index out of range -
+    caught = 0;
+    try {
+      us[10];
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("[10] on 'kůň' should throw").throw();
+    }
+
+    // - UnicodeString: negative item index -
+    caught = 0;
+    try {
+      us.item(-1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("item(-1) should throw").throw();
+    }
+
+    // - UnicodeString: head exceeds range -
+    caught = 0;
+    try {
+      us.head(10);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("head(10) on 'kůň' should throw").throw();
+    }
+
+    // - UnicodeString: tail exceeds range -
+    caught = 0;
+    try {
+      us.tail(10);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("tail(10) on 'kůň' should throw").throw();
+    }
+
+    // - UnicodeString: next_idx exceeds range -
+    caught = 0;
+    try {
+      us.next_idx(10);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("next_idx(10) on 'kůň' should throw").throw();
+    }
+
+    // - UnicodeString: range reversed indexes -
+    caught = 0;
+    try {
+      us.range(2,0);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("range(2,0) reversed should throw").throw();
+    }
+
+    // - UnicodeString: range out of bounds -
+    caught = 0;
+    try {
+      us.range(0,10);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("range(0,10) on 'kůň' should throw").throw();
+    }
+  }/*}}}*/
+}

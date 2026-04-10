@@ -1,0 +1,233 @@
+
+import containers;
+import xml;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - ERROR_PARSING_DATA -
+
+    // - parse broken XML -
+    caught = 0;
+    try {
+      Xml.parse("<broken");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse <broken did not throw").throw();
+    }
+
+    // - parse empty string -
+    caught = 0;
+    try {
+      Xml.parse("");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse empty string did not throw").throw();
+    }
+
+    // - parse mismatched tags -
+    caught = 0;
+    try {
+      Xml.parse("<a><b></a>");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse mismatched tags did not throw").throw();
+    }
+
+    // - NAME_INVALID_VALUE_ERROR -
+
+    // - empty name in constructor -
+    caught = 0;
+    try {
+      new XmlNode("");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("XmlNode empty name did not throw").throw();
+    }
+
+    // - empty name in node() -
+    caught = 0;
+    try {
+      root = new XmlNode("root");
+      root.node("");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("node empty name did not throw").throw();
+    }
+
+    // - empty name in node_() -
+    caught = 0;
+    try {
+      root = new XmlNode("root");
+      root.node_("");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("node_ empty name did not throw").throw();
+    }
+
+    // - empty name in node(name,text) -
+    caught = 0;
+    try {
+      root = new XmlNode("root");
+      root.node("","text");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("node#2 empty name did not throw").throw();
+    }
+
+    // - empty name in node_(name,text) -
+    caught = 0;
+    try {
+      root = new XmlNode("root");
+      root.node_("","text");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("node_#2 empty name did not throw").throw();
+    }
+
+    // - NODE_DICTIONARY_NOT_AVAILABLE -
+
+    // - bracket access without update_node_dict -
+    caught = 0;
+    try {
+      root = Xml.parse("<root><child/></root>");
+      root["child"];
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("bracket without update_node_dict did not throw").throw();
+    }
+
+    // - has_key without update_node_dict -
+    caught = 0;
+    try {
+      root = Xml.parse("<root><child/></root>");
+      root.has_key("child");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("has_key without update_node_dict did not throw").throw();
+    }
+
+    // - contain without update_node_dict -
+    caught = 0;
+    try {
+      root = Xml.parse("<root><child/></root>");
+      root.contain("child");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("contain without update_node_dict did not throw").throw();
+    }
+
+    // - ATTRIBUTE_INVALID_VALUE_ERROR -
+
+    // - empty attribute name -
+    caught = 0;
+    try {
+      root = new XmlNode("root");
+      root.attr_("","value");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("attr_ empty name did not throw").throw();
+    }
+
+    // - TEXT_VALUE_ERROR -
+
+    // - text() on node with only child nodes (no text) -
+    caught = 0;
+    try {
+      root = Xml.parse("<root><child/></root>");
+      root.text();
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("text() on node-only content did not throw").throw();
+    }
+
+    // - text() on mixed content (nodes + text) -
+    caught = 0;
+    try {
+      root = Xml.parse("<root>text<child/></root>");
+      root.text();
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("text() on mixed content did not throw").throw();
+    }
+
+    // - to_string returns class name -
+    if ($Xml != "Xml")
+    {
+      new Exception("to_string: expected Xml, got %s" % $Xml).throw();
+    }
+  }/*}}}*/
+}
+

@@ -1,0 +1,65 @@
+
+import sys;
+import websocket;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - to_string -
+    if ($WsBase64 != "WsBase64")
+    {
+      new Exception("to_string: expected WsBase64, got %s" % $WsBase64).throw();
+    }
+
+    // - round-trip: Hello World -
+    input = "Hello World";
+    encoded = WsBase64.encode(input);
+    decoded = WsBase64.decode(encoded);
+    if (decoded != input)
+    {
+      new Exception("round-trip: expected '%s', got '%s'" % [input,decoded]).throw();
+    }
+
+    // - verify known encoding -
+    if (encoded != "SGVsbG8gV29ybGQ=")
+    {
+      new Exception("encode: expected 'SGVsbG8gV29ybGQ=', got '%s'" % encoded).throw();
+    }
+
+    // - empty string round-trip -
+    enc_empty = WsBase64.encode("");
+    dec_empty = WsBase64.decode(enc_empty);
+    if (dec_empty != "")
+    {
+      new Exception("empty round-trip failed, got '%s'" % dec_empty).throw();
+    }
+
+    // - special characters round-trip -
+    test_str = "abc123!@#%^&*()_+-=[]{}|;':,./<>?";
+    enc = WsBase64.encode(test_str);
+    dec = WsBase64.decode(enc);
+    if (dec != test_str)
+    {
+      new Exception("special chars round-trip failed").throw();
+    }
+
+    // - longer string round-trip -
+    long_str = "The quick brown fox jumps over the lazy dog 0123456789";
+    enc_long = WsBase64.encode(long_str);
+    dec_long = WsBase64.decode(enc_long);
+    if (dec_long != long_str)
+    {
+      new Exception("long string round-trip failed").throw();
+    }
+
+    // - single character -
+    enc_a = WsBase64.encode("A");
+    dec_a = WsBase64.decode(enc_a);
+    if (dec_a != "A")
+    {
+      new Exception("single char round-trip failed").throw();
+    }
+  }/*}}}*/
+}

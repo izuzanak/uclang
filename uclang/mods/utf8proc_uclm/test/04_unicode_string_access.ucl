@@ -1,0 +1,131 @@
+
+import utf8proc;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    us = new UnicodeString("Příliš žluťoučký kůň úpěl ďábelské ódy.");
+
+    // - item(0) returns 'P' (80) -
+    if (us.item(0).value() != 80)
+    {
+      new Exception("item(0): expected 80 (P), got %d" % us.item(0).value()).throw();
+    }
+
+    // - [1] returns ř (0x159) -
+    if (us[1].value() != 0x159)
+    {
+      new Exception("[1]: expected 0x159 (ř), got %d" % us[1].value()).throw();
+    }
+
+    // - [5] returns š (0x161) -
+    if (us[5].value() != 0x161)
+    {
+      new Exception("[5]: expected 0x161 (š), got %d" % us[5].value()).throw();
+    }
+
+    // - [7] returns ž (0x17E) -
+    if (us[7].value() != 0x17E)
+    {
+      new Exception("[7]: expected 0x17E (ž), got %d" % us[7].value()).throw();
+    }
+
+    // - [13] returns č (0x10D) -
+    if (us[13].value() != 0x10D)
+    {
+      new Exception("[13]: expected 0x10D (č), got %d" % us[13].value()).throw();
+    }
+
+    // - [18] returns ů (0x16F) -
+    if (us[18].value() != 0x16F)
+    {
+      new Exception("[18]: expected 0x16F (ů), got %d" % us[18].value()).throw();
+    }
+
+    // - head(6) -
+    if ($us.head(6) != "Příliš")
+    {
+      new Exception("head(6): expected 'Příliš', got '%s'" % $us.head(6)).throw();
+    }
+
+    // - tail(4) -
+    if ($us.tail(4) != "ódy.")
+    {
+      new Exception("tail(4): expected 'ódy.', got '%s'" % $us.tail(4)).throw();
+    }
+
+    // - head(0) empty -
+    if (us.head(0).length() != 0)
+    {
+      new Exception("head(0): expected empty").throw();
+    }
+
+    // - tail(0) empty -
+    if (us.tail(0).length() != 0)
+    {
+      new Exception("tail(0): expected empty").throw();
+    }
+
+    // - range(0,5) -
+    if ($us.range(0,5) != "Příliš")
+    {
+      new Exception("range(0,5): expected 'Příliš', got '%s'" % $us.range(0,5)).throw();
+    }
+
+    // - range(7,15) word 'žluťoučký' -
+    if ($us.range(7,15) != "žluťoučký")
+    {
+      new Exception("range(7,15): expected 'žluťoučký', got '%s'" % $us.range(7,15)).throw();
+    }
+
+    // - range(17,19) word 'kůň' -
+    if ($us.range(17,19) != "kůň")
+    {
+      new Exception("range(17,19): expected 'kůň', got '%s'" % $us.range(17,19)).throw();
+    }
+
+    // - range(26,33) word 'ďábelské' -
+    if ($us.range(26,33) != "ďábelské")
+    {
+      new Exception("range(26,33): expected 'ďábelské', got '%s'" % $us.range(26,33)).throw();
+    }
+
+    // - range full sentence -
+    if ($us.range(0,38) != "Příliš žluťoučký kůň úpěl ďábelské ódy.")
+    {
+      new Exception("range(0,38): expected full sentence").throw();
+    }
+
+    // - negative head: head(-1) on 39-char string drops trailing '.' -
+    if ($us.head(-1) != "Příliš žluťoučký kůň úpěl ďábelské ódy")
+    {
+      new Exception("head(-1): expected sentence without '.', got '%s'" % $us.head(-1)).throw();
+    }
+
+    // - negative tail: tail(-1) on 39-char string drops leading 'P' -
+    if ($us.tail(-1) != "říliš žluťoučký kůň úpěl ďábelské ódy.")
+    {
+      new Exception("tail(-1): expected sentence without 'P', got '%s'" % $us.tail(-1)).throw();
+    }
+
+    // - negative range: range(-4,-1) gives last 4 chars 'ódy.' -
+    if ($us.range(-4,-1) != "ódy.")
+    {
+      new Exception("range(-4,-1): expected 'ódy.', got '%s'" % $us.range(-4,-1)).throw();
+    }
+
+    // - head full length -
+    if ($us.head(39) != "Příliš žluťoučký kůň úpěl ďábelské ódy.")
+    {
+      new Exception("head(39): expected full sentence").throw();
+    }
+
+    // - tail full length -
+    if ($us.tail(39) != "Příliš žluťoučký kůň úpěl ďábelské ódy.")
+    {
+      new Exception("tail(39): expected full sentence").throw();
+    }
+  }/*}}}*/
+}

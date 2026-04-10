@@ -1,0 +1,71 @@
+
+import containers;
+import validator;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - in with strings pass -
+    schema = new Dict(["color", ["in", new Set(["red", "green", "blue"])]]);
+    v = new Validator(schema);
+    v.validate("color", "red");
+    v.validate("color", "green");
+    v.validate("color", "blue");
+
+    // - in with strings fail -
+    caught = 0;
+    try {
+      v.validate("color", "yellow");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("in should reject 'yellow'").throw();
+    }
+
+    // - in with integers pass -
+    schema = new Dict(["num", ["in", new Set([1, 2, 3])]]);
+    v = new Validator(schema);
+    v.validate("num", 1);
+    v.validate("num", 2);
+    v.validate("num", 3);
+
+    // - in with integers fail -
+    caught = 0;
+    try {
+      v.validate("num", 4);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("in should reject 4").throw();
+    }
+
+    // - in with realistic values (from web_gen.ucl) -
+    schema = new Dict(["period", ["in", new Set(["1", "5", "10", "15", "30", "60"])]]);
+    v = new Validator(schema);
+    v.validate("period", "10");
+    v.validate("period", "60");
+
+    caught = 0;
+    try {
+      v.validate("period", "7");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("in should reject '7'").throw();
+    }
+  }/*}}}*/
+}

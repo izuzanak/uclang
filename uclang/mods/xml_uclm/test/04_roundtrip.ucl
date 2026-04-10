@@ -1,0 +1,103 @@
+
+import containers;
+import xml;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - build ROOT/CONSIST/VEHICLE structure (C-test inspired) -
+    root = new XmlNode("ROOT");
+    c_idx = 0;
+    while (c_idx < 10)
+    {
+      consist = root.node("CONSIST");
+      consist.attr_("id",$c_idx);
+
+      v_idx = 0;
+      while (v_idx < 5)
+      {
+        consist.node("VEHICLE","Description of vehicle %d of consist %d, <>&'\"" % [v_idx,c_idx]);
+        v_idx += 1;
+      }
+
+      c_idx += 1;
+    }
+
+    // - compact roundtrip: build -> create -> parse -> create -
+    compact1 = Xml.create(root);
+    parsed = Xml.parse(compact1);
+    compact2 = Xml.create(parsed);
+    if (compact1 != compact2)
+    {
+      new Exception("compact roundtrip: mismatch").throw();
+    }
+
+    // - verify parsed structure integrity via update_node_dict -
+    if (parsed.name() != "ROOT")
+    {
+      new Exception("parsed name: expected ROOT, got %s" % parsed.name()).throw();
+    }
+
+    parsed.update_node_dict();
+    consists = parsed.node_dict()["CONSIST"];
+    if (consists.length() != 10)
+    {
+      new Exception("node_dict CONSIST: expected 10, got %d" % consists.length()).throw();
+    }
+
+    // - verify first CONSIST -
+    first = consists[0];
+    if (first.name() != "CONSIST")
+    {
+      new Exception("first child name: expected CONSIST, got %s" % first.name()).throw();
+    }
+    if (first.attributes()["id"] != "0")
+    {
+      new Exception("first child id: expected 0, got %s" % first.attributes()["id"]).throw();
+    }
+
+    first.update_node_dict();
+    vehicles = first.node_dict()["VEHICLE"];
+    if (vehicles.length() != 5)
+    {
+      new Exception("first consist vehicles: expected 5, got %d" % vehicles.length()).throw();
+    }
+
+    // - verify first VEHICLE text (entities decoded) -
+    vtext = vehicles[0].text();
+    expected_text = "Description of vehicle 0 of consist 0, <>&'\"";
+    if (vtext != expected_text)
+    {
+      new Exception("vehicle text: expected %s, got %s" % [expected_text,vtext]).throw();
+    }
+
+    // - verify last CONSIST -
+    last = consists[9];
+    if (last.attributes()["id"] != "9")
+    {
+      new Exception("last consist id: expected 9, got %s" % last.attributes()["id"]).throw();
+    }
+    last.update_node_dict();
+    last_vehicles = last.node_dict()["VEHICLE"];
+    last_vtext = last_vehicles[4].text();
+    expected_last = "Description of vehicle 4 of consist 9, <>&'\"";
+    if (last_vtext != expected_last)
+    {
+      new Exception("last vehicle text: expected %s, got %s" % [expected_last,last_vtext]).throw();
+    }
+
+    // - simple roundtrip with attributes -
+    node = new XmlNode("item");
+    node.attr_("id","1").attr_("class","test");
+    node.text_("value");
+    s1 = Xml.create(node);
+    s2 = Xml.create(Xml.parse(s1));
+    if (s1 != s2)
+    {
+      new Exception("simple roundtrip: %s != %s" % [s1,s2]).throw();
+    }
+  }/*}}}*/
+}
+

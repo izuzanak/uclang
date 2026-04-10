@@ -1,0 +1,74 @@
+
+import containers;
+import xml;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - create_nice 2-arg with simple structure -
+    root = new XmlNode("root");
+    root.node("child","text");
+    result = Xml.create_nice(root,"  ");
+    expected = "<root>\n  <child>text</child>\n</root>";
+    if (result != expected)
+    {
+      new Exception("nice simple: mismatch\ngot:      %s\nexpected: %s" % [result,expected]).throw();
+    }
+
+    // - create_nice 2-arg with deeper nesting -
+    root = new XmlNode("a");
+    b = root.node("b");
+    b.node("c","deep");
+    result = Xml.create_nice(root,"  ");
+    expected = "<a>\n  <b>\n    <c>deep</c>\n  </b>\n</a>";
+    if (result != expected)
+    {
+      new Exception("nice deep: mismatch\ngot:      %s\nexpected: %s" % [result,expected]).throw();
+    }
+
+    // - create_nice 3-arg with custom tab and indent (C-test inspired) -
+    root = new XmlNode("ROOT");
+    consist = root.node("CONSIST");
+    consist.attr_("id","0");
+    consist.node("VEHICLE","text0");
+    consist.node("VEHICLE","text1");
+    result = Xml.create_nice(root,"==","--");
+    expected = "<ROOT>\n--==<CONSIST id=\"0\">\n--====<VEHICLE>text0</VEHICLE>\n--====<VEHICLE>text1</VEHICLE>\n--==</CONSIST>\n--</ROOT>";
+    if (result != expected)
+    {
+      new Exception("nice 3-arg: mismatch\ngot:      %s\nexpected: %s" % [result,expected]).throw();
+    }
+
+    // - create_nice with self-closing child -
+    root = new XmlNode("root");
+    root.node("empty");
+    result = Xml.create_nice(root,"  ");
+    expected = "<root>\n  <empty/>\n</root>";
+    if (result != expected)
+    {
+      new Exception("nice self-closing: mismatch\ngot:      %s\nexpected: %s" % [result,expected]).throw();
+    }
+
+    // - create_nice with attributes -
+    root = new XmlNode("root");
+    child = root.node("item","text");
+    child.attr_("id","1");
+    result = Xml.create_nice(root,"  ");
+    expected = "<root>\n  <item id=\"1\">text</item>\n</root>";
+    if (result != expected)
+    {
+      new Exception("nice attrs: mismatch\ngot:      %s\nexpected: %s" % [result,expected]).throw();
+    }
+
+    // - create_nice empty root (self-closing) -
+    root = new XmlNode("empty");
+    result = Xml.create_nice(root,"  ");
+    if (result != "<empty/>")
+    {
+      new Exception("nice empty: expected <empty/>, got %s" % result).throw();
+    }
+  }/*}}}*/
+}
+

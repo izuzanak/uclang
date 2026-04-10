@@ -1,0 +1,167 @@
+
+import binbits;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - first_idx non-empty -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[10] = 100;
+    dict[20] = 200;
+    dict[30] = 300;
+    idx = dict.first_idx();
+    if (Blank == idx)
+    {
+      new Exception("first_idx: expected valid index, got Blank").throw();
+    }
+
+    // - first_idx empty -
+    edict = new BinDict(BinDict.TYPE_INT64_INT64);
+    if (Blank != edict.first_idx())
+    {
+      new Exception("first_idx empty: expected Blank").throw();
+    }
+
+    // - last_idx non-empty -
+    idx = dict.last_idx();
+    if (Blank == idx)
+    {
+      new Exception("last_idx: expected valid index, got Blank").throw();
+    }
+
+    // - last_idx empty -
+    if (Blank != edict.last_idx())
+    {
+      new Exception("last_idx empty: expected Blank").throw();
+    }
+
+    // - next_idx sequence covers all elements -
+    count = 0;
+    idx = dict.first_idx();
+    while (Blank != idx)
+    {
+      count += 1;
+      idx = dict.next_idx(idx);
+    }
+    if (count != 3)
+    {
+      new Exception("next_idx count: expected 3, got %d" % count).throw();
+    }
+
+    // - prev_idx sequence covers all elements -
+    count = 0;
+    idx = dict.last_idx();
+    while (Blank != idx)
+    {
+      count += 1;
+      idx = dict.prev_idx(idx);
+    }
+    if (count != 3)
+    {
+      new Exception("prev_idx count: expected 3, got %d" % count).throw();
+    }
+
+    // - for-each iteration key order -
+    keys = [];
+    values = [];
+    for (ref <- dict)
+    {
+      keys.push(ref.key());
+      values.push(ref.value());
+    }
+    if (keys.length() != 3 || keys[0] != 10 || keys[1] != 20 || keys[2] != 30)
+    {
+      new Exception("for-each keys: expected [10,20,30], got %s" % $keys).throw();
+    }
+    if (values[0] != 100 || values[1] != 200 || values[2] != 300)
+    {
+      new Exception("for-each values: expected [100,200,300], got %s" % $values).throw();
+    }
+
+    // - BinDictRef key -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict[42] = 999;
+    idx = dict.first_idx();
+    ref = dict.item(idx);
+    if (ref.key() != 42)
+    {
+      new Exception("ref key: expected 42, got %s" % $ref.key()).throw();
+    }
+
+    // - BinDictRef value -
+    if (ref.value() != 999)
+    {
+      new Exception("ref value: expected 999, got %s" % $ref.value()).throw();
+    }
+
+    // - BinDictRef write-through -
+    dict[42] = 111;
+    if (dict[42].value() != 111)
+    {
+      new Exception("ref write: expected 111, got %s" % $dict[42].value()).throw();
+    }
+
+    // - BinDictRef to_string -
+    if ($dict[42] != "BinDictRef")
+    {
+      new Exception("ref to_string: expected BinDictRef, got %s" % $dict[42]).throw();
+    }
+
+    // - compare equal dicts -
+    dict_a = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict_a[1] = 10;
+    dict_a[2] = 20;
+    dict_b = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict_b[1] = 10;
+    dict_b[2] = 20;
+    if (dict_a.compare(dict_b) != 0)
+    {
+      new Exception("compare equal: expected 0, got %d" % dict_a.compare(dict_b)).throw();
+    }
+
+    // - compare different length -
+    dict_c = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict_c[1] = 10;
+    dict_c[2] = 20;
+    dict_c[3] = 30;
+    if (dict_a.compare(dict_c) >= 0)
+    {
+      new Exception("compare fewer: expected < 0, got %d" % dict_a.compare(dict_c)).throw();
+    }
+
+    // - compare element-wise -
+    dict_d = new BinDict(BinDict.TYPE_INT64_INT64);
+    dict_d[1] = 10;
+    dict_d[2] = 99;
+    if (dict_a.compare(dict_d) >= 0)
+    {
+      new Exception("compare element: expected < 0, got %d" % dict_a.compare(dict_d)).throw();
+    }
+
+    // - compare self -
+    if (dict_a.compare(dict_a) != 0)
+    {
+      new Exception("compare self: expected 0, got %d" % dict_a.compare(dict_a)).throw();
+    }
+
+    // - length verification -
+    dict = new BinDict(BinDict.TYPE_INT64_INT64);
+    if (dict.length() != 0)
+    {
+      new Exception("length empty: expected 0").throw();
+    }
+    dict[1] = 10;
+    dict[2] = 20;
+    if (dict.length() != 2)
+    {
+      new Exception("length after insert: expected 2, got %d" % dict.length()).throw();
+    }
+    dict.remove_key(1);
+    if (dict.length() != 1)
+    {
+      new Exception("length after remove: expected 1, got %d" % dict.length()).throw();
+    }
+  }/*}}}*/
+}
