@@ -109,6 +109,13 @@ int http_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,size
 int protocol_func(lws *wsi,enum lws_callback_reasons reason,void *user,void *in,size_t len)
 {/*{{{*/
   ws_context_s *wsc_ptr = (ws_context_s *)lws_context_user(lws_get_context(wsi));
+
+  // - interpreter thread not available during context destruction -
+  if (wsc_ptr->it_ptr == nullptr)
+  {
+    return 0;
+  }
+
   interpreter_thread_s &it = *wsc_ptr->it_ptr;
 
   location_s *conn_location = nullptr;

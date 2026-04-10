@@ -197,6 +197,9 @@ inline void ws_context_s::clear(interpreter_thread_s &it)
   // - destroy websocket context -
   if (context != nullptr)
   {
+    // - set interpreter thread for callbacks during destroy -
+    it_ptr = &it;
+
     lws_context_destroy(context);
   }
 
