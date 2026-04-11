@@ -28,7 +28,7 @@ jobs:
           libopencv-dev libportaudio2 libprotobuf-c-dev libraw-dev \
           libsnappy-dev libsqlite3-dev libssh2-1-dev libwebsockets-dev \
           libva-dev libvlc-dev freeglut3-dev libglew-dev libpam0g-dev \
-          libcurl4-openssl-dev
+          libcurl4-openssl-dev libutf8proc-dev
 
       - name: Build and install cont
         run: |
