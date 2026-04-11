@@ -649,29 +649,33 @@ macro
   {/*{{{*/\
     if (first.count <= second.count)\
     {\
-      unsigned stack[RB_TREE_STACK_SIZE(first)];\
-      unsigned *stack_ptr = stack;\
+      /* - empty first is subset of any second - */\
+      if (first.count != 0)\
+      {\
+        unsigned stack[RB_TREE_STACK_SIZE(first)];\
+        unsigned *stack_ptr = stack;\
 \
-      unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
-      do {\
-        location_s *elm_location = (location_s *)first.data[f_idx].object;\
+        unsigned f_idx = first.get_stack_min_value_idx(first.root_idx,&stack_ptr);\
+        do {\
+          location_s *elm_location = (location_s *)first.data[f_idx].object;\
 \
-        /* - retrieve index in second - */\
-        unsigned s_idx = second.get_idx((pointer)elm_location);\
+          /* - retrieve index in second - */\
+          unsigned s_idx = second.get_idx((pointer)elm_location);\
 \
-        if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
-          return false;\
-        }\
+          if (((location_s *)it.exception_location)->v_type != c_bi_class_blank) {\
+            return false;\
+          }\
 \
-        /* - if element exist in second - */\
-        if (s_idx == c_idx_not_exist)\
-        {\
-          result = 0;\
-          break;\
-        }\
+          /* - if element exist in second - */\
+          if (s_idx == c_idx_not_exist)\
+          {\
+            result = 0;\
+            break;\
+          }\
 \
-        f_idx = first.get_stack_next_idx(f_idx,&stack_ptr,stack);\
-      } while(f_idx != c_idx_not_exist);\
+          f_idx = first.get_stack_next_idx(f_idx,&stack_ptr,stack);\
+        } while(f_idx != c_idx_not_exist);\
+      }\
     }\
     else {\
       result = 0;\

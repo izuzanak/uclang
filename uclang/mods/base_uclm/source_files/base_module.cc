@@ -1460,7 +1460,53 @@ bool bic_char_operator_binary_slash_equal(interpreter_thread_s &it,unsigned stac
 
 bool bic_char_operator_binary_percent_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_CHAR_BINARY_EQUAL_OPS_CHAR_INTEGER(%,"operator_binary_percent_equal#1");
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  char result = (char)dst_location->v_data_ptr;
+
+  switch (src_0_location->v_type)
+  {
+  case c_bi_class_char:
+  {
+    char divider = (char)src_0_location->v_data_ptr;
+
+    // - ERROR -
+    if (divider == 0)
+    {
+      exception_s::throw_exception(it,c_error_DIVISION_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    result %= divider;
+  }
+  break;
+  case c_bi_class_integer:
+  {
+    long long int divider = (long long int)src_0_location->v_data_ptr;
+
+    // - ERROR -
+    if (divider == 0)
+    {
+      exception_s::throw_exception(it,c_error_DIVISION_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    result %= divider;
+  }
+  break;
+
+  // - ERROR -
+  default:
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_percent_equal#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_char,result);
 
   return true;
 }/*}}}*/
@@ -1706,15 +1752,37 @@ bool bic_char_operator_binary_percent(interpreter_thread_s &it,unsigned stack_ba
   unsigned v_type;
   v_data_type v_data_ptr;
 
-  switch (src_0_location->v_type) {
+  switch (src_0_location->v_type)
+  {
   case c_bi_class_char:
+  {
+    char divider = (char)src_0_location->v_data_ptr;
+
+    // - ERROR -
+    if (divider == 0)
+    {
+      exception_s::throw_exception(it,c_error_DIVISION_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
     v_type = c_bi_class_char;
-    v_data_ptr = (char)((char)dst_location->v_data_ptr % (char)src_0_location->v_data_ptr);
-    break;
+    v_data_ptr = (char)((char)dst_location->v_data_ptr % divider);
+  }
+  break;
   case c_bi_class_integer:
+  {
+    long long int divider = (long long int)src_0_location->v_data_ptr;
+
+    // - ERROR -
+    if (divider == 0)
+    {
+      exception_s::throw_exception(it,c_error_DIVISION_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
     v_type = c_bi_class_integer;
-    v_data_ptr = (long long int)((char)dst_location->v_data_ptr % (long long int)src_0_location->v_data_ptr);
-    break;
+    v_data_ptr = (long long int)((char)dst_location->v_data_ptr % divider);
+  }
   break;
 
   // - ERROR -
@@ -2561,7 +2629,53 @@ bool bic_integer_operator_binary_slash_equal(interpreter_thread_s &it,unsigned s
 
 bool bic_integer_operator_binary_percent_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_INTEGER_BINARY_EQUAL_OPS_CHAR_INTEGER(%,"operator_binary_percent_equal#1");
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result = (long long int)dst_location->v_data_ptr;
+
+  switch (src_0_location->v_type)
+  {
+  case c_bi_class_char:
+  {
+    char divider = (char)src_0_location->v_data_ptr;
+
+    // - ERROR -
+    if (divider == 0)
+    {
+      exception_s::throw_exception(it,c_error_DIVISION_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    result %= divider;
+  }
+  break;
+  case c_bi_class_integer:
+  {
+    long long int divider = (long long int)src_0_location->v_data_ptr;
+
+    // - ERROR -
+    if (divider == 0)
+    {
+      exception_s::throw_exception(it,c_error_DIVISION_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    result %= divider;
+  }
+  break;
+
+  // - ERROR -
+  default:
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_percent_equal#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_SIMPLE_SET_DST_AND_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
@@ -2851,7 +2965,53 @@ bool bic_integer_operator_binary_slash(interpreter_thread_s &it,unsigned stack_b
 
 bool bic_integer_operator_binary_percent(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
-  BIC_INTEGER_BINARY_OPS_CHAR_INTEGER_RESULT_INTEGER(%,"operator_binary_percent#1");
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result;
+
+  switch (src_0_location->v_type)
+  {
+  case c_bi_class_char:
+  {
+    char divider = (char)src_0_location->v_data_ptr;
+
+    // - ERROR -
+    if (divider == 0)
+    {
+      exception_s::throw_exception(it,c_error_DIVISION_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    result = (long long int)dst_location->v_data_ptr % divider;
+  }
+  break;
+  case c_bi_class_integer:
+  {
+    long long int divider = (long long int)src_0_location->v_data_ptr;
+
+    // - ERROR -
+    if (divider == 0)
+    {
+      exception_s::throw_exception(it,c_error_DIVISION_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    result = (long long int)dst_location->v_data_ptr % divider;
+  }
+  break;
+
+  // - ERROR -
+  default:
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_METHOD_NOT_DEFINED_WITH_PARAMETERS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    BIC_EXCEPTION_PUSH_METHOD_RI("operator_binary_percent#1");
+    new_exception->params.push(1);
+    new_exception->params.push(src_0_location->v_type);
+
+    return false;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/
