@@ -1,0 +1,161 @@
+
+class Main
+{
+  public Main() {}
+
+  public a_method() { return 0; }
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - Integer parse with invalid string throws -
+    caught = 0;
+    try { new Integer("not a number",10); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Integer(\"not a number\",10): expected throw").throw();
+    }
+
+    caught = 0;
+    try { new Integer("zzz",16); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Integer(\"zzz\",16): expected throw").throw();
+    }
+
+    // - Integer with out-of-range base throws -
+    caught = 0;
+    try { new Integer("10",99); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Integer(\"10\",99): expected throw").throw();
+    }
+
+    // - division by zero throws -
+    caught = 0;
+    try { 1/0; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("1/0: expected throw").throw();
+    }
+
+    // - modulo by zero throws -
+    caught = 0;
+    try { 1 % 0; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("1 %% 0: expected throw").throw();
+    }
+
+    // - modulo-assign by zero throws -
+    caught = 0;
+    try { x = 1; x %= 0; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("1 %%= 0: expected throw").throw();
+    }
+
+    // - array index out of range throws -
+    caught = 0;
+    try { x = [1,2,3][99]; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("[1,2,3][99]: expected throw").throw();
+    }
+
+    // - access first element of empty array throws -
+    caught = 0;
+    try { x = new Array()[0]; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("new Array()[0]: expected throw").throw();
+    }
+
+    // - pop from empty array throws -
+    caught = 0;
+    try { new Array().pop(); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Array().pop(): expected throw").throw();
+    }
+
+    // - last() on empty array throws -
+    caught = 0;
+    try { new Array().last(); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Array().last(): expected throw").throw();
+    }
+
+    // - string index out of range throws -
+    caught = 0;
+    try { x = "abc"[10]; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("\"abc\"[10]: expected throw").throw();
+    }
+
+    // - format with too few arguments throws -
+    caught = 0;
+    try { x = "%d %d" % [1]; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("\"%%d %%d\" %% [1]: expected throw").throw();
+    }
+
+    // - format with wrong arg type throws -
+    caught = 0;
+    try { x = "%d" % "abc"; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("\"%%d\" %% \"abc\": expected throw").throw();
+    }
+
+    // - delegate to nonexistent method throws -
+    caught = 0;
+    try { new Delegate(new Main(),"nonexistent_method",0); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Delegate(...,\"nonexistent_method\",0): expected throw").throw();
+    }
+
+    // - delegate.call with wrong parameter count throws -
+    caught = 0;
+    try { new Delegate(new Main(),"a_method",0).call([1,2,3]); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("delegate.call wrong arity: expected throw").throw();
+    }
+
+    // - explicit user exception is catchable -
+    caught = 0;
+    try { new Exception("user exception").throw(); }
+    catch (e)
+    {
+      caught = 1;
+      if (e.get_value() != "user exception")
+      {
+        new Exception("user exception value mismatch").throw();
+      }
+    }
+    if (caught != 1)
+    {
+      new Exception("user Exception not caught").throw();
+    }
+  }/*}}}*/
+}

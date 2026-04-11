@@ -1,0 +1,228 @@
+
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - empty constructor -
+    q = new Queue();
+    if (q.length() != 0)
+    {
+      new Exception("empty Queue length: expected 0, got %s" % $q.length()).throw();
+    }
+
+    // - iterable constructor -
+    q = new Queue([1,2,3,4,5]);
+    if (q.length() != 5)
+    {
+      new Exception("Queue([1..5]) length: expected 5, got %s" % $q.length()).throw();
+    }
+    if (q.items() != [1,2,3,4,5])
+    {
+      new Exception("Queue items: expected [1,2,3,4,5], got %s" % $q.items()).throw();
+    }
+
+    // - cross-container constructor (from List) -
+    q = new Queue(new List([7,8,9]));
+    if (q.items() != [7,8,9])
+    {
+      new Exception("Queue(List): expected [7,8,9], got %s" % $q.items()).throw();
+    }
+
+    // - to_string of empty/nonempty queue -
+    if ($new Queue() != "[]")
+    {
+      new Exception("empty Queue to_string: got %s" % $new Queue()).throw();
+    }
+    if ($new Queue([1,2,3,4,5]) != "[1,2,3,4,5]")
+    {
+      new Exception("Queue([1..5]) to_string: got %s" % $new Queue([1,2,3,4,5])).throw();
+    }
+
+    // - equality: same content -
+    q0 = new Queue([1,2,3,4]);
+    q1 = new Queue([1,2,3,4]);
+    if (!(q0 == q1))
+    {
+      new Exception("Queue == same: expected true").throw();
+    }
+    if (q0 != q1)
+    {
+      new Exception("Queue != same: expected false").throw();
+    }
+
+    // - equality: different content -
+    q2 = new Queue([1,2,3,5]);
+    if (q0 == q2)
+    {
+      new Exception("Queue == diff: expected false").throw();
+    }
+    if (!(q0 != q2))
+    {
+      new Exception("Queue != diff: expected true").throw();
+    }
+
+    // - equality vs non-queue value -
+    if (q0 == 10)
+    {
+      new Exception("Queue == int: expected false").throw();
+    }
+    if (!(q0 != 10))
+    {
+      new Exception("Queue != int: expected true").throw();
+    }
+
+    // - plus operator (immutable) -
+    q = new Queue([1,2,3]);
+    q_plus = q + [4,5,6];
+    if (q_plus.items() != [1,2,3,4,5,6])
+    {
+      new Exception("Queue + arr: expected [1..6], got %s" % $q_plus.items()).throw();
+    }
+    if (q.items() != [1,2,3])
+    {
+      new Exception("Queue + arr (orig mutated): got %s" % $q.items()).throw();
+    }
+
+    // - plus-equals operator (mutating) -
+    q += [4,5,6];
+    if (q.items() != [1,2,3,4,5,6])
+    {
+      new Exception("Queue += arr: got %s" % $q.items()).throw();
+    }
+
+    // - insert#1 appends to end -
+    q = new Queue([1,2,3]);
+    q.insert(10);
+    if (q.items() != [1,2,3,10])
+    {
+      new Exception("Queue.insert(10): got %s" % $q.items()).throw();
+    }
+    q.insert(20);
+    if (q.items() != [1,2,3,10,20])
+    {
+      new Exception("Queue.insert(20): got %s" % $q.items()).throw();
+    }
+
+    // - insert_ref#1 keeps live reference -
+    value = 10;
+    q = new Queue([1,2,3]);
+    q.insert_ref(value);
+    q.insert_ref(value);
+    if (q.items() != [1,2,3,10,10])
+    {
+      new Exception("Queue.insert_ref live: got %s" % $q.items()).throw();
+    }
+    value = 100;
+    if (q.items() != [1,2,3,100,100])
+    {
+      new Exception("Queue.insert_ref after mutation: got %s" % $q.items()).throw();
+    }
+
+    // - next#0 returns first element (FIFO) -
+    q = new Queue([1,2,3,4,5]);
+    if (q.next() != 1)
+    {
+      new Exception("Queue.next #1: expected 1").throw();
+    }
+    if (q.next() != 2)
+    {
+      new Exception("Queue.next #2: expected 2").throw();
+    }
+    if (q.next() != 3)
+    {
+      new Exception("Queue.next #3: expected 3").throw();
+    }
+    if (q.items() != [4,5])
+    {
+      new Exception("Queue after 3 next: expected [4,5], got %s" % $q.items()).throw();
+    }
+
+    // - contain#1 -
+    q = new Queue([1,2,3,4,5]);
+    if (q.contain(2) != 1) { new Exception("Queue.contain(2)").throw(); }
+    if (q.contain(4) != 1) { new Exception("Queue.contain(4)").throw(); }
+    if (q.contain(6) != 0) { new Exception("Queue.contain(6)").throw(); }
+
+    // - clear#0 -
+    q = new Queue([1,2,3,4,5]);
+    q.clear();
+    if (q.length() != 0)
+    {
+      new Exception("Queue.clear length: got %s" % $q.length()).throw();
+    }
+    if (q.items() != [])
+    {
+      new Exception("Queue.clear items: got %s" % $q.items()).throw();
+    }
+
+    // - items#0 returns Array (independent copy) -
+    q = new Queue([1,2,3,4,5]);
+    items = q.items();
+    if ($(type items) != "Array")
+    {
+      new Exception("items type: expected Array, got %s" % $(type items)).throw();
+    }
+
+    // - iteration: forward -
+    q = new Queue([10,20,30,40,50]);
+    collected = [];
+    idx = q.first_idx();
+    while (Blank != idx)
+    {
+      collected.push(q.item(idx));
+      idx = q.next_idx(idx);
+    }
+    if (collected != [10,20,30,40,50])
+    {
+      new Exception("Queue forward iter: got %s" % $collected).throw();
+    }
+
+    // - iteration: backward -
+    collected = [];
+    idx = q.last_idx();
+    while (Blank != idx)
+    {
+      collected.push(q.item(idx));
+      idx = q.prev_idx(idx);
+    }
+    if (collected != [50,40,30,20,10])
+    {
+      new Exception("Queue backward iter: got %s" % $collected).throw();
+    }
+
+    // - item#1 access at first/last -
+    q = new Queue([10,20,30]);
+    if (q.item(q.first_idx()) != 10)
+    {
+      new Exception("Queue.item(first): expected 10").throw();
+    }
+    if (q.item(q.last_idx()) != 30)
+    {
+      new Exception("Queue.item(last): expected 30").throw();
+    }
+
+    // - to_string#0 / to_string#1 -
+    q = new Queue([1,2,3,4,5]);
+    if (q.to_string() != "[1,2,3,4,5]")
+    {
+      new Exception("Queue.to_string(): got %s" % q.to_string()).throw();
+    }
+    if (q.to_string("-SEP-") != "1-SEP-2-SEP-3-SEP-4-SEP-5")
+    {
+      new Exception("Queue.to_string(\"-SEP-\"): got %s" % q.to_string("-SEP-")).throw();
+    }
+
+    // - length#0 across operations -
+    q = new Queue();
+    if (q.length() != 0) { new Exception("len 0").throw(); }
+    q.insert(1);
+    q.insert(2);
+    q.insert(3);
+    if (q.length() != 3) { new Exception("len 3").throw(); }
+    q.next();
+    if (q.length() != 2) { new Exception("len 2 after next").throw(); }
+  }/*}}}*/
+}

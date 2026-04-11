@@ -1,0 +1,89 @@
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - type retrieve -
+    if ($(type 42) != "Integer")
+    {
+      new Exception("type 42: expected \"Integer\", got \"%s\"" % $(type 42)).throw();
+    }
+    if ($(type "hello") != "String")
+    {
+      new Exception("type \"hello\": expected \"String\", got \"%s\"" % $(type "hello")).throw();
+    }
+    if ($(type [1,2,3]) != "Array")
+    {
+      new Exception("type [1,2,3]: expected \"Array\", got \"%s\"" % $(type [1,2,3])).throw();
+    }
+    if ($(type 1.5) != "Float")
+    {
+      new Exception("type 1.5: expected \"Float\", got \"%s\"" % $(type 1.5)).throw();
+    }
+    if ($(type new Blank()) != "Blank")
+    {
+      new Exception("type Blank: expected \"Blank\"").throw();
+    }
+    if ($(type 'A') != "Char")
+    {
+      new Exception("type 'A': expected \"Char\"").throw();
+    }
+
+    // - type constant -
+    if ($(type Integer) != "Integer")
+    {
+      new Exception("type Integer constant").throw();
+    }
+    if ($(type String) != "String")
+    {
+      new Exception("type String constant").throw();
+    }
+
+    // - same type compares equal -
+    if (!(type 1 == type 2))
+    {
+      new Exception("type 1 == type 2: expected true").throw();
+    }
+    if (!(type "a" == type "b"))
+    {
+      new Exception("type \"a\" == type \"b\"").throw();
+    }
+
+    // - different types compare unequal -
+    if (type 1 == type 1.5)
+    {
+      new Exception("type 1 == type 1.5: expected false").throw();
+    }
+    if (!(type 1 != type "a"))
+    {
+      new Exception("type 1 != type \"a\"").throw();
+    }
+
+    // - type vs class constant -
+    if (!(type 1 == type Integer))
+    {
+      new Exception("type 1 == type Integer").throw();
+    }
+    if (!(type [1,2,3] == type Array))
+    {
+      new Exception("type [...] == type Array").throw();
+    }
+
+    // - new Type(value) -
+    if (!(new Type(42) == type Integer))
+    {
+      new Exception("new Type(42) == type Integer").throw();
+    }
+    if (!(new Type("x") == type String))
+    {
+      new Exception("new Type(\"x\") == type String").throw();
+    }
+
+    // - compare#1 -
+    if ((type 1).compare(type 1) != 0)
+    {
+      new Exception("type Integer compare self").throw();
+    }
+  }/*}}}*/
+}

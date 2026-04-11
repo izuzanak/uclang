@@ -1,0 +1,227 @@
+
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - empty constructor -
+    t = new Tree();
+    if (t.length() != 0)
+    {
+      new Exception("empty Tree length: expected 0, got %s" % $t.length()).throw();
+    }
+
+    // - iterable constructor -
+    t = new Tree([1,2,3,4,5]);
+    if (t.length() != 5)
+    {
+      new Exception("Tree([1..5]) length: expected 5, got %s" % $t.length()).throw();
+    }
+    if (t.items() != [1,2,3,4,5])
+    {
+      new Exception("Tree items: got %s" % $t.items()).throw();
+    }
+
+    // - iterable constructor preserves duplicates (Tree is a multi-set) -
+    t = new Tree([1,2,2,3,3,3]);
+    if (t.length() != 6)
+    {
+      new Exception("Tree dup length: expected 6, got %s" % $t.length()).throw();
+    }
+    if (t.items() != [1,2,2,3,3,3])
+    {
+      new Exception("Tree dup items: got %s" % $t.items()).throw();
+    }
+
+    // - cross-container constructor (sorts) -
+    t = new Tree(new List([5,3,1,4,2]));
+    if (t.items() != [1,2,3,4,5])
+    {
+      new Exception("Tree(List) sorted: got %s" % $t.items()).throw();
+    }
+
+    // - to_string -
+    if ($new Tree() != "[]")
+    {
+      new Exception("empty Tree to_string: got %s" % $new Tree()).throw();
+    }
+    if ($new Tree([5,3,1,4,2]) != "[1,2,3,4,5]")
+    {
+      new Exception("Tree to_string sorted: got %s" % $new Tree([5,3,1,4,2])).throw();
+    }
+
+    // - equality -
+    t0 = new Tree([1,2,3,4]);
+    t1 = new Tree([4,3,2,1]);
+    if (!(t0 == t1))
+    {
+      new Exception("Tree == reordered: expected true").throw();
+    }
+    t2 = new Tree([1,2,3,5]);
+    if (t0 == t2)
+    {
+      new Exception("Tree == diff: expected false").throw();
+    }
+    if (!(t0 != t2))
+    {
+      new Exception("Tree != diff: expected true").throw();
+    }
+    if (t0 == 10)
+    {
+      new Exception("Tree == int: expected false").throw();
+    }
+
+    // - plus operator (with duplicates allowed) -
+    t = new Tree([1,2,3]);
+    t_plus = t + [5,5,4];
+    if (t_plus.items() != [1,2,3,4,5,5])
+    {
+      new Exception("Tree + arr (dups): got %s" % $t_plus.items()).throw();
+    }
+    if (t.items() != [1,2,3])
+    {
+      new Exception("Tree + arr (orig mutated): got %s" % $t.items()).throw();
+    }
+    t += [5,5,4];
+    if (t.items() != [1,2,3,4,5,5])
+    {
+      new Exception("Tree += arr: got %s" % $t.items()).throw();
+    }
+
+    // - insert#1 (allows duplicates) -
+    t = new Tree([1,2,3,4,5]);
+    t.insert(10);
+    t.insert(10);
+    t.insert(10);
+    if (t.items() != [1,2,3,4,5,10,10,10])
+    {
+      new Exception("Tree.insert dups: got %s" % $t.items()).throw();
+    }
+
+    // - remove#1 by index -
+    t = new Tree([1,2,3,3,4,5]);
+    idx = t.get_idx(3);
+    t.remove(idx);
+    if (t.items() != [1,2,3,4,5])
+    {
+      new Exception("Tree.remove(idx): got %s" % $t.items()).throw();
+    }
+
+    // - get_idx#1 -
+    t = new Tree([1,2,3,4,5]);
+    if (t.get_idx(2) == -1)
+    {
+      new Exception("Tree.get_idx(2): expected valid idx").throw();
+    }
+    if (t.get_idx(3) == -1)
+    {
+      new Exception("Tree.get_idx(3): expected valid idx").throw();
+    }
+    // - confirm idx points at the correct element via item#1 -
+    if (t.item(t.get_idx(2)) != 2)
+    {
+      new Exception("Tree.item(get_idx(2)): expected 2").throw();
+    }
+    if (t.item(t.get_idx(3)) != 3)
+    {
+      new Exception("Tree.item(get_idx(3)): expected 3").throw();
+    }
+
+    // - get_idxs#1 (multi-match) -
+    t = new Tree([1,2,2,3,3,4]);
+    idxs = t.get_idxs(2);
+    if (idxs.length() != 2)
+    {
+      new Exception("Tree.get_idxs(2) length: expected 2").throw();
+    }
+    if (t.item(idxs[0]) != 2 || t.item(idxs[1]) != 2)
+    {
+      new Exception("Tree.get_idxs(2) values: not all 2").throw();
+    }
+    idxs = t.get_idxs(3);
+    if (idxs.length() != 2)
+    {
+      new Exception("Tree.get_idxs(3) length: expected 2").throw();
+    }
+    if (t.item(idxs[0]) != 3 || t.item(idxs[1]) != 3)
+    {
+      new Exception("Tree.get_idxs(3) values: not all 3").throw();
+    }
+
+    // - contain#1 -
+    t = new Tree([1,2,3,4,5]);
+    if (t.contain(2) != 1) { new Exception("Tree.contain(2)").throw(); }
+    if (t.contain(4) != 1) { new Exception("Tree.contain(4)").throw(); }
+    if (t.contain(6) != 0) { new Exception("Tree.contain(6)").throw(); }
+
+    // - clear#0 -
+    t = new Tree([1,2,3,4,5]);
+    t.clear();
+    if (t.length() != 0)
+    {
+      new Exception("Tree.clear length: got %s" % $t.length()).throw();
+    }
+
+    // - items#0 returns Array (sorted) -
+    t = new Tree([5,3,1,4,2]);
+    items = t.items();
+    if ($(type items) != "Array")
+    {
+      new Exception("items type: got %s" % $(type items)).throw();
+    }
+    if (items != [1,2,3,4,5])
+    {
+      new Exception("Tree.items() sorted: got %s" % $items).throw();
+    }
+
+    // - iteration via first_idx/next_idx (sorted order) -
+    t = new Tree([5,3,1,4,2]);
+    collected = [];
+    idx = t.first_idx();
+    while (Blank != idx)
+    {
+      collected.push(t[idx]);
+      idx = t.next_idx(idx);
+    }
+    if (collected != [1,2,3,4,5])
+    {
+      new Exception("Tree forward iter: got %s" % $collected).throw();
+    }
+
+    // - iteration backward -
+    collected = [];
+    idx = t.last_idx();
+    while (Blank != idx)
+    {
+      collected.push(t[idx]);
+      idx = t.prev_idx(idx);
+    }
+    if (collected != [5,4,3,2,1])
+    {
+      new Exception("Tree backward iter: got %s" % $collected).throw();
+    }
+
+    // - to_string#0 / to_string#1 -
+    t = new Tree([1,2,3,4,5]);
+    if (t.to_string() != "[1,2,3,4,5]")
+    {
+      new Exception("Tree.to_string(): got %s" % t.to_string()).throw();
+    }
+    if (t.to_string("-SEP-") != "1-SEP-2-SEP-3-SEP-4-SEP-5")
+    {
+      new Exception("Tree.to_string(\"-SEP-\"): got %s" % t.to_string("-SEP-")).throw();
+    }
+
+    // - length#0 across operations -
+    t = new Tree();
+    if (t.length() != 0) { new Exception("len 0").throw(); }
+    t.insert(1);
+    t.insert(2);
+    t.insert(2);
+    if (t.length() != 3) { new Exception("len 3 (dups allowed)").throw(); }
+    t.remove(t.get_idx(2));
+    if (t.length() != 2) { new Exception("len 2 after remove").throw(); }
+  }/*}}}*/
+}

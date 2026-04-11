@@ -1,0 +1,120 @@
+
+import sys;
+import http;
+
+class Main
+{
+  public Main() {}
+
+  // - HttpServer connection callback (1 arg) -
+  public on_conn(a_conn) {}
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19200 + (Sys.getpid() % 1000);
+
+    // - construct HttpServer with 4-arg form: (flags,port,delegate,opts) -
+    server = new HttpServer(0,port,
+      new Delegate(obj,"on_conn",1),[]);
+
+    // - HttpServer to_string -
+    if ($server != "HttpServer")
+    {
+      new Exception("server to_string: expected HttpServer, got %s" % $server).throw();
+    }
+
+    // - get_fds returns Array with even count (fd/flags pairs) -
+    fds = server.get_fds();
+    if ($(type fds) != "Array")
+    {
+      new Exception("get_fds: expected Array, got %s" % $(type fds)).throw();
+    }
+    if (fds.length() % 2 != 0)
+    {
+      new Exception("get_fds: expected even count, got %d" % fds.length()).throw();
+    }
+
+    // - timeout returns Integer -
+    tmo = server.timeout();
+    if (type tmo != type Integer)
+    {
+      new Exception("server.timeout: expected Integer, got %s" % $(type tmo)).throw();
+    }
+
+    // - process(0) does not throw -
+    server.process(0);
+
+    // - process() (no arg) does not throw -
+    server.process();
+
+    // - stop the first server before constructing another bound to the same host -
+    server.stop();
+
+    // - second construction using OPTION_SOCK_ADDR + USE_EPOLL (production form) -
+    server2 = new HttpServer(HttpServer.USE_EPOLL,0,
+      new Delegate(obj,"on_conn",1),
+      [HttpServer.OPTION_SOCK_ADDR,new SocketAddr("127.0.0.1",port + 1)]);
+
+    if ($server2 != "HttpServer")
+    {
+      new Exception("server2 to_string: expected HttpServer, got %s" % $server2).throw();
+    }
+    server2.stop();
+
+    // - third construction with OPTION_CONNECTION_LIMIT (Integer-valued option) -
+    server3 = new HttpServer(0,port + 2,
+      new Delegate(obj,"on_conn",1),
+      [HttpServer.OPTION_CONNECTION_LIMIT,32]);
+    server3.stop();
+
+    // - HttpResp construction (FROM_STRING) -
+    resp = new HttpResp(HttpResp.FROM_STRING,"hello");
+    if ($resp != "HttpResp")
+    {
+      new Exception("resp to_string: expected HttpResp, got %s" % $resp).throw();
+    }
+
+    // - add_header / add_footer do not throw -
+    resp.add_header("Content-Type","text/plain");
+    resp.add_header("X-Custom","value");
+    resp.add_footer("X-Trailer","trailer-value");
+
+    // - HttpResp from a buffer-like value (1-arg constructor) -
+    resp_buf = new HttpResp("buffer-data");
+    if ($resp_buf != "HttpResp")
+    {
+      new Exception("resp_buf to_string: expected HttpResp, got %s" % $resp_buf).throw();
+    }
+
+    // - operating on a stopped server throws HTTP_SERVER_WAS_STOPPED -
+    caught = 0;
+    try { server.get_fds(); } catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("get_fds on stopped server: expected throw").throw();
+    }
+
+    caught = 0;
+    try { server.timeout(); } catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("timeout on stopped server: expected throw").throw();
+    }
+
+    caught = 0;
+    try { server.process(0); } catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("process on stopped server: expected throw").throw();
+    }
+
+    // - calling stop on an already-stopped server throws -
+    caught = 0;
+    try { server.stop(); } catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("stop on stopped server: expected throw").throw();
+    }
+  }/*}}}*/
+}

@@ -1,0 +1,299 @@
+
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - empty constructor -
+    d = new Dict();
+    if (d.length() != 0)
+    {
+      new Exception("empty Dict length: expected 0, got %s" % $d.length()).throw();
+    }
+
+    // - flat-array constructor (key,value pairs) -
+    d = new Dict(["One",1,"Two",2,"Three",3]);
+    if (d.length() != 3)
+    {
+      new Exception("Dict length: expected 3, got %s" % $d.length()).throw();
+    }
+    if (d["One"] != 1) { new Exception("Dict[One]: expected 1").throw(); }
+    if (d["Two"] != 2) { new Exception("Dict[Two]: expected 2").throw(); }
+    if (d["Three"] != 3) { new Exception("Dict[Three]: expected 3").throw(); }
+
+    // - to_string of empty dict -
+    if ($new Dict() != "[]")
+    {
+      new Exception("empty Dict to_string: got %s" % $new Dict()).throw();
+    }
+
+    // - equality -
+    d0 = new Dict(["One",1,"Two",2,"Three",3]);
+    d1 = new Dict(["One",1,"Two",2,"Three",3]);
+    if (!(d0 == d1))
+    {
+      new Exception("Dict == same: expected true").throw();
+    }
+    d2 = new Dict(["One",1,"Two",2,"Three",4]);
+    if (d0 == d2)
+    {
+      new Exception("Dict == diff: expected false").throw();
+    }
+    if (!(d0 != d2))
+    {
+      new Exception("Dict != diff: expected true").throw();
+    }
+    if (d0 == 10)
+    {
+      new Exception("Dict == int: expected false").throw();
+    }
+
+    // - bracket assignment to existing key -
+    d = new Dict(["One",1,"Two",2]);
+    d["One"] = 99;
+    if (d["One"] != 99)
+    {
+      new Exception("Dict[One]=99: got %s" % $d["One"]).throw();
+    }
+
+    // - bracket access on missing key auto-creates with Blank -
+    d = new Dict(["One",1]);
+    val = d["Missing"];
+    if (Blank != val)
+    {
+      new Exception("Dict[Missing]: expected Blank, got %s" % $val).throw();
+    }
+    if (d.length() != 2)
+    {
+      new Exception("Dict length after auto-create: expected 2, got %s" % $d.length()).throw();
+    }
+    if (d.has_key("Missing") != 1)
+    {
+      new Exception("Dict has Missing key after auto-create").throw();
+    }
+
+    // - has_key#1 -
+    d = new Dict(["One",1,"Two",2,"Three",3]);
+    if (d.has_key("One") != 1) { new Exception("has_key One").throw(); }
+    if (d.has_key("Two") != 1) { new Exception("has_key Two").throw(); }
+    if (d.has_key("Four") != 0) { new Exception("has_key Four").throw(); }
+    if (d.has_key(2) != 0) { new Exception("has_key 2 (int)").throw(); }
+
+    // - keys#0 returns Array of keys -
+    d = new Dict(["One",1,"Two",2,"Three",3]);
+    keys = d.keys();
+    if ($(type keys) != "Array")
+    {
+      new Exception("keys type: got %s" % $(type keys)).throw();
+    }
+    if (keys.length() != 3)
+    {
+      new Exception("keys length: expected 3, got %s" % $keys.length()).throw();
+    }
+    // - assert key set membership without depending on order -
+    keys_set = new Set(keys);
+    if (keys_set != new Set(["One","Two","Three"]))
+    {
+      new Exception("keys set: got %s" % $keys_set).throw();
+    }
+
+    // - items#0 returns Array of values -
+    d = new Dict(["One",1,"Two",2,"Three",3]);
+    items = d.items();
+    if ($(type items) != "Array")
+    {
+      new Exception("items type: got %s" % $(type items)).throw();
+    }
+    if (items.length() != 3)
+    {
+      new Exception("items length: expected 3").throw();
+    }
+    if (new Set(items) != new Set([1,2,3]))
+    {
+      new Exception("items values: got %s" % $items).throw();
+    }
+
+    // - store_ref#2 (live reference) -
+    value = 10;
+    d = new Dict(["One",1,"Two",2,"Three",3]);
+    d.store_ref("Two",value);
+    d.store_ref("Four",value);
+    if (d["Two"] != 10) { new Exception("store_ref Two: expected 10").throw(); }
+    if (d["Four"] != 10) { new Exception("store_ref Four: expected 10").throw(); }
+    value = 100;
+    if (d["Two"] != 100)
+    {
+      new Exception("store_ref Two after mutation: expected 100, got %s" % $d["Two"]).throw();
+    }
+    if (d["Four"] != 100)
+    {
+      new Exception("store_ref Four after mutation: expected 100, got %s" % $d["Four"]).throw();
+    }
+
+    // - remove_key#1 -
+    d = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+    d.remove_key("One");
+    if (d.has_key("One") != 0)
+    {
+      new Exception("remove_key One: still present").throw();
+    }
+    if (d.length() != 3)
+    {
+      new Exception("length after remove_key: expected 3, got %s" % $d.length()).throw();
+    }
+    d.remove_key("Three");
+    if (d.has_key("Three") != 0)
+    {
+      new Exception("remove_key Three: still present").throw();
+    }
+    if (d.length() != 2)
+    {
+      new Exception("length after 2x remove: expected 2, got %s" % $d.length()).throw();
+    }
+
+    // - remove_if_key#1 (no error if missing) -
+    d = new Dict(["One",1,"Two",2,"Three",3]);
+    d.remove_if_key("One");
+    if (d.has_key("One") != 0)
+    {
+      new Exception("remove_if_key One: still present").throw();
+    }
+    d.remove_if_key("Missing");
+    if (d.length() != 2)
+    {
+      new Exception("remove_if_key Missing: length should still be 2, got %s" % $d.length()).throw();
+    }
+
+    // - first_key/next_key iteration covers all keys -
+    d = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+    seen = new Set();
+    key = d.first_key();
+    count = 0;
+    while (Blank != key)
+    {
+      seen.insert(key);
+      count += 1;
+      key = d.next_key(key);
+    }
+    if (count != 4)
+    {
+      new Exception("first/next_key count: expected 4, got %s" % $count).throw();
+    }
+    if (seen != new Set(["One","Two","Three","Four"]))
+    {
+      new Exception("first/next_key keys: got %s" % $seen).throw();
+    }
+
+    // - last_key/prev_key iteration covers all keys -
+    seen = new Set();
+    key = d.last_key();
+    count = 0;
+    while (Blank != key)
+    {
+      seen.insert(key);
+      count += 1;
+      key = d.prev_key(key);
+    }
+    if (count != 4)
+    {
+      new Exception("last/prev_key count: expected 4, got %s" % $count).throw();
+    }
+    if (seen != new Set(["One","Two","Three","Four"]))
+    {
+      new Exception("last/prev_key keys: got %s" % $seen).throw();
+    }
+
+    // - lee_key#1 / gre_key#1 (less-or-equal / greater-or-equal lookup) -
+    d = new Dict([10,"ten",20,"twenty",30,"thirty"]);
+    if (d.lee_key(25) != 20)
+    {
+      new Exception("lee_key(25): expected 20, got %s" % $d.lee_key(25)).throw();
+    }
+    if (d.lee_key(20) != 20)
+    {
+      new Exception("lee_key(20): expected 20, got %s" % $d.lee_key(20)).throw();
+    }
+    if (Blank != d.lee_key(5))
+    {
+      new Exception("lee_key(5): expected Blank, got %s" % $d.lee_key(5)).throw();
+    }
+    if (d.gre_key(15) != 20)
+    {
+      new Exception("gre_key(15): expected 20, got %s" % $d.gre_key(15)).throw();
+    }
+    if (d.gre_key(20) != 20)
+    {
+      new Exception("gre_key(20): expected 20, got %s" % $d.gre_key(20)).throw();
+    }
+    if (Blank != d.gre_key(35))
+    {
+      new Exception("gre_key(35): expected Blank, got %s" % $d.gre_key(35)).throw();
+    }
+
+    // - contain#1 (checks key presence) -
+    d = new Dict(["One",1,"Two",2,"Three",3,"Four",4]);
+    if (d.contain("One") != 1) { new Exception("contain One").throw(); }
+    if (d.contain("Two") != 1) { new Exception("contain Two").throw(); }
+    if (d.contain("Five") != 0) { new Exception("contain Five").throw(); }
+
+    // - clear#0 -
+    d = new Dict(["One",1,"Two",2,"Three",3]);
+    d.clear();
+    if (d.length() != 0)
+    {
+      new Exception("clear length: got %s" % $d.length()).throw();
+    }
+    if ($d != "[]")
+    {
+      new Exception("clear to_string: got %s" % $d).throw();
+    }
+
+    // - unordered_keys / unordered_items -
+    d = new Dict(["One",1,"Two",2,"Three",3]);
+    if (d.unordered_keys().length() != 3)
+    {
+      new Exception("unordered_keys length: expected 3").throw();
+    }
+    if (d.unordered_items().length() != 3)
+    {
+      new Exception("unordered_items length: expected 3").throw();
+    }
+
+    // - for-each yields keys -
+    d = new Dict(["One",1,"Two",2,"Three",3]);
+    seen = new Set();
+    for (key <- d)
+    {
+      seen.insert(key);
+    }
+    if (seen != new Set(["One","Two","Three"]))
+    {
+      new Exception("for-each keys: got %s" % $seen).throw();
+    }
+
+    // - to_string#0 -
+    d = new Dict([10,"ten"]);
+    if (d.to_string() != "[10:ten]")
+    {
+      new Exception("Dict.to_string(): got %s" % d.to_string()).throw();
+    }
+
+    // - to_string#1 with separator -
+    d = new Dict([10,"ten",20,"twenty",30,"thirty"]);
+    if (d.to_string("-SEP-") != "10:ten-SEP-20:twenty-SEP-30:thirty")
+    {
+      new Exception("Dict.to_string(\"-SEP-\"): got %s" % d.to_string("-SEP-")).throw();
+    }
+
+    // - length#0 across operations -
+    d = new Dict();
+    if (d.length() != 0) { new Exception("len 0").throw(); }
+    d["a"] = 1;
+    d["b"] = 2;
+    if (d.length() != 2) { new Exception("len 2").throw(); }
+    d.remove_key("a");
+    if (d.length() != 1) { new Exception("len 1 after remove").throw(); }
+  }/*}}}*/
+}

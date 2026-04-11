@@ -1,0 +1,60 @@
+
+import crypto;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - derive PEM paths from script path (argv[0]) -
+    parts = argv[0].split("/");
+    parts.last() = "test_rsa_private.pem";
+    priv_path = parts.to_string("/");
+    parts.last() = "test_rsa_public.pem";
+    pub_path  = parts.to_string("/");
+
+    priv = CryptoPKey.load_private(priv_path, "");
+    pub  = CryptoPKey.load_public(pub_path, "");
+
+    msg = "this is a test message for sealing" * 5;
+
+    // - seal message to public key -
+    seal = new CryptoSeal("aes-256-cbc", [pub]);
+    ct = seal.update(msg) + seal.finalize();
+    enc_keys = seal.keys();
+    iv = seal.iv();
+
+    if (enc_keys.length() != 1)
+    {
+      new Exception("seal.keys() length: expected 1, got %s" % $enc_keys.length()).throw();
+    }
+    if (iv.length() != 16)
+    {
+      new Exception("seal.iv() length: expected 16, got %s" % $iv.length()).throw();
+    }
+    if (ct == msg)
+    {
+      new Exception("seal ciphertext equals plaintext").throw();
+    }
+
+    // - open with matching private key (param order: name, enc_key, iv, priv_key) -
+    open = new CryptoOpen("aes-256-cbc", enc_keys[0], iv, priv);
+    pt = open.update(ct) + open.finalize();
+
+    if (pt != msg)
+    {
+      new Exception("seal/open round-trip failed").throw();
+    }
+
+    // - seal with CryptoCipherInfo object form -
+    info = new CryptoCipherInfo("aes-256-cbc");
+    seal = new CryptoSeal(info, [pub]);
+    ct = seal.update(msg) + seal.finalize();
+
+    open = new CryptoOpen(info, seal.keys()[0], seal.iv(), priv);
+    if ((open.update(ct) + open.finalize()) != msg)
+    {
+      new Exception("seal/open with CipherInfo object failed").throw();
+    }
+  }/*}}}*/
+}

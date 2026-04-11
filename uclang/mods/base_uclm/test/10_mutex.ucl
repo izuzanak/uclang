@@ -1,0 +1,53 @@
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - construct -
+    m = new Mutex();
+    if ($m == "")
+    {
+      new Exception("new Mutex(): empty to_string").throw();
+    }
+
+    // - lock then unlock (no error) -
+    m = new Mutex();
+    m.lock();
+    m.unlock();
+
+    // - try_lock on unlocked mutex succeeds (returns Blank on success) -
+    m = new Mutex();
+    rc = m.try_lock();
+    if (Blank != rc)
+    {
+      new Exception("try_lock on unlocked: expected Blank, got %s" % $rc).throw();
+    }
+    m.unlock();
+
+    // - lock, then try_lock fails (mutex is recursive: try_lock should
+    //   succeed since same thread). Mutex is recursive — verify just that
+    //   lock + unlock pairs work cleanly. -
+    m = new Mutex();
+    m.lock();
+    m.lock();
+    m.unlock();
+    m.unlock();
+
+    // - to_string -
+    if ($new Mutex() != "Mutex")
+    {
+      new Exception("$Mutex: expected \"Mutex\", got \"%s\"" % $new Mutex()).throw();
+    }
+
+    // - error constants are defined -
+    if ($Mutex.ERROR_BUSY == "")
+    {
+      new Exception("Mutex.ERROR_BUSY undefined").throw();
+    }
+    if ($Mutex.ERROR_DEADLOCK == "")
+    {
+      new Exception("Mutex.ERROR_DEADLOCK undefined").throw();
+    }
+  }/*}}}*/
+}

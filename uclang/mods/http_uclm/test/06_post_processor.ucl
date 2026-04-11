@@ -1,0 +1,156 @@
+
+import sys;
+import http;
+import curl;
+import containers;
+
+class Main
+{
+  static server_ready = 0;
+  static stop_flag = 0;
+
+  // - server-side observations -
+  static fields = new Dict();
+  static offset_type_ok = 0;
+  static observed_pp_to_string = "";
+  static server_error = "";
+
+  public Main() {}
+
+  // - HttpPostProc field callback (1-arg) -
+  public on_post_field(a_pp)
+  {/*{{{*/
+    fields[a_pp.key()] = $a_pp.data();
+
+    if (type a_pp.offset() == type Integer)
+    {
+      offset_type_ok = 1;
+    }
+
+    if (observed_pp_to_string == "")
+    {
+      observed_pp_to_string = $a_pp;
+    }
+  }/*}}}*/
+
+  // - HttpServer connection callback -
+  public on_conn(a_conn)
+  {/*{{{*/
+    if (a_conn.get_type() != HttpConn.TYPE_POST)
+    {
+      server_error = "expected POST, got type %d" % a_conn.get_type();
+      resp = new HttpResp(HttpResp.FROM_STRING,"");
+      a_conn.queue_response(HttpResp.HTTP_BAD_REQUEST,resp);
+    }
+    else
+    {
+      // - first call: create the post processor and stash it on user_data -
+      user_data =@ a_conn.user_data();
+
+      if (Blank == user_data)
+      {
+        user_data = a_conn.post_processor(1024,
+          new Delegate(this,"on_post_field",1));
+      }
+
+      ud = a_conn.upload_data();
+      if (Blank != ud)
+      {
+        // - feed the chunk into the post processor -
+        user_data.process(ud);
+      }
+      else
+      {
+        // - all data consumed: queue the response -
+        resp = new HttpResp(HttpResp.FROM_STRING,"OK");
+        a_conn.queue_response(HttpResp.HTTP_OK,resp);
+      }
+    }
+  }/*}}}*/
+
+  static parallel run_server(a_obj,a_port)
+  {/*{{{*/
+    server = new HttpServer(0,a_port,
+      new Delegate(a_obj,"on_conn",1),[]);
+
+    server_ready = 1;
+
+    while (stop_flag == 0)
+    {
+      poll = new Poll(server.get_fds());
+      poll.ready(50);
+      server.process();
+    }
+
+    server.stop();
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19600 + (Sys.getpid() % 1000);
+    url = "http://127.0.0.1:%d/post" % port;
+
+    thr = run_server(obj,port);
+
+    attempts = 0;
+    while (server_ready == 0 and attempts < 1000)
+    {
+      Sys.sleep(10);
+      attempts += 1;
+    }
+    if (server_ready == 0)
+    {
+      stop_flag = 1;
+      thr.join();
+      new Exception("server did not become ready").throw();
+    }
+
+    result = Curl.POST(url,"name=Alice&age=30");
+
+    stop_flag = 1;
+    thr.join();
+
+    if (server_error != "")
+    {
+      new Exception("server-side: %s" % server_error).throw();
+    }
+
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("code: expected CURLE_OK, got %d" % result.code()).throw();
+    }
+
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 200)
+    {
+      new Exception("INFO_RESPONSE_CODE: expected 200, got %d" %
+        result.info(CurlResult.INFO_RESPONSE_CODE)).throw();
+    }
+
+    if (result.data() != "OK")
+    {
+      new Exception("data: expected OK, got %s" % result.data()).throw();
+    }
+
+    if (fields["name"] != "Alice")
+    {
+      new Exception("fields[name]: expected Alice, got %s" % $fields["name"]).throw();
+    }
+
+    if (fields["age"] != "30")
+    {
+      new Exception("fields[age]: expected 30, got %s" % $fields["age"]).throw();
+    }
+
+    if (offset_type_ok != 1)
+    {
+      new Exception("offset(): expected Integer type").throw();
+    }
+
+    if (observed_pp_to_string != "HttpPostProc")
+    {
+      new Exception("HttpPostProc to_string: expected HttpPostProc, got %s" %
+        observed_pp_to_string).throw();
+    }
+  }/*}}}*/
+}

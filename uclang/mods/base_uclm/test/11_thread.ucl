@@ -1,0 +1,76 @@
+
+class Main
+{
+  static parallel worker(@a_result)
+  {/*{{{*/
+    a_result = 42;
+    return ["thread","return","value"];
+  }/*}}}*/
+
+  static parallel worker_blocking(a_mutex)
+  {/*{{{*/
+    // - wait for mutex to be unlocked by main -
+    a_mutex.lock();
+    a_mutex.unlock();
+    return 100;
+  }/*}}}*/
+
+  static parallel detached_worker()
+  {/*{{{*/
+    // - trivial work -
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - call to parallel method returns a Thread object -
+    result = 0;
+    thread = worker(result);
+
+    if ($(type thread) != "Thread")
+    {
+      new Exception("worker() type: expected \"Thread\", got \"%s\"" % $(type thread)).throw();
+    }
+
+    // - join returns parallel method's return value -
+    ret = thread.join();
+    if (ret != ["thread","return","value"])
+    {
+      new Exception("join return value: got %s" % $ret).throw();
+    }
+
+    // - reference parameter was set -
+    if (result != 42)
+    {
+      new Exception("ref param: expected 42, got %s" % $result).throw();
+    }
+
+    // - mutex-synchronized startup: worker blocks until main unlocks -
+    mutex = new Mutex();
+    mutex.lock();
+    thread = worker_blocking(mutex);
+    mutex.unlock();
+    ret = thread.join();
+    if (ret != 100)
+    {
+      new Exception("blocking worker return: expected 100, got %s" % $ret).throw();
+    }
+
+    // - Thread.yield is callable (no return value to check) -
+    Thread.yield();
+
+    // - detach completes without error -
+    thread = detached_worker();
+    thread.detach();
+
+    // - error constants are defined -
+    if ($Thread.ERROR_BUSY == "")
+    {
+      new Exception("Thread.ERROR_BUSY undefined").throw();
+    }
+    if ($Thread.ERROR_INVALID == "")
+    {
+      new Exception("Thread.ERROR_INVALID undefined").throw();
+    }
+  }/*}}}*/
+}

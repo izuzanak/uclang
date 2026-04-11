@@ -1,0 +1,148 @@
+
+import sys;
+import http;
+
+class Main
+{
+  public Main() {}
+
+  // - 0-arg delegate (wrong arity for HttpServer) -
+  public cb_zero() {}
+
+  // - valid 1-arg delegate -
+  public cb_one(a_conn) {}
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19700 + (Sys.getpid() % 1000);
+
+    // - HttpServer with wrong-arity callback throws WRONG_CALLBACK_DELEGATE -
+    caught = 0;
+    try
+    {
+      new HttpServer(0,port,new Delegate(obj,"cb_zero",0),[]);
+    }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("HttpServer(0-arg cb): expected throw").throw();
+    }
+
+    // - HttpServer with non-Integer option id throws
+    //   EXPECTED_INTEGER_AS_OPTION_ID -
+    caught = 0;
+    try
+    {
+      new HttpServer(0,port,new Delegate(obj,"cb_one",1),["string-not-int",0]);
+    }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("HttpServer(non-int option): expected throw").throw();
+    }
+
+    // - HttpServer with unknown option id throws UNKNOWN_OPTION_ID -
+    caught = 0;
+    try
+    {
+      new HttpServer(0,port,new Delegate(obj,"cb_one",1),[99999,0]);
+    }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("HttpServer(unknown option id): expected throw").throw();
+    }
+
+    // - HttpServer with wrong-typed option value throws
+    //   INVALID_OPTION_VALUE_TYPE (CONNECTION_LIMIT expects Integer) -
+    caught = 0;
+    try
+    {
+      new HttpServer(0,port,new Delegate(obj,"cb_one",1),
+        [HttpServer.OPTION_CONNECTION_LIMIT,"not-an-int"]);
+    }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("HttpServer(wrong option value type): expected throw").throw();
+    }
+
+    // - HttpServer with non-String value for HTTPS_MEM_KEY throws -
+    caught = 0;
+    try
+    {
+      new HttpServer(0,port,new Delegate(obj,"cb_one",1),
+        [HttpServer.OPTION_HTTPS_MEM_KEY,42]);
+    }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("HttpServer(HTTPS_MEM_KEY = Integer): expected throw").throw();
+    }
+
+    // - operating on a stopped server throws HTTP_SERVER_WAS_STOPPED -
+    server = new HttpServer(0,port,new Delegate(obj,"cb_one",1),[]);
+    server.stop();
+
+    caught = 0;
+    try { server.get_fds(); } catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("get_fds on stopped server: expected throw").throw();
+    }
+
+    caught = 0;
+    try { server.timeout(); } catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("timeout on stopped server: expected throw").throw();
+    }
+
+    caught = 0;
+    try { server.process(); } catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("process() on stopped server: expected throw").throw();
+    }
+
+    caught = 0;
+    try { server.process(0); } catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("process(0) on stopped server: expected throw").throw();
+    }
+
+    caught = 0;
+    try { server.stop(); } catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("stop on already-stopped server: expected throw").throw();
+    }
+
+    // - HttpResp(FROM_FILE, nonexistent path) throws CANNOT_READ_SOURCE_FILE -
+    caught = 0;
+    try
+    {
+      new HttpResp(HttpResp.FROM_FILE,"/tmp/uclang_http_test_does_not_exist_xyz");
+    }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("HttpResp(FROM_FILE, missing): expected throw").throw();
+    }
+
+    // - HttpResp with unknown source identifier throws
+    //   UNKNOWN_DATA_SOURCE_IDENTIFIER -
+    caught = 0;
+    try
+    {
+      new HttpResp(99999,"data");
+    }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("HttpResp(unknown source id): expected throw").throw();
+    }
+  }/*}}}*/
+}

@@ -1,0 +1,243 @@
+
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - empty constructor -
+    s = new Stack();
+    if (s.length() != 0)
+    {
+      new Exception("empty Stack length: expected 0, got %s" % $s.length()).throw();
+    }
+
+    // - iterable constructor -
+    s = new Stack([1,2,3,4,5]);
+    if (s.length() != 5)
+    {
+      new Exception("Stack([1..5]) length: expected 5, got %s" % $s.length()).throw();
+    }
+    if (s.items() != [1,2,3,4,5])
+    {
+      new Exception("Stack items: expected [1,2,3,4,5], got %s" % $s.items()).throw();
+    }
+
+    // - cross-container constructor (from List) -
+    s = new Stack(new List([7,8,9]));
+    if (s.items() != [7,8,9])
+    {
+      new Exception("Stack(List): expected [7,8,9], got %s" % $s.items()).throw();
+    }
+
+    // - to_string of empty stack -
+    if ($new Stack() != "[]")
+    {
+      new Exception("empty Stack to_string: expected [], got %s" % $new Stack()).throw();
+    }
+
+    // - to_string with items -
+    if ($new Stack([1,2,3,4,5]) != "[1,2,3,4,5]")
+    {
+      new Exception("Stack([1..5]) to_string: expected [1,2,3,4,5], got %s" % $new Stack([1,2,3,4,5])).throw();
+    }
+
+    // - equality: same content -
+    s0 = new Stack([1,2,3,4]);
+    s1 = new Stack([1,2,3,4]);
+    if (!(s0 == s1))
+    {
+      new Exception("Stack == same content: expected true").throw();
+    }
+    if (s0 != s1)
+    {
+      new Exception("Stack != same content: expected false").throw();
+    }
+
+    // - equality: different content -
+    s2 = new Stack([1,2,3,5]);
+    if (s0 == s2)
+    {
+      new Exception("Stack == different content: expected false").throw();
+    }
+    if (!(s0 != s2))
+    {
+      new Exception("Stack != different content: expected true").throw();
+    }
+
+    // - equality vs non-stack value -
+    if (s0 == 10)
+    {
+      new Exception("Stack == int: expected false").throw();
+    }
+    if (!(s0 != 10))
+    {
+      new Exception("Stack != int: expected true").throw();
+    }
+
+    // - plus operator (immutable) -
+    s = new Stack([1,2,3]);
+    s_plus = s + [4,5,6];
+    if (s_plus.items() != [1,2,3,4,5,6])
+    {
+      new Exception("Stack + arr: expected [1..6], got %s" % $s_plus.items()).throw();
+    }
+    if (s.items() != [1,2,3])
+    {
+      new Exception("Stack + arr (original mutated): expected [1,2,3], got %s" % $s.items()).throw();
+    }
+
+    // - plus-equals operator (mutating) -
+    s += [4,5,6];
+    if (s.items() != [1,2,3,4,5,6])
+    {
+      new Exception("Stack += arr: expected [1..6], got %s" % $s.items()).throw();
+    }
+
+    // - push#1 returns stack and appends to top -
+    s = new Stack([1,2,3]);
+    ret = s.push(10);
+    if (ret.items() != [1,2,3,10])
+    {
+      new Exception("Stack.push(10) return: expected [1,2,3,10], got %s" % $ret.items()).throw();
+    }
+    if (s.length() != 4)
+    {
+      new Exception("Stack.push then length: expected 4, got %s" % $s.length()).throw();
+    }
+
+    // - push_ref#1 keeps live reference -
+    value = 10;
+    s = new Stack([1,2,3]);
+    s.push_ref(value);
+    s.push_ref(value);
+    if (s.items() != [1,2,3,10,10])
+    {
+      new Exception("Stack.push_ref live: expected [1,2,3,10,10], got %s" % $s.items()).throw();
+    }
+    value = 100;
+    if (s.items() != [1,2,3,100,100])
+    {
+      new Exception("Stack.push_ref after mutation: expected [1,2,3,100,100], got %s" % $s.items()).throw();
+    }
+
+    // - pop#0 returns top (LIFO order) -
+    s = new Stack([1,2,3,4,5]);
+    if (s.pop() != 5)
+    {
+      new Exception("Stack.pop #1: expected 5").throw();
+    }
+    if (s.pop() != 4)
+    {
+      new Exception("Stack.pop #2: expected 4").throw();
+    }
+    if (s.pop() != 3)
+    {
+      new Exception("Stack.pop #3: expected 3").throw();
+    }
+    if (s.items() != [1,2])
+    {
+      new Exception("Stack after 3 pops: expected [1,2], got %s" % $s.items()).throw();
+    }
+
+    // - contain#1 -
+    s = new Stack([1,2,3,4,5]);
+    if (s.contain(2) != 1)
+    {
+      new Exception("Stack.contain(2): expected 1").throw();
+    }
+    if (s.contain(4) != 1)
+    {
+      new Exception("Stack.contain(4): expected 1").throw();
+    }
+    if (s.contain(6) != 0)
+    {
+      new Exception("Stack.contain(6): expected 0").throw();
+    }
+
+    // - clear#0 -
+    s = new Stack([1,2,3,4,5]);
+    s.clear();
+    if (s.length() != 0)
+    {
+      new Exception("Stack.clear length: expected 0, got %s" % $s.length()).throw();
+    }
+    if (s.items() != [])
+    {
+      new Exception("Stack.clear items: expected [], got %s" % $s.items()).throw();
+    }
+
+    // - items#0 returns Array (independent copy) -
+    s = new Stack([1,2,3,4,5]);
+    items = s.items();
+    if ($(type items) != "Array")
+    {
+      new Exception("items type: expected Array, got %s" % $(type items)).throw();
+    }
+    if (items != [1,2,3,4,5])
+    {
+      new Exception("items value: expected [1,2,3,4,5], got %s" % $items).throw();
+    }
+
+    // - iteration: forward via first_idx/next_idx -
+    s = new Stack([10,20,30,40,50]);
+    collected = [];
+    idx = s.first_idx();
+    while (Blank != idx)
+    {
+      collected.push(s.item(idx));
+      idx = s.next_idx(idx);
+    }
+    if (collected != [10,20,30,40,50])
+    {
+      new Exception("Stack forward iter: expected [10..50], got %s" % $collected).throw();
+    }
+
+    // - iteration: backward via last_idx/prev_idx -
+    collected = [];
+    idx = s.last_idx();
+    while (Blank != idx)
+    {
+      collected.push(s.item(idx));
+      idx = s.prev_idx(idx);
+    }
+    if (collected != [50,40,30,20,10])
+    {
+      new Exception("Stack backward iter: expected [50..10], got %s" % $collected).throw();
+    }
+
+    // - item#1 access -
+    s = new Stack([10,20,30]);
+    if (s.item(s.first_idx()) != 10)
+    {
+      new Exception("Stack.item(first): expected 10").throw();
+    }
+    if (s.item(s.last_idx()) != 30)
+    {
+      new Exception("Stack.item(last): expected 30").throw();
+    }
+
+    // - to_string#0 / to_string#1 -
+    s = new Stack([1,2,3,4,5]);
+    if (s.to_string() != "[1,2,3,4,5]")
+    {
+      new Exception("Stack.to_string(): expected [1,2,3,4,5], got %s" % s.to_string()).throw();
+    }
+    if (s.to_string("-SEP-") != "1-SEP-2-SEP-3-SEP-4-SEP-5")
+    {
+      new Exception("Stack.to_string(\"-SEP-\"): got %s" % s.to_string("-SEP-")).throw();
+    }
+
+    // - length#0 across operations -
+    s = new Stack();
+    if (s.length() != 0) { new Exception("len 0").throw(); }
+    s.push(1);
+    if (s.length() != 1) { new Exception("len 1").throw(); }
+    s.push(2);
+    s.push(3);
+    if (s.length() != 3) { new Exception("len 3").throw(); }
+    s.pop();
+    if (s.length() != 2) { new Exception("len 2 after pop").throw(); }
+  }/*}}}*/
+}

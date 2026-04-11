@@ -109,9 +109,9 @@ class Main
     dict[1] = 10;
     dict[2] = 20;
     dict[3] = 30;
-    if (dict.to_string("|") != "1:10|2:20|3:30")
+    if (dict.to_string("-SEP-") != "1:10-SEP-2:20-SEP-3:30")
     {
-      new Exception("to_string sep: expected 1:10|2:20|3:30, got %s" % dict.to_string("|")).throw();
+      new Exception("to_string sep: expected 1:10-SEP-2:20-SEP-3:30, got %s" % dict.to_string("-SEP-")).throw();
     }
   }/*}}}*/
 }

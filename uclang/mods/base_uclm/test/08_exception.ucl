@@ -1,0 +1,112 @@
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - construct + throw + catch -
+    caught = 0;
+    try {
+      new Exception("hello").throw();
+    }
+    catch (e) {
+      caught = 1;
+      // - get_value returns the message string -
+      if (e.get_value() != "hello")
+      {
+        new Exception("get_value: expected \"hello\", got \"%s\"" % $e.get_value()).throw();
+      }
+      // - get_file_name returns a non-empty string -
+      if ($e.get_file_name() == "")
+      {
+        new Exception("get_file_name: empty").throw();
+      }
+      // - get_line returns positive integer -
+      if (!(e.get_line() > 0))
+      {
+        new Exception("get_line: expected > 0, got %s" % $e.get_line()).throw();
+      }
+      // - get_type returns an Error value -
+      t = e.get_type();
+      if ($t == "")
+      {
+        new Exception("get_type: empty").throw();
+      }
+    }
+    if (caught != 1)
+    {
+      new Exception("caught Exception throw").throw();
+    }
+
+    // - division by zero is catchable -
+    caught = 0;
+    try { 1/0; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("1/0: expected throw").throw();
+    }
+
+    // - array index out of range is catchable -
+    caught = 0;
+    try { [1,2,3][5]; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("[1,2,3][5]: expected throw").throw();
+    }
+
+    // - re-throw caught exception -
+    re_caught = 0;
+    try {
+      try { new Exception("inner").throw(); }
+      catch (inner) { inner.throw(); }
+    }
+    catch (outer) {
+      re_caught = 1;
+      if (outer.get_value() != "inner")
+      {
+        new Exception("re-throw value: got \"%s\"" % $outer.get_value()).throw();
+      }
+    }
+    if (re_caught != 1)
+    {
+      new Exception("re-throw not caught").throw();
+    }
+
+    // - nested try/catch isolation -
+    inner_caught = 0;
+    outer_caught = 0;
+    try {
+      try { new Exception("a").throw(); }
+      catch (e) { inner_caught = 1; }
+
+      // - this throw is caught by the outer block -
+      new Exception("b").throw();
+    }
+    catch (e) {
+      outer_caught = 1;
+      if (e.get_value() != "b")
+      {
+        new Exception("nested outer value").throw();
+      }
+    }
+    if (inner_caught != 1)
+    {
+      new Exception("nested inner not caught").throw();
+    }
+    if (outer_caught != 1)
+    {
+      new Exception("nested outer not caught").throw();
+    }
+
+    // - to_string non-empty -
+    try { new Exception("x").throw(); }
+    catch (e) {
+      if ($e == "")
+      {
+        new Exception("$exception empty").throw();
+      }
+    }
+  }/*}}}*/
+}

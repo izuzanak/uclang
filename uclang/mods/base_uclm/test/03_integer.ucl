@@ -1,0 +1,120 @@
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - constructors -
+    if (new Integer() != 0)
+    {
+      new Exception("new Integer(): expected 0").throw();
+    }
+    if (new Integer(42) != 42)
+    {
+      new Exception("new Integer(42): expected 42").throw();
+    }
+    if (new Integer('A') != 65)
+    {
+      new Exception("new Integer('A'): expected 65").throw();
+    }
+
+    // - float to int truncation -
+    if (new Integer(3.7) != 3)
+    {
+      new Exception("new Integer(3.7): expected 3").throw();
+    }
+    if (new Integer(-2.9) != -2)
+    {
+      new Exception("new Integer(-2.9): expected -2").throw();
+    }
+
+    // - parse string with explicit base -
+    if (new Integer("42",10) != 42)
+    {
+      new Exception("Integer(\"42\",10): expected 42").throw();
+    }
+    if (new Integer("ff",16) != 255)
+    {
+      new Exception("Integer(\"ff\",16): expected 255").throw();
+    }
+    if (new Integer("100",8) != 64)
+    {
+      new Exception("Integer(\"100\",8): expected 64").throw();
+    }
+    if (new Integer("1010",2) != 10)
+    {
+      new Exception("Integer(\"1010\",2): expected 10").throw();
+    }
+
+    // - parse string with prefix-detection -
+    if (new Integer("0x10") != 16)
+    {
+      new Exception("Integer(\"0x10\"): expected 16").throw();
+    }
+
+    // - arithmetic -
+    if (10 + 5 != 15) { new Exception("10+5").throw(); }
+    if (10 - 5 != 5)  { new Exception("10-5").throw(); }
+    if (10 * 5 != 50) { new Exception("10*5").throw(); }
+    if (10 / 3 != 3)  { new Exception("10/3").throw(); }
+    if (10 % 3 != 1)  { new Exception("10%%3").throw(); }
+    if (-10 + 3 != -7){ new Exception("-10+3").throw(); }
+
+    // - += -= *= /= %= -
+    n = 100;
+    n += 50;
+    if (n != 150) { new Exception("n += 50").throw(); }
+    n -= 25;
+    if (n != 125) { new Exception("n -= 25").throw(); }
+    n *= 2;
+    if (n != 250) { new Exception("n *= 2").throw(); }
+    n /= 5;
+    if (n != 50) { new Exception("n /= 5").throw(); }
+    n %= 7;
+    if (n != 1) { new Exception("n %%= 7").throw(); }
+
+    // - bitwise -
+    if ((0xf0 & 0x3c) != 0x30) { new Exception("0xf0 & 0x3c").throw(); }
+    if ((0xf0 | 0x0f) != 0xff) { new Exception("0xf0 | 0x0f").throw(); }
+    if ((0xff ^ 0xaa) != 0x55) { new Exception("0xff ^ 0xaa").throw(); }
+    if ((1 << 4) != 16)        { new Exception("1 << 4").throw(); }
+    if ((256 >> 2) != 64)      { new Exception("256 >> 2").throw(); }
+    if (~0 != -1)              { new Exception("~0").throw(); }
+
+    // - comparison -
+    if (!(10 < 20))   { new Exception("10 < 20").throw(); }
+    if (!(20 > 10))   { new Exception("20 > 10").throw(); }
+    if (!(10 <= 10))  { new Exception("10 <= 10").throw(); }
+    if (!(10 >= 10))  { new Exception("10 >= 10").throw(); }
+    if (!(10 == 10))  { new Exception("10 == 10").throw(); }
+    if (10 != 10)     { new Exception("10 != 10").throw(); }
+
+    // - increment / decrement -
+    n = 5;
+    ++n;
+    if (n != 6) { new Exception("++n").throw(); }
+    --n;
+    if (n != 5) { new Exception("--n").throw(); }
+    n ++;
+    if (n != 6) { new Exception("n++").throw(); }
+    n --;
+    if (n != 5) { new Exception("n--").throw(); }
+
+    // - unary minus -
+    if (-(42) != -42) { new Exception("-42").throw(); }
+
+    // - logical not -
+    if (!0 != 1) { new Exception("!0").throw(); }
+    if (!1 != 0) { new Exception("!1").throw(); }
+
+    // - compare#1 -
+    if ((10).compare(10) != 0)  { new Exception("10.compare(10)").throw(); }
+    if (!((10).compare(20) < 0)){ new Exception("10.compare(20)").throw(); }
+    if (!((20).compare(10) > 0)){ new Exception("20.compare(10)").throw(); }
+
+    // - to_string -
+    if ($42 != "42")     { new Exception("$42").throw(); }
+    if ($-7 != "-7")     { new Exception("$-7").throw(); }
+    if ($0 != "0")       { new Exception("$0").throw(); }
+  }/*}}}*/
+}

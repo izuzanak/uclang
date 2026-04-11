@@ -1,0 +1,111 @@
+
+import sys;
+import curl;
+
+class Main
+{
+  public Main() {}
+
+  // - 0-arg delegate (wrong arity for CurlMulti) -
+  public cb_zero() {}
+
+  // - valid 1-arg delegate -
+  public cb_one(a_result) {}
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+
+    // - Curl.GET with refused port throws -
+    caught = 0;
+    try { Curl.GET("http://127.0.0.1:1/"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Curl.GET refused port: expected throw").throw();
+    }
+
+    // - Curl.GET with malformed URL (no scheme) throws -
+    caught = 0;
+    try { Curl.GET("not-a-url"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Curl.GET malformed url: expected throw").throw();
+    }
+
+    // - new CurlMulti with 0-arg callback throws -
+    caught = 0;
+    try { new CurlMulti(new Delegate(obj,"cb_zero",0)); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("CurlMulti(0-arg cb): expected throw").throw();
+    }
+
+    // - cm[invalid_index] throws -
+    cm = new CurlMulti(new Delegate(obj,"cb_one",1));
+    caught = 0;
+    try { cm[9999]; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("cm[9999]: expected throw").throw();
+    }
+
+    // - enqueue a request to get a valid CurlMultiRequest for further error tests.
+    //   The target is a refused port; we never call cm.process() so curl never
+    //   tries to deliver the request and the test cannot hang. -
+    refused_url = "http://127.0.0.1:1/";
+    idx = cm.GET(refused_url,"u");
+    req = cm[idx];
+
+    // - add_headers with non-string element throws -
+    caught = 0;
+    try { req.add_headers([42]); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("add_headers([42]): expected throw").throw();
+    }
+
+    // - setopt OPT_TIMEOUT with String value throws -
+    caught = 0;
+    try { req.setopt(Curl.OPT_TIMEOUT,"not-an-int"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("setopt(OPT_TIMEOUT, String): expected throw").throw();
+    }
+
+    // - setopt OPT_USERNAME with Integer value throws -
+    caught = 0;
+    try { req.setopt(Curl.OPT_USERNAME,42); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("setopt(OPT_USERNAME, Integer): expected throw").throw();
+    }
+
+    // - first cancel succeeds and removes the slot from the multi handle -
+    req.cancel();
+
+    // - second cancel on the same request throws invalid reference -
+    caught = 0;
+    try { req.cancel(); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("req.cancel twice: expected second to throw").throw();
+    }
+
+    // - cm[idx] on cancelled slot throws -
+    caught = 0;
+    try { cm[idx]; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("cm[cancelled idx]: expected throw").throw();
+    }
+  }/*}}}*/
+}

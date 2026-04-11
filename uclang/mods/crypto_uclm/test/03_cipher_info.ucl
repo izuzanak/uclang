@@ -1,0 +1,54 @@
+
+import crypto;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - aes-256-cbc properties -
+    ci = new CryptoCipherInfo("aes-256-cbc");
+    if (ci.name() != "AES-256-CBC")
+    {
+      new Exception("aes-256-cbc name: expected AES-256-CBC, got %s" % ci.name()).throw();
+    }
+    if (ci.block_size() != 16)
+    {
+      new Exception("aes-256-cbc block_size: expected 16, got %s" % $ci.block_size()).throw();
+    }
+    if (ci.key_length() != 32)
+    {
+      new Exception("aes-256-cbc key_length: expected 32, got %s" % $ci.key_length()).throw();
+    }
+    if (ci.iv_length() != 16)
+    {
+      new Exception("aes-256-cbc iv_length: expected 16, got %s" % $ci.iv_length()).throw();
+    }
+
+    // - aes-128-cbc properties -
+    ci = new CryptoCipherInfo("aes-128-cbc");
+    if (ci.key_length() != 16)
+    {
+      new Exception("aes-128-cbc key_length: expected 16, got %s" % $ci.key_length()).throw();
+    }
+    if (ci.iv_length() != 16)
+    {
+      new Exception("aes-128-cbc iv_length: expected 16, got %s" % $ci.iv_length()).throw();
+    }
+    if (ci.block_size() != 16)
+    {
+      new Exception("aes-128-cbc block_size: expected 16, got %s" % $ci.block_size()).throw();
+    }
+
+    // - aes-256-ecb has no IV -
+    ci = new CryptoCipherInfo("aes-256-ecb");
+    if (ci.iv_length() != 0)
+    {
+      new Exception("aes-256-ecb iv_length: expected 0, got %s" % $ci.iv_length()).throw();
+    }
+    if (ci.key_length() != 32)
+    {
+      new Exception("aes-256-ecb key_length: expected 32, got %s" % $ci.key_length()).throw();
+    }
+  }/*}}}*/
+}

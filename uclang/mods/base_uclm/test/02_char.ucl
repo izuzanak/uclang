@@ -1,0 +1,129 @@
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - construction from int -
+    if (new Char(65) != 'A')
+    {
+      new Exception("new Char(65): expected 'A'").throw();
+    }
+    if (new Char('B') != 'B')
+    {
+      new Exception("new Char('B'): expected 'B'").throw();
+    }
+
+    // - char as integer -
+    if (new Integer('A') != 65)
+    {
+      new Exception("Integer('A'): expected 65").throw();
+    }
+    if (new Integer('Z') != 90)
+    {
+      new Exception("Integer('Z'): expected 90").throw();
+    }
+
+    // - addition / subtraction -
+    if ('A' + new Char(1) != 'B')
+    {
+      new Exception("'A' + 1: expected 'B'").throw();
+    }
+    if ('Z' - new Char(1) != 'Y')
+    {
+      new Exception("'Z' - 1: expected 'Y'").throw();
+    }
+
+    // - comparison -
+    if (!('A' < 'B'))
+    {
+      new Exception("'A' < 'B': expected true").throw();
+    }
+    if (!('B' > 'A'))
+    {
+      new Exception("'B' > 'A': expected true").throw();
+    }
+    if (!('A' == 'A'))
+    {
+      new Exception("'A' == 'A': expected true").throw();
+    }
+    if ('A' != 'A')
+    {
+      new Exception("'A' != 'A': expected false").throw();
+    }
+    if (!('A' <= 'A'))
+    {
+      new Exception("'A' <= 'A': expected true").throw();
+    }
+    if (!('A' >= 'A'))
+    {
+      new Exception("'A' >= 'A': expected true").throw();
+    }
+
+    // - bitwise -
+    if (('\xf0' & '\x0f') != '\x00')
+    {
+      new Exception("0xf0 & 0x0f: expected 0").throw();
+    }
+    if (('\xf0' | '\x0f') != '\xff')
+    {
+      new Exception("0xf0 | 0x0f: expected 0xff").throw();
+    }
+    if (('\xff' ^ '\x0f') != '\xf0')
+    {
+      new Exception("0xff ^ 0x0f: expected 0xf0").throw();
+    }
+
+    // - pre-increment / post-increment -
+    c = 'A';
+    ++c;
+    if (c != 'B')
+    {
+      new Exception("++c from 'A': expected 'B'").throw();
+    }
+    c = 'A';
+    c ++;
+    if (c != 'B')
+    {
+      new Exception("c++ from 'A': expected 'B' after").throw();
+    }
+
+    // - pre-decrement -
+    c = 'B';
+    -- c;
+    if (c != 'A')
+    {
+      new Exception("--c from 'B': expected 'A'").throw();
+    }
+
+    // - logical not -
+    if (!'\x00' != 1)
+    {
+      new Exception("!'\\x00': expected 1").throw();
+    }
+    if (!'A' != 0)
+    {
+      new Exception("!'A': expected 0").throw();
+    }
+
+    // - compare#1 -
+    if ('A'.compare('A') != 0)
+    {
+      new Exception("'A'.compare('A'): expected 0").throw();
+    }
+    if (!('A'.compare('B') < 0))
+    {
+      new Exception("'A'.compare('B'): expected negative").throw();
+    }
+    if (!('B'.compare('A') > 0))
+    {
+      new Exception("'B'.compare('A'): expected positive").throw();
+    }
+
+    // - to_string -
+    if ($'A' != "A")
+    {
+      new Exception("$'A': expected \"A\", got \"%s\"" % $'A').throw();
+    }
+  }/*}}}*/
+}

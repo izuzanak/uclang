@@ -8,7 +8,7 @@ class Main
   {/*{{{*/
 
     // - WsContext constants -
-    if (type WsContext.PORT_NO_LISTEN != type 0)
+    if (type WsContext.PORT_NO_LISTEN != type Integer)
     {
       new Exception("PORT_NO_LISTEN: expected Integer type").throw();
     }
@@ -31,7 +31,7 @@ class Main
     idx = 0;
     while (idx < write_consts.length())
     {
-      if (type write_consts[idx] != type 0)
+      if (type write_consts[idx] != type Integer)
       {
         new Exception("WRITE constant %d: expected Integer type" % idx).throw();
       }
@@ -77,7 +77,7 @@ class Main
     idx = 0;
     while (idx < cb_consts.length())
     {
-      if (type cb_consts[idx] != type 0)
+      if (type cb_consts[idx] != type Integer)
       {
         new Exception("CB constant %d: expected Integer type" % idx).throw();
       }
@@ -105,7 +105,7 @@ class Main
     idx = 0;
     while (idx < timeout_consts.length())
     {
-      if (type timeout_consts[idx] != type 0)
+      if (type timeout_consts[idx] != type Integer)
       {
         new Exception("TIMEOUT constant %d: expected Integer type" % idx).throw();
       }
@@ -174,7 +174,7 @@ class Main
     idx = 0;
     while (idx < token_consts.length())
     {
-      if (type token_consts[idx] != type 0)
+      if (type token_consts[idx] != type Integer)
       {
         new Exception("TOKEN constant %d: expected Integer type" % idx).throw();
       }

@@ -1,0 +1,301 @@
+
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - empty constructor -
+    l = new List();
+    if (l.length() != 0)
+    {
+      new Exception("empty List length: expected 0, got %s" % $l.length()).throw();
+    }
+
+    // - iterable constructor -
+    l = new List([1,2,3,4,5]);
+    if (l.length() != 5)
+    {
+      new Exception("List([1..5]) length: expected 5, got %s" % $l.length()).throw();
+    }
+    if (l.items() != [1,2,3,4,5])
+    {
+      new Exception("List items: expected [1..5], got %s" % $l.items()).throw();
+    }
+
+    // - cross-container constructor -
+    l = new List(new Stack([7,8,9]));
+    if (l.items() != [7,8,9])
+    {
+      new Exception("List(Stack): got %s" % $l.items()).throw();
+    }
+
+    // - to_string -
+    if ($new List() != "[]")
+    {
+      new Exception("empty List to_string: got %s" % $new List()).throw();
+    }
+    if ($new List([1,2,3,4,5]) != "[1,2,3,4,5]")
+    {
+      new Exception("List to_string: got %s" % $new List([1,2,3,4,5])).throw();
+    }
+
+    // - equality -
+    l0 = new List([1,2,3,4]);
+    l1 = new List([1,2,3,4]);
+    if (!(l0 == l1))
+    {
+      new Exception("List == same: expected true").throw();
+    }
+    l2 = new List([1,2,3,5]);
+    if (l0 == l2)
+    {
+      new Exception("List == diff: expected false").throw();
+    }
+    if (!(l0 != l2))
+    {
+      new Exception("List != diff: expected true").throw();
+    }
+    if (l0 == 10)
+    {
+      new Exception("List == int: expected false").throw();
+    }
+
+    // - plus operator -
+    l = new List([1,2,3]);
+    l_plus = l + [4,5,6];
+    if (l_plus.items() != [1,2,3,4,5,6])
+    {
+      new Exception("List + arr: got %s" % $l_plus.items()).throw();
+    }
+    if (l.items() != [1,2,3])
+    {
+      new Exception("List + arr (orig mutated): got %s" % $l.items()).throw();
+    }
+    l += [4,5,6];
+    if (l.items() != [1,2,3,4,5,6])
+    {
+      new Exception("List += arr: got %s" % $l.items()).throw();
+    }
+
+    // - bracket access via iteration indices -
+    l = new List(["a","b","c","d"]);
+    collected = [];
+    idx = l.first_idx();
+    while (Blank != idx)
+    {
+      collected.push(l[idx]);
+      idx = l.next_idx(idx);
+    }
+    if (collected != ["a","b","c","d"])
+    {
+      new Exception("List forward iter: got %s" % $collected).throw();
+    }
+
+    // - iteration backward -
+    collected = [];
+    idx = l.last_idx();
+    while (Blank != idx)
+    {
+      collected.push(l[idx]);
+      idx = l.prev_idx(idx);
+    }
+    if (collected != ["d","c","b","a"])
+    {
+      new Exception("List backward iter: got %s" % $collected).throw();
+    }
+
+    // - append#1 -
+    l = new List([1,2,3,4,5]);
+    l.append(6);
+    l.append(7);
+    l.append(8);
+    if (l.items() != [1,2,3,4,5,6,7,8])
+    {
+      new Exception("List.append: got %s" % $l.items()).throw();
+    }
+
+    // - append_ref#1 (live reference) -
+    value = 10;
+    l = new List([1,2,3,4,5]);
+    l.append_ref(value);
+    l.append_ref(value);
+    l.append_ref(value);
+    if (l.items() != [1,2,3,4,5,10,10,10])
+    {
+      new Exception("List.append_ref live: got %s" % $l.items()).throw();
+    }
+    value = 100;
+    if (l.items() != [1,2,3,4,5,100,100,100])
+    {
+      new Exception("List.append_ref after mutation: got %s" % $l.items()).throw();
+    }
+
+    // - prepend#1 (each new item becomes new first) -
+    l = new List([1,2,3,4,5]);
+    l.prepend(6);
+    l.prepend(7);
+    l.prepend(8);
+    if (l.items() != [8,7,6,1,2,3,4,5])
+    {
+      new Exception("List.prepend: got %s" % $l.items()).throw();
+    }
+
+    // - prepend_ref#1 (live reference) -
+    value = 10;
+    l = new List([1,2,3,4,5]);
+    l.prepend_ref(value);
+    l.prepend_ref(value);
+    l.prepend_ref(value);
+    if (l.items() != [10,10,10,1,2,3,4,5])
+    {
+      new Exception("List.prepend_ref live: got %s" % $l.items()).throw();
+    }
+    value = 100;
+    if (l.items() != [100,100,100,1,2,3,4,5])
+    {
+      new Exception("List.prepend_ref after mutation: got %s" % $l.items()).throw();
+    }
+
+    // - insert_before#2 -
+    l = new List([1,2,3,4,5]);
+    idx = l.get_idx(3);
+    l.insert_before(idx,6);
+    l.insert_before(idx,7);
+    l.insert_before(idx,8);
+    if (l.items() != [1,2,6,7,8,3,4,5])
+    {
+      new Exception("List.insert_before: got %s" % $l.items()).throw();
+    }
+
+    // - insert_before_ref#2 -
+    value = 10;
+    l = new List([1,2,3,4,5]);
+    idx = l.get_idx(3);
+    l.insert_before_ref(idx,value);
+    l.insert_before_ref(idx,value);
+    l.insert_before_ref(idx,value);
+    if (l.items() != [1,2,10,10,10,3,4,5])
+    {
+      new Exception("List.insert_before_ref live: got %s" % $l.items()).throw();
+    }
+    value = 100;
+    if (l.items() != [1,2,100,100,100,3,4,5])
+    {
+      new Exception("List.insert_before_ref after mutation: got %s" % $l.items()).throw();
+    }
+
+    // - insert_after#2 -
+    l = new List([1,2,3,4,5]);
+    idx = l.get_idx(3);
+    l.insert_after(idx,6);
+    l.insert_after(idx,7);
+    l.insert_after(idx,8);
+    if (l.items() != [1,2,3,8,7,6,4,5])
+    {
+      new Exception("List.insert_after: got %s" % $l.items()).throw();
+    }
+
+    // - insert_after_ref#2 -
+    value = 10;
+    l = new List([1,2,3,4,5]);
+    idx = l.get_idx(3);
+    l.insert_after_ref(idx,value);
+    l.insert_after_ref(idx,value);
+    l.insert_after_ref(idx,value);
+    if (l.items() != [1,2,3,10,10,10,4,5])
+    {
+      new Exception("List.insert_after_ref live: got %s" % $l.items()).throw();
+    }
+    value = 100;
+    if (l.items() != [1,2,3,100,100,100,4,5])
+    {
+      new Exception("List.insert_after_ref after mutation: got %s" % $l.items()).throw();
+    }
+
+    // - remove#1 by index -
+    l = new List([1,2,3,4,5]);
+    idx = l.get_idx(3);
+    l.remove(idx);
+    if (l.items() != [1,2,4,5])
+    {
+      new Exception("List.remove: got %s" % $l.items()).throw();
+    }
+
+    // - has_idx#1 -
+    l = new List([1,2,3,4,5]);
+    if (l.has_idx(2) != 1)
+    {
+      new Exception("List.has_idx(2): expected 1").throw();
+    }
+    if (l.has_idx(6) != 0)
+    {
+      new Exception("List.has_idx(6): expected 0").throw();
+    }
+
+    // - get_idx#1 -
+    l = new List([1,2,3,4,5]);
+    if (l.get_idx(2) != 1)
+    {
+      new Exception("List.get_idx(2): expected 1, got %s" % $l.get_idx(2)).throw();
+    }
+    if (l.get_idx(3) != 2)
+    {
+      new Exception("List.get_idx(3): expected 2").throw();
+    }
+
+    // - get_idxs#1 (multi-match) -
+    l = new List([1,2,3,3,2,4]);
+    if (l.get_idxs(2) != [1,4])
+    {
+      new Exception("List.get_idxs(2): expected [1,4], got %s" % $l.get_idxs(2)).throw();
+    }
+    if (l.get_idxs(3) != [2,3])
+    {
+      new Exception("List.get_idxs(3): expected [2,3], got %s" % $l.get_idxs(3)).throw();
+    }
+
+    // - contain#1 -
+    l = new List([1,2,3,4,5]);
+    if (l.contain(2) != 1) { new Exception("List.contain(2)").throw(); }
+    if (l.contain(4) != 1) { new Exception("List.contain(4)").throw(); }
+    if (l.contain(6) != 0) { new Exception("List.contain(6)").throw(); }
+
+    // - clear#0 -
+    l = new List([1,2,3,4,5]);
+    l.clear();
+    if (l.length() != 0)
+    {
+      new Exception("List.clear length: got %s" % $l.length()).throw();
+    }
+
+    // - items#0 returns Array -
+    l = new List([1,2,3,4,5]);
+    items = l.items();
+    if ($(type items) != "Array")
+    {
+      new Exception("items type: got %s" % $(type items)).throw();
+    }
+
+    // - to_string#0 / to_string#1 -
+    l = new List([1,2,3,4,5]);
+    if (l.to_string() != "[1,2,3,4,5]")
+    {
+      new Exception("List.to_string(): got %s" % l.to_string()).throw();
+    }
+    if (l.to_string("-SEP-") != "1-SEP-2-SEP-3-SEP-4-SEP-5")
+    {
+      new Exception("List.to_string(\"-SEP-\"): got %s" % l.to_string("-SEP-")).throw();
+    }
+
+    // - length#0 across operations -
+    l = new List();
+    if (l.length() != 0) { new Exception("len 0").throw(); }
+    l.append(1);
+    l.append(2);
+    l.prepend(0);
+    if (l.length() != 3) { new Exception("len 3").throw(); }
+    if (l.items() != [0,1,2]) { new Exception("len ops items: got %s" % $l.items()).throw(); }
+  }/*}}}*/
+}

@@ -1,0 +1,213 @@
+
+import curl;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Curl OPT_* constants (17) -
+    opt_consts = [
+      Curl.OPT_TIMEOUT,
+      Curl.OPT_TIMEOUT_MS,
+      Curl.OPT_HTTPAUTH,
+      Curl.OPT_USERNAME,
+      Curl.OPT_PASSWORD,
+      Curl.OPT_DIRLISTONLY,
+      Curl.OPT_FTP_CREATE_MISSING_DIRS,
+      Curl.OPT_FTPPORT,
+      Curl.OPT_KEYPASSWD,
+      Curl.OPT_SSH_AUTH_TYPES,
+      Curl.OPT_SSH_PRIVATE_KEYFILE,
+      Curl.OPT_SSH_PUBLIC_KEYFILE,
+      Curl.OPT_SSL_VERIFYPEER,
+      Curl.OPT_SSL_VERIFYHOST,
+      Curl.OPT_QUOTE,
+      Curl.OPT_PREQUOTE,
+      Curl.OPT_POSTQUOTE,
+    ];
+
+    if (opt_consts.length() != 17)
+    {
+      new Exception("OPT constants: expected 17, got %d" % opt_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < opt_consts.length())
+    {
+      if (type opt_consts[idx] != type Integer)
+      {
+        new Exception("OPT constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - Curl AUTH_* constants (10) -
+    auth_consts = [
+      Curl.AUTH_ANY,
+      Curl.AUTH_ANYSAFE,
+      Curl.AUTH_BASIC,
+      Curl.AUTH_DIGEST,
+      Curl.AUTH_GSSNEGOTIATE,
+      Curl.AUTH_NTLM,
+      Curl.AUTH_DIGEST_IE,
+      Curl.AUTH_NTLM_WB,
+      Curl.AUTH_ONLY,
+      Curl.AUTH_NONE,
+    ];
+
+    if (auth_consts.length() != 10)
+    {
+      new Exception("AUTH constants: expected 10, got %d" % auth_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < auth_consts.length())
+    {
+      if (type auth_consts[idx] != type Integer)
+      {
+        new Exception("AUTH constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - Curl FTP_CREATE_DIR* constants (3) -
+    ftp_consts = [
+      Curl.FTP_CREATE_DIR_NONE,
+      Curl.FTP_CREATE_DIR,
+      Curl.FTP_CREATE_DIR_RETRY,
+    ];
+
+    if (ftp_consts.length() != 3)
+    {
+      new Exception("FTP_CREATE_DIR constants: expected 3, got %d" % ftp_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < ftp_consts.length())
+    {
+      if (type ftp_consts[idx] != type Integer)
+      {
+        new Exception("FTP_CREATE_DIR constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - Curl SSH_AUTH_* constants (5) -
+    ssh_consts = [
+      Curl.SSH_AUTH_PUBLICKEY,
+      Curl.SSH_AUTH_PASSWORD,
+      Curl.SSH_AUTH_HOST,
+      Curl.SSH_AUTH_KEYBOARD,
+      Curl.SSH_AUTH_AGENT,
+    ];
+
+    if (ssh_consts.length() != 5)
+    {
+      new Exception("SSH_AUTH constants: expected 5, got %d" % ssh_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < ssh_consts.length())
+    {
+      if (type ssh_consts[idx] != type Integer)
+      {
+        new Exception("SSH_AUTH constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - CurlResult INFO_* constants (43) -
+    info_consts = [
+      CurlResult.INFO_EFFECTIVE_URL,
+      CurlResult.INFO_RESPONSE_CODE,
+      CurlResult.INFO_TOTAL_TIME,
+      CurlResult.INFO_NAMELOOKUP_TIME,
+      CurlResult.INFO_CONNECT_TIME,
+      CurlResult.INFO_PRETRANSFER_TIME,
+      CurlResult.INFO_SIZE_UPLOAD,
+      CurlResult.INFO_SIZE_DOWNLOAD,
+      CurlResult.INFO_SPEED_DOWNLOAD,
+      CurlResult.INFO_SPEED_UPLOAD,
+      CurlResult.INFO_HEADER_SIZE,
+      CurlResult.INFO_REQUEST_SIZE,
+      CurlResult.INFO_SSL_VERIFYRESULT,
+      CurlResult.INFO_FILETIME,
+      CurlResult.INFO_CONTENT_LENGTH_DOWNLOAD,
+      CurlResult.INFO_CONTENT_LENGTH_UPLOAD,
+      CurlResult.INFO_STARTTRANSFER_TIME,
+      CurlResult.INFO_CONTENT_TYPE,
+      CurlResult.INFO_REDIRECT_TIME,
+      CurlResult.INFO_REDIRECT_COUNT,
+      CurlResult.INFO_PRIVATE,
+      CurlResult.INFO_HTTP_CONNECTCODE,
+      CurlResult.INFO_HTTPAUTH_AVAIL,
+      CurlResult.INFO_PROXYAUTH_AVAIL,
+      CurlResult.INFO_OS_ERRNO,
+      CurlResult.INFO_NUM_CONNECTS,
+      CurlResult.INFO_SSL_ENGINES,
+      CurlResult.INFO_COOKIELIST,
+      CurlResult.INFO_LASTSOCKET,
+      CurlResult.INFO_FTP_ENTRY_PATH,
+      CurlResult.INFO_REDIRECT_URL,
+      CurlResult.INFO_PRIMARY_IP,
+      CurlResult.INFO_APPCONNECT_TIME,
+      CurlResult.INFO_CERTINFO,
+      CurlResult.INFO_CONDITION_UNMET,
+      CurlResult.INFO_RTSP_SESSION_ID,
+      CurlResult.INFO_RTSP_CLIENT_CSEQ,
+      CurlResult.INFO_RTSP_SERVER_CSEQ,
+      CurlResult.INFO_RTSP_CSEQ_RECV,
+      CurlResult.INFO_PRIMARY_PORT,
+      CurlResult.INFO_LOCAL_IP,
+      CurlResult.INFO_LOCAL_PORT,
+      CurlResult.INFO_TLS_SESSION,
+    ];
+
+    if (info_consts.length() != 43)
+    {
+      new Exception("INFO constants: expected 43, got %d" % info_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < info_consts.length())
+    {
+      if (type info_consts[idx] != type Integer)
+      {
+        new Exception("INFO constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - CurlResult.CURLE_OK is Integer 0 -
+    if (type CurlResult.CURLE_OK != type Integer)
+    {
+      new Exception("CURLE_OK: expected Integer type").throw();
+    }
+    if (CurlResult.CURLE_OK != 0)
+    {
+      new Exception("CURLE_OK: expected 0, got %d" % CurlResult.CURLE_OK).throw();
+    }
+
+    // - to_string for static-callable classes -
+    if ($Curl != "Curl")
+    {
+      new Exception("Curl to_string: expected \"Curl\", got \"%s\"" % $Curl).throw();
+    }
+
+    if ($CurlMulti != "CurlMulti")
+    {
+      new Exception("CurlMulti to_string: expected \"CurlMulti\", got \"%s\"" % $CurlMulti).throw();
+    }
+
+    if ($CurlMultiRequest != "CurlMultiRequest")
+    {
+      new Exception("CurlMultiRequest to_string: expected \"CurlMultiRequest\", got \"%s\"" % $CurlMultiRequest).throw();
+    }
+
+    if ($CurlResult != "CurlResult")
+    {
+      new Exception("CurlResult to_string: expected \"CurlResult\", got \"%s\"" % $CurlResult).throw();
+    }
+  }/*}}}*/
+}

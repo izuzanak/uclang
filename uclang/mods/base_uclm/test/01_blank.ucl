@@ -1,0 +1,67 @@
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Blank singleton vs new Blank() -
+    blank = new Blank();
+    if (!(Blank == blank))
+    {
+      new Exception("Blank == new Blank(): expected true").throw();
+    }
+    if (Blank != blank)
+    {
+      new Exception("Blank != new Blank(): expected false").throw();
+    }
+
+    // - blank == blank -
+    if (!(blank == blank))
+    {
+      new Exception("blank == blank: expected true").throw();
+    }
+
+    // - blank vs non-blank -
+    if (blank == 10)
+    {
+      new Exception("blank == 10: expected false").throw();
+    }
+    if (!(blank != 10))
+    {
+      new Exception("blank != 10: expected true").throw();
+    }
+    if (blank == "x")
+    {
+      new Exception("blank == \"x\": expected false").throw();
+    }
+
+    // - to_string returns "<blank>" -
+    if ($blank != "<blank>")
+    {
+      new Exception("$blank: expected \"<blank>\", got \"%s\"" % $blank).throw();
+    }
+    if ($Blank != "<blank>")
+    {
+      new Exception("$Blank: expected \"<blank>\", got \"%s\"" % $Blank).throw();
+    }
+
+    // - compare#1 -
+    if (blank.compare(blank) != 0)
+    {
+      new Exception("blank.compare(blank): expected 0").throw();
+    }
+    // - non-zero compare against non-Blank value -
+    if (blank.compare(10) == 0)
+    {
+      new Exception("blank.compare(10): expected non-zero").throw();
+    }
+
+    // - assignment replaces blank -
+    x = new Blank();
+    x = 42;
+    if (x != 42)
+    {
+      new Exception("blank reassignment: expected 42, got %s" % $x).throw();
+    }
+  }/*}}}*/
+}

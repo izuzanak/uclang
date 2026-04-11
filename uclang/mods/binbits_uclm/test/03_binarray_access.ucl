@@ -145,9 +145,9 @@ class Main
 
     // - to_string with separator -
     arr = new BinArray(BinArray.TYPE_INT32,[1,2,3]);
-    if (arr.to_string("|") != "1|2|3")
+    if (arr.to_string("-SEP-") != "1-SEP-2-SEP-3")
     {
-      new Exception("to_string sep: expected 1|2|3, got %s" % arr.to_string("|")).throw();
+      new Exception("to_string sep: expected 1-SEP-2-SEP-3, got %s" % arr.to_string("-SEP-")).throw();
     }
   }/*}}}*/
 }

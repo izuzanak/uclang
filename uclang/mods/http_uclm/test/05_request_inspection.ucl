@@ -1,0 +1,194 @@
+
+import sys;
+import http;
+import curl;
+import containers;
+
+class Main
+{
+  static server_ready = 0;
+  static stop_flag = 0;
+
+  // - server-side observations (recorded under the server thread,
+  //   verified after the join) -
+  static observed_url = "";
+  static observed_method = "";
+  static observed_query = new Dict();
+  static observed_host_present = 0;
+  static observed_host_value = "";
+  static observed_client_ip = "";
+  static observed_id_type_ok = 0;
+  static caught_unknown_header = 0;
+  static server_error = "";
+
+  public Main() {}
+
+  // - HttpServer connection callback -
+  public on_conn(a_conn)
+  {/*{{{*/
+    if (a_conn.get_type() == HttpConn.TYPE_GET)
+    {
+      observed_url = a_conn.url();
+      observed_method = a_conn.method();
+
+      // - parse query string into a Dict (production pattern from
+      //   metcoll_dcs_report/ucl/dat-srv.ucl) -
+      observed_query = new Dict(a_conn.values(HttpConn.VALS_GET_ARGUMENT));
+
+      // - inspect headers via both bag and single-key forms -
+      headers = new Dict(a_conn.values(HttpConn.VALS_HEADER));
+      observed_host_present = headers.has_key("Host") ? 1 : 0;
+
+      observed_host_value = a_conn.value(HttpConn.VALS_HEADER,"Host");
+
+      // - looking up a header that does not exist must throw -
+      try
+      {
+        a_conn.value(HttpConn.VALS_HEADER,"X-Definitely-Not-A-Header-XYZ");
+      }
+      catch (e)
+      {
+        caught_unknown_header = 1;
+      }
+
+      observed_client_ip = a_conn.client_ip();
+
+      cid = a_conn.id();
+      if (type cid == type Integer)
+      {
+        observed_id_type_ok = 1;
+      }
+
+      // - response with custom headers and a footer -
+      resp = new HttpResp(HttpResp.FROM_STRING,"INSPECTION-OK");
+      resp.add_header("Content-Type","text/plain");
+      resp.add_header("X-Reply","from-test");
+      resp.add_footer("X-Trailer","trailer-value");
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+    else
+    {
+      server_error = "unexpected method type %d" % a_conn.get_type();
+      resp = new HttpResp(HttpResp.FROM_STRING,"");
+      a_conn.queue_response(HttpResp.HTTP_BAD_REQUEST,resp);
+    }
+  }/*}}}*/
+
+  static parallel run_server(a_obj,a_port)
+  {/*{{{*/
+    server = new HttpServer(0,a_port,
+      new Delegate(a_obj,"on_conn",1),[]);
+
+    server_ready = 1;
+
+    while (stop_flag == 0)
+    {
+      poll = new Poll(server.get_fds());
+      poll.ready(50);
+      server.process();
+    }
+
+    server.stop();
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19500 + (Sys.getpid() % 1000);
+    url = "http://127.0.0.1:%d/api?sec=status&sub=dcs" % port;
+
+    thr = run_server(obj,port);
+
+    attempts = 0;
+    while (server_ready == 0 and attempts < 1000)
+    {
+      Sys.sleep(10);
+      attempts += 1;
+    }
+    if (server_ready == 0)
+    {
+      stop_flag = 1;
+      thr.join();
+      new Exception("server did not become ready").throw();
+    }
+
+    result = Curl.GET(url);
+
+    stop_flag = 1;
+    thr.join();
+
+    // - server-side checks -
+    if (server_error != "")
+    {
+      new Exception("server-side: %s" % server_error).throw();
+    }
+
+    if (observed_url != "/api")
+    {
+      new Exception("url: expected /api, got %s" % observed_url).throw();
+    }
+
+    if (observed_method != "GET")
+    {
+      new Exception("method: expected GET, got %s" % observed_method).throw();
+    }
+
+    if (observed_query["sec"] != "status")
+    {
+      new Exception("query.sec: expected status, got %s" % $observed_query["sec"]).throw();
+    }
+
+    if (observed_query["sub"] != "dcs")
+    {
+      new Exception("query.sub: expected dcs, got %s" % $observed_query["sub"]).throw();
+    }
+
+    if (observed_host_present != 1)
+    {
+      new Exception("Host header: expected present in values()").throw();
+    }
+
+    if (observed_host_value.length() == 0)
+    {
+      new Exception("Host header: value() returned empty").throw();
+    }
+
+    if (caught_unknown_header != 1)
+    {
+      new Exception("value() with unknown header: expected throw").throw();
+    }
+
+    if (observed_client_ip != "127.0.0.1")
+    {
+      new Exception("client_ip: expected 127.0.0.1, got %s" % observed_client_ip).throw();
+    }
+
+    if (observed_id_type_ok != 1)
+    {
+      new Exception("id(): expected Integer type").throw();
+    }
+
+    // - client-side checks -
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("code: expected CURLE_OK, got %d" % result.code()).throw();
+    }
+
+    if (result.data() != "INSPECTION-OK")
+    {
+      new Exception("data: expected INSPECTION-OK, got %s" % result.data()).throw();
+    }
+
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 200)
+    {
+      new Exception("INFO_RESPONSE_CODE: expected 200, got %d" %
+        result.info(CurlResult.INFO_RESPONSE_CODE)).throw();
+    }
+
+    if (result.info(CurlResult.INFO_CONTENT_TYPE) != "text/plain")
+    {
+      new Exception("INFO_CONTENT_TYPE: expected text/plain, got %s" %
+        $result.info(CurlResult.INFO_CONTENT_TYPE)).throw();
+    }
+  }/*}}}*/
+}

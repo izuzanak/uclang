@@ -1,0 +1,108 @@
+
+import crypto;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - decode_base16 with odd-length input throws -
+    caught = 0;
+    try { Crypto.decode_base16("abc"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("decode_base16(odd length): expected throw").throw();
+    }
+
+    // - decode_base16 with invalid hex characters throws -
+    caught = 0;
+    try { Crypto.decode_base16("xyzz"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("decode_base16(invalid chars): expected throw").throw();
+    }
+
+    // - CryptoDigestInfo with unknown algorithm throws -
+    caught = 0;
+    try { new CryptoDigestInfo("bogus_algo"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("CryptoDigestInfo(bogus): expected throw").throw();
+    }
+
+    // - CryptoDigest with unknown algorithm throws -
+    caught = 0;
+    try { new CryptoDigest("bogus_algo"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("CryptoDigest(bogus): expected throw").throw();
+    }
+
+    // - CryptoCipherInfo with unknown algorithm throws -
+    caught = 0;
+    try { new CryptoCipherInfo("bogus_algo"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("CryptoCipherInfo(bogus): expected throw").throw();
+    }
+
+    // - CryptoEncrypt with wrong key length throws -
+    caught = 0;
+    try { new CryptoEncrypt("aes-256-cbc", "short", Crypto.random(16)); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("CryptoEncrypt(short key): expected throw").throw();
+    }
+
+    // - CryptoEncrypt with wrong IV length throws -
+    caught = 0;
+    try { new CryptoEncrypt("aes-256-cbc", Crypto.random(32), ""); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("CryptoEncrypt(empty iv): expected throw").throw();
+    }
+
+    // - CryptoDecrypt with wrong key length throws -
+    caught = 0;
+    try { new CryptoDecrypt("aes-256-cbc", "short", Crypto.random(16)); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("CryptoDecrypt(short key): expected throw").throw();
+    }
+
+    // - CryptoPKey.load_private on nonexistent file throws -
+    caught = 0;
+    try { CryptoPKey.load_private("/nonexistent/path.pem", ""); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("load_private(nonexistent): expected throw").throw();
+    }
+
+    // - CryptoPKey.load_public on nonexistent file throws -
+    caught = 0;
+    try { CryptoPKey.load_public("/nonexistent/path.pem", ""); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("load_public(nonexistent): expected throw").throw();
+    }
+
+    // - CryptoSeal with empty public-key array throws -
+    caught = 0;
+    try { new CryptoSeal("aes-256-cbc", []); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("CryptoSeal(empty pkey array): expected throw").throw();
+    }
+  }/*}}}*/
+}

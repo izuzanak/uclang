@@ -1,0 +1,247 @@
+
+import sys;
+import containers;
+import algorithms;
+import http;
+import curl;
+import epoll;
+
+class Main
+{
+  public Main()
+  {/*{{{*/
+    m_epoll = new Epoll(Epoll.CLOEXEC);
+    m_poll_callbacks = new Dict();
+    m_poll_fd_sets = [new Set(),new Set()];
+  }/*}}}*/
+
+  // - poll set indices -
+  static SET_HTTP = 0;
+  static SET_CURL = 1;
+
+  // - shared state for delegate -
+  static received_results = [];
+
+  public m_epoll;
+  public m_poll_callbacks;
+  public m_poll_fd_sets;
+  public m_http;
+  public m_cm;
+
+  // - HttpServer connection callback -
+  public on_conn(a_conn)
+  {/*{{{*/
+    ct = a_conn.get_type();
+    url = a_conn.url();
+
+    if (ct == HttpConn.TYPE_GET)
+    {
+      resp = new HttpResp(HttpResp.FROM_STRING,"GET-RESP:" + url);
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+    else if (ct == HttpConn.TYPE_POST)
+    {
+      ud = a_conn.upload_data();
+      if (Blank == ud)
+      {
+        resp = new HttpResp(HttpResp.FROM_STRING,"POST-RESP:" + url);
+        a_conn.queue_response(HttpResp.HTTP_OK,resp);
+      }
+    }
+    else if (ct == HttpConn.TYPE_DELETE)
+    {
+      resp = new HttpResp(HttpResp.FROM_STRING,"DELETE-RESP:" + url);
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+  }/*}}}*/
+
+  // - CurlMulti completion callback -
+  public on_done(a_result)
+  {/*{{{*/
+    received_results.push([
+      $a_result.user_data(),
+      a_result.data(),
+      a_result.info(CurlResult.INFO_RESPONSE_CODE),
+      a_result.code(),
+    ]);
+  }/*}}}*/
+
+  // - http server fd event handler -
+  public on_http_fd_event(a_fd,a_event)
+  {/*{{{*/
+    m_http.process();
+    this.poll_set_update(m_http.get_fds(),SET_HTTP,
+      new Delegate(this,"on_http_fd_event",2));
+  }/*}}}*/
+
+  // - curl multi fd event handler -
+  public on_curl_fd_event(a_fd,a_event)
+  {/*{{{*/
+    m_cm.process();
+    this.poll_set_update(m_cm.get_fds(),SET_CURL,
+      new Delegate(this,"on_curl_fd_event",2));
+  }/*}}}*/
+
+  // - generic poll set update: diff new fd set against tracked set,
+  //   add/remove from shared epoll, keep callback dict in sync -
+  public poll_set_update(a_pollfds,a_set_index,a_callback)
+  {/*{{{*/
+    old_set = m_poll_fd_sets[a_set_index];
+    new_set = m_poll_fd_sets[a_set_index]
+            = new Set(Algo.tuple_zip([a_pollfds[::2],a_pollfds[1::2]]));
+
+    // - remove old or modified fds -
+    for (pollfd <- old_set - new_set)
+    {
+      m_epoll.del(pollfd[0]);
+      m_poll_callbacks.remove_key(pollfd[0]);
+    }
+
+    // - add new or modified fds -
+    for (pollfd <- new_set - old_set)
+    {
+      m_epoll.add(pollfd[0],pollfd[1]);
+      m_poll_callbacks[pollfd[0]] = a_callback;
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19000 + (Sys.getpid() % 1000);
+    base = "http://127.0.0.1:%d" % port;
+
+    // - create http server in main thread (no parallel run loop) -
+    obj.m_http = new HttpServer(0,port,
+      new Delegate(obj,"on_conn",1),[]);
+
+    // - register http server fds with the shared epoll -
+    obj.poll_set_update(obj.m_http.get_fds(),SET_HTTP,
+      new Delegate(obj,"on_http_fd_event",2));
+
+    // - construct CurlMulti with 1-arg callback delegate -
+    obj.m_cm = new CurlMulti(new Delegate(obj,"on_done",1));
+
+    // - enqueue 3 requests of different types with distinct user_data -
+    g_idx = obj.m_cm.GET(base + "/r1","u-get");
+    p_idx = obj.m_cm.POST(base + "/r2","payload","u-post");
+    d_idx = obj.m_cm.DELETE(base + "/r3","u-del");
+
+    if (type g_idx != type Integer)
+    {
+      new Exception("GET index type: expected Integer, got %s" % $(type g_idx)).throw();
+    }
+
+    // - access via cm[idx] -
+    g_req = obj.m_cm[g_idx];
+    if ($(type g_req) != "CurlMultiRequest")
+    {
+      new Exception("cm[idx] type: expected CurlMultiRequest, got %s" % $(type g_req)).throw();
+    }
+    if ($g_req != "CurlMultiRequest")
+    {
+      new Exception("g_req to_string: expected CurlMultiRequest, got %s" % $g_req).throw();
+    }
+
+    // - add headers (must not throw) -
+    g_req.add_headers(["X-Test: value","X-Two: second"]);
+
+    // - setopt with Integer value -
+    g_req.setopt(Curl.OPT_TIMEOUT,10);
+
+    // - setopt with String value (USERNAME doesn't apply but should accept) -
+    g_req.setopt(Curl.OPT_USERNAME,"testuser");
+
+    // - sanity-check curl multi accessors before entering the loop -
+    tmo = obj.m_cm.timeout();
+    if (type tmo != type Integer)
+    {
+      new Exception("cm.timeout type: expected Integer, got %s" % $(type tmo)).throw();
+    }
+
+    fds_check = obj.m_cm.get_fds();
+    if ($(type fds_check) != "Array")
+    {
+      new Exception("cm.get_fds type: expected Array, got %s" % $(type fds_check)).throw();
+    }
+
+    // - kick curl off and register its sockets in the shared epoll -
+    obj.m_cm.process();
+    obj.poll_set_update(obj.m_cm.get_fds(),SET_CURL,
+      new Delegate(obj,"on_curl_fd_event",2));
+
+    // - unified event loop: one Epoll drives both HttpServer and CurlMulti -
+    iterations = 0;
+    while (received_results.length() < 3 and iterations < 500)
+    {
+      events = obj.m_epoll.wait(1,50);
+
+      if (Blank != events)
+      {
+        obj.m_poll_callbacks[events[0]].call(events);
+      }
+      else
+      {
+        // - on epoll timeout, service curl's internal timer -
+        obj.m_cm.process();
+        obj.poll_set_update(obj.m_cm.get_fds(),SET_CURL,
+          new Delegate(obj,"on_curl_fd_event",2));
+      }
+
+      iterations += 1;
+    }
+
+    if (received_results.length() != 3)
+    {
+      new Exception("received: expected 3, got %d" % received_results.length()).throw();
+    }
+
+    // - validate each result by user_data (order is not deterministic) -
+    expected = new Set(["u-get","u-post","u-del"]);
+    seen = new Set();
+
+    i = 0;
+    while (i < 3)
+    {
+      r = received_results[i];
+      ud = r[0];
+      data = r[1];
+      rc = r[2];
+      code = r[3];
+
+      if (code != CurlResult.CURLE_OK)
+      {
+        new Exception("result %d: code expected 0, got %d" % [i,code]).throw();
+      }
+      if (rc != 200)
+      {
+        new Exception("result %d: response code expected 200, got %d" % [i,rc]).throw();
+      }
+      if (data.length() == 0)
+      {
+        new Exception("result %d: data is empty" % i).throw();
+      }
+
+      seen.insert(ud);
+      i += 1;
+    }
+
+    if (seen != expected)
+    {
+      new Exception("user_data set mismatch: got %s" % $seen).throw();
+    }
+
+    // - exercise cancel#0 on a fresh request (does not throw) -
+    cancel_idx = obj.m_cm.GET(base + "/cancel-me","u-cancel");
+    cancel_req = obj.m_cm[cancel_idx];
+    cancel_req.cancel();
+
+    // - shut server down before tearing down the object graph -
+    obj.m_http.stop();
+
+    // - release reference cycles introduced by delegates -> obj -
+    free obj.m_poll_callbacks;
+    free obj.m_cm;
+    free obj.m_http;
+  }/*}}}*/
+}

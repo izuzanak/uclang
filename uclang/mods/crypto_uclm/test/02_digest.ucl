@@ -1,0 +1,69 @@
+
+import crypto;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - CryptoDigestInfo name -
+    di = new CryptoDigestInfo("SHA256");
+    if (di.name() != "SHA256")
+    {
+      new Exception("CryptoDigestInfo name: expected SHA256, got %s" % di.name()).throw();
+    }
+
+    // - SHA256 empty string known vector -
+    d = new CryptoDigest("SHA256");
+    d.update("");
+    if (Crypto.encode_base16(d.value()) != "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+    {
+      new Exception("SHA256(empty): got %s" % Crypto.encode_base16(d.value())).throw();
+    }
+
+    // - SHA256("abc") known vector -
+    d = new CryptoDigest("SHA256");
+    d.update("abc");
+    if (Crypto.encode_base16(d.value()) != "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad")
+    {
+      new Exception("SHA256(abc): got %s" % Crypto.encode_base16(d.value())).throw();
+    }
+
+    // - SHA1("abc") known vector -
+    d = new CryptoDigest("SHA1");
+    d.update("abc");
+    if (Crypto.encode_base16(d.value()) != "a9993e364706816aba3e25717850c26c9cd0d89d")
+    {
+      new Exception("SHA1(abc): got %s" % Crypto.encode_base16(d.value())).throw();
+    }
+
+    // - MD5("abc") known vector -
+    d = new CryptoDigest("MD5");
+    d.update("abc");
+    if (Crypto.encode_base16(d.value()) != "900150983cd24fb0d6963f7d28e17f72")
+    {
+      new Exception("MD5(abc): got %s" % Crypto.encode_base16(d.value())).throw();
+    }
+
+    // - multi-update must match single update -
+    da = new CryptoDigest("SHA256");
+    da.update("ab");
+    da.update("c");
+
+    db = new CryptoDigest("SHA256");
+    db.update("abc");
+
+    if (da.value() != db.value())
+    {
+      new Exception("multi-update SHA256 mismatch").throw();
+    }
+
+    // - construct digest from CryptoDigestInfo object -
+    dc = new CryptoDigest(di);
+    dc.update("abc");
+    if (Crypto.encode_base16(dc.value()) != "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad")
+    {
+      new Exception("CryptoDigest(info): got %s" % Crypto.encode_base16(dc.value())).throw();
+    }
+  }/*}}}*/
+}

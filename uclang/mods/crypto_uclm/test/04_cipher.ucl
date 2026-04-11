@@ -1,0 +1,73 @@
+
+import crypto;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - AES-256-CBC round-trip with string cipher name -
+    info = new CryptoCipherInfo("aes-256-cbc");
+    key = Crypto.random(info.key_length());
+    iv  = Crypto.random(info.iv_length());
+    pt  = "The quick brown fox jumps over the lazy dog" * 10;
+
+    enc = new CryptoEncrypt("aes-256-cbc", key, iv);
+    ct = enc.update(pt) + enc.finalize();
+
+    if (ct == pt)
+    {
+      new Exception("ciphertext equals plaintext (no encryption happened)").throw();
+    }
+    if (ct.length() == 0)
+    {
+      new Exception("empty ciphertext").throw();
+    }
+
+    dec = new CryptoDecrypt("aes-256-cbc", key, iv);
+    pt2 = dec.update(ct) + dec.finalize();
+
+    if (pt2 != pt)
+    {
+      new Exception("AES-256-CBC round-trip failed").throw();
+    }
+
+    // - round-trip using CryptoCipherInfo object form -
+    enc = new CryptoEncrypt(info, key, iv);
+    ct = enc.update(pt) + enc.finalize();
+
+    dec = new CryptoDecrypt(info, key, iv);
+    pt3 = dec.update(ct) + dec.finalize();
+
+    if (pt3 != pt)
+    {
+      new Exception("AES-256-CBC round-trip with CipherInfo object failed").throw();
+    }
+
+    // - AES-128-CBC round-trip -
+    info128 = new CryptoCipherInfo("aes-128-cbc");
+    key128  = Crypto.random(info128.key_length());
+    iv128   = Crypto.random(info128.iv_length());
+    pt_s    = "short message";
+
+    enc = new CryptoEncrypt("aes-128-cbc", key128, iv128);
+    ct = enc.update(pt_s) + enc.finalize();
+
+    dec = new CryptoDecrypt("aes-128-cbc", key128, iv128);
+    if ((dec.update(ct) + dec.finalize()) != pt_s)
+    {
+      new Exception("AES-128-CBC round-trip failed").throw();
+    }
+
+    // - encrypting empty plaintext round-trip -
+    pt_e = "";
+    enc = new CryptoEncrypt("aes-256-cbc", key, iv);
+    ct = enc.update(pt_e) + enc.finalize();
+
+    dec = new CryptoDecrypt("aes-256-cbc", key, iv);
+    if ((dec.update(ct) + dec.finalize()) != pt_e)
+    {
+      new Exception("empty plaintext round-trip failed").throw();
+    }
+  }/*}}}*/
+}

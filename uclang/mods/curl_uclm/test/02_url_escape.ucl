@@ -1,0 +1,80 @@
+
+import curl;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - url_escape: space -
+    enc = Curl.url_escape("hello world");
+    if (enc != "hello%20world")
+    {
+      new Exception("url_escape(\"hello world\"): expected \"hello%%20world\", got \"%s\"" % enc).throw();
+    }
+
+    // - url_escape: reserved characters -
+    enc = Curl.url_escape("a/b?c=1&d=2");
+    if (enc != "a%2Fb%3Fc%3D1%26d%3D2")
+    {
+      new Exception("url_escape(\"a/b?c=1&d=2\"): unexpected \"%s\"" % enc).throw();
+    }
+
+    // - url_escape: alphanumerics pass through unchanged -
+    enc = Curl.url_escape("abcXYZ123");
+    if (enc != "abcXYZ123")
+    {
+      new Exception("url_escape(\"abcXYZ123\"): expected unchanged, got \"%s\"" % enc).throw();
+    }
+
+    // - url_escape: empty string -
+    enc = Curl.url_escape("");
+    if (enc != "")
+    {
+      new Exception("url_escape(\"\"): expected empty, got \"%s\"" % enc).throw();
+    }
+
+    // - url_unescape: space -
+    dec = Curl.url_unescape("hello%20world");
+    if (dec != "hello world")
+    {
+      new Exception("url_unescape(\"hello%%20world\"): expected \"hello world\", got \"%s\"" % dec).throw();
+    }
+
+    // - url_unescape: reserved characters -
+    dec = Curl.url_unescape("a%2Fb%3Fc%3D1%26d%3D2");
+    if (dec != "a/b?c=1&d=2")
+    {
+      new Exception("url_unescape: unexpected \"%s\"" % dec).throw();
+    }
+
+    // - url_unescape: alphanumerics pass through unchanged -
+    dec = Curl.url_unescape("abcXYZ123");
+    if (dec != "abcXYZ123")
+    {
+      new Exception("url_unescape(\"abcXYZ123\"): expected unchanged, got \"%s\"" % dec).throw();
+    }
+
+    // - roundtrip: ASCII string -
+    src = "Hello, World! @#$%^&*()_+-={}[]|:;<>?,./";
+    rt = Curl.url_unescape(Curl.url_escape(src));
+    if (rt != src)
+    {
+      new Exception("roundtrip ASCII: expected \"%s\", got \"%s\"" % [src,rt]).throw();
+    }
+
+    // - roundtrip: UTF-8 string -
+    src = "Příliš žluťoučký kůň úpěl ďábelské ódy";
+    rt = Curl.url_unescape(Curl.url_escape(src));
+    if (rt != src)
+    {
+      new Exception("roundtrip UTF-8: expected \"%s\", got \"%s\"" % [src,rt]).throw();
+    }
+
+    // - roundtrip: empty string -
+    if (Curl.url_unescape(Curl.url_escape("")) != "")
+    {
+      new Exception("roundtrip empty: failed").throw();
+    }
+  }/*}}}*/
+}

@@ -1,0 +1,131 @@
+
+import sys;
+import http;
+import curl;
+
+class Main
+{
+  // - shared state -
+  static server_ready = 0;
+  static stop_flag = 0;
+
+  public Main() {}
+
+  // - HttpServer connection callback -
+  public on_conn(a_conn)
+  {/*{{{*/
+    if (a_conn.get_type() == HttpConn.TYPE_GET)
+    {
+      resp = new HttpResp(HttpResp.FROM_STRING,"Hello GET");
+      resp.add_header("Content-Type","text/plain");
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+  }/*}}}*/
+
+  static parallel run_server(a_obj,a_port)
+  {/*{{{*/
+    server = new HttpServer(0,a_port,
+      new Delegate(a_obj,"on_conn",1),[]);
+
+    server_ready = 1;
+
+    while (stop_flag == 0)
+    {
+      poll = new Poll(server.get_fds());
+      poll.ready(50);
+      server.process();
+    }
+
+    server.stop();
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19800 + (Sys.getpid() % 1000);
+    url = "http://127.0.0.1:%d/" % port;
+
+    thr = run_server(obj,port);
+
+    // - wait for server thread to bind -
+    attempts = 0;
+    while (server_ready == 0 and attempts < 1000)
+    {
+      Sys.sleep(10);
+      attempts += 1;
+    }
+    if (server_ready == 0)
+    {
+      new Exception("server did not become ready").throw();
+    }
+
+    // - perform GET -
+    result = Curl.GET(url);
+
+    // - result is a CurlResult -
+    if ($(type result) != "CurlResult")
+    {
+      new Exception("result type: expected CurlResult, got %s" % $(type result)).throw();
+    }
+
+    // - code is CURLE_OK -
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("code: expected CURLE_OK (0), got %d" % result.code()).throw();
+    }
+
+    // - body matches -
+    body = result.data();
+    if (body != "Hello GET")
+    {
+      new Exception("data: expected \"Hello GET\", got \"%s\"" % body).throw();
+    }
+
+    // - response code is 200 -
+    rc = result.info(CurlResult.INFO_RESPONSE_CODE);
+    if (rc != 200)
+    {
+      new Exception("INFO_RESPONSE_CODE: expected 200, got %d" % rc).throw();
+    }
+
+    // - effective URL is non-empty String -
+    eff = result.info(CurlResult.INFO_EFFECTIVE_URL);
+    if ($(type eff) != "String")
+    {
+      new Exception("INFO_EFFECTIVE_URL: expected String, got %s" % $(type eff)).throw();
+    }
+    if (eff.length() == 0)
+    {
+      new Exception("INFO_EFFECTIVE_URL: expected non-empty").throw();
+    }
+
+    // - content type matches -
+    ct = result.info(CurlResult.INFO_CONTENT_TYPE);
+    if (ct != "text/plain")
+    {
+      new Exception("INFO_CONTENT_TYPE: expected \"text/plain\", got \"%s\"" % $ct).throw();
+    }
+
+    // - primary IP is 127.0.0.1 -
+    ip = result.info(CurlResult.INFO_PRIMARY_IP);
+    if (ip != "127.0.0.1")
+    {
+      new Exception("INFO_PRIMARY_IP: expected \"127.0.0.1\", got \"%s\"" % $ip).throw();
+    }
+
+    // - total time is non-negative Float -
+    tt = result.info(CurlResult.INFO_TOTAL_TIME);
+    if ($(type tt) != "Float")
+    {
+      new Exception("INFO_TOTAL_TIME: expected Float, got %s" % $(type tt)).throw();
+    }
+    if (tt < 0.0)
+    {
+      new Exception("INFO_TOTAL_TIME: expected >= 0.0, got %s" % $tt).throw();
+    }
+
+    // - signal server to stop and wait -
+    stop_flag = 1;
+    thr.join();
+  }/*}}}*/
+}

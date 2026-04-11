@@ -1,0 +1,61 @@
+
+import crypto;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - derive PEM paths from script path (argv[0]) -
+    parts = argv[0].split("/");
+    parts.last() = "test_rsa_private.pem";
+    priv_path = parts.to_string("/");
+    parts.last() = "test_rsa_public.pem";
+    pub_path  = parts.to_string("/");
+
+    priv = CryptoPKey.load_private(priv_path, "");
+    pub  = CryptoPKey.load_public(pub_path, "");
+
+    msg = "this is a test message for signing";
+
+    // - sign with private key -
+    s = new CryptoDigestSign("SHA256", priv);
+    s.update(msg);
+    sig = s.value();
+
+    if (sig.length() == 0)
+    {
+      new Exception("empty signature").throw();
+    }
+
+    // - verify OK with public key -
+    v = new CryptoDigestVerify("SHA256", pub);
+    v.update(msg);
+    if (v.verify(sig) != 1)
+    {
+      new Exception("verify with correct message failed").throw();
+    }
+
+    // - verify fails on tampered message -
+    v2 = new CryptoDigestVerify("SHA256", pub);
+    v2.update(msg + "x");
+    if (v2.verify(sig) == 1)
+    {
+      new Exception("verify with tampered message unexpectedly succeeded").throw();
+    }
+
+    // - multi-update sign + verify round-trip -
+    s = new CryptoDigestSign("SHA256", priv);
+    s.update("first ");
+    s.update("second ");
+    s.update("third");
+    sig = s.value();
+
+    v = new CryptoDigestVerify("SHA256", pub);
+    v.update("first second third");
+    if (v.verify(sig) != 1)
+    {
+      new Exception("multi-update sign/verify failed").throw();
+    }
+  }/*}}}*/
+}

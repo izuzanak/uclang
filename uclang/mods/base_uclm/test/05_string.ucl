@@ -1,0 +1,211 @@
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - construction -
+    if (new String() != "")
+    {
+      new Exception("new String(): expected empty").throw();
+    }
+    if (new String("hello") != "hello")
+    {
+      new Exception("new String(\"hello\"): expected \"hello\"").throw();
+    }
+
+    // - String#1 with int -
+    if ($new String(42) != "42")
+    {
+      new Exception("new String(42): expected \"42\"").throw();
+    }
+
+    // - String.create#1 -
+    s = String.create(5);
+    if (s.length() != 5)
+    {
+      new Exception("String.create(5).length(): expected 5, got %s" % $s.length()).throw();
+    }
+
+    // - length -
+    if ("".length() != 0)        { new Exception("\"\".length()").throw(); }
+    if ("abc".length() != 3)     { new Exception("\"abc\".length()").throw(); }
+    if ("hello".length() != 5)   { new Exception("\"hello\".length()").throw(); }
+
+    // - concat -
+    if ("foo" + "bar" != "foobar")
+    {
+      new Exception("\"foo\"+\"bar\"").throw();
+    }
+
+    // - += -
+    s = "foo";
+    s += "bar";
+    if (s != "foobar")
+    {
+      new Exception("s += \"bar\"").throw();
+    }
+
+    // - string * int (repeat) -
+    if ("ab" * 3 != "ababab")
+    {
+      new Exception("\"ab\"*3").throw();
+    }
+
+    // - format with single arg -
+    if (("value: %d" % 42) != "value: 42")
+    {
+      new Exception("%%d format").throw();
+    }
+    if (("name: %s" % "Joe") != "name: Joe")
+    {
+      new Exception("%%s format").throw();
+    }
+
+    // - format with array of args -
+    if (("%d/%d" % [10,20]) != "10/20")
+    {
+      new Exception("multi format").throw();
+    }
+
+    // - index -> Char -
+    if ("hello"[0] != 'h')
+    {
+      new Exception("\"hello\"[0]").throw();
+    }
+    if ("hello"[4] != 'o')
+    {
+      new Exception("\"hello\"[4]").throw();
+    }
+
+    // - slice [a:b:] inclusive both ends -
+    if ("abcde"[0:2:] != "abc")
+    {
+      new Exception("\"abcde\"[0:2:]: expected \"abc\", got \"%s\"" % "abcde"[0:2:]).throw();
+    }
+    if ("abcde"[1:3:] != "bcd")
+    {
+      new Exception("\"abcde\"[1:3:]: expected \"bcd\", got \"%s\"" % "abcde"[1:3:]).throw();
+    }
+
+    // - contain#1 -
+    if ("hello world".contain("world") != 1)
+    {
+      new Exception("contain(\"world\")").throw();
+    }
+    if ("hello world".contain("xyz") != 0)
+    {
+      new Exception("contain(\"xyz\")").throw();
+    }
+
+    // - split#1 -
+    parts = "a,b,c,d".split(",");
+    if (parts.length() != 4)
+    {
+      new Exception("split length: expected 4, got %s" % $parts.length()).throw();
+    }
+    if (parts[0] != "a" or parts[3] != "d")
+    {
+      new Exception("split contents").throw();
+    }
+
+    // - join#1 -
+    if ("-".join(["a","b","c"]) != "a-b-c")
+    {
+      new Exception("join: expected \"a-b-c\"").throw();
+    }
+    if ("".join(["x","y","z"]) != "xyz")
+    {
+      new Exception("join with empty sep").throw();
+    }
+
+    // - head#1 -
+    if ("Hello world!".head(5) != "Hello")
+    {
+      new Exception("head(5)").throw();
+    }
+
+    // - tail#1 -
+    if ("Hello world!".tail(6) != "world!")
+    {
+      new Exception("tail(6)").throw();
+    }
+
+    // - range#2 (inclusive both ends) -
+    if ("xxx Hello yyy".range(4,8) != "Hello")
+    {
+      new Exception("range(4,8): expected \"Hello\", got \"%s\"" % "xxx Hello yyy".range(4,8)).throw();
+    }
+    if ("abcde".range(0,2) != "abc")
+    {
+      new Exception("\"abcde\".range(0,2): expected \"abc\"").throw();
+    }
+
+    // - replace#2 -
+    if ("hello world".replace("world","there") != "hello there")
+    {
+      new Exception("replace").throw();
+    }
+    if ("aaa".replace("a","bb") != "bbbbbb")
+    {
+      new Exception("replace expand").throw();
+    }
+
+    // - get_idx#1 (find substring) -
+    if ("hello world".get_idx("world") != 6)
+    {
+      new Exception("get_idx(\"world\"): expected 6").throw();
+    }
+
+    // - get_idxs#1 (all matches) -
+    idxs = "ababab".get_idxs("a");
+    if (idxs.length() != 3)
+    {
+      new Exception("get_idxs len: expected 3, got %s" % $idxs.length()).throw();
+    }
+
+    // - iteration via first_idx/next_idx/item -
+    s = "abc";
+    collected = [];
+    idx = s.first_idx();
+    while (Blank != idx)
+    {
+      collected.push(s.item(idx));
+      idx = s.next_idx(idx);
+    }
+    if (collected.length() != 3)
+    {
+      new Exception("string iter length: expected 3, got %s" % $collected.length()).throw();
+    }
+    if (collected[0] != 'a' or collected[1] != 'b' or collected[2] != 'c')
+    {
+      new Exception("string iter content").throw();
+    }
+
+    // - for-each -
+    cnt = 0;
+    for (ch <- "xyz")
+    {
+      cnt += 1;
+    }
+    if (cnt != 3)
+    {
+      new Exception("for-each string count: expected 3, got %s" % $cnt).throw();
+    }
+
+    // - compare -
+    if ("abc".compare("abc") != 0)
+    {
+      new Exception("compare equal").throw();
+    }
+    if (!("abc".compare("abd") < 0))
+    {
+      new Exception("compare less").throw();
+    }
+
+    // - equality operators -
+    if ("foo" == "bar")  { new Exception("foo == bar").throw(); }
+    if (!("foo" == "foo")){ new Exception("foo == foo").throw(); }
+    if ("foo" != "foo")  { new Exception("foo != foo").throw(); }
+  }/*}}}*/
+}

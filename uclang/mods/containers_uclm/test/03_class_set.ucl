@@ -1,0 +1,335 @@
+
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - empty constructor -
+    s = new Set();
+    if (s.length() != 0)
+    {
+      new Exception("empty Set length: expected 0, got %s" % $s.length()).throw();
+    }
+
+    // - iterable constructor -
+    s = new Set([1,2,3,4,5]);
+    if (s.length() != 5)
+    {
+      new Exception("Set([1..5]) length: expected 5, got %s" % $s.length()).throw();
+    }
+
+    // - iterable constructor with duplicates (deduplication) -
+    s = new Set([1,2,2,4,4]);
+    if (s.length() != 3)
+    {
+      new Exception("Set dedupe length: expected 3, got %s" % $s.length()).throw();
+    }
+    if (s.items() != [1,2,4])
+    {
+      new Exception("Set dedupe items: expected [1,2,4], got %s" % $s.items()).throw();
+    }
+
+    // - cross-container constructor -
+    s = new Set(new List([3,1,2,1,3]));
+    if (s.items() != [1,2,3])
+    {
+      new Exception("Set(List dups): expected [1,2,3], got %s" % $s.items()).throw();
+    }
+
+    // - items#0 ordering is sorted (integers) -
+    s = new Set([5,3,1,4,2]);
+    if (s.items() != [1,2,3,4,5])
+    {
+      new Exception("Set sorted items: expected [1..5], got %s" % $s.items()).throw();
+    }
+
+    // - to_string -
+    if ($new Set() != "[]")
+    {
+      new Exception("empty Set to_string: got %s" % $new Set()).throw();
+    }
+    if ($new Set([5,3,1,4,2]) != "[1,2,3,4,5]")
+    {
+      new Exception("Set to_string sorted: got %s" % $new Set([5,3,1,4,2])).throw();
+    }
+
+    // - equality -
+    s0 = new Set([1,2,3,4]);
+    s1 = new Set([4,3,2,1]);
+    if (!(s0 == s1))
+    {
+      new Exception("Set == reordered: expected true").throw();
+    }
+    s2 = new Set([1,2,3,5]);
+    if (s0 == s2)
+    {
+      new Exception("Set == diff: expected false").throw();
+    }
+    if (!(s0 != s2))
+    {
+      new Exception("Set != diff: expected true").throw();
+    }
+    if (s0 == 10)
+    {
+      new Exception("Set == int: expected false").throw();
+    }
+
+    // - plus operator (union with iterable) -
+    s = new Set([1,2,3]);
+    s_plus = s + [5,4,2];
+    if (s_plus.items() != [1,2,3,4,5])
+    {
+      new Exception("Set + arr: expected [1..5], got %s" % $s_plus.items()).throw();
+    }
+    if (s.items() != [1,2,3])
+    {
+      new Exception("Set + arr (orig mutated): got %s" % $s.items()).throw();
+    }
+    s += [5,4,2];
+    if (s.items() != [1,2,3,4,5])
+    {
+      new Exception("Set += arr: got %s" % $s.items()).throw();
+    }
+
+    // - minus operator (set difference) -
+    a = new Set([1,2,3,4]);
+    b = new Set([3,4,5,6]);
+    if ((a - b).items() != [1,2])
+    {
+      new Exception("Set a - b: expected [1,2], got %s" % $(a - b).items()).throw();
+    }
+    if ((b - a).items() != [5,6])
+    {
+      new Exception("Set b - a: expected [5,6], got %s" % $(b - a).items()).throw();
+    }
+    if (a.items() != [1,2,3,4])
+    {
+      new Exception("Set a unchanged after a-b: got %s" % $a.items()).throw();
+    }
+    a -= b;
+    if (a.items() != [1,2])
+    {
+      new Exception("Set a -= b: got %s" % $a.items()).throw();
+    }
+
+    // - intersection operator -
+    a = new Set([1,2,3,4]);
+    b = new Set([3,4,5,6]);
+    if ((a & b).items() != [3,4])
+    {
+      new Exception("Set a & b: expected [3,4], got %s" % $(a & b).items()).throw();
+    }
+    if (a.items() != [1,2,3,4])
+    {
+      new Exception("Set a unchanged after a & b: got %s" % $a.items()).throw();
+    }
+    a &= b;
+    if (a.items() != [3,4])
+    {
+      new Exception("Set a &= b: got %s" % $a.items()).throw();
+    }
+
+    // - union operator -
+    a = new Set([1,2,3,4]);
+    b = new Set([3,4,5,6]);
+    if ((a | b).items() != [1,2,3,4,5,6])
+    {
+      new Exception("Set a | b: expected [1..6], got %s" % $(a | b).items()).throw();
+    }
+    if (a.items() != [1,2,3,4])
+    {
+      new Exception("Set a unchanged after a|b: got %s" % $a.items()).throw();
+    }
+    a |= b;
+    if (a.items() != [1,2,3,4,5,6])
+    {
+      new Exception("Set a |= b: got %s" % $a.items()).throw();
+    }
+
+    // - symmetric difference operator -
+    a = new Set([1,2,3,4]);
+    b = new Set([3,4,5,6]);
+    if ((a ^ b).items() != [1,2,5,6])
+    {
+      new Exception("Set a ^ b: expected [1,2,5,6], got %s" % $(a ^ b).items()).throw();
+    }
+    if (a.items() != [1,2,3,4])
+    {
+      new Exception("Set a unchanged after a^b: got %s" % $a.items()).throw();
+    }
+    a ^= b;
+    if (a.items() != [1,2,5,6])
+    {
+      new Exception("Set a ^= b: got %s" % $a.items()).throw();
+    }
+
+    // - subset / superset operators -
+    sub = new Set([3,4,5]);
+    sup = new Set([3,4,5,6]);
+    if ((sub <= sup) != 1)
+    {
+      new Exception("Set sub <= sup: expected 1").throw();
+    }
+    if ((sup <= sub) != 0)
+    {
+      new Exception("Set sup <= sub: expected 0").throw();
+    }
+    if ((sub >= sup) != 0)
+    {
+      new Exception("Set sub >= sup: expected 0").throw();
+    }
+    if ((sup >= sub) != 1)
+    {
+      new Exception("Set sup >= sub: expected 1").throw();
+    }
+
+    // - subset / superset operators with empty Set (regression: empty on left of <= used to crash) -
+    empty = new Set();
+    nonempty = new Set([1,2,3]);
+
+    // empty <= empty : empty is subset of itself
+    if ((empty <= empty) != 1)
+    {
+      new Exception("Set empty <= empty: expected 1").throw();
+    }
+
+    // empty <= nonempty : empty is subset of any set
+    if ((empty <= nonempty) != 1)
+    {
+      new Exception("Set empty <= nonempty: expected 1").throw();
+    }
+
+    // nonempty <= empty : non-empty is not subset of empty
+    if ((nonempty <= empty) != 0)
+    {
+      new Exception("Set nonempty <= empty: expected 0").throw();
+    }
+
+    // nonempty >= empty : every set is superset of empty (exercises swap path with empty first)
+    if ((nonempty >= empty) != 1)
+    {
+      new Exception("Set nonempty >= empty: expected 1").throw();
+    }
+
+    // empty >= empty
+    if ((empty >= empty) != 1)
+    {
+      new Exception("Set empty >= empty: expected 1").throw();
+    }
+
+    // empty >= nonempty : empty is not superset of non-empty
+    if ((empty >= nonempty) != 0)
+    {
+      new Exception("Set empty >= nonempty: expected 0").throw();
+    }
+
+    // - insert#1 (no duplicates) -
+    s = new Set([1,2,3,4,5]);
+    s.insert(10);
+    if (s.items() != [1,2,3,4,5,10])
+    {
+      new Exception("Set.insert(10): got %s" % $s.items()).throw();
+    }
+    s.insert(10);
+    if (s.items() != [1,2,3,4,5,10])
+    {
+      new Exception("Set.insert(10) dup: got %s" % $s.items()).throw();
+    }
+    s.insert(9);
+    if (s.items() != [1,2,3,4,5,9,10])
+    {
+      new Exception("Set.insert(9): got %s" % $s.items()).throw();
+    }
+
+    // - remove#1 -
+    s = new Set([1,2,3,4,5]);
+    s.remove(2);
+    if (s.items() != [1,3,4,5])
+    {
+      new Exception("Set.remove(2): got %s" % $s.items()).throw();
+    }
+    s.remove(4);
+    if (s.items() != [1,3,5])
+    {
+      new Exception("Set.remove(4): got %s" % $s.items()).throw();
+    }
+
+    // - contain#1 -
+    s = new Set([1,2,3,4,5]);
+    if (s.contain(2) != 1) { new Exception("Set.contain(2)").throw(); }
+    if (s.contain(4) != 1) { new Exception("Set.contain(4)").throw(); }
+    if (s.contain(6) != 0) { new Exception("Set.contain(6)").throw(); }
+
+    // - clear#0 -
+    s = new Set([1,2,3,4,5]);
+    s.clear();
+    if (s.length() != 0)
+    {
+      new Exception("Set.clear length: got %s" % $s.length()).throw();
+    }
+
+    // - items#0 returns Array -
+    s = new Set([1,2,3,4,5]);
+    items = s.items();
+    if ($(type items) != "Array")
+    {
+      new Exception("items type: got %s" % $(type items)).throw();
+    }
+
+    // - unordered_items#0 returns same length -
+    if (s.unordered_items().length() != 5)
+    {
+      new Exception("Set.unordered_items().length(): expected 5").throw();
+    }
+
+    // - iteration via first_idx/next_idx (sorted order) -
+    s = new Set([5,3,1,4,2]);
+    collected = [];
+    idx = s.first_idx();
+    while (Blank != idx)
+    {
+      collected.push(s[idx]);
+      idx = s.next_idx(idx);
+    }
+    if (collected != [1,2,3,4,5])
+    {
+      new Exception("Set forward iter: expected sorted, got %s" % $collected).throw();
+    }
+
+    // - iteration backward -
+    collected = [];
+    idx = s.last_idx();
+    while (Blank != idx)
+    {
+      collected.push(s[idx]);
+      idx = s.prev_idx(idx);
+    }
+    if (collected != [5,4,3,2,1])
+    {
+      new Exception("Set backward iter: got %s" % $collected).throw();
+    }
+
+    // - to_string#0 / to_string#1 -
+    s = new Set([1,2,3,4,5]);
+    if (s.to_string() != "[1,2,3,4,5]")
+    {
+      new Exception("Set.to_string(): got %s" % s.to_string()).throw();
+    }
+    if (s.to_string("-SEP-") != "1-SEP-2-SEP-3-SEP-4-SEP-5")
+    {
+      new Exception("Set.to_string(\"-SEP-\"): got %s" % s.to_string("-SEP-")).throw();
+    }
+
+    // - length#0 across operations -
+    s = new Set();
+    if (s.length() != 0) { new Exception("len 0").throw(); }
+    s.insert(1);
+    s.insert(2);
+    s.insert(2);
+    if (s.length() != 2) { new Exception("len 2 after dup insert").throw(); }
+    s.remove(1);
+    if (s.length() != 1) { new Exception("len 1 after remove").throw(); }
+  }/*}}}*/
+}

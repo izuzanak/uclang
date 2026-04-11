@@ -1,0 +1,139 @@
+
+import sys;
+import http;
+import curl;
+
+class Main
+{
+  // - shared state -
+  static server_ready = 0;
+  static stop_flag = 0;
+  static server_error = "";
+  static observed_id = -1;
+
+  public Main() {}
+
+  // - HttpServer connection callback -
+  public on_conn(a_conn)
+  {/*{{{*/
+    if (a_conn.get_type() == HttpConn.TYPE_GET)
+    {
+      // - inspect request from the server side -
+      m = a_conn.method();
+      if (m != "GET")
+      {
+        server_error = "method: expected GET, got " + m;
+      }
+
+      v = a_conn.version();
+      if (v != "HTTP/1.1")
+      {
+        server_error = "version: expected HTTP/1.1, got " + v;
+      }
+
+      u = a_conn.url();
+      if (u != "/")
+      {
+        server_error = "url: expected /, got " + u;
+      }
+
+      // - id() returns Integer >= 0 -
+      observed_id = a_conn.id();
+      if (type observed_id != type Integer)
+      {
+        server_error = "id: expected Integer";
+      }
+
+      // - HttpConn to_string -
+      if ($a_conn != "HttpConn")
+      {
+        server_error = "conn to_string: expected HttpConn, got " + $a_conn;
+      }
+
+      resp = new HttpResp(HttpResp.FROM_STRING,"Hello GET");
+      resp.add_header("Content-Type","text/plain");
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+  }/*}}}*/
+
+  static parallel run_server(a_obj,a_port)
+  {/*{{{*/
+    server = new HttpServer(0,a_port,
+      new Delegate(a_obj,"on_conn",1),[]);
+
+    server_ready = 1;
+
+    while (stop_flag == 0)
+    {
+      poll = new Poll(server.get_fds());
+      poll.ready(50);
+      server.process();
+    }
+
+    server.stop();
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19300 + (Sys.getpid() % 1000);
+    url = "http://127.0.0.1:%d/" % port;
+
+    thr = run_server(obj,port);
+
+    // - wait for server thread to bind -
+    attempts = 0;
+    while (server_ready == 0 and attempts < 1000)
+    {
+      Sys.sleep(10);
+      attempts += 1;
+    }
+    if (server_ready == 0)
+    {
+      stop_flag = 1;
+      thr.join();
+      new Exception("server did not become ready").throw();
+    }
+
+    // - perform GET -
+    result = Curl.GET(url);
+
+    // - signal server to stop and wait -
+    stop_flag = 1;
+    thr.join();
+
+    // - check server-side observations -
+    if (server_error != "")
+    {
+      new Exception("server-side: %s" % server_error).throw();
+    }
+
+    if (observed_id < 0)
+    {
+      new Exception("id: expected >= 0, got %d" % observed_id).throw();
+    }
+
+    // - client-side validation -
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("code: expected CURLE_OK, got %d" % result.code()).throw();
+    }
+
+    if (result.data() != "Hello GET")
+    {
+      new Exception("data: expected \"Hello GET\", got \"%s\"" % result.data()).throw();
+    }
+
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 200)
+    {
+      new Exception("INFO_RESPONSE_CODE: expected 200, got %d" %
+        result.info(CurlResult.INFO_RESPONSE_CODE)).throw();
+    }
+
+    if (result.info(CurlResult.INFO_CONTENT_TYPE) != "text/plain")
+    {
+      new Exception("INFO_CONTENT_TYPE: expected \"text/plain\", got \"%s\"" %
+        $result.info(CurlResult.INFO_CONTENT_TYPE)).throw();
+    }
+  }/*}}}*/
+}

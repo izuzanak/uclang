@@ -1,0 +1,76 @@
+
+class Main
+{
+  public Main() {}
+
+  public callback(a_param_0,a_param_1)
+  {/*{{{*/
+    return a_param_0 + a_param_1;
+  }/*}}}*/
+
+  public greet(a_name)
+  {/*{{{*/
+    return "Hello, " + a_name;
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+
+    // - construct delegate -
+    d = new Delegate(obj,"callback",2);
+    if ($(type d) != "Delegate")
+    {
+      new Exception("Delegate type: expected \"Delegate\", got \"%s\"" % $(type d)).throw();
+    }
+
+    // - call with int args -
+    if (d.call([10,5]) != 15)
+    {
+      new Exception("d.call([10,5]): expected 15").throw();
+    }
+
+    // - call with string args -
+    if (d.call(["foo","bar"]) != "foobar")
+    {
+      new Exception("d.call([\"foo\",\"bar\"]): expected \"foobar\"").throw();
+    }
+
+    // - call with array args -
+    if (d.call([[1,2,3],[4,5,6]]) != [1,2,3,4,5,6])
+    {
+      new Exception("d.call array+array").throw();
+    }
+
+    // - papply: bind first arg, then call with second -
+    pd = d.papply([10]);
+    if (pd.call([5]) != 15)
+    {
+      new Exception("papply([10]).call([5]): expected 15").throw();
+    }
+    if (pd.call([20]) != 30)
+    {
+      new Exception("papply([10]).call([20]): expected 30").throw();
+    }
+
+    // - papply both args, then call with empty array -
+    pd2 = d.papply([1,2]);
+    if (pd2.call([]) != 3)
+    {
+      new Exception("papply([1,2]).call([]): expected 3").throw();
+    }
+
+    // - one-arg delegate -
+    g = new Delegate(obj,"greet",1);
+    if (g.call(["world"]) != "Hello, world")
+    {
+      new Exception("greet delegate: expected \"Hello, world\"").throw();
+    }
+
+    // - to_string -
+    if ($d != "Delegate")
+    {
+      new Exception("$delegate: expected \"Delegate\", got \"%s\"" % $d).throw();
+    }
+  }/*}}}*/
+}

@@ -1,0 +1,186 @@
+
+import sys;
+import http;
+import curl;
+
+class Main
+{
+  static server_ready = 0;
+  static stop_flag = 0;
+
+  // - last upload payload received by POST/PUT routes -
+  static last_upload = "";
+
+  public Main() {}
+
+  // - HttpServer connection callback: dispatches by URL/method -
+  public on_conn(a_conn)
+  {/*{{{*/
+    ct = a_conn.get_type();
+    url = a_conn.url();
+
+    if (ct == HttpConn.TYPE_GET and url == "/notfound")
+    {
+      // - return 404 with body -
+      resp = new HttpResp(HttpResp.FROM_STRING,"Not Found");
+      a_conn.queue_response(HttpResp.HTTP_NOT_FOUND,resp);
+    }
+    else if (ct == HttpConn.TYPE_DELETE)
+    {
+      resp = new HttpResp(HttpResp.FROM_STRING,"DELETED");
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+    else if (ct == HttpConn.TYPE_HEAD)
+    {
+      // - HEAD: respond with body but curl strips it -
+      resp = new HttpResp(HttpResp.FROM_STRING,"head body");
+      resp.add_header("Content-Type","text/plain");
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+    else if (ct == HttpConn.TYPE_POST)
+    {
+      // - libmicrohttpd two-pass: respond on the call where upload_data is Blank -
+      ud = a_conn.upload_data();
+      if (Blank == ud)
+      {
+        resp = new HttpResp(HttpResp.FROM_STRING,"POST-OK:" + last_upload);
+        a_conn.queue_response(HttpResp.HTTP_OK,resp);
+      }
+      else
+      {
+        last_upload = $ud;
+      }
+    }
+    else if (ct == HttpConn.TYPE_PUT)
+    {
+      ud = a_conn.upload_data();
+      if (Blank == ud)
+      {
+        resp = new HttpResp(HttpResp.FROM_STRING,"PUT-OK:" + last_upload);
+        a_conn.queue_response(HttpResp.HTTP_CREATED,resp);
+      }
+      else
+      {
+        last_upload = $ud;
+      }
+    }
+  }/*}}}*/
+
+  static parallel run_server(a_obj,a_port)
+  {/*{{{*/
+    server = new HttpServer(0,a_port,
+      new Delegate(a_obj,"on_conn",1),[]);
+
+    server_ready = 1;
+
+    while (stop_flag == 0)
+    {
+      poll = new Poll(server.get_fds());
+      poll.ready(50);
+      server.process();
+    }
+
+    server.stop();
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19900 + (Sys.getpid() % 1000);
+    base = "http://127.0.0.1:%d" % port;
+
+    thr = run_server(obj,port);
+
+    attempts = 0;
+    while (server_ready == 0 and attempts < 1000)
+    {
+      Sys.sleep(10);
+      attempts += 1;
+    }
+    if (server_ready == 0)
+    {
+      new Exception("server did not become ready").throw();
+    }
+
+    // - POST -
+    last_upload = "";
+    result = Curl.POST(base + "/post","key=value");
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("POST code: expected 0, got %d" % result.code()).throw();
+    }
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 200)
+    {
+      new Exception("POST INFO_RESPONSE_CODE: expected 200, got %d" %
+        result.info(CurlResult.INFO_RESPONSE_CODE)).throw();
+    }
+    if (result.data() != "POST-OK:key=value")
+    {
+      new Exception("POST data: expected \"POST-OK:key=value\", got \"%s\"" % result.data()).throw();
+    }
+
+    // - PUT -
+    last_upload = "";
+    result = Curl.PUT(base + "/put","put-body");
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("PUT code: expected 0, got %d" % result.code()).throw();
+    }
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 201)
+    {
+      new Exception("PUT INFO_RESPONSE_CODE: expected 201, got %d" %
+        result.info(CurlResult.INFO_RESPONSE_CODE)).throw();
+    }
+    if (result.data() != "PUT-OK:put-body")
+    {
+      new Exception("PUT data: expected \"PUT-OK:put-body\", got \"%s\"" % result.data()).throw();
+    }
+
+    // - DELETE -
+    result = Curl.DELETE(base + "/del");
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("DELETE code: expected 0, got %d" % result.code()).throw();
+    }
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 200)
+    {
+      new Exception("DELETE INFO_RESPONSE_CODE: expected 200, got %d" %
+        result.info(CurlResult.INFO_RESPONSE_CODE)).throw();
+    }
+    if (result.data() != "DELETED")
+    {
+      new Exception("DELETE data: expected \"DELETED\", got \"%s\"" % result.data()).throw();
+    }
+
+    // - HEAD: response code surfaces, body is the response headers (curl HEAD includes headers) -
+    result = Curl.HEAD(base + "/head");
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("HEAD code: expected 0, got %d" % result.code()).throw();
+    }
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 200)
+    {
+      new Exception("HEAD INFO_RESPONSE_CODE: expected 200, got %d" %
+        result.info(CurlResult.INFO_RESPONSE_CODE)).throw();
+    }
+
+    // - GET 404: code is CURLE_OK (transfer ok), but response code is 404 -
+    result = Curl.GET(base + "/notfound");
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("404 code: expected CURLE_OK, got %d" % result.code()).throw();
+    }
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 404)
+    {
+      new Exception("404 INFO_RESPONSE_CODE: expected 404, got %d" %
+        result.info(CurlResult.INFO_RESPONSE_CODE)).throw();
+    }
+    if (result.data() != "Not Found")
+    {
+      new Exception("404 data: expected \"Not Found\", got \"%s\"" % result.data()).throw();
+    }
+
+    stop_flag = 1;
+    thr.join();
+  }/*}}}*/
+}

@@ -1,0 +1,155 @@
+
+class Main
+{
+  // - absolute difference helper for tolerance comparison -
+  static private close(a_a,a_b)
+  {/*{{{*/
+    diff = a_a - a_b;
+    if (diff < 0.0) { diff = -diff; }
+    return diff < 1e-9;
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - constructors -
+    if (new Float() != 0.0)
+    {
+      new Exception("new Float(): expected 0.0").throw();
+    }
+    if (new Float(1.5) != 1.5)
+    {
+      new Exception("new Float(1.5): expected 1.5").throw();
+    }
+
+    // - int -> float -
+    if (new Float(3) != 3.0)
+    {
+      new Exception("new Float(3): expected 3.0").throw();
+    }
+
+    // - arithmetic -
+    if (1.5 + 2.5 != 4.0) { new Exception("1.5 + 2.5").throw(); }
+    if (5.0 - 1.5 != 3.5) { new Exception("5.0 - 1.5").throw(); }
+    if (2.0 * 3.5 != 7.0) { new Exception("2.0 * 3.5").throw(); }
+    if (10.0 / 4.0 != 2.5){ new Exception("10.0 / 4.0").throw(); }
+    if (-(1.5) != -1.5)   { new Exception("-1.5").throw(); }
+
+    // - += -
+    f = 1.0;
+    f += 2.5;
+    if (f != 3.5) { new Exception("f += 2.5").throw(); }
+
+    // - comparison -
+    if (!(1.5 < 2.5))     { new Exception("1.5 < 2.5").throw(); }
+    if (!(2.5 > 1.5))     { new Exception("2.5 > 1.5").throw(); }
+    if (1.5 != 1.5)       { new Exception("1.5 != 1.5").throw(); }
+    if (!(1.5 == 1.5))    { new Exception("1.5 == 1.5").throw(); }
+
+    // - sqrt -
+    if (!close((100.0).sqrt(),10.0))
+    {
+      new Exception("100.sqrt() != 10").throw();
+    }
+    if (!close((2.0).sqrt() * (2.0).sqrt(),2.0))
+    {
+      new Exception("sqrt(2)^2 != 2").throw();
+    }
+
+    // - cbrt -
+    if (!close((27.0).cbrt(),3.0))
+    {
+      new Exception("27.cbrt() != 3").throw();
+    }
+
+    // - pow -
+    if (!close((2.0).pow(10),1024.0))
+    {
+      new Exception("2.pow(10) != 1024").throw();
+    }
+    if (!close((10.0).pow(3),1000.0))
+    {
+      new Exception("10.pow(3) != 1000").throw();
+    }
+
+    // - hypot -
+    if (!close((3.0).hypot(4),5.0))
+    {
+      new Exception("3.hypot(4) != 5").throw();
+    }
+
+    // - exp/log roundtrip -
+    if (!close((1.0).exp().log(),1.0))
+    {
+      new Exception("exp(1).log() != 1").throw();
+    }
+    if (!close((5.0).exp().log(),5.0))
+    {
+      new Exception("exp(5).log() != 5").throw();
+    }
+
+    // - trig: sin(0)=0, cos(0)=1 -
+    if (!close((0.0).sin(),0.0))
+    {
+      new Exception("sin(0) != 0").throw();
+    }
+    if (!close((0.0).cos(),1.0))
+    {
+      new Exception("cos(0) != 1").throw();
+    }
+    if (!close((0.0).tan(),0.0))
+    {
+      new Exception("tan(0) != 0").throw();
+    }
+
+    // - asin(1) = pi/2; sin(asin(1)) = 1 -
+    if (!close((1.0).asin().sin(),1.0))
+    {
+      new Exception("sin(asin(1)) != 1").throw();
+    }
+    if (!close((1.0).acos().cos(),1.0))
+    {
+      new Exception("cos(acos(1)) != 1").throw();
+    }
+    if (!close((1.0).atan().tan(),1.0))
+    {
+      new Exception("tan(atan(1)) != 1").throw();
+    }
+
+    // - isnan -
+    if ((125.25).isnan() != 0)
+    {
+      new Exception("125.25.isnan(): expected 0").throw();
+    }
+
+    // - classify normal vs zero vs infinite -
+    if ((125.25).classify() != Float.CLASS_NORMAL)
+    {
+      new Exception("125.25.classify(): expected NORMAL").throw();
+    }
+    if ((0.0).classify() != Float.CLASS_ZERO)
+    {
+      new Exception("0.0.classify(): expected ZERO").throw();
+    }
+    if (Float.INFINITY.classify() != Float.CLASS_INFINITE)
+    {
+      new Exception("INFINITY.classify(): expected INFINITE").throw();
+    }
+
+    // - compare#1 -
+    if ((1.5).compare(1.5) != 0)
+    {
+      new Exception("1.5.compare(1.5): expected 0").throw();
+    }
+    if (!((1.5).compare(2.5) < 0))
+    {
+      new Exception("1.5.compare(2.5): expected negative").throw();
+    }
+
+    // - to_string non-empty -
+    if ($1.5 == "")
+    {
+      new Exception("$1.5: empty").throw();
+    }
+  }/*}}}*/
+}

@@ -1,0 +1,74 @@
+
+import crypto;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - random with zero length -
+    r0 = Crypto.random(0);
+    if (r0.length() != 0)
+    {
+      new Exception("Crypto.random(0) length: expected 0, got %s" % $r0.length()).throw();
+    }
+
+    // - random produces requested size -
+    r = Crypto.random(32);
+    if (r.length() != 32)
+    {
+      new Exception("Crypto.random(32) length: expected 32, got %s" % $r.length()).throw();
+    }
+
+    // - two random calls differ (probabilistic, 32 bytes collision ~ impossible) -
+    r2 = Crypto.random(32);
+    if (r == r2)
+    {
+      new Exception("Crypto.random(32) produced identical results").throw();
+    }
+
+    // - encode_base16 known vector -
+    if (Crypto.encode_base16("abc") != "616263")
+    {
+      new Exception("encode_base16(abc): expected 616263, got %s" % Crypto.encode_base16("abc")).throw();
+    }
+
+    // - encode_base16 empty -
+    if (Crypto.encode_base16("") != "")
+    {
+      new Exception("encode_base16(empty): expected empty, got %s" % Crypto.encode_base16("")).throw();
+    }
+
+    // - decode_base16 known vector -
+    if (Crypto.decode_base16("616263") != "abc")
+    {
+      new Exception("decode_base16(616263): expected abc, got %s" % Crypto.decode_base16("616263")).throw();
+    }
+
+    // - base16 round-trip on random bytes -
+    rb = Crypto.random(64);
+    if (Crypto.decode_base16(Crypto.encode_base16(rb)) != rb)
+    {
+      new Exception("base16 round-trip failed").throw();
+    }
+
+    // - encode_base64 known vector -
+    if (Crypto.encode_base64("Hello, World!") != "SGVsbG8sIFdvcmxkIQ==")
+    {
+      new Exception("encode_base64: expected SGVsbG8sIFdvcmxkIQ==, got %s" % Crypto.encode_base64("Hello, World!")).throw();
+    }
+
+    // - decode_base64 known vector -
+    if (Crypto.decode_base64("SGVsbG8sIFdvcmxkIQ==") != "Hello, World!")
+    {
+      new Exception("decode_base64: expected Hello, World!, got %s" % Crypto.decode_base64("SGVsbG8sIFdvcmxkIQ==")).throw();
+    }
+
+    // - base64 round-trip on random bytes -
+    rb2 = Crypto.random(65);
+    if (Crypto.decode_base64(Crypto.encode_base64(rb2)) != rb2)
+    {
+      new Exception("base64 round-trip failed").throw();
+    }
+  }/*}}}*/
+}

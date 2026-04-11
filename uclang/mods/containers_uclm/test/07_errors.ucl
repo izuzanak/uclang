@@ -1,0 +1,122 @@
+
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Stack.pop on empty throws -
+    caught = 0;
+    try { new Stack().pop(); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Stack().pop(): expected throw").throw();
+    }
+
+    // - Stack.item with bad index throws -
+    caught = 0;
+    try { new Stack([1,2,3]).item(99); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Stack.item(99): expected throw").throw();
+    }
+
+    // - Queue.next on empty throws -
+    caught = 0;
+    try { new Queue().next(); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Queue().next(): expected throw").throw();
+    }
+
+    // - Queue.item with bad index throws -
+    caught = 0;
+    try { new Queue([1,2,3]).item(99); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Queue.item(99): expected throw").throw();
+    }
+
+    // - Set.remove non-existent throws -
+    caught = 0;
+    try { new Set([1,2,3]).remove(99); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Set.remove(99): expected throw").throw();
+    }
+
+    // - List bracket access with bad index throws -
+    caught = 0;
+    try { new List([1,2,3])[99]; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("List[99]: expected throw").throw();
+    }
+
+    // - Tree bracket access with bad index throws -
+    caught = 0;
+    try { new Tree([1,2,3])[99]; }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Tree[99]: expected throw").throw();
+    }
+
+    // - Dict construction from odd-length flat array throws -
+    caught = 0;
+    try { new Dict([1,2,3]); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Dict([1,2,3]) odd: expected throw").throw();
+    }
+
+    // - Dict.remove_key for missing key throws -
+    caught = 0;
+    try { new Dict(["a",1]).remove_key("missing"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Dict.remove_key(missing): expected throw").throw();
+    }
+
+    // - Dict.remove_if_key for missing key does NOT throw -
+    caught = 0;
+    try { new Dict(["a",1]).remove_if_key("missing"); }
+    catch (e) { caught = 1; }
+    if (caught != 0)
+    {
+      new Exception("Dict.remove_if_key(missing): expected no throw").throw();
+    }
+
+    // - Set.remove_if_key analog: Set.remove on missing throws (verified above) -
+    // - Stack pop after clearing throws -
+    s = new Stack([1]);
+    s.pop();
+    caught = 0;
+    try { s.pop(); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Stack pop after clearing: expected throw").throw();
+    }
+
+    // - Queue next after clearing throws -
+    q = new Queue([1]);
+    q.next();
+    caught = 0;
+    try { q.next(); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("Queue next after clearing: expected throw").throw();
+    }
+  }/*}}}*/
+}

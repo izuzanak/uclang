@@ -1,0 +1,36 @@
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - construct an Error -
+    e = new Error();
+    if ($e == "")
+    {
+      new Exception("$Error: empty string").throw();
+    }
+
+    // - new Error() == new Error() -
+    if (!(new Error() == new Error()))
+    {
+      new Exception("new Error() == new Error(): expected true").throw();
+    }
+
+    // - error type comes through caught exception -
+    try { 1/0; }
+    catch (e) {
+      err_t = e.get_type();
+      if ($err_t == "")
+      {
+        new Exception("get_type stringified empty").throw();
+      }
+
+      // - error compare against itself is 0 -
+      if (err_t.compare(err_t) != 0)
+      {
+        new Exception("error.compare(self): expected 0").throw();
+      }
+    }
+  }/*}}}*/
+}

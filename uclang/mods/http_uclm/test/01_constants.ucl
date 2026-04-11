@@ -1,0 +1,261 @@
+
+import sys;
+import http;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - HttpServer USE_* constants (3) -
+    use_consts = [
+      HttpServer.USE_SSL,
+      HttpServer.USE_POLL,
+      HttpServer.USE_EPOLL,
+    ];
+
+    if (use_consts.length() != 3)
+    {
+      new Exception("USE constants: expected 3, got %d" % use_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < use_consts.length())
+    {
+      if (type use_consts[idx] != type Integer)
+      {
+        new Exception("USE constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - HttpServer OPTION_* constants (6) -
+    opt_consts = [
+      HttpServer.OPTION_SOCK_ADDR,
+      HttpServer.OPTION_HTTPS_MEM_KEY,
+      HttpServer.OPTION_HTTPS_MEM_CERT,
+      HttpServer.OPTION_CONNECTION_LIMIT,
+      HttpServer.OPTION_CONNECTION_TIMEOUT,
+      HttpServer.OPTION_PER_IP_CONNECTION_LIMIT,
+    ];
+
+    if (opt_consts.length() != 6)
+    {
+      new Exception("OPTION constants: expected 6, got %d" % opt_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < opt_consts.length())
+    {
+      if (type opt_consts[idx] != type Integer)
+      {
+        new Exception("OPTION constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - HttpConn TYPE_* constants (8) -
+    type_consts = [
+      HttpConn.TYPE_CONNECT,
+      HttpConn.TYPE_DELETE,
+      HttpConn.TYPE_GET,
+      HttpConn.TYPE_HEAD,
+      HttpConn.TYPE_OPTIONS,
+      HttpConn.TYPE_POST,
+      HttpConn.TYPE_PUT,
+      HttpConn.TYPE_TRACE,
+    ];
+
+    if (type_consts.length() != 8)
+    {
+      new Exception("TYPE constants: expected 8, got %d" % type_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < type_consts.length())
+    {
+      if (type type_consts[idx] != type Integer)
+      {
+        new Exception("TYPE constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - HttpConn VALS_* constants (5) -
+    vals_consts = [
+      HttpConn.VALS_HEADER,
+      HttpConn.VALS_COOKIE,
+      HttpConn.VALS_POSTDATA,
+      HttpConn.VALS_GET_ARGUMENT,
+      HttpConn.VALS_FOOTER,
+    ];
+
+    if (vals_consts.length() != 5)
+    {
+      new Exception("VALS constants: expected 5, got %d" % vals_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < vals_consts.length())
+    {
+      if (type vals_consts[idx] != type Integer)
+      {
+        new Exception("VALS constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - HttpConn digest auth result constants (3) -
+    auth_consts = [
+      HttpConn.YES,
+      HttpConn.NO,
+      HttpConn.INVALID_NONCE,
+    ];
+
+    if (auth_consts.length() != 3)
+    {
+      new Exception("digest auth constants: expected 3, got %d" % auth_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < auth_consts.length())
+    {
+      if (type auth_consts[idx] != type Integer)
+      {
+        new Exception("digest auth constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - HttpResp source constants (2) -
+    src_consts = [
+      HttpResp.FROM_STRING,
+      HttpResp.FROM_FILE,
+    ];
+
+    if (src_consts.length() != 2)
+    {
+      new Exception("source constants: expected 2, got %d" % src_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < src_consts.length())
+    {
+      if (type src_consts[idx] != type Integer)
+      {
+        new Exception("source constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - HttpResp HTTP_* status code constants (50) -
+    status_consts = [
+      // - 1xx -
+      HttpResp.HTTP_CONTINUE,
+      HttpResp.HTTP_SWITCHING_PROTOCOLS,
+      HttpResp.HTTP_PROCESSING,
+      // - 2xx -
+      HttpResp.HTTP_OK,
+      HttpResp.HTTP_CREATED,
+      HttpResp.HTTP_ACCEPTED,
+      HttpResp.HTTP_NON_AUTHORITATIVE_INFORMATION,
+      HttpResp.HTTP_NO_CONTENT,
+      HttpResp.HTTP_RESET_CONTENT,
+      HttpResp.HTTP_PARTIAL_CONTENT,
+      HttpResp.HTTP_MULTI_STATUS,
+      // - 3xx -
+      HttpResp.HTTP_MULTIPLE_CHOICES,
+      HttpResp.HTTP_MOVED_PERMANENTLY,
+      HttpResp.HTTP_FOUND,
+      HttpResp.HTTP_SEE_OTHER,
+      HttpResp.HTTP_NOT_MODIFIED,
+      HttpResp.HTTP_USE_PROXY,
+      HttpResp.HTTP_SWITCH_PROXY,
+      HttpResp.HTTP_TEMPORARY_REDIRECT,
+      // - 4xx -
+      HttpResp.HTTP_BAD_REQUEST,
+      HttpResp.HTTP_UNAUTHORIZED,
+      HttpResp.HTTP_PAYMENT_REQUIRED,
+      HttpResp.HTTP_FORBIDDEN,
+      HttpResp.HTTP_NOT_FOUND,
+      HttpResp.HTTP_METHOD_NOT_ALLOWED,
+      HttpResp.HTTP_METHOD_NOT_ACCEPTABLE,
+      HttpResp.HTTP_PROXY_AUTHENTICATION_REQUIRED,
+      HttpResp.HTTP_REQUEST_TIMEOUT,
+      HttpResp.HTTP_CONFLICT,
+      HttpResp.HTTP_GONE,
+      HttpResp.HTTP_LENGTH_REQUIRED,
+      HttpResp.HTTP_PRECONDITION_FAILED,
+      HttpResp.HTTP_UNSUPPORTED_MEDIA_TYPE,
+      HttpResp.HTTP_EXPECTATION_FAILED,
+      HttpResp.HTTP_LOCKED,
+      HttpResp.HTTP_FAILED_DEPENDENCY,
+      HttpResp.HTTP_UPGRADE_REQUIRED,
+      HttpResp.HTTP_RETRY_WITH,
+      HttpResp.HTTP_BLOCKED_BY_WINDOWS_PARENTAL_CONTROLS,
+      HttpResp.HTTP_UNAVAILABLE_FOR_LEGAL_REASONS,
+      // - 5xx -
+      HttpResp.HTTP_INTERNAL_SERVER_ERROR,
+      HttpResp.HTTP_NOT_IMPLEMENTED,
+      HttpResp.HTTP_BAD_GATEWAY,
+      HttpResp.HTTP_SERVICE_UNAVAILABLE,
+      HttpResp.HTTP_GATEWAY_TIMEOUT,
+      HttpResp.HTTP_HTTP_VERSION_NOT_SUPPORTED,
+      HttpResp.HTTP_VARIANT_ALSO_NEGOTIATES,
+      HttpResp.HTTP_INSUFFICIENT_STORAGE,
+      HttpResp.HTTP_BANDWIDTH_LIMIT_EXCEEDED,
+      HttpResp.HTTP_NOT_EXTENDED,
+    ];
+
+    if (status_consts.length() != 50)
+    {
+      new Exception("HTTP status constants: expected 50, got %d" % status_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < status_consts.length())
+    {
+      if (type status_consts[idx] != type Integer)
+      {
+        new Exception("HTTP status constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - check well-known status code numeric values -
+    if (HttpResp.HTTP_OK != 200)
+    {
+      new Exception("HTTP_OK: expected 200, got %d" % HttpResp.HTTP_OK).throw();
+    }
+    if (HttpResp.HTTP_CREATED != 201)
+    {
+      new Exception("HTTP_CREATED: expected 201, got %d" % HttpResp.HTTP_CREATED).throw();
+    }
+    if (HttpResp.HTTP_NOT_FOUND != 404)
+    {
+      new Exception("HTTP_NOT_FOUND: expected 404, got %d" % HttpResp.HTTP_NOT_FOUND).throw();
+    }
+    if (HttpResp.HTTP_INTERNAL_SERVER_ERROR != 500)
+    {
+      new Exception("HTTP_INTERNAL_SERVER_ERROR: expected 500, got %d" % HttpResp.HTTP_INTERNAL_SERVER_ERROR).throw();
+    }
+
+    // - to_string for static-callable classes -
+    if ($HttpServer != "HttpServer")
+    {
+      new Exception("HttpServer to_string: expected \"HttpServer\", got \"%s\"" % $HttpServer).throw();
+    }
+    if ($HttpConn != "HttpConn")
+    {
+      new Exception("HttpConn to_string: expected \"HttpConn\", got \"%s\"" % $HttpConn).throw();
+    }
+    if ($HttpResp != "HttpResp")
+    {
+      new Exception("HttpResp to_string: expected \"HttpResp\", got \"%s\"" % $HttpResp).throw();
+    }
+    if ($HttpPostProc != "HttpPostProc")
+    {
+      new Exception("HttpPostProc to_string: expected \"HttpPostProc\", got \"%s\"" % $HttpPostProc).throw();
+    }
+  }/*}}}*/
+}
