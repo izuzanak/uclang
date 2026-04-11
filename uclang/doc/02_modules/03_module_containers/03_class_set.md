@@ -55,7 +55,7 @@ Container class implementing abstract data type set.
 
 <a name="Set#0" />
 
-### Constructor [`Set#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1203)
+### Constructor [`Set#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1207)
 
 Creates default object of class `Set`.
 
@@ -71,7 +71,7 @@ obj: []
 
 <a name="Set#1" />
 
-### Constructor [`Set#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1208)
+### Constructor [`Set#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1212)
 
 Creates object of class `Set` containing elements retrieved from method parameter.
 
@@ -95,7 +95,7 @@ obj: [1,2,3,4,5]
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L831)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L835)
 
 Assignment operator `=`. Object of class `Set` is replaced by method parameter.
 
@@ -122,7 +122,7 @@ obj: New value
 
 <a name="operator_binary_plus_equal#1" />
 
-### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L843)
+### Operator [`operator_binary_plus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L847)
 
 Append operator `+=`. Append elements retrieved from method parameter to object of class `Set`.
 
@@ -149,7 +149,7 @@ obj: [1,2,3,4,5,6,7,8]
 
 <a name="operator_binary_minus_equal#1" />
 
-### Operator [`operator_binary_minus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L871)
+### Operator [`operator_binary_minus_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L875)
 
 Set difference operator `-=`. Creates object of class `Set` containing
 elements from first object of class `Set` that are not contained in second
@@ -178,7 +178,7 @@ obj_0: [3,4,5]
 
 <a name="operator_binary_ampersand_equal#1" />
 
-### Operator [`operator_binary_ampersand_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L900)
+### Operator [`operator_binary_ampersand_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L904)
 
 Set intersection operator `&=`. Creates object of class `Set` containing
 elements contained in both source objects of class `Set`. Value of variable is
@@ -206,7 +206,7 @@ obj_0: [1,2]
 
 <a name="operator_binary_pipe_equal#1" />
 
-### Operator [`operator_binary_pipe_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L929)
+### Operator [`operator_binary_pipe_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L933)
 
 Set union operator `|=`. Creates object of class `Set` containing elements
 from both source objects of class `Set`. Value of variable is set to result
@@ -234,7 +234,7 @@ obj_0: [1,2,3,4,5,6,7,8]
 
 <a name="operator_binary_circumflex_equal#1" />
 
-### Operator [`operator_binary_circumflex_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L958)
+### Operator [`operator_binary_circumflex_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L962)
 
 Set symmetric difference operator `^=`. Creates object of class `Set`
 containing elements from both source objects of class `Set` that are contained
@@ -263,7 +263,7 @@ obj_0: [3,4,5,6,7,8]
 
 <a name="operator_binary_ampersand#1" />
 
-### Operator [`operator_binary_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L987)
+### Operator [`operator_binary_ampersand#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L991)
 
 Set intersection operator `&`. Creates object of class `Set` containing
 elements contained in both source objects of class `Set`.
@@ -290,7 +290,7 @@ res: [1,2]
 
 <a name="operator_binary_pipe#1" />
 
-### Operator [`operator_binary_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1013)
+### Operator [`operator_binary_pipe#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1017)
 
 Set union operator `|`. Creates object of class `Set` containing elements from
 both source objects of class `Set`.
@@ -317,7 +317,7 @@ res: [1,2,3,4,5,6,7,8]
 
 <a name="operator_binary_circumflex#1" />
 
-### Operator [`operator_binary_circumflex#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1039)
+### Operator [`operator_binary_circumflex#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1043)
 
 Set symmetric difference operator `^`. Creates object of class `Set`
 containing elements from both source objects of class `Set` that are contained
@@ -345,7 +345,7 @@ res: [3,4,5,6,7,8]
 
 <a name="operator_binary_double_equal#1" />
 
-### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1065)
+### Operator [`operator_binary_double_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1069)
 
 Comparison operator `==`. Compares object of class `Set` with method parameter and return `1` if objects has same value or `0` otherwise.
 
@@ -375,7 +375,7 @@ obj_0 == obj_2: 1
 
 <a name="operator_binary_exclamation_equal#1" />
 
-### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1080)
+### Operator [`operator_binary_exclamation_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1084)
 
 Comparison operator `!=`. Compares object of class `Set` with method parameter and return `0` if objects has same value or `1` otherwise.
 
@@ -405,7 +405,7 @@ obj_0 != obj_2: 0
 
 <a name="operator_binary_rs_br_equal#1" />
 
-### Operator [`operator_binary_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1095)
+### Operator [`operator_binary_rs_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1099)
 
 Subset test operator `>=`. Test if object of class `Set` given by method
 parameter is subset of object of class `Set`.
@@ -439,7 +439,7 @@ obj_1 >= obj_0: 0
 
 <a name="operator_binary_ls_br_equal#1" />
 
-### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1117)
+### Operator [`operator_binary_ls_br_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1121)
 
 Superset test operator `<=`. Test if object of class `Set` given by method
 parameter is superset of object of class `Set`.
@@ -473,7 +473,7 @@ obj_1 <= obj_0: 1
 
 <a name="operator_binary_plus#1" />
 
-### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1139)
+### Operator [`operator_binary_plus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1143)
 
 Concatenation operator `+`. Creates object of class `Set` containing elements of original object of class `Set` concatenated with elements retrieved from method parameter.
 
@@ -500,7 +500,7 @@ res: [1,2,3,4,5]
 
 <a name="operator_binary_minus#1" />
 
-### Operator [`operator_binary_minus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1172)
+### Operator [`operator_binary_minus#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1176)
 
 Set difference operator `-`. Creates object of class `Set` containing elements
 from first object of class `Set` that are not contained in second object of
@@ -528,7 +528,7 @@ res: [3,4,5]
 
 <a name="operator_binary_le_br_re_br#1" />
 
-### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1198)
+### Operator [`operator_binary_le_br_re_br#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1202)
 
 Item selection operator `[]`.
 Retrieve element from object of class `Set` stored at requested index position.
@@ -563,7 +563,7 @@ obj[3]: 3
 
 <a name="clear#0" />
 
-### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1232)
+### Method [`clear#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1236)
 
 Release all elements stored in object of class `Set`.
 
@@ -586,7 +586,7 @@ obj: []
 
 <a name="items#0" />
 
-### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1260)
+### Method [`items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1264)
 
 Retrieve list of elements contained in object of class `Set`. Elements are returned as object of class `Array`.
 
@@ -611,7 +611,7 @@ items: [1,2,3,4,5]
 
 <a name="unordered_items#0" />
 
-### Method [`unordered_items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1291)
+### Method [`unordered_items#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1295)
 
 Retrieve list of unordered elements contained in object of class `Set`. Elements are returned as object of class `Array`.
 
@@ -636,7 +636,7 @@ unordered_items: [1,2,3,4,5]
 
 <a name="insert#1" />
 
-### Method [`insert#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1322)
+### Method [`insert#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1326)
 
 Insert method parameter to object of class `Set`.
 
@@ -665,7 +665,7 @@ obj: [1,2,3,4,5,6,7]
 
 <a name="remove#1" />
 
-### Method [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1346)
+### Method [`remove#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1350)
 
 From object of class `Set` remove elements with value equal to value of method
 parameter.
@@ -694,7 +694,7 @@ obj: [1,3,5]
 
 <a name="contain#1" />
 
-### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1378)
+### Method [`contain#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1382)
 
 Test if object of class `Set` contains element with same value as object given by method parameter.
 
@@ -724,7 +724,7 @@ obj.contain(100): 0
 
 <a name="compare#1" />
 
-### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1401)
+### Method `spec` [`compare#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1405)
 
 Compare object of class `Set` with method parameter.
 
@@ -755,7 +755,7 @@ obj_0.compare(obj_0): 0
 
 <a name="item#1" />
 
-### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1415)
+### Method `spec` [`item#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1419)
 
 Retrieve element from object of class `Set` stored at requested index position.
 
@@ -790,7 +790,7 @@ obj.item(5): 5
 
 <a name="first_idx#0" />
 
-### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1420)
+### Method `spec` [`first_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1424)
 
 Retrieve index of first element in object of class `Set`.
 
@@ -814,7 +814,7 @@ obj.first_idx: <blank>
 
 <a name="last_idx#0" />
 
-### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1440)
+### Method `spec` [`last_idx#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1444)
 
 Retrieve index of last element in object of class `Set`.
 
@@ -838,7 +838,7 @@ obj.last_idx: <blank>
 
 <a name="next_idx#1" />
 
-### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1460)
+### Method `spec` [`next_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1464)
 
 From object of class `Set` retrieve index of element following element identified by method parameter.
 
@@ -873,7 +873,7 @@ idx: 5
 
 <a name="prev_idx#1" />
 
-### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1478)
+### Method `spec` [`prev_idx#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1482)
 
 From object of class `Set` retrieve index of element preceding element identified by method parameter.
 
@@ -908,7 +908,7 @@ idx: 0
 
 <a name="length#0" />
 
-### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1496)
+### Method `spec` [`length#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1500)
 
 Retrieve count of elements in object of class `Set`.
 
@@ -931,7 +931,7 @@ obj.length(): 0
 
 <a name="to_string#0" />
 
-### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1507)
+### Method `spec` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1511)
 
 Convert object of class `Set` to object of class `String`.
 Each element of object of class `Set` is converted to string by call of its
@@ -953,7 +953,7 @@ obj.to_string(): [1,2,3,4,5]
 
 <a name="to_string#1" />
 
-### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1546)
+### Method [`to_string#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1550)
 
 Convert object of class `Set` to object of class `String`.
 Each element of object of class `Set` is converted to string by call of its
@@ -981,7 +981,7 @@ obj.to_string("<->"): 1<->2<->3<->4<->5
 
 <a name="print#0" />
 
-### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1591)
+### Method `spec` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/containers_uclm/source_files/containers_set.cc#L1595)
 
 Print string representation of object of class `Set` to standard output.
 Each element of object of class `Set` is printed by call of its `print#0`

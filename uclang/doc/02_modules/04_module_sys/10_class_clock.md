@@ -73,7 +73,7 @@ time = Clock.gettime(Clock.CLOCK_MONOTONIC);
 ("time: %s\n" % $time).print();
 ```
 ```
-time: 38097469273557869
+time: 38281283733398698
 ```
 
 <a name="settime#2" />

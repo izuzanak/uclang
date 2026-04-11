@@ -43,7 +43,7 @@ class Main
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8726)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8886)
 
 Assignment operator `=`. Object of class `Buffer` is replaced by method parameter.
 
@@ -74,7 +74,7 @@ obj: New value
 
 <a name="size#0" />
 
-### Method [`size#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8738)
+### Method [`size#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8898)
 
 Returns size of buffer in bytes.
 
@@ -93,7 +93,7 @@ size: 12
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8751)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8911)
 
 Convert object of class `Buffer` to object of class `String`.
 This method returns name of class `Buffer`.
@@ -113,7 +113,7 @@ Buffer.to_string(): Buffer
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8760)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/base_uclm/source_files/base_module.cc#L8920)
 
 Print string representation of object of class `Buffer` to standard output.
 This method prints name of class `Buffer`.

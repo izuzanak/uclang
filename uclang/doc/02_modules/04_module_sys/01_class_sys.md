@@ -71,8 +71,8 @@ Sys.sleep(250);
 ("time: %d ms\n" % new Time().milli_sec()).print();
 ```
 ```
-time: 1775557797369 ms
-time: 1775557797619 ms
+time: 1775910316634 ms
+time: 1775910316885 ms
 ```
 
 <a name="srand#1" />

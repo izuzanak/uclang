@@ -120,7 +120,7 @@ Sends signal to process identified by process ID.
 ("pid: %d\n" % Sys.getpid()).print();
 ```
 ```
-pid: 1839
+pid: 25331
 ```
 
 <a name="to_string#0" />
