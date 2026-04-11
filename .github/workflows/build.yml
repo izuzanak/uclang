@@ -27,7 +27,8 @@ jobs:
           libmono-2.0-dev mono-runtime-sgen libmpg123-dev libnanomsg-dev \
           libopencv-dev libportaudio2 libprotobuf-c-dev libraw-dev \
           libsnappy-dev libsqlite3-dev libssh2-1-dev libwebsockets-dev \
-          libva-dev libvlc-dev freeglut3-dev libglew-dev libpam0g-dev
+          libva-dev libvlc-dev freeglut3-dev libglew-dev libpam0g-dev \
+          libcurl4-openssl-dev
 
       - name: Build and install cont
         run: |
