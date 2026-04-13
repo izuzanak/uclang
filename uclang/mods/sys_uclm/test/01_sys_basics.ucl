@@ -1,0 +1,100 @@
+
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Sys.NAME -
+    if (Sys.NAME != "Unix")
+    {
+      new Exception("Sys.NAME: expected Unix, got %s" % Sys.NAME).throw();
+    }
+
+    // - Sys.SEP -
+    if (Sys.SEP != "/")
+    {
+      new Exception("Sys.SEP: expected /, got %s" % Sys.SEP).throw();
+    }
+
+    // - Sys.RAND_MAX -
+    if (Sys.RAND_MAX <= 0)
+    {
+      new Exception("Sys.RAND_MAX: expected positive, got %s" % $Sys.RAND_MAX).throw();
+    }
+
+    // - Sys.getpid -
+    pid = Sys.getpid();
+    if (pid <= 0)
+    {
+      new Exception("getpid: expected positive, got %s" % $pid).throw();
+    }
+
+    // - Sys.getuid -
+    uid = Sys.getuid();
+    if (uid < 0)
+    {
+      new Exception("getuid: expected non-negative, got %s" % $uid).throw();
+    }
+
+    // - Sys.getgid -
+    gid = Sys.getgid();
+    if (gid < 0)
+    {
+      new Exception("getgid: expected non-negative, got %s" % $gid).throw();
+    }
+
+    // - Sys.time -
+    t = Sys.time();
+    if (t <= 0)
+    {
+      new Exception("time: expected positive, got %s" % $t).throw();
+    }
+
+    // - Sys.sleep(0) does not throw -
+    Sys.sleep(0);
+
+    // - Sys.srand and Sys.rand determinism -
+    Sys.srand(42);
+    r1 = Sys.rand();
+    r2 = Sys.rand();
+    r3 = Sys.rand();
+
+    Sys.srand(42);
+    if (Sys.rand() != r1 or Sys.rand() != r2 or Sys.rand() != r3)
+    {
+      new Exception("rand: not deterministic after srand(42)").throw();
+    }
+
+    // - Sys.rand range -
+    Sys.srand(123);
+    idx = 0;
+    do {
+      r = Sys.rand();
+      if (r < 0 or r > Sys.RAND_MAX)
+      {
+        new Exception("rand: %s out of range [0,%s]" % [$r,$Sys.RAND_MAX]).throw();
+      }
+    } while(++idx < 20);
+
+    // - Sys.to_string -
+    if ($Sys != "Sys")
+    {
+      new Exception("to_string: expected Sys, got %s" % $Sys).throw();
+    }
+
+    // - Sys.system -
+    ret = Sys.system("true");
+    if (ret != 0)
+    {
+      new Exception("system(true): expected 0, got %s" % $ret).throw();
+    }
+
+    ret = Sys.system("false");
+    if (ret == 0)
+    {
+      new Exception("system(false): expected non-zero, got 0").throw();
+    }
+  }/*}}}*/
+}

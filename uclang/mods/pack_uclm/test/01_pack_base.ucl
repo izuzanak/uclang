@@ -1,0 +1,208 @@
+
+import pack;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Pack.to_string -
+    if ($Pack != "Pack")
+    {
+      new Exception("to_string: expected Pack, got %s" % $Pack).throw();
+    }
+
+    // - pack returns a non-empty String -
+    data = Pack.pack(42);
+    if (data.length() <= 0)
+    {
+      new Exception("pack result: expected non-empty string").throw();
+    }
+
+    // - Blank roundtrip -
+    orig = new Blank();
+    result = Pack.unpack(Pack.pack(orig));
+    if (Blank != result)
+    {
+      new Exception("Blank roundtrip: expected Blank, got %s" % $result).throw();
+    }
+
+    // - Char roundtrip -
+    orig = 'A';
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != 'A')
+    {
+      new Exception("Char roundtrip 'A': expected A, got %s" % $result).throw();
+    }
+
+    orig = 'z';
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != 'z')
+    {
+      new Exception("Char roundtrip 'z': expected z, got %s" % $result).throw();
+    }
+
+    orig = new Char(0);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != new Char(0))
+    {
+      new Exception("Char roundtrip null: failed").throw();
+    }
+
+    // - Integer roundtrip: 0 -
+    result = Pack.unpack(Pack.pack(0));
+    if (result != 0)
+    {
+      new Exception("Integer roundtrip 0: got %s" % $result).throw();
+    }
+
+    // - Integer roundtrip: 42 -
+    result = Pack.unpack(Pack.pack(42));
+    if (result != 42)
+    {
+      new Exception("Integer roundtrip 42: got %s" % $result).throw();
+    }
+
+    // - Integer roundtrip: -1 -
+    result = Pack.unpack(Pack.pack(-1));
+    if (result != -1)
+    {
+      new Exception("Integer roundtrip -1: got %s" % $result).throw();
+    }
+
+    // - Integer roundtrip: large positive -
+    orig = 2147483647;
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Integer roundtrip 2147483647: got %s" % $result).throw();
+    }
+
+    // - Integer roundtrip: large negative -
+    orig = -2147483648;
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Integer roundtrip -2147483648: got %s" % $result).throw();
+    }
+
+    // - Integer roundtrip: max 64-bit -
+    orig = 9223372036854775807;
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Integer roundtrip max i64: got %s" % $result).throw();
+    }
+
+    // - Float roundtrip: 0.0 -
+    result = Pack.unpack(Pack.pack(0.0));
+    if (result != 0.0)
+    {
+      new Exception("Float roundtrip 0.0: got %s" % $result).throw();
+    }
+
+    // - Float roundtrip: 1.0 -
+    result = Pack.unpack(Pack.pack(1.0));
+    if (result != 1.0)
+    {
+      new Exception("Float roundtrip 1.0: got %s" % $result).throw();
+    }
+
+    // - Float roundtrip: -1.0 -
+    result = Pack.unpack(Pack.pack(-1.0));
+    if (result != -1.0)
+    {
+      new Exception("Float roundtrip -1.0: got %s" % $result).throw();
+    }
+
+    // - Float roundtrip: pi -
+    orig = 3.141592653589793;
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Float roundtrip pi: got %s" % $result).throw();
+    }
+
+    // - String roundtrip: empty -
+    result = Pack.unpack(Pack.pack(""));
+    if (result != "")
+    {
+      new Exception("String roundtrip empty: got %s" % result).throw();
+    }
+
+    // - String roundtrip: hello -
+    result = Pack.unpack(Pack.pack("hello"));
+    if (result != "hello")
+    {
+      new Exception("String roundtrip hello: got %s" % result).throw();
+    }
+
+    // - String roundtrip: long string -
+    orig = "";
+    idx = 0;
+    do {
+      orig = orig + "abcdefghij";
+    } while(++idx < 100);
+
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("String roundtrip long: length %d != %d" % [result.length(),orig.length()]).throw();
+    }
+
+    // - String roundtrip: special chars -
+    orig = "tab\there\nnewline";
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("String roundtrip special chars: got %s" % result).throw();
+    }
+
+    // - Array roundtrip: empty -
+    result = Pack.unpack(Pack.pack([]));
+    if (result != [])
+    {
+      new Exception("Array roundtrip empty: got %s" % $result).throw();
+    }
+
+    // - Array roundtrip: integers -
+    orig = [1,2,3];
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Array roundtrip [1,2,3]: got %s" % $result).throw();
+    }
+
+    // - Array roundtrip: nested -
+    orig = [1,[2,3],4];
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Array roundtrip nested: got %s" % $result).throw();
+    }
+
+    // - Array roundtrip: mixed types -
+    orig = [1,"two",3.0,'D'];
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Array roundtrip mixed: got %s" % $result).throw();
+    }
+
+    // - Array roundtrip: with Blank -
+    orig = [1,new Blank(),3];
+    result = Pack.unpack(Pack.pack(orig));
+    if (result[0] != 1 or Blank != result[1] or result[2] != 3)
+    {
+      new Exception("Array roundtrip with Blank: failed").throw();
+    }
+
+    // - deeply nested Array -
+    orig = [[[[1]]]];
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Array roundtrip deep nested: got %s" % $result).throw();
+    }
+  }/*}}}*/
+}

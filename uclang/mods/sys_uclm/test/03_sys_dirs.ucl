@@ -1,0 +1,148 @@
+
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    pid = Sys.getpid();
+    tmp_dir = "/tmp/ucltest_sys_03_%d" % pid;
+    sub_dir = "%s/subdir" % tmp_dir;
+    orig_cwd = Sys.getcwd();
+
+    // - cleanup from previous failed run -
+    if (Sys.is_dir(tmp_dir))
+    {
+      Sys.system("rm -rf %s" % tmp_dir);
+    }
+
+    // - getcwd returns non-empty string -
+    if (orig_cwd.length() == 0)
+    {
+      new Exception("getcwd: expected non-empty string").throw();
+    }
+
+    // - mkdir -
+    Sys.mkdir(tmp_dir);
+
+    // - is_dir returns 1 -
+    if (Sys.is_dir(tmp_dir) != 1)
+    {
+      new Exception("is_dir: expected 1 for created dir").throw();
+    }
+
+    // - is_file returns 0 for directory -
+    if (Sys.is_file(tmp_dir) != 0)
+    {
+      new Exception("is_file: expected 0 for directory").throw();
+    }
+
+    // - listdir on empty dir returns empty array -
+    entries = Sys.listdir(tmp_dir);
+    if (entries.length() != 0)
+    {
+      new Exception("listdir empty dir: expected 0 entries, got %d" % entries.length()).throw();
+    }
+
+    // - chdir and getcwd -
+    Sys.chdir(tmp_dir);
+    cwd = Sys.getcwd();
+    if (cwd != tmp_dir)
+    {
+      new Exception("chdir: getcwd expected %s, got %s" % [tmp_dir,cwd]).throw();
+    }
+
+    // - restore cwd -
+    Sys.chdir(orig_cwd);
+    if (Sys.getcwd() != orig_cwd)
+    {
+      new Exception("chdir restore: failed to restore original cwd").throw();
+    }
+
+    // - create subdir and verify listdir -
+    Sys.mkdir(sub_dir);
+    entries = Sys.listdir(tmp_dir);
+    if (entries.length() != 1)
+    {
+      new Exception("listdir with subdir: expected 1, got %d" % entries.length()).throw();
+    }
+    if (entries[0] != "subdir")
+    {
+      new Exception("listdir with subdir: expected subdir, got %s" % entries[0]).throw();
+    }
+
+    // - rmdir subdir -
+    Sys.rmdir(sub_dir);
+    entries = Sys.listdir(tmp_dir);
+    if (entries.length() != 0)
+    {
+      new Exception("listdir after rmdir: expected 0, got %d" % entries.length()).throw();
+    }
+
+    // - is_dir on non-existent returns 0 -
+    if (Sys.is_dir("/tmp/ucltest_nonexistent_%d" % pid) != 0)
+    {
+      new Exception("is_dir non-existent: expected 0").throw();
+    }
+
+    // - error: mkdir existing dir -
+    caught = 0;
+    try {
+      Sys.mkdir(tmp_dir);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("mkdir existing dir did not throw").throw();
+    }
+
+    // - error: rmdir non-existent -
+    caught = 0;
+    try {
+      Sys.rmdir("/tmp/ucltest_nonexistent_%d" % pid);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("rmdir non-existent did not throw").throw();
+    }
+
+    // - error: chdir non-existent -
+    caught = 0;
+    try {
+      Sys.chdir("/tmp/ucltest_nonexistent_%d" % pid);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("chdir non-existent did not throw").throw();
+    }
+
+    // - error: listdir non-existent -
+    caught = 0;
+    try {
+      Sys.listdir("/tmp/ucltest_nonexistent_%d" % pid);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("listdir non-existent did not throw").throw();
+    }
+
+    // - cleanup -
+    Sys.rmdir(tmp_dir);
+  }/*}}}*/
+}

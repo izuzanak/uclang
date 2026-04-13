@@ -1,0 +1,47 @@
+
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    pid = Sys.getpid();
+    var_name = "UCLTEST_VAR_%d" % pid;
+    noexist_name = "UCLTEST_NOEXIST_%d" % pid;
+
+    // - setenv and getenv -
+    Sys.setenv(var_name,"test_value");
+    result = Sys.getenv(var_name);
+    if (result != "test_value")
+    {
+      new Exception("getenv: expected test_value, got %s" % $result).throw();
+    }
+
+    // - overwrite env var -
+    Sys.setenv(var_name,"new_value");
+    result = Sys.getenv(var_name);
+    if (result != "new_value")
+    {
+      new Exception("getenv overwrite: expected new_value, got %s" % $result).throw();
+    }
+
+    // - getenv non-existent returns Blank -
+    result = Sys.getenv(noexist_name);
+    if (Blank != result)
+    {
+      new Exception("getenv non-existent: expected Blank, got %s" % $result).throw();
+    }
+
+    // - getenv PATH returns non-blank string -
+    path = Sys.getenv("PATH");
+    if (Blank == path)
+    {
+      new Exception("getenv PATH: expected non-blank").throw();
+    }
+    if (path.length() == 0)
+    {
+      new Exception("getenv PATH: expected non-empty string").throw();
+    }
+  }/*}}}*/
+}

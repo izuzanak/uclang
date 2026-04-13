@@ -1,0 +1,240 @@
+
+import pack;
+import math;
+import graph;
+import binbits;
+import gmp;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Vec2 roundtrip -
+    orig = new Vec2([1.0,2.0]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Vec2 roundtrip: got %s" % $result).throw();
+    }
+
+    // - Vec2 zero -
+    orig = new Vec2([0.0,0.0]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Vec2 zero roundtrip: got %s" % $result).throw();
+    }
+
+    // - Vec2 negative -
+    orig = new Vec2([-1.5,3.7]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Vec2 negative roundtrip: got %s" % $result).throw();
+    }
+
+    // - Vec3 roundtrip -
+    orig = new Vec3([1.0,2.0,3.0]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Vec3 roundtrip: got %s" % $result).throw();
+    }
+
+    // - Vec3 zero -
+    orig = new Vec3([0.0,0.0,0.0]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Vec3 zero roundtrip: got %s" % $result).throw();
+    }
+
+    // - Vec4 roundtrip -
+    orig = new Vec4([1.0,2.0,3.0,4.0]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Vec4 roundtrip: got %s" % $result).throw();
+    }
+
+    // - Vec4 zero -
+    orig = new Vec4([0.0,0.0,0.0,0.0]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Vec4 zero roundtrip: got %s" % $result).throw();
+    }
+
+    // - Vec4 negative -
+    orig = new Vec4([-1.0,2.5,-3.7,0.001]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Vec4 negative roundtrip: got %s" % $result).throw();
+    }
+
+    // - Graph roundtrip: with vertices and edges -
+    orig = new Graph();
+    v0 = orig.vertex_add("node_a");
+    v1 = orig.vertex_add("node_b");
+    v2 = orig.vertex_add("node_c");
+    orig.edge_add(v0,v1,1.0);
+    orig.edge_add(v1,v2,2.0);
+    result = Pack.unpack(Pack.pack(orig));
+    if ($result != $orig)
+    {
+      new Exception("Graph roundtrip: got %s" % $result).throw();
+    }
+
+    // - Graph roundtrip: single vertex -
+    orig = new Graph();
+    orig.vertex_add(10);
+    result = Pack.unpack(Pack.pack(orig));
+    if ($result != $orig)
+    {
+      new Exception("Graph single vertex roundtrip: got %s" % $result).throw();
+    }
+
+    // - Graph roundtrip: empty -
+    orig = new Graph();
+    result = Pack.unpack(Pack.pack(orig));
+    if ($result != $orig)
+    {
+      new Exception("Graph empty roundtrip: got %s" % $result).throw();
+    }
+
+    // - BinArray roundtrip -
+    orig = new BinArray(BinArray.TYPE_INT32,[100,200,300]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("BinArray roundtrip: got %s" % $result).throw();
+    }
+
+    // - BinArray roundtrip: double type -
+    orig = new BinArray(BinArray.TYPE_DOUBLE,[3.14,2.71]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("BinArray double roundtrip: got %s" % $result).throw();
+    }
+
+    // - BinDict roundtrip -
+    orig = new BinDict(BinDict.TYPE_INT64_INT64);
+    orig[1] = 100;
+    orig[2] = 200;
+    orig[3] = 300;
+    result = Pack.unpack(Pack.pack(orig));
+    if ($result != $orig)
+    {
+      new Exception("BinDict roundtrip: got %s" % $result).throw();
+    }
+
+    // - BinArray roundtrip: empty int32 -
+    orig = new BinArray(BinArray.TYPE_INT32);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("BinArray empty int32 roundtrip: got %s" % $result).throw();
+    }
+
+    // - BinArray roundtrip: empty double -
+    orig = new BinArray(BinArray.TYPE_DOUBLE);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("BinArray empty double roundtrip: got %s" % $result).throw();
+    }
+
+    // - BinDict roundtrip: float values -
+    orig = new BinDict(BinDict.TYPE_INT64_FLOAT64);
+    orig[1] = 3.14;
+    orig[2] = 2.71;
+    result = Pack.unpack(Pack.pack(orig));
+    if ($result != $orig)
+    {
+      new Exception("BinDict float roundtrip: got %s" % $result).throw();
+    }
+
+    // - BinDict roundtrip: empty int64_int64 -
+    orig = new BinDict(BinDict.TYPE_INT64_INT64);
+    result = Pack.unpack(Pack.pack(orig));
+    if ($result != $orig)
+    {
+      new Exception("BinDict empty int64_int64 roundtrip: got %s" % $result).throw();
+    }
+
+    // - BinDict roundtrip: empty int64_float64 -
+    orig = new BinDict(BinDict.TYPE_INT64_FLOAT64);
+    result = Pack.unpack(Pack.pack(orig));
+    if ($result != $orig)
+    {
+      new Exception("BinDict empty int64_float64 roundtrip: got %s" % $result).throw();
+    }
+
+    // - GmpInteger roundtrip -
+    orig = new GmpInteger(123456789);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("GmpInteger roundtrip: got %s" % $result).throw();
+    }
+
+    // - GmpInteger roundtrip: zero -
+    orig = new GmpInteger(0);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("GmpInteger zero roundtrip: got %s" % $result).throw();
+    }
+
+    // - GmpInteger roundtrip: negative -
+    orig = new GmpInteger(-987654321);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("GmpInteger negative roundtrip: got %s" % $result).throw();
+    }
+
+    // - GmpInteger roundtrip: large -
+    orig = new GmpInteger("123456789012345678901234567890",10);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("GmpInteger large roundtrip: got %s" % $result).throw();
+    }
+
+    // - GmpRational roundtrip -
+    orig = new GmpRational("22/7",10);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("GmpRational roundtrip: got %s" % $result).throw();
+    }
+
+    // - GmpRational roundtrip: zero -
+    orig = new GmpRational(0);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("GmpRational zero roundtrip: got %s" % $result).throw();
+    }
+
+    // - MpfrFixed roundtrip -
+    orig = new MpfrFixed("3.141592653589793",10);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("MpfrFixed roundtrip: got %s" % $result).throw();
+    }
+
+    // - MpfrFixed roundtrip: zero -
+    orig = new MpfrFixed("0.0",10);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("MpfrFixed zero roundtrip: got %s" % $result).throw();
+    }
+  }/*}}}*/
+}

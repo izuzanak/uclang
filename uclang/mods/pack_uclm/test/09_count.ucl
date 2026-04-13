@@ -1,0 +1,156 @@
+
+import pack;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - 3 unsigned shorts: 3*2 = 6 bytes -
+    data = Pack.code("3H",[10,20,30]);
+    if (data.length() != 6)
+    {
+      new Exception("3H length: expected 6, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("3H",data);
+    if (result[0] != 10 or result[1] != 20 or result[2] != 30)
+    {
+      new Exception("3H decode: got [%s,%s,%s]" % [$result[0],$result[1],$result[2]]).throw();
+    }
+
+    // - 2 ints: 2*4 = 8 bytes -
+    data = Pack.code("2i",[100,200]);
+    if (data.length() != 8)
+    {
+      new Exception("2i length: expected 8, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("2i",data);
+    if (result[0] != 100 or result[1] != 200)
+    {
+      new Exception("2i decode: got [%s,%s]" % [$result[0],$result[1]]).throw();
+    }
+
+    // - 4 unsigned bytes: 4*1 = 4 bytes -
+    data = Pack.code("4B",[1,2,3,4]);
+    if (data.length() != 4)
+    {
+      new Exception("4B length: expected 4, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("4B",data);
+    if (result[0] != 1 or result[1] != 2 or result[2] != 3 or result[3] != 4)
+    {
+      new Exception("4B decode: failed").throw();
+    }
+
+    // - 2 doubles: 2*8 = 16 bytes -
+    data = Pack.code("2d",[1.0,2.0]);
+    if (data.length() != 16)
+    {
+      new Exception("2d length: expected 16, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("2d",data);
+    if (result[0] != 1.0 or result[1] != 2.0)
+    {
+      new Exception("2d decode: got [%s,%s]" % [$result[0],$result[1]]).throw();
+    }
+
+    // - 2 chars -
+    data = Pack.code("2c",['A','B']);
+    if (data.length() != 2)
+    {
+      new Exception("2c length: expected 2, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("2c",data);
+    if (result[0] != 'A' or result[1] != 'B')
+    {
+      new Exception("2c decode: failed").throw();
+    }
+
+    // - count 1 is equivalent to no count -
+    data1 = Pack.code("1i",[42]);
+    data2 = Pack.code("i",[42]);
+    if (data1.length() != data2.length())
+    {
+      new Exception("1i vs i length: %d != %d" % [data1.length(),data2.length()]).throw();
+    }
+    result = Pack.decode("1i",data1);
+    if (result[0] != 42)
+    {
+      new Exception("1i decode: got %s" % $result[0]).throw();
+    }
+
+    // - mixed count and non-count: 2Hi = 2 unsigned shorts + 1 int -
+    data = Pack.code("2Hi",[10,20,99]);
+    if (data.length() != 8)
+    {
+      new Exception("2Hi length: expected 8, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("2Hi",data);
+    if (result[0] != 10 or result[1] != 20 or result[2] != 99)
+    {
+      new Exception("2Hi decode: got [%s,%s,%s]" % [$result[0],$result[1],$result[2]]).throw();
+    }
+
+    // - count with endian: <3H -
+    result = Pack.decode("<3H",Pack.code("<3H",[100,200,300]));
+    if (result[0] != 100 or result[1] != 200 or result[2] != 300)
+    {
+      new Exception("<3H decode: failed").throw();
+    }
+
+    // - count with endian: >3H -
+    result = Pack.decode(">3H",Pack.code(">3H",[100,200,300]));
+    if (result[0] != 100 or result[1] != 200 or result[2] != 300)
+    {
+      new Exception(">3H decode: failed").throw();
+    }
+
+    // - fixed-count zero-terminated string: 8z -
+    data = Pack.code("8z",["hello"]);
+    if (data.length() != 8)
+    {
+      new Exception("8z length: expected 8, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("8z",data);
+    if (result[0] != "hello")
+    {
+      new Exception("8z decode: expected hello, got %s" % result[0]).throw();
+    }
+
+    // - large count: 10B -
+    vals = [10,20,30,40,50,60,70,80,90,100];
+    data = Pack.code("10B",vals);
+    if (data.length() != 10)
+    {
+      new Exception("10B length: expected 10, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("10B",data);
+    idx = 0;
+    do {
+      if (result[idx] != vals[idx])
+      {
+        new Exception("10B[%d]: expected %s, got %s" % [idx,$vals[idx],$result[idx]]).throw();
+      }
+    } while(++idx < 10);
+
+    // - dynamic format string (real-world pattern from assembler.ucl) -
+    cnt = 4;
+    fmt = "%dH" % cnt;
+    vals = [0x1000,0x2000,0x3000,0x4000];
+    result = Pack.decode(fmt,Pack.code(fmt,vals));
+    idx = 0;
+    do {
+      if (result[idx] != vals[idx])
+      {
+        new Exception("dynamic %dH[%d]: expected %s, got %s" % [cnt,idx,$vals[idx],$result[idx]]).throw();
+      }
+    } while(++idx < cnt);
+
+    // - count with signed int: 3i -
+    result = Pack.decode("3i",Pack.code("3i",[-1,0,1]));
+    if (result[0] != -1 or result[1] != 0 or result[2] != 1)
+    {
+      new Exception("3i decode: failed").throw();
+    }
+  }/*}}}*/
+}

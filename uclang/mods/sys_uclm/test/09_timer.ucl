@@ -1,0 +1,158 @@
+
+import sys;
+
+class Main
+{
+  public callback_count = 0;
+  public callback_value = new Blank();
+
+  public timer_callback(value)
+  {
+    callback_count = callback_count + 1;
+    callback_value = value;
+  }
+
+  public bad_callback()
+  {
+  }
+
+  public Main()
+  {
+    // - $Timer -
+    if ($Timer != "Timer")
+    {
+      new Exception("Timer to_string: expected Timer, got %s" % $Timer).throw();
+    }
+
+    // - Timer constructor -
+    timer = new Timer();
+    if ($timer != "Timer")
+    {
+      new Exception("Timer instance to_string: expected Timer, got %s" % $timer).throw();
+    }
+
+    dlg = new Delegate(this,"timer_callback",1);
+
+    // - schedule returns index -
+    idx = timer.schedule(100,dlg,"param1");
+    if (idx < 0)
+    {
+      new Exception("schedule: expected non-negative index, got %d" % idx).throw();
+    }
+
+    // - remain returns integer (time until next timer) -
+    r = timer.remain();
+    if (Blank == r)
+    {
+      new Exception("remain: expected integer, got Blank").throw();
+    }
+
+    // - timeout returns integer -
+    t = timer.timeout();
+    if (t < 0)
+    {
+      new Exception("timeout: expected non-negative, got %d" % t).throw();
+    }
+
+    // - cancel -
+    timer.cancel(idx);
+
+    // - remain returns Blank after canceling all timers -
+    r = timer.remain();
+    if (Blank != r)
+    {
+      new Exception("remain after cancel: expected Blank, got %s" % $r).throw();
+    }
+
+    // - schedule with 0ms delay and process -
+    callback_count = 0;
+    callback_value = new Blank();
+
+    timer = new Timer();
+    timer.schedule(0,dlg,"zero_delay");
+
+    // - small sleep to ensure timer stamp is passed -
+    Sys.sleep(1);
+    timer.process();
+
+    if (callback_count != 1)
+    {
+      new Exception("process: callback not invoked, count=%d" % callback_count).throw();
+    }
+    if (callback_value != "zero_delay")
+    {
+      new Exception("process: wrong callback value, got %s" % $callback_value).throw();
+    }
+
+    // - multiple timers, cancel one -
+    timer = new Timer();
+    idx1 = timer.schedule(1000,dlg,"t1");
+    idx2 = timer.schedule(1000,dlg,"t2");
+
+    r1 = timer.remain();
+    if (Blank == r1)
+    {
+      new Exception("remain with 2 timers: expected integer").throw();
+    }
+
+    timer.cancel(idx1);
+    timer.cancel(idx2);
+
+    r2 = timer.remain();
+    if (Blank != r2)
+    {
+      new Exception("remain after cancel all: expected Blank, got %s" % $r2).throw();
+    }
+
+    // - error: negative delay -
+    caught = 0;
+    try {
+      timer = new Timer();
+      timer.schedule(-1,dlg,"neg");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("schedule negative delay did not throw").throw();
+    }
+
+    // - error: wrong delegate param count -
+    caught = 0;
+    try {
+      timer = new Timer();
+      bad_dlg = new Delegate(this,"bad_callback",0);
+      timer.schedule(100,bad_dlg,"x");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("schedule wrong delegate param count did not throw").throw();
+    }
+
+    // - error: cancel invalid index -
+    caught = 0;
+    try {
+      timer = new Timer();
+      timer.cancel(999);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("cancel invalid index did not throw").throw();
+    }
+  }
+
+  static public main(argv)
+  {/*{{{*/
+    new Main();
+  }/*}}}*/
+}

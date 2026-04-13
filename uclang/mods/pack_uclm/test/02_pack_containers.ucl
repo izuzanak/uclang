@@ -1,0 +1,161 @@
+
+import pack;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Dict roundtrip -
+    orig = new Dict(["a",1,"b",2,"c",3]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Dict roundtrip: got %s" % $result).throw();
+    }
+
+    // - Dict roundtrip: empty -
+    orig = new Dict();
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Dict empty roundtrip: got %s" % $result).throw();
+    }
+
+    // - Dict roundtrip: nested with Array values -
+    orig = new Dict(["x",[1,2,3],"y",[4,5,6]]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Dict nested roundtrip: got %s" % $result).throw();
+    }
+
+    // - List roundtrip -
+    orig = new List([10,20,30]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("List roundtrip: got %s" % $result).throw();
+    }
+
+    // - List roundtrip: empty -
+    orig = new List();
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("List empty roundtrip: got %s" % $result).throw();
+    }
+
+    // - List roundtrip: mixed types -
+    orig = new List([1,"two",3.0]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("List mixed roundtrip: got %s" % $result).throw();
+    }
+
+    // - Queue roundtrip -
+    orig = new Queue([10,20,30]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Queue roundtrip: got %s" % $result).throw();
+    }
+
+    // - Queue roundtrip: empty -
+    orig = new Queue();
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Queue empty roundtrip: got %s" % $result).throw();
+    }
+
+    // - Stack roundtrip -
+    orig = new Stack([1,2,3,4,5]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Stack roundtrip: got %s" % $result).throw();
+    }
+
+    // - Stack roundtrip: empty -
+    orig = new Stack();
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Stack empty roundtrip: got %s" % $result).throw();
+    }
+
+    // - Set roundtrip -
+    orig = new Set([3,1,2]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Set roundtrip: got %s" % $result).throw();
+    }
+
+    // - Set roundtrip: empty -
+    orig = new Set();
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Set empty roundtrip: got %s" % $result).throw();
+    }
+
+    // - Tree roundtrip -
+    orig = new Tree([5,3,1,4,2]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Tree roundtrip: got %s" % $result).throw();
+    }
+
+    // - Tree roundtrip: empty -
+    orig = new Tree();
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Tree empty roundtrip: got %s" % $result).throw();
+    }
+
+    // - Tree roundtrip: with duplicates -
+    orig = new Tree([1,2,2,3,3,3]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Tree duplicates roundtrip: got %s" % $result).throw();
+    }
+
+    // - cross-container nesting: Array containing Dict -
+    orig = [new Dict(["key","value"]),new Set([1,2,3])];
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Array with Dict/Set roundtrip: got %s" % $result).throw();
+    }
+
+    // - cross-container nesting: Dict containing containers -
+    orig = new Dict(["list",new List([1,2,3]),"stack",new Stack([4,5,6])]);
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("Dict with containers roundtrip: got %s" % $result).throw();
+    }
+
+    // - all containers in one Array -
+    orig = [
+      new Dict(["a",1]),
+      new List([2,3]),
+      new Queue([4,5]),
+      new Stack([6,7]),
+      new Set([8,9]),
+      new Tree([10,11])
+    ];
+    result = Pack.unpack(Pack.pack(orig));
+    if (result != orig)
+    {
+      new Exception("All containers roundtrip: got %s" % $result).throw();
+    }
+  }/*}}}*/
+}

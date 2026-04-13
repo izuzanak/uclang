@@ -1,0 +1,156 @@
+
+import pack;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - single value (not wrapped in array) -
+    data = Pack.code("i",42);
+    if (data.length() != 4)
+    {
+      new Exception("code single i: expected length 4, got %d" % data.length()).throw();
+    }
+
+    // - array value gives same result -
+    data2 = Pack.code("i",[42]);
+    if (data2.length() != 4)
+    {
+      new Exception("code array i: expected length 4, got %d" % data2.length()).throw();
+    }
+
+    // - multi-type format: bhif = 1+2+4+4 = 11 -
+    data = Pack.code("bhif",[127,32767,2147483647,1.0]);
+    if (data.length() != 11)
+    {
+      new Exception("code bhif: expected length 11, got %d" % data.length()).throw();
+    }
+
+    // - signed byte: 1 byte -
+    data = Pack.code("b",[0]);
+    if (data.length() != 1)
+    {
+      new Exception("code b: expected length 1, got %d" % data.length()).throw();
+    }
+
+    // - unsigned byte: 1 byte -
+    data = Pack.code("B",[255]);
+    if (data.length() != 1)
+    {
+      new Exception("code B: expected length 1, got %d" % data.length()).throw();
+    }
+
+    // - short: 2 bytes -
+    data = Pack.code("h",[0]);
+    if (data.length() != 2)
+    {
+      new Exception("code h: expected length 2, got %d" % data.length()).throw();
+    }
+
+    // - unsigned short: 2 bytes -
+    data = Pack.code("H",[0]);
+    if (data.length() != 2)
+    {
+      new Exception("code H: expected length 2, got %d" % data.length()).throw();
+    }
+
+    // - int: 4 bytes -
+    data = Pack.code("i",[0]);
+    if (data.length() != 4)
+    {
+      new Exception("code i: expected length 4, got %d" % data.length()).throw();
+    }
+
+    // - unsigned int: 4 bytes -
+    data = Pack.code("I",[0]);
+    if (data.length() != 4)
+    {
+      new Exception("code I: expected length 4, got %d" % data.length()).throw();
+    }
+
+    // - long long int: 8 bytes -
+    data = Pack.code("q",[0]);
+    if (data.length() != 8)
+    {
+      new Exception("code q: expected length 8, got %d" % data.length()).throw();
+    }
+
+    // - unsigned long long: 8 bytes -
+    data = Pack.code("Q",[0]);
+    if (data.length() != 8)
+    {
+      new Exception("code Q: expected length 8, got %d" % data.length()).throw();
+    }
+
+    // - char: 1 byte -
+    data = Pack.code("c",['A']);
+    if (data.length() != 1)
+    {
+      new Exception("code c: expected length 1, got %d" % data.length()).throw();
+    }
+
+    // - float: 4 bytes -
+    data = Pack.code("f",[1.0]);
+    if (data.length() != 4)
+    {
+      new Exception("code f: expected length 4, got %d" % data.length()).throw();
+    }
+
+    // - double: 8 bytes -
+    data = Pack.code("d",[3.14]);
+    if (data.length() != 8)
+    {
+      new Exception("code d: expected length 8, got %d" % data.length()).throw();
+    }
+
+    // - long: roundtrip only (platform-dependent size) -
+    data = Pack.code("l",[0]);
+    if (data.length() < 4)
+    {
+      new Exception("code l: expected length >= 4, got %d" % data.length()).throw();
+    }
+
+    // - unsigned long: roundtrip only -
+    data = Pack.code("L",[0]);
+    if (data.length() < 4)
+    {
+      new Exception("code L: expected length >= 4, got %d" % data.length()).throw();
+    }
+
+    // - length-prefixed string: 4-byte prefix + 5 data = 9 -
+    data = Pack.code("s",["hello"]);
+    if (data.length() != 9)
+    {
+      new Exception("code s hello: expected length 9, got %d" % data.length()).throw();
+    }
+
+    // - zero-terminated string: 5 chars + null = 6 -
+    data = Pack.code("z",["hello"]);
+    if (data.length() != 6)
+    {
+      new Exception("code z hello: expected length 6, got %d" % data.length()).throw();
+    }
+
+    // - length-prefixed empty string: 4-byte prefix + 0 data = 4 -
+    data = Pack.code("s",[""]);
+    if (data.length() != 4)
+    {
+      new Exception("code s empty: expected length 4, got %d" % data.length()).throw();
+    }
+
+    // - zero-terminated empty string: 0 chars + null = 1 -
+    data = Pack.code("z",[""]);
+    if (data.length() != 1)
+    {
+      new Exception("code z empty: expected length 1, got %d" % data.length()).throw();
+    }
+
+    // - empty format produces zero-length output -
+    data = Pack.code("",[]);
+    if (data.length() != 0)
+    {
+      new Exception("code empty: expected length 0, got %d" % data.length()).throw();
+    }
+  }/*}}}*/
+}

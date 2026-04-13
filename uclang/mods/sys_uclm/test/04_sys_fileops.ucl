@@ -1,0 +1,168 @@
+
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    pid = Sys.getpid();
+    tmp_dir = "/tmp/ucltest_sys_04_%d" % pid;
+    file_a = "%s/file_a.txt" % tmp_dir;
+    file_b = "%s/file_b.txt" % tmp_dir;
+    file_link = "%s/file_link.txt" % tmp_dir;
+    fifo_path = "%s/test_fifo" % tmp_dir;
+
+    // - cleanup from previous failed run -
+    if (Sys.is_dir(tmp_dir))
+    {
+      Sys.system("rm -rf %s" % tmp_dir);
+    }
+
+    Sys.mkdir(tmp_dir);
+
+    // - create file via Sys.open -
+    content = "hello";
+    file = Sys.open(file_a,"w");
+    file.write(content);
+    file.close();
+
+    // - is_file returns 1 -
+    if (Sys.is_file(file_a) != 1)
+    {
+      new Exception("is_file: expected 1 for created file").throw();
+    }
+
+    // - is_dir returns 0 for file -
+    if (Sys.is_dir(file_a) != 0)
+    {
+      new Exception("is_dir: expected 0 for file").throw();
+    }
+
+    // - size matches written bytes -
+    sz = Sys.size(file_a);
+    if (sz != content.length())
+    {
+      new Exception("size: expected %d, got %d" % [content.length(),sz]).throw();
+    }
+
+    // - rename -
+    Sys.rename(file_a,file_b);
+    if (Sys.is_file(file_a) != 0)
+    {
+      new Exception("rename: old file still exists").throw();
+    }
+    if (Sys.is_file(file_b) != 1)
+    {
+      new Exception("rename: new file does not exist").throw();
+    }
+
+    // - link -
+    Sys.link(file_b,file_link);
+    if (Sys.is_file(file_link) != 1)
+    {
+      new Exception("link: linked file does not exist").throw();
+    }
+    if (Sys.size(file_link) != Sys.size(file_b))
+    {
+      new Exception("link: sizes differ").throw();
+    }
+
+    // - chmod -
+    Sys.chmod(file_b,0644);
+
+    // - remove -
+    Sys.remove(file_link);
+    if (Sys.is_file(file_link) != 0)
+    {
+      new Exception("remove: file still exists after remove").throw();
+    }
+
+    Sys.remove(file_b);
+    if (Sys.is_file(file_b) != 0)
+    {
+      new Exception("remove: file_b still exists after remove").throw();
+    }
+
+    // - mkfifo -
+    Sys.mkfifo(fifo_path);
+    if (Sys.is_file(fifo_path) != 1)
+    {
+      new Exception("mkfifo: fifo does not appear as file").throw();
+    }
+    Sys.remove(fifo_path);
+
+    // - error: size non-existent -
+    caught = 0;
+    try {
+      Sys.size("%s/nonexistent" % tmp_dir);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("size non-existent did not throw").throw();
+    }
+
+    // - error: remove non-existent -
+    caught = 0;
+    try {
+      Sys.remove("%s/nonexistent" % tmp_dir);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("remove non-existent did not throw").throw();
+    }
+
+    // - error: rename non-existent -
+    caught = 0;
+    try {
+      Sys.rename("%s/nonexistent" % tmp_dir,"%s/other" % tmp_dir);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("rename non-existent did not throw").throw();
+    }
+
+    // - error: link non-existent -
+    caught = 0;
+    try {
+      Sys.link("%s/nonexistent" % tmp_dir,"%s/other" % tmp_dir);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("link non-existent did not throw").throw();
+    }
+
+    // - error: chmod non-existent -
+    caught = 0;
+    try {
+      Sys.chmod("%s/nonexistent" % tmp_dir,0644);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("chmod non-existent did not throw").throw();
+    }
+
+    // - cleanup -
+    Sys.rmdir(tmp_dir);
+  }/*}}}*/
+}

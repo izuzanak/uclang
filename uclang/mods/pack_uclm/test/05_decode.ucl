@@ -1,0 +1,160 @@
+
+import pack;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - decode single signed byte -
+    result = Pack.decode("b",Pack.code("b",[42]));
+    if (result[0] != 42)
+    {
+      new Exception("decode b: expected 42, got %s" % $result[0]).throw();
+    }
+
+    // - remainder is empty string when fully consumed -
+    if (result[result.length() - 1] != "")
+    {
+      new Exception("decode b remainder: expected empty, got length %d" % result[result.length() - 1].length()).throw();
+    }
+
+    // - decode unsigned byte -
+    result = Pack.decode("B",Pack.code("B",[200]));
+    if (result[0] != 200)
+    {
+      new Exception("decode B: expected 200, got %s" % $result[0]).throw();
+    }
+
+    // - decode signed short -
+    result = Pack.decode("h",Pack.code("h",[-100]));
+    if (result[0] != -100)
+    {
+      new Exception("decode h: expected -100, got %s" % $result[0]).throw();
+    }
+
+    // - decode unsigned short -
+    result = Pack.decode("H",Pack.code("H",[60000]));
+    if (result[0] != 60000)
+    {
+      new Exception("decode H: expected 60000, got %s" % $result[0]).throw();
+    }
+
+    // - decode int -
+    result = Pack.decode("i",Pack.code("i",[-1]));
+    if (result[0] != -1)
+    {
+      new Exception("decode i: expected -1, got %s" % $result[0]).throw();
+    }
+
+    // - decode unsigned int -
+    result = Pack.decode("I",Pack.code("I",[3000000000]));
+    if (result[0] != 3000000000)
+    {
+      new Exception("decode I: expected 3000000000, got %s" % $result[0]).throw();
+    }
+
+    // - decode long long -
+    result = Pack.decode("q",Pack.code("q",[-123456789012345]));
+    if (result[0] != -123456789012345)
+    {
+      new Exception("decode q: expected -123456789012345, got %s" % $result[0]).throw();
+    }
+
+    // - decode unsigned long long -
+    result = Pack.decode("Q",Pack.code("Q",[123456789012345]));
+    if (result[0] != 123456789012345)
+    {
+      new Exception("decode Q: expected 123456789012345, got %s" % $result[0]).throw();
+    }
+
+    // - decode long (platform-dependent) -
+    result = Pack.decode("l",Pack.code("l",[42]));
+    if (result[0] != 42)
+    {
+      new Exception("decode l: expected 42, got %s" % $result[0]).throw();
+    }
+
+    // - decode unsigned long -
+    result = Pack.decode("L",Pack.code("L",[42]));
+    if (result[0] != 42)
+    {
+      new Exception("decode L: expected 42, got %s" % $result[0]).throw();
+    }
+
+    // - decode char -
+    result = Pack.decode("c",Pack.code("c",['A']));
+    if (result[0] != 'A')
+    {
+      new Exception("decode c: expected A, got %s" % $result[0]).throw();
+    }
+
+    // - decode float -
+    result = Pack.decode("f",Pack.code("f",[1.0]));
+    if (result[0] != 1.0)
+    {
+      new Exception("decode f: expected 1.0, got %s" % $result[0]).throw();
+    }
+
+    // - decode double -
+    result = Pack.decode("d",Pack.code("d",[3.141592653589793]));
+    if (result[0] != 3.141592653589793)
+    {
+      new Exception("decode d: expected pi, got %s" % $result[0]).throw();
+    }
+
+    // - decode multi-format bhif -
+    result = Pack.decode("bhif",Pack.code("bhif",[127,32767,2147483647,1.0]));
+    if (result[0] != 127)
+    {
+      new Exception("decode bhif[0]: expected 127, got %s" % $result[0]).throw();
+    }
+    if (result[1] != 32767)
+    {
+      new Exception("decode bhif[1]: expected 32767, got %s" % $result[1]).throw();
+    }
+    if (result[2] != 2147483647)
+    {
+      new Exception("decode bhif[2]: expected 2147483647, got %s" % $result[2]).throw();
+    }
+    if (result[3] != 1.0)
+    {
+      new Exception("decode bhif[3]: expected 1.0, got %s" % $result[3]).throw();
+    }
+    if (result[4] != "")
+    {
+      new Exception("decode bhif remainder: expected empty").throw();
+    }
+
+    // - decode with extra trailing data -
+    data_short = Pack.code("b",[99]);
+    data_extra = Pack.code("bH",[99,1234]);
+    result = Pack.decode("b",data_extra);
+    if (result[0] != 99)
+    {
+      new Exception("decode extra data value: expected 99, got %s" % $result[0]).throw();
+    }
+    if (result[1].length() != 2)
+    {
+      new Exception("decode extra data remainder: expected 2 bytes, got %d" % result[1].length()).throw();
+    }
+
+    // - result array length equals format fields + 1 (remainder) -
+    result = Pack.decode("bhi",Pack.code("bhi",[1,2,3]));
+    if (result.length() != 4)
+    {
+      new Exception("decode result length: expected 4, got %d" % result.length()).throw();
+    }
+
+    // - empty format: result is just the remainder -
+    result = Pack.decode("","hello");
+    if (result.length() != 1)
+    {
+      new Exception("decode empty format length: expected 1, got %d" % result.length()).throw();
+    }
+    if (result[0] != "hello")
+    {
+      new Exception("decode empty format: expected hello, got %s" % result[0]).throw();
+    }
+  }/*}}}*/
+}

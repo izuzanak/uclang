@@ -1,0 +1,126 @@
+
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    pid = Sys.getpid();
+    tmp_file = "/tmp/ucltest_sys_08_%d.txt" % pid;
+
+    // - create temp file for readable fd -
+    file = new File(tmp_file,"w");
+    file.write_close("poll test data\n");
+
+    // - poll constants are positive integers -
+    if (Poll.POLLIN <= 0)
+    {
+      new Exception("POLLIN: expected positive, got %d" % Poll.POLLIN).throw();
+    }
+    if (Poll.POLLOUT <= 0)
+    {
+      new Exception("POLLOUT: expected positive, got %d" % Poll.POLLOUT).throw();
+    }
+    if (Poll.POLLPRI < 0)
+    {
+      new Exception("POLLPRI: expected non-negative, got %d" % Poll.POLLPRI).throw();
+    }
+
+    // - $Poll -
+    if ($Poll != "Poll")
+    {
+      new Exception("Poll to_string: expected Poll, got %s" % $Poll).throw();
+    }
+
+    // - Poll constructor with readable file fd -
+    file = new File(tmp_file,"r");
+    poll = new Poll([file.get_fd(),Poll.POLLIN]);
+    if ($poll != "Poll")
+    {
+      new Exception("Poll instance to_string: expected Poll, got %s" % $poll).throw();
+    }
+
+    // - ready returns 1 for readable file -
+    r = poll.ready(0);
+    if (r != 1)
+    {
+      new Exception("ready: expected 1 for readable file, got %d" % r).throw();
+    }
+
+    // - poll returns array with events -
+    res = poll.poll(0);
+    if (Blank == res)
+    {
+      new Exception("poll: expected array result, got Blank").throw();
+    }
+    if (res.length() != 1)
+    {
+      new Exception("poll: expected 1 element, got %d" % res.length()).throw();
+    }
+
+    // - POLLIN should be set -
+    if (Poll.POLLIN & res[0] == 0)
+    {
+      new Exception("poll: POLLIN not set in revents").throw();
+    }
+
+    file.close();
+
+    // - poll with multiple fds -
+    file = new File(tmp_file,"r");
+    poll = new Poll([
+      file.get_fd(),Poll.POLLIN,
+      1,Poll.POLLOUT]);
+
+    res = poll.poll(0);
+    if (Blank == res)
+    {
+      new Exception("poll multi: expected array, got Blank").throw();
+    }
+    if (res.length() != 2)
+    {
+      new Exception("poll multi: expected 2, got %d" % res.length()).throw();
+    }
+    file.close();
+
+    // - poll with empty array -
+    poll = new Poll([]);
+    r = poll.ready(0);
+    if (r != 0)
+    {
+      new Exception("ready empty: expected 0, got %d" % r).throw();
+    }
+
+    // - error: odd-length array -
+    caught = 0;
+    try {
+      new Poll([1]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Poll odd-length array did not throw").throw();
+    }
+
+    // - error: wrong type in array -
+    caught = 0;
+    try {
+      new Poll(["string",1]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Poll wrong type did not throw").throw();
+    }
+
+    // - cleanup -
+    Sys.remove(tmp_file);
+  }/*}}}*/
+}

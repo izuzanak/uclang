@@ -1,0 +1,163 @@
+
+import pack;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - length-prefixed string roundtrip -
+    result = Pack.decode("s",Pack.code("s",["hello"]));
+    if (result[0] != "hello")
+    {
+      new Exception("s hello: got %s" % result[0]).throw();
+    }
+    if (result[1] != "")
+    {
+      new Exception("s hello remainder: not empty").throw();
+    }
+
+    // - length-prefixed empty string -
+    result = Pack.decode("s",Pack.code("s",[""]));
+    if (result[0] != "")
+    {
+      new Exception("s empty: got %s" % result[0]).throw();
+    }
+
+    // - length-prefixed long string -
+    orig = "";
+    idx = 0;
+    do {
+      orig = orig + "abcdefghij";
+    } while(++idx < 100);
+
+    result = Pack.decode("s",Pack.code("s",[orig]));
+    if (result[0] != orig)
+    {
+      new Exception("s long: length %d != %d" % [result[0].length(),orig.length()]).throw();
+    }
+
+    // - zero-terminated string roundtrip -
+    result = Pack.decode("z",Pack.code("z",["hello"]));
+    if (result[0] != "hello")
+    {
+      new Exception("z hello: got %s" % result[0]).throw();
+    }
+    if (result[1] != "")
+    {
+      new Exception("z hello remainder: not empty").throw();
+    }
+
+    // - zero-terminated empty string -
+    result = Pack.decode("z",Pack.code("z",[""]));
+    if (result[0] != "")
+    {
+      new Exception("z empty: got %s" % result[0]).throw();
+    }
+
+    // - multiple length-prefixed strings -
+    result = Pack.decode("ss",Pack.code("ss",["abc","def"]));
+    if (result[0] != "abc")
+    {
+      new Exception("ss[0]: got %s" % result[0]).throw();
+    }
+    if (result[1] != "def")
+    {
+      new Exception("ss[1]: got %s" % result[1]).throw();
+    }
+
+    // - multiple zero-terminated strings -
+    result = Pack.decode("zz",Pack.code("zz",["abc","def"]));
+    if (result[0] != "abc")
+    {
+      new Exception("zz[0]: got %s" % result[0]).throw();
+    }
+    if (result[1] != "def")
+    {
+      new Exception("zz[1]: got %s" % result[1]).throw();
+    }
+
+    // - mixed string types sz -
+    result = Pack.decode("sz",Pack.code("sz",["abc","def"]));
+    if (result[0] != "abc")
+    {
+      new Exception("sz[0]: got %s" % result[0]).throw();
+    }
+    if (result[1] != "def")
+    {
+      new Exception("sz[1]: got %s" % result[1]).throw();
+    }
+
+    // - mixed string + integer: is -
+    result = Pack.decode("is",Pack.code("is",[42,"hello"]));
+    if (result[0] != 42)
+    {
+      new Exception("is[0]: got %s" % $result[0]).throw();
+    }
+    if (result[1] != "hello")
+    {
+      new Exception("is[1]: got %s" % result[1]).throw();
+    }
+
+    // - mixed zero-terminated string + integer: zi -
+    result = Pack.decode("zi",Pack.code("zi",["hello",99]));
+    if (result[0] != "hello")
+    {
+      new Exception("zi[0]: got %s" % result[0]).throw();
+    }
+    if (result[1] != 99)
+    {
+      new Exception("zi[1]: got %s" % $result[1]).throw();
+    }
+
+    // - fixed-count zero-terminated string: 8z -
+    data = Pack.code("8z",["hi"]);
+    if (data.length() != 8)
+    {
+      new Exception("8z length: expected 8, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("8z",data);
+    if (result[0] != "hi")
+    {
+      new Exception("8z decode: expected hi, got %s" % result[0]).throw();
+    }
+
+    // - fixed-count zero-terminated: exact fit -
+    data = Pack.code("6z",["hello"]);
+    if (data.length() != 6)
+    {
+      new Exception("6z length: expected 6, got %d" % data.length()).throw();
+    }
+    result = Pack.decode("6z",data);
+    if (result[0] != "hello")
+    {
+      new Exception("6z decode: expected hello, got %s" % result[0]).throw();
+    }
+
+    // - string with integer and endian: >Hz -
+    result = Pack.decode(">Hz",Pack.code(">Hz",[0x1234,"world"]));
+    if (result[0] != 0x1234)
+    {
+      new Exception(">Hz[0]: got %s" % $result[0]).throw();
+    }
+    if (result[1] != "world")
+    {
+      new Exception(">Hz[1]: got %s" % result[1]).throw();
+    }
+
+    // - multiple strings with integers -
+    result = Pack.decode("isz",Pack.code("isz",[10,"abc","xyz"]));
+    if (result[0] != 10)
+    {
+      new Exception("isz[0]: got %s" % $result[0]).throw();
+    }
+    if (result[1] != "abc")
+    {
+      new Exception("isz[1]: got %s" % result[1]).throw();
+    }
+    if (result[2] != "xyz")
+    {
+      new Exception("isz[2]: got %s" % result[2]).throw();
+    }
+  }/*}}}*/
+}

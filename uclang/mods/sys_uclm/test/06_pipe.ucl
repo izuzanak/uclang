@@ -1,0 +1,178 @@
+
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Pipe constructor read -
+    pipe = new Pipe("echo hello 2>/dev/null","r");
+    if ($pipe != "Pipe")
+    {
+      new Exception("Pipe to_string: expected Pipe, got %s" % $pipe).throw();
+    }
+    data = pipe.read();
+    if (data != "hello\n")
+    {
+      new Exception("Pipe read: expected hello\\n, got %s" % $data).throw();
+    }
+    pipe.close();
+
+    // - Sys.popen equivalent -
+    pipe = Sys.popen("echo popen_test 2>/dev/null","r");
+    data = pipe.read();
+    if (data != "popen_test\n")
+    {
+      new Exception("popen read: expected popen_test\\n, got %s" % $data).throw();
+    }
+    pipe.close();
+
+    // - readln (strips trailing newline) -
+    pipe = new Pipe("printf 'line1\nline2\nline3\n'","r");
+    line = pipe.readln();
+    if (line != "line1")
+    {
+      new Exception("readln: expected line1, got %s" % $line).throw();
+    }
+    line = pipe.readln();
+    if (line != "line2")
+    {
+      new Exception("readln 2: expected line2, got %s" % $line).throw();
+    }
+    pipe.read();
+    pipe.close();
+
+    // - read(N) exact bytes -
+    pipe = new Pipe("echo abcdefghij 2>/dev/null","r");
+    data = pipe.read(5);
+    if (data != "abcde")
+    {
+      new Exception("read(5): expected abcde, got %s" % data).throw();
+    }
+    pipe.read();
+    pipe.close();
+
+    // - read_max -
+    pipe = new Pipe("echo short 2>/dev/null","r");
+    data = pipe.read_max(1024);
+    if (data != "short\n")
+    {
+      new Exception("read_max: expected short\\n, got %s" % $data).throw();
+    }
+    pipe.close();
+
+    // - get_fd -
+    pipe = new Pipe("cat > /dev/null 2>/dev/null","w");
+    fd = pipe.get_fd();
+    if (fd < 0)
+    {
+      new Exception("get_fd: expected non-negative, got %d" % fd).throw();
+    }
+
+    // - flush -
+    pipe.flush();
+    pipe.close();
+
+    // - pid -
+    pipe = new Pipe("cat > /dev/null 2>/dev/null","w");
+    p = pipe.pid();
+    if (p <= 0)
+    {
+      new Exception("pid: expected positive, got %d" % p).throw();
+    }
+    pipe.close();
+
+    // - write_close -
+    pipe = new Pipe("cat > /dev/null","w");
+    pipe.write_close("test_data");
+
+    // - read_close -
+    pipe = new Pipe("echo read_close_test 2>/dev/null","r");
+    data = pipe.read_close();
+    if (data != "read_close_test\n")
+    {
+      new Exception("read_close: expected read_close_test\\n, got %s" % $data).throw();
+    }
+
+    // - Sys.pipe round-trip -
+    pp = Sys.pipe();
+    if (pp.length() != 2)
+    {
+      new Exception("Sys.pipe: expected array of 2, got %d" % pp.length()).throw();
+    }
+    pp[1].write("pipe_data\n");
+    pp[1].write("pipe_line2\n");
+    pp[1].close();
+
+    lines = [];
+    for (line <- pp[0])
+    {
+      lines.push(line);
+    }
+
+    if (lines.length() != 2)
+    {
+      new Exception("Sys.pipe: expected 2 lines, got %d" % lines.length()).throw();
+    }
+    if (lines[0] != "pipe_data")
+    {
+      new Exception("Sys.pipe line 0: expected pipe_data, got %s" % $lines[0]).throw();
+    }
+    if (lines[1] != "pipe_line2")
+    {
+      new Exception("Sys.pipe line 1: expected pipe_line2, got %s" % $lines[1]).throw();
+    }
+
+    // - iteration over pipe lines -
+    pipe = new Pipe("printf 'a\nb\nc\n'","r");
+    lines = [];
+    for (line <- pipe)
+    {
+      lines.push(line);
+    }
+    pipe.close();
+    if (lines.length() != 3)
+    {
+      new Exception("iteration: expected 3 lines, got %d" % lines.length()).throw();
+    }
+
+    // - $Pipe class to_string -
+    if ($Pipe != "Pipe")
+    {
+      new Exception("Pipe class to_string: expected Pipe, got %s" % $Pipe).throw();
+    }
+
+    // - error: write on closed pipe -
+    pipe = new Pipe("cat > /dev/null 2>/dev/null","w");
+    pipe.close();
+    caught = 0;
+    try {
+      pipe.write("data");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("write on closed pipe did not throw").throw();
+    }
+
+    // - error: read on closed pipe -
+    pipe = new Pipe("echo x 2>/dev/null","r");
+    pipe.close();
+    caught = 0;
+    try {
+      pipe.read();
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("read on closed pipe did not throw").throw();
+    }
+  }/*}}}*/
+}

@@ -1,0 +1,73 @@
+
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - clock constants -
+    if (Clock.CLOCK_REALTIME != 0)
+    {
+      new Exception("CLOCK_REALTIME: expected 0, got %d" % Clock.CLOCK_REALTIME).throw();
+    }
+    if (Clock.CLOCK_MONOTONIC != 1)
+    {
+      new Exception("CLOCK_MONOTONIC: expected 1, got %d" % Clock.CLOCK_MONOTONIC).throw();
+    }
+
+    // - $Clock -
+    if ($Clock != "Clock")
+    {
+      new Exception("Clock to_string: expected Clock, got %s" % $Clock).throw();
+    }
+
+    // - getres returns positive integer -
+    res = Clock.getres(Clock.CLOCK_REALTIME);
+    if (res <= 0)
+    {
+      new Exception("getres REALTIME: expected positive, got %s" % $res).throw();
+    }
+
+    res = Clock.getres(Clock.CLOCK_MONOTONIC);
+    if (res <= 0)
+    {
+      new Exception("getres MONOTONIC: expected positive, got %s" % $res).throw();
+    }
+
+    // - gettime returns positive integer -
+    t = Clock.gettime(Clock.CLOCK_REALTIME);
+    if (t <= 0)
+    {
+      new Exception("gettime REALTIME: expected positive, got %s" % $t).throw();
+    }
+
+    t = Clock.gettime(Clock.CLOCK_MONOTONIC);
+    if (t <= 0)
+    {
+      new Exception("gettime MONOTONIC: expected positive, got %s" % $t).throw();
+    }
+
+    // - monotonic property: second call >= first -
+    t1 = Clock.gettime(Clock.CLOCK_MONOTONIC);
+    t2 = Clock.gettime(Clock.CLOCK_MONOTONIC);
+    if (t2 < t1)
+    {
+      new Exception("monotonic: t2 (%s) < t1 (%s)" % [$t2,$t1]).throw();
+    }
+
+    // - process cpu time -
+    t = Clock.gettime(Clock.CLOCK_PROCESS_CPUTIME_ID);
+    if (t < 0)
+    {
+      new Exception("gettime PROCESS_CPUTIME_ID: expected non-negative, got %s" % $t).throw();
+    }
+
+    // - thread cpu time -
+    t = Clock.gettime(Clock.CLOCK_THREAD_CPUTIME_ID);
+    if (t < 0)
+    {
+      new Exception("gettime THREAD_CPUTIME_ID: expected non-negative, got %s" % $t).throw();
+    }
+  }/*}}}*/
+}

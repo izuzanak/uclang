@@ -1,0 +1,289 @@
+
+import pack;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - code: not enough arguments -
+    caught = 0;
+    try {
+      Pack.code("ii",[1]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code not enough args: did not throw").throw();
+    }
+
+    // - code: not enough arguments (4 needed, 2 given) -
+    caught = 0;
+    try {
+      Pack.code("bhif",[1,2]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code not enough args bhif: did not throw").throw();
+    }
+
+    // - code: wrong argument type (Integer where String expected) -
+    caught = 0;
+    try {
+      Pack.code("s",[42]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code wrong type s/int: did not throw").throw();
+    }
+
+    // - code: wrong argument type (String where Integer expected) -
+    caught = 0;
+    try {
+      Pack.code("i",["hello"]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code wrong type i/str: did not throw").throw();
+    }
+
+    // - code: wrong argument type (Integer where Float expected) -
+    caught = 0;
+    try {
+      Pack.code("f",[42]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code wrong type f/int: did not throw").throw();
+    }
+
+    // - code: wrong argument type (Integer where Char expected) -
+    caught = 0;
+    try {
+      Pack.code("c",[42]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code wrong type c/int: did not throw").throw();
+    }
+
+    // - code: wrong argument type (Integer where String expected for z) -
+    caught = 0;
+    try {
+      Pack.code("z",[42]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code wrong type z/int: did not throw").throw();
+    }
+
+    // - code: wrong format string -
+    caught = 0;
+    try {
+      Pack.code("x",[1]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code wrong format x: did not throw").throw();
+    }
+
+    // - code: wrong format string (invalid char in middle) -
+    caught = 0;
+    try {
+      Pack.code("iXi",[1,2,3]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code wrong format iXi: did not throw").throw();
+    }
+
+    // - code: not all arguments converted -
+    caught = 0;
+    try {
+      Pack.code("i",[1,2,3]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code not all converted: did not throw").throw();
+    }
+
+    // - code: not all arguments converted (1 needed, 2 given) -
+    caught = 0;
+    try {
+      Pack.code("b",[1,2]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code not all converted b: did not throw").throw();
+    }
+
+    // - code: string length exceeds target size -
+    caught = 0;
+    try {
+      Pack.code("3z",["hello"]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code string exceeds 3z: did not throw").throw();
+    }
+
+    // - code: string length exceeds target size (s format) -
+    caught = 0;
+    try {
+      Pack.code("3s",["hello"]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("code string exceeds 3s: did not throw").throw();
+    }
+
+    // - decode: wrong format string -
+    caught = 0;
+    try {
+      Pack.decode("x","data");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("decode wrong format x: did not throw").throw();
+    }
+
+    // - decode: not enough data bytes (need 4, have 1) -
+    caught = 0;
+    try {
+      Pack.decode("i",Pack.code("b",[0]));
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("decode not enough data i/b: did not throw").throw();
+    }
+
+    // - decode: not enough data bytes (need 8, have 4) -
+    caught = 0;
+    try {
+      Pack.decode("q",Pack.code("i",[0]));
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("decode not enough data q/i: did not throw").throw();
+    }
+
+    // - decode: not enough data bytes (empty data) -
+    caught = 0;
+    try {
+      Pack.decode("d","");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("decode empty data d: did not throw").throw();
+    }
+
+    // - unpack: empty data -
+    caught = 0;
+    try {
+      Pack.unpack("");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("unpack empty: did not throw").throw();
+    }
+
+    // - unpack: corrupted data -
+    caught = 0;
+    try {
+      Pack.unpack("garbage");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("unpack garbage: did not throw").throw();
+    }
+
+    // - unpack: truncated data (too short for header) -
+    caught = 0;
+    try {
+      Pack.unpack("x");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("unpack truncated: did not throw").throw();
+    }
+  }/*}}}*/
+}

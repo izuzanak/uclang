@@ -1,0 +1,194 @@
+
+import pack;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - signed byte boundary values -
+    result = Pack.decode("b",Pack.code("b",[-128]));
+    if (result[0] != -128)
+    {
+      new Exception("b -128: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("b",Pack.code("b",[0]));
+    if (result[0] != 0)
+    {
+      new Exception("b 0: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("b",Pack.code("b",[127]));
+    if (result[0] != 127)
+    {
+      new Exception("b 127: got %s" % $result[0]).throw();
+    }
+
+    // - unsigned byte boundary values -
+    result = Pack.decode("B",Pack.code("B",[0]));
+    if (result[0] != 0)
+    {
+      new Exception("B 0: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("B",Pack.code("B",[255]));
+    if (result[0] != 255)
+    {
+      new Exception("B 255: got %s" % $result[0]).throw();
+    }
+
+    // - signed short boundary values -
+    result = Pack.decode("h",Pack.code("h",[-32768]));
+    if (result[0] != -32768)
+    {
+      new Exception("h -32768: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("h",Pack.code("h",[0]));
+    if (result[0] != 0)
+    {
+      new Exception("h 0: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("h",Pack.code("h",[32767]));
+    if (result[0] != 32767)
+    {
+      new Exception("h 32767: got %s" % $result[0]).throw();
+    }
+
+    // - unsigned short boundary values -
+    result = Pack.decode("H",Pack.code("H",[0]));
+    if (result[0] != 0)
+    {
+      new Exception("H 0: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("H",Pack.code("H",[65535]));
+    if (result[0] != 65535)
+    {
+      new Exception("H 65535: got %s" % $result[0]).throw();
+    }
+
+    // - signed int boundary values -
+    result = Pack.decode("i",Pack.code("i",[-2147483648]));
+    if (result[0] != -2147483648)
+    {
+      new Exception("i -2147483648: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("i",Pack.code("i",[0]));
+    if (result[0] != 0)
+    {
+      new Exception("i 0: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("i",Pack.code("i",[2147483647]));
+    if (result[0] != 2147483647)
+    {
+      new Exception("i 2147483647: got %s" % $result[0]).throw();
+    }
+
+    // - unsigned int boundary values -
+    result = Pack.decode("I",Pack.code("I",[0]));
+    if (result[0] != 0)
+    {
+      new Exception("I 0: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("I",Pack.code("I",[4294967295]));
+    if (result[0] != 4294967295)
+    {
+      new Exception("I 4294967295: got %s" % $result[0]).throw();
+    }
+
+    // - long long int boundary values -
+    result = Pack.decode("q",Pack.code("q",[-9223372036854775807]));
+    if (result[0] != -9223372036854775807)
+    {
+      new Exception("q large negative: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("q",Pack.code("q",[9223372036854775807]));
+    if (result[0] != 9223372036854775807)
+    {
+      new Exception("q large positive: got %s" % $result[0]).throw();
+    }
+
+    // - unsigned long long -
+    result = Pack.decode("Q",Pack.code("Q",[0]));
+    if (result[0] != 0)
+    {
+      new Exception("Q 0: got %s" % $result[0]).throw();
+    }
+
+    // - float: exact representable values -
+    result = Pack.decode("f",Pack.code("f",[0.0]));
+    if (result[0] != 0.0)
+    {
+      new Exception("f 0.0: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("f",Pack.code("f",[1.0]));
+    if (result[0] != 1.0)
+    {
+      new Exception("f 1.0: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("f",Pack.code("f",[-1.0]));
+    if (result[0] != -1.0)
+    {
+      new Exception("f -1.0: got %s" % $result[0]).throw();
+    }
+
+    // - double -
+    result = Pack.decode("d",Pack.code("d",[0.0]));
+    if (result[0] != 0.0)
+    {
+      new Exception("d 0.0: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("d",Pack.code("d",[3.141592653589793]));
+    if (result[0] != 3.141592653589793)
+    {
+      new Exception("d pi: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("d",Pack.code("d",[-2.718281828459045]));
+    if (result[0] != -2.718281828459045)
+    {
+      new Exception("d -e: got %s" % $result[0]).throw();
+    }
+
+    // - char -
+    result = Pack.decode("c",Pack.code("c",['A']));
+    if (result[0] != 'A')
+    {
+      new Exception("c A: got %s" % $result[0]).throw();
+    }
+
+    result = Pack.decode("c",Pack.code("c",['z']));
+    if (result[0] != 'z')
+    {
+      new Exception("c z: got %s" % $result[0]).throw();
+    }
+
+    // - multi-value roundtrip -
+    fmt = "bBhHiIqd";
+    vals = [-1,200,-1000,60000,-999999,3000000000,123456789012345,2.5];
+    result = Pack.decode(fmt,Pack.code(fmt,vals));
+    idx = 0;
+    do {
+      if (result[idx] != vals[idx])
+      {
+        new Exception("multi[%d]: expected %s, got %s" % [idx,$vals[idx],$result[idx]]).throw();
+      }
+    } while(++idx < vals.length());
+
+    // - remainder always empty after complete decode -
+    if (result[result.length() - 1] != "")
+    {
+      new Exception("multi remainder: expected empty").throw();
+    }
+  }/*}}}*/
+}

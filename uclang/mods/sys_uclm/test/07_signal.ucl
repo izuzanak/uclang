@@ -1,0 +1,88 @@
+
+import sys;
+
+class Main
+{
+  public signal_handler(signum)
+  {
+    return 1;
+  }
+
+  public bad_handler()
+  {
+    return 1;
+  }
+
+  public Main()
+  {
+    // - signal constants -
+    if (Signal.SIGINT != 2)
+    {
+      new Exception("SIGINT: expected 2, got %d" % Signal.SIGINT).throw();
+    }
+    if (Signal.SIGTERM != 15)
+    {
+      new Exception("SIGTERM: expected 15, got %d" % Signal.SIGTERM).throw();
+    }
+    if (Signal.SIGHUP != 1)
+    {
+      new Exception("SIGHUP: expected 1, got %d" % Signal.SIGHUP).throw();
+    }
+    if (Signal.SIGUSR1 <= 0)
+    {
+      new Exception("SIGUSR1: expected positive, got %d" % Signal.SIGUSR1).throw();
+    }
+    if (Signal.SIGUSR2 <= 0)
+    {
+      new Exception("SIGUSR2: expected positive, got %d" % Signal.SIGUSR2).throw();
+    }
+
+    // - $Signal -
+    if ($Signal != "Signal")
+    {
+      new Exception("Signal to_string: expected Signal, got %s" % $Signal).throw();
+    }
+
+    // - bind handler -
+    dlg = new Delegate(this,"signal_handler",1);
+    Signal.bind(Signal.SIGUSR1,dlg);
+
+    // - unbind -
+    Signal.unbind(Signal.SIGUSR1);
+
+    // - re-bind and unbind -
+    Signal.bind(Signal.SIGUSR1,dlg);
+    Signal.unbind(Signal.SIGUSR1);
+
+    // - bind multiple signals -
+    Signal.bind(Signal.SIGUSR1,dlg);
+    Signal.bind(Signal.SIGUSR2,dlg);
+    Signal.unbind(Signal.SIGUSR1);
+    Signal.unbind(Signal.SIGUSR2);
+
+    // Note: Signal.send to self is not tested because the interpreter
+    // terminates after handling any signal (term_signal_handler sets
+    // terminate flag). Only SIGINT/SIGTERM/SIGHUP have OS-level
+    // handlers registered.
+
+    // - error: bind with wrong delegate param count -
+    caught = 0;
+    try {
+      bad_dlg = new Delegate(this,"bad_handler",0);
+      Signal.bind(Signal.SIGUSR1,bad_dlg);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("bind wrong delegate param count did not throw").throw();
+    }
+  }
+
+  static public main(argv)
+  {/*{{{*/
+    new Main();
+  }/*}}}*/
+}
