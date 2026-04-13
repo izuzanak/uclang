@@ -807,11 +807,14 @@ bool bic_bin_array_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_a
   ARRAY_TYPE *array_ptr = (ARRAY_TYPE *)cmalloc(sizeof(ARRAY_TYPE));\
   array_ptr->init_size(length);\
 \
-  TYPE *e_ptr = array_ptr->data;\
-  TYPE *e_ptr_end = e_ptr + length;\
-  do {\
-    stream.from_end(sizeof(TYPE),(char *)e_ptr,order_bytes);\
-  } while(++e_ptr < e_ptr_end);\
+  if (length != 0)\
+  {\
+    TYPE *e_ptr = array_ptr->data;\
+    TYPE *e_ptr_end = e_ptr + length;\
+    do {\
+      stream.from_end(sizeof(TYPE),(char *)e_ptr,order_bytes);\
+    } while(++e_ptr < e_ptr_end);\
+  }\
 \
   array_ptr->used = length;\
   cont = array_ptr;\
@@ -3202,14 +3205,17 @@ bool bic_bin_dict_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_ar
   MAP_NAME ## _tree_s *tree_ptr = (MAP_NAME ## _tree_s *)cmalloc(sizeof(MAP_NAME ## _tree_s));\
   tree_ptr->init();\
 \
-  do {\
-    MAP_NAME ## _s key_value;\
+  if (count != 0)\
+  {\
+    do {\
+      MAP_NAME ## _s key_value;\
 \
-    stream.from_end(sizeof(VALUE_TYPE),(char *)&key_value.value,order_bytes);\
-    stream.from_end(sizeof(KEY_TYPE),(char *)&key_value.key,order_bytes);\
+      stream.from_end(sizeof(VALUE_TYPE),(char *)&key_value.value,order_bytes);\
+      stream.from_end(sizeof(KEY_TYPE),(char *)&key_value.key,order_bytes);\
 \
-    tree_ptr->insert(key_value);\
-  } while(--count > 0);\
+      tree_ptr->insert(key_value);\
+    } while(--count > 0);\
+  }\
 \
   cont = tree_ptr;\
 }/*}}}*/
