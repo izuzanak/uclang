@@ -75,6 +75,8 @@ bool bic_vec2_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,
 bool bic_vec2_operator_binary_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec2_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec2_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_vec2_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_vec2_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec2_method_Vec2_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec2_method_Vec2_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec2_method_Vec2_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -106,6 +108,8 @@ bool bic_vec3_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,
 bool bic_vec3_operator_binary_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec3_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec3_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_vec3_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_vec3_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec3_method_Vec3_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec3_method_Vec3_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec3_method_Vec3_3(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -139,6 +143,8 @@ bool bic_vec4_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,
 bool bic_vec4_operator_binary_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec4_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec4_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_vec4_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_vec4_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec4_method_Vec4_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec4_method_Vec4_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_vec4_method_Vec4_4(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -170,6 +176,8 @@ bool bic_mat4_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,
 bool bic_mat4_operator_binary_minus(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mat4_operator_binary_asterisk(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mat4_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mat4_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_mat4_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mat4_method_Mat4_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mat4_method_Mat4_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_mat4_method_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

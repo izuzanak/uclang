@@ -464,7 +464,7 @@ built_in_class_s vec2_class =
 {/*{{{*/
   "Vec2",
   c_modifier_public | c_modifier_final,
-  23, vec2_methods,
+  25, vec2_methods,
   0, vec2_variables,
   bic_vec2_consts,
   bic_vec2_init,
@@ -508,6 +508,16 @@ built_in_method_s vec2_methods[] =
     "operator_binary_slash_equal#1",
     c_modifier_public | c_modifier_final,
     bic_vec2_operator_binary_slash_equal
+  },
+  {
+    "operator_binary_double_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_vec2_operator_binary_double_equal
+  },
+  {
+    "operator_binary_exclamation_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_vec2_operator_binary_exclamation_equal
   },
   {
     "operator_binary_plus#1",
@@ -679,6 +689,32 @@ bool bic_vec2_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base
   BIC_VEC_BINARY_OPS_FLOAT_VEC(vec2,/,"operator_binary_slash#1");
 }/*}}}*/
 
+bool bic_vec2_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result = src_0_location->v_type == c_bi_class_vec2 &&
+    *((glm::vec2 *)dst_location->v_data_ptr) == *((glm::vec2 *)src_0_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_vec2_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result = src_0_location->v_type != c_bi_class_vec2 ||
+    *((glm::vec2 *)dst_location->v_data_ptr) != *((glm::vec2 *)src_0_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
 bool bic_vec2_method_Vec2_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   return true;
@@ -794,7 +830,7 @@ built_in_class_s vec3_class =
 {/*{{{*/
   "Vec3",
   c_modifier_public | c_modifier_final,
-  27, vec3_methods,
+  29, vec3_methods,
   0, vec3_variables,
   bic_vec3_consts,
   bic_vec3_init,
@@ -838,6 +874,16 @@ built_in_method_s vec3_methods[] =
     "operator_binary_slash_equal#1",
     c_modifier_public | c_modifier_final,
     bic_vec3_operator_binary_slash_equal
+  },
+  {
+    "operator_binary_double_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_vec3_operator_binary_double_equal
+  },
+  {
+    "operator_binary_exclamation_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_vec3_operator_binary_exclamation_equal
   },
   {
     "operator_binary_plus#1",
@@ -1019,6 +1065,32 @@ bool bic_vec3_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base
   BIC_VEC_BINARY_OPS_FLOAT_VEC(vec3,/,"operator_binary_slash#1");
 }/*}}}*/
 
+bool bic_vec3_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result = src_0_location->v_type == c_bi_class_vec3 &&
+    *((glm::vec3 *)dst_location->v_data_ptr) == *((glm::vec3 *)src_0_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_vec3_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result = src_0_location->v_type != c_bi_class_vec3 ||
+    *((glm::vec3 *)dst_location->v_data_ptr) != *((glm::vec3 *)src_0_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
 bool bic_vec3_method_Vec3_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   return true;
@@ -1163,7 +1235,7 @@ built_in_class_s vec4_class =
 {/*{{{*/
   "Vec4",
   c_modifier_public | c_modifier_final,
-  29, vec4_methods,
+  31, vec4_methods,
   0, vec4_variables,
   bic_vec4_consts,
   bic_vec4_init,
@@ -1207,6 +1279,16 @@ built_in_method_s vec4_methods[] =
     "operator_binary_slash_equal#1",
     c_modifier_public | c_modifier_final,
     bic_vec4_operator_binary_slash_equal
+  },
+  {
+    "operator_binary_double_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_vec4_operator_binary_double_equal
+  },
+  {
+    "operator_binary_exclamation_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_vec4_operator_binary_exclamation_equal
   },
   {
     "operator_binary_plus#1",
@@ -1388,6 +1470,32 @@ bool bic_vec4_operator_binary_slash(interpreter_thread_s &it,unsigned stack_base
   BIC_VEC_BINARY_OPS_FLOAT_VEC(vec4,/,"operator_binary_slash#1");
 }/*}}}*/
 
+bool bic_vec4_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result = src_0_location->v_type == c_bi_class_vec4 &&
+    *((glm::vec4 *)dst_location->v_data_ptr) == *((glm::vec4 *)src_0_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_vec4_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result = src_0_location->v_type != c_bi_class_vec4 ||
+    *((glm::vec4 *)dst_location->v_data_ptr) != *((glm::vec4 *)src_0_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
 bool bic_vec4_method_Vec4_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   return true;
@@ -1519,7 +1627,7 @@ built_in_class_s mat4_class =
 {/*{{{*/
   "Mat4",
   c_modifier_public | c_modifier_final,
-  24, mat4_methods,
+  26, mat4_methods,
   0, mat4_variables,
   bic_mat4_consts,
   bic_mat4_init,
@@ -1563,6 +1671,16 @@ built_in_method_s mat4_methods[] =
     "operator_binary_slash_equal#1",
     c_modifier_public | c_modifier_final,
     bic_mat4_operator_binary_slash_equal
+  },
+  {
+    "operator_binary_double_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_mat4_operator_binary_double_equal
+  },
+  {
+    "operator_binary_exclamation_equal#1",
+    c_modifier_public | c_modifier_final,
+    bic_mat4_operator_binary_exclamation_equal
   },
   {
     "operator_binary_plus#1",
@@ -1786,6 +1904,32 @@ bool bic_mat4_operator_binary_asterisk_equal(interpreter_thread_s &it,unsigned s
 bool bic_mat4_operator_binary_slash_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_MAT4_BINARY_EQUAL_OPS_FLOAT_MAT4(/,"operator_binary_slash_equal#1");
+}/*}}}*/
+
+bool bic_mat4_operator_binary_double_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result = src_0_location->v_type == c_bi_class_mat4 &&
+    *((glm::mat4 *)dst_location->v_data_ptr) == *((glm::mat4 *)src_0_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_mat4_operator_binary_exclamation_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+  location_s *src_0_location = (location_s *)it.get_stack_value(stack_base + operands[c_src_0_op_idx]);
+
+  long long int result = src_0_location->v_type != c_bi_class_mat4 ||
+    *((glm::mat4 *)dst_location->v_data_ptr) != *((glm::mat4 *)src_0_location->v_data_ptr);
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
 }/*}}}*/
 
 bool bic_mat4_operator_binary_plus(interpreter_thread_s &it,unsigned stack_base,uli *operands)
