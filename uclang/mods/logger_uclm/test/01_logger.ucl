@@ -1,0 +1,96 @@
+
+import sys;
+import logger;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    pid = Sys.getpid();
+    tmp_dir = "/tmp/ucltest_logger_01_%d" % pid;
+    log_path = "%s/test.log" % tmp_dir;
+
+    // - cleanup from previous failed run -
+    if (Sys.is_dir(tmp_dir))
+    {
+      Sys.system("rm -rf %s" % tmp_dir);
+    }
+
+    Sys.mkdir(tmp_dir);
+
+    // - to_string returns Logger -
+    if ($Logger != "Logger")
+    {
+      new Exception("to_string: expected Logger, got %s" % $Logger).throw();
+    }
+
+    // - constructor -
+    logger = new Logger("test");
+
+    // - assignment operator -
+    logger2 = logger;
+
+    // - add_file creates log file -
+    logger.add_file(3,log_path,4096,3);
+    if (Sys.is_file(log_path) != 1)
+    {
+      new Exception("add_file: log file not created").throw();
+    }
+
+    // - write#2 basic -
+    logger.write(1,"hello world");
+    data = new File(log_path,"r").read_close();
+    if (data.contain("test: hello world") != 1)
+    {
+      new Exception("write#2: expected 'test: hello world' in log").throw();
+    }
+    if (data.contain(" 1 test:") != 1)
+    {
+      new Exception("write#2: expected level '1' in log header").throw();
+    }
+
+    // - write#3 with explicit time -
+    // 946684825123000000 ns = 2000/01/01 00:00:25.123 UTC
+    logger.write(946684825123000000,2,"timed message");
+    data = new File(log_path,"r").read_close();
+    if (data.contain("2 test: timed message") != 1)
+    {
+      new Exception("write#3: expected 'timed message' with level 2 in log").throw();
+    }
+    if (data.contain(".123") != 1)
+    {
+      new Exception("write#3: expected milliseconds '.123' in timestamp").throw();
+    }
+
+    // - write_headless#2 -
+    logger.write_headless(1,"raw line");
+    data = new File(log_path,"r").read_close();
+    if (data.contain("raw line") != 1)
+    {
+      new Exception("write_headless: expected 'raw line' in log").throw();
+    }
+    // - headless line should not have user prefix -
+    // find raw line and verify it's not preceded by "test:" on same line
+    lines = data.split("\n");
+    found_headless = 0;
+    for (line <- lines)
+    {
+      if (line.contain("raw line") == 1 and line.contain("test:") == 0)
+      {
+        found_headless = 1;
+      }
+    }
+    if (found_headless != 1)
+    {
+      new Exception("write_headless: expected line without header prefix").throw();
+    }
+
+    // - write with no registered files succeeds -
+    logger3 = new Logger("noop");
+    logger3.write(1,"should not fail");
+
+    // - cleanup -
+    Sys.system("rm -rf %s" % tmp_dir);
+  }/*}}}*/
+}

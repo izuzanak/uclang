@@ -1,0 +1,170 @@
+
+import sys;
+import logger;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    pid = Sys.getpid();
+    tmp_dir = "/tmp/ucltest_logger_03_%d" % pid;
+    log_path = "%s/test.log" % tmp_dir;
+    rot_path = "%s/rotate.log" % tmp_dir;
+
+    // - cleanup from previous failed run -
+    if (Sys.is_dir(tmp_dir))
+    {
+      Sys.system("rm -rf %s" % tmp_dir);
+    }
+
+    Sys.mkdir(tmp_dir);
+
+    logger = new Logger("errtest");
+
+    // - add_file: negative level throws -
+    caught = 0;
+    try {
+      logger.add_file(-1,log_path,4096,3);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("add_file: negative level did not throw").throw();
+    }
+
+    // - add_file: max_size below 4096 throws -
+    caught = 0;
+    try {
+      logger.add_file(1,log_path,4095,3);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("add_file: max_size 4095 did not throw").throw();
+    }
+
+    // - add_file: max_count zero throws -
+    caught = 0;
+    try {
+      logger.add_file(1,log_path,4096,0);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("add_file: max_count 0 did not throw").throw();
+    }
+
+    // - add_file: max_size exactly 4096 succeeds -
+    ok_path = "%s/ok.log" % tmp_dir;
+    logger.add_file(1,ok_path,4096,1);
+    if (Sys.is_file(ok_path) != 1)
+    {
+      new Exception("add_file: max_size 4096 should succeed").throw();
+    }
+
+    // - add_file: non-existent directory throws -
+    caught = 0;
+    try {
+      logger.add_file(1,"/tmp/ucltest_nonexistent_%d/test.log" % pid,4096,3);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("add_file: non-existent directory did not throw").throw();
+    }
+
+    // - write#2: negative level throws -
+    caught = 0;
+    try {
+      logger.write(-1,"msg");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("write#2: negative level did not throw").throw();
+    }
+
+    // - write#3: negative level throws -
+    caught = 0;
+    try {
+      logger.write(0,-1,"msg");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("write#3: negative level did not throw").throw();
+    }
+
+    // - write_headless#2: negative level throws -
+    caught = 0;
+    try {
+      logger.write_headless(-1,"msg");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("write_headless: negative level did not throw").throw();
+    }
+
+    // - log rotation: writing beyond max_size creates rotated files -
+    rot_logger = new Logger("rottest");
+    rot_logger.add_file(5,rot_path,4096,3);
+
+    idx = 0;
+    while (idx < 100)
+    {
+      rot_logger.write(1,"rotation test message number %03d padding to fill buffer" % idx);
+      idx = idx + 1;
+    }
+
+    // - rotated file path.1 should exist -
+    if (Sys.is_file("%s.1" % rot_path) != 1)
+    {
+      new Exception("rotation: expected %s.1 to exist" % rot_path).throw();
+    }
+
+    // - main file should still exist -
+    if (Sys.is_file(rot_path) != 1)
+    {
+      new Exception("rotation: main log file should still exist").throw();
+    }
+
+    // - main file should be smaller than max_size -
+    main_size = Sys.size(rot_path);
+    if (main_size >= 4096)
+    {
+      new Exception("rotation: main file size %d should be < 4096" % main_size).throw();
+    }
+
+    // - rotation respects max_count: path.3 should NOT exist (max_count=3 means path, path.1, path.2) -
+    if (Sys.is_file("%s.3" % rot_path) != 0)
+    {
+      new Exception("rotation: %s.3 should not exist with max_count=3" % rot_path).throw();
+    }
+
+    // - cleanup -
+    Sys.system("rm -rf %s" % tmp_dir);
+  }/*}}}*/
+}

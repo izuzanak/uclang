@@ -1,0 +1,88 @@
+
+import sys;
+import logger;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    pid = Sys.getpid();
+    tmp_dir = "/tmp/ucltest_logger_02_%d" % pid;
+    path_low = "%s/low.log" % tmp_dir;
+    path_high = "%s/high.log" % tmp_dir;
+    path_filter = "%s/filter.log" % tmp_dir;
+
+    // - cleanup from previous failed run -
+    if (Sys.is_dir(tmp_dir))
+    {
+      Sys.system("rm -rf %s" % tmp_dir);
+    }
+
+    Sys.mkdir(tmp_dir);
+
+    // - level filtering: low file (level 1) vs high file (level 3) -
+    logger = new Logger("leveltest");
+    logger.add_file(1,path_low,4096,3);
+    logger.add_file(3,path_high,4096,3);
+
+    logger.write(0,"msg_level0");
+    logger.write(1,"msg_level1");
+    logger.write(2,"msg_level2");
+    logger.write(3,"msg_level3");
+
+    data_low = new File(path_low,"r").read_close();
+    data_high = new File(path_high,"r").read_close();
+
+    // - low file (level 1) receives levels 0 and 1 only -
+    if (data_low.contain("msg_level0") != 1)
+    {
+      new Exception("level filter: low file missing msg_level0").throw();
+    }
+    if (data_low.contain("msg_level1") != 1)
+    {
+      new Exception("level filter: low file missing msg_level1").throw();
+    }
+    if (data_low.contain("msg_level2") != 0)
+    {
+      new Exception("level filter: low file should not contain msg_level2").throw();
+    }
+    if (data_low.contain("msg_level3") != 0)
+    {
+      new Exception("level filter: low file should not contain msg_level3").throw();
+    }
+
+    // - high file (level 3) receives levels 0, 1, 2, 3 -
+    if (data_high.contain("msg_level0") != 1)
+    {
+      new Exception("level filter: high file missing msg_level0").throw();
+    }
+    if (data_high.contain("msg_level1") != 1)
+    {
+      new Exception("level filter: high file missing msg_level1").throw();
+    }
+    if (data_high.contain("msg_level2") != 1)
+    {
+      new Exception("level filter: high file missing msg_level2").throw();
+    }
+    if (data_high.contain("msg_level3") != 1)
+    {
+      new Exception("level filter: high file missing msg_level3").throw();
+    }
+
+    // - high write level filtered out by low file level -
+    logger2 = new Logger("filtertest");
+    logger2.add_file(2,path_filter,4096,3);
+    logger2.write(5,"high_level_msg");
+    data_filter = new File(path_filter,"r").read_close();
+
+    // - empty file returns Blank, non-empty must not contain the message -
+    if (Blank != data_filter and data_filter.contain("high_level_msg") != 0)
+    {
+      new Exception("level filter: file at level 2 should not contain level 5 message").throw();
+    }
+
+    // - cleanup -
+    Sys.system("rm -rf %s" % tmp_dir);
+  }/*}}}*/
+}
