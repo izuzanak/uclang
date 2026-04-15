@@ -13,13 +13,13 @@ class Main
     parts.last() = "test_rsa_public.pem";
     pub_path  = parts.to_string("/");
 
-    priv = CryptoPKey.load_private(priv_path, "");
-    pub  = CryptoPKey.load_public(pub_path, "");
+    priv = CryptoPKey.load_private(priv_path,"");
+    pub  = CryptoPKey.load_public(pub_path,"");
 
     msg = "this is a test message for signing";
 
     // - sign with private key -
-    s = new CryptoDigestSign("SHA256", priv);
+    s = new CryptoDigestSign("SHA256",priv);
     s.update(msg);
     sig = s.value();
 
@@ -29,7 +29,7 @@ class Main
     }
 
     // - verify OK with public key -
-    v = new CryptoDigestVerify("SHA256", pub);
+    v = new CryptoDigestVerify("SHA256",pub);
     v.update(msg);
     if (v.verify(sig) != 1)
     {
@@ -37,7 +37,7 @@ class Main
     }
 
     // - verify fails on tampered message -
-    v2 = new CryptoDigestVerify("SHA256", pub);
+    v2 = new CryptoDigestVerify("SHA256",pub);
     v2.update(msg + "x");
     if (v2.verify(sig) == 1)
     {
@@ -45,13 +45,13 @@ class Main
     }
 
     // - multi-update sign + verify round-trip -
-    s = new CryptoDigestSign("SHA256", priv);
+    s = new CryptoDigestSign("SHA256",priv);
     s.update("first ");
     s.update("second ");
     s.update("third");
     sig = s.value();
 
-    v = new CryptoDigestVerify("SHA256", pub);
+    v = new CryptoDigestVerify("SHA256",pub);
     v.update("first second third");
     if (v.verify(sig) != 1)
     {

@@ -8,36 +8,36 @@ class Main
   {/*{{{*/
 
     // - type Integer pass -
-    schema = new Dict(["entry", ["type", type Integer]]);
+    schema = new Dict(["entry",["type",type Integer]]);
     v = new Validator(schema);
-    v.validate("entry", 42);
+    v.validate("entry",42);
 
     // - type String pass -
-    schema = new Dict(["entry", ["type", type String]]);
+    schema = new Dict(["entry",["type",type String]]);
     v = new Validator(schema);
-    v.validate("entry", "hello");
+    v.validate("entry","hello");
 
     // - type Float pass -
-    schema = new Dict(["entry", ["type", type Float]]);
+    schema = new Dict(["entry",["type",type Float]]);
     v = new Validator(schema);
-    v.validate("entry", 3.14);
+    v.validate("entry",3.14);
 
     // - type Array pass -
-    schema = new Dict(["entry", ["type", type Array]]);
+    schema = new Dict(["entry",["type",type Array]]);
     v = new Validator(schema);
-    v.validate("entry", [1,2,3]);
+    v.validate("entry",[1,2,3]);
 
     // - type Dict pass -
-    schema = new Dict(["entry", ["type", type Dict]]);
+    schema = new Dict(["entry",["type",type Dict]]);
     v = new Validator(schema);
-    v.validate("entry", new Dict(["a", 1]));
+    v.validate("entry",new Dict(["a",1]));
 
     // - type Integer fail with String -
-    schema = new Dict(["entry", ["type", type Integer]]);
+    schema = new Dict(["entry",["type",type Integer]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("entry", "not_an_int");
+      v.validate("entry","not_an_int");
     }
     catch (e)
     {
@@ -49,11 +49,11 @@ class Main
     }
 
     // - type String fail with Integer -
-    schema = new Dict(["entry", ["type", type String]]);
+    schema = new Dict(["entry",["type",type String]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("entry", 42);
+      v.validate("entry",42);
     }
     catch (e)
     {
@@ -65,11 +65,11 @@ class Main
     }
 
     // - type Float fail with String -
-    schema = new Dict(["entry", ["type", type Float]]);
+    schema = new Dict(["entry",["type",type Float]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("entry", "not_a_float");
+      v.validate("entry","not_a_float");
     }
     catch (e)
     {
@@ -81,11 +81,11 @@ class Main
     }
 
     // - type with non-Type prop value must throw -
-    schema = new Dict(["entry", ["type", "Integer"]]);
+    schema = new Dict(["entry",["type","Integer"]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("entry", 42);
+      v.validate("entry",42);
     }
     catch (e)
     {

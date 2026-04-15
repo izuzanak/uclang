@@ -8,14 +8,14 @@ class Main
   {/*{{{*/
 
     // - regex simple match pass -
-    schema = new Dict(["uint", ["regex", "^[0-9][0-9]*$"]]);
+    schema = new Dict(["uint",["regex","^[0-9][0-9]*$"]]);
     v = new Validator(schema);
-    v.validate("uint", "123");
+    v.validate("uint","123");
 
     // - regex simple match fail -
     caught = 0;
     try {
-      v.validate("uint", "abc");
+      v.validate("uint","abc");
     }
     catch (e)
     {
@@ -27,14 +27,14 @@ class Main
     }
 
     // - regex pattern pass -
-    schema = new Dict(["email", ["regex", "^[a-z]*@[a-z]*\\.[a-z]*$"]]);
+    schema = new Dict(["email",["regex","^[a-z]*@[a-z]*\\.[a-z]*$"]]);
     v = new Validator(schema);
-    v.validate("email", "user@example.com");
+    v.validate("email","user@example.com");
 
     // - regex pattern fail -
     caught = 0;
     try {
-      v.validate("email", "not-an-email");
+      v.validate("email","not-an-email");
     }
     catch (e)
     {
@@ -46,11 +46,11 @@ class Main
     }
 
     // - regex value must be string -
-    schema = new Dict(["str_only", ["regex", "^[0-9]*$"]]);
+    schema = new Dict(["str_only",["regex","^[0-9]*$"]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("str_only", 123);
+      v.validate("str_only",123);
     }
     catch (e)
     {
@@ -62,16 +62,16 @@ class Main
     }
 
     // - multiple regex rules (both must match) -
-    schema = new Dict(["multi", [
-      "regex", "^Hello[123]*$",
-      "regex", "^.*$"
+    schema = new Dict(["multi",[
+      "regex","^Hello[123]*$",
+      "regex","^.*$"
     ]]);
     v = new Validator(schema);
-    v.validate("multi", "Hello123");
+    v.validate("multi","Hello123");
 
     caught = 0;
     try {
-      v.validate("multi", "Hello124");
+      v.validate("multi","Hello124");
     }
     catch (e)
     {
@@ -83,9 +83,9 @@ class Main
     }
 
     // - regex reuse (cached) -
-    schema = new Dict(["cached", ["regex", "^[a-z]*$"]]);
+    schema = new Dict(["cached",["regex","^[a-z]*$"]]);
     v = new Validator(schema);
-    v.validate("cached", "abc");
-    v.validate("cached", "xyz");
+    v.validate("cached","abc");
+    v.validate("cached","xyz");
   }/*}}}*/
 }

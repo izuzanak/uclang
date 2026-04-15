@@ -12,7 +12,7 @@ class Main
     iv  = Crypto.random(info.iv_length());
     pt  = "The quick brown fox jumps over the lazy dog" * 10;
 
-    enc = new CryptoEncrypt("aes-256-cbc", key, iv);
+    enc = new CryptoEncrypt("aes-256-cbc",key,iv);
     ct = enc.update(pt) + enc.finalize();
 
     if (ct == pt)
@@ -24,7 +24,7 @@ class Main
       new Exception("empty ciphertext").throw();
     }
 
-    dec = new CryptoDecrypt("aes-256-cbc", key, iv);
+    dec = new CryptoDecrypt("aes-256-cbc",key,iv);
     pt2 = dec.update(ct) + dec.finalize();
 
     if (pt2 != pt)
@@ -33,10 +33,10 @@ class Main
     }
 
     // - round-trip using CryptoCipherInfo object form -
-    enc = new CryptoEncrypt(info, key, iv);
+    enc = new CryptoEncrypt(info,key,iv);
     ct = enc.update(pt) + enc.finalize();
 
-    dec = new CryptoDecrypt(info, key, iv);
+    dec = new CryptoDecrypt(info,key,iv);
     pt3 = dec.update(ct) + dec.finalize();
 
     if (pt3 != pt)
@@ -50,10 +50,10 @@ class Main
     iv128   = Crypto.random(info128.iv_length());
     pt_s    = "short message";
 
-    enc = new CryptoEncrypt("aes-128-cbc", key128, iv128);
+    enc = new CryptoEncrypt("aes-128-cbc",key128,iv128);
     ct = enc.update(pt_s) + enc.finalize();
 
-    dec = new CryptoDecrypt("aes-128-cbc", key128, iv128);
+    dec = new CryptoDecrypt("aes-128-cbc",key128,iv128);
     if ((dec.update(ct) + dec.finalize()) != pt_s)
     {
       new Exception("AES-128-CBC round-trip failed").throw();
@@ -61,10 +61,10 @@ class Main
 
     // - encrypting empty plaintext round-trip -
     pt_e = "";
-    enc = new CryptoEncrypt("aes-256-cbc", key, iv);
+    enc = new CryptoEncrypt("aes-256-cbc",key,iv);
     ct = enc.update(pt_e) + enc.finalize();
 
-    dec = new CryptoDecrypt("aes-256-cbc", key, iv);
+    dec = new CryptoDecrypt("aes-256-cbc",key,iv);
     if ((dec.update(ct) + dec.finalize()) != pt_e)
     {
       new Exception("empty plaintext round-trip failed").throw();

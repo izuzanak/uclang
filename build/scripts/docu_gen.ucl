@@ -265,9 +265,9 @@ pi = 3.1415926535897932384626433;
       "contain_values",["Hi","world","Hello"],
       "iter_index_name","index",
       "iter_element_name","character",
-      "iter_first_idx", "%s.first_idx()",
-      "iter_next_idx", "%s.next_idx(%s)",
-      "cont_clear", "%s = \"\""
+      "iter_first_idx","%s.first_idx()",
+      "iter_next_idx","%s.next_idx(%s)",
+      "cont_clear","%s = \"\""
     ]);/*}}}*/
     CLASS_PROPERTIES["Array"] = class_Array = new Dict(
     [/*{{{*/
@@ -276,11 +276,11 @@ pi = 3.1415926535897932384626433;
       "create_compare","[1,2,6,7,8]",
       "iter_index_name","index",
       "iter_element_name","element",
-      "iter_first_idx", "%s.first_idx()",
-      "iter_last_idx", "%s.last_idx()",
-      "iter_next_idx", "%s.next_idx(%s)",
-      "cont_remove_last", "%s.pop()",
-      "cont_clear", "%s.clear()"
+      "iter_first_idx","%s.first_idx()",
+      "iter_last_idx","%s.last_idx()",
+      "iter_next_idx","%s.next_idx(%s)",
+      "cont_remove_last","%s.pop()",
+      "cont_clear","%s.clear()"
     ]);/*}}}*/
     CLASS_PROPERTIES["Error"] = new Dict(
     [/*{{{*/
@@ -350,21 +350,21 @@ class Main
     [/*{{{*/
       "description","Container class implementing abstract data type stack.",
       "iter_element_name","element",
-      "iter_first_idx", "%s.first_idx()",
-      "iter_last_idx", "%s.last_idx()",
-      "iter_next_idx", "%s.next_idx(%s)",
-      "cont_remove_last", "%s.pop()",
-      "cont_clear", "%s.clear()"
+      "iter_first_idx","%s.first_idx()",
+      "iter_last_idx","%s.last_idx()",
+      "iter_next_idx","%s.next_idx(%s)",
+      "cont_remove_last","%s.pop()",
+      "cont_clear","%s.clear()"
     ]);/*}}}*/
     CLASS_PROPERTIES["Queue"] = new Dict(
     [/*{{{*/
       "description","Container class implementing abstract data type queue.",
       "iter_element_name","element",
-      "iter_first_idx", "%s.first_idx()",
-      "iter_last_idx", "%s.last_idx()",
-      "iter_next_idx", "%s.next_idx(%s)",
-      "cont_remove_first", "%s.next()",
-      "cont_clear", "%s.clear()"
+      "iter_first_idx","%s.first_idx()",
+      "iter_last_idx","%s.last_idx()",
+      "iter_next_idx","%s.next_idx(%s)",
+      "cont_remove_first","%s.next()",
+      "cont_clear","%s.clear()"
     ]);/*}}}*/
     CLASS_PROPERTIES["Set"] = class_Set = new Dict(
     [/*{{{*/
@@ -372,20 +372,20 @@ class Main
       "iter_indexes",[0,2,3],
       "iter_index_name","index",
       "iter_element_name","element",
-      "iter_first_idx", "%s.first_idx()",
-      "iter_last_idx", "%s.last_idx()",
-      "iter_next_idx", "%s.next_idx(%s)",
-      "cont_clear", "%s.clear()"
+      "iter_first_idx","%s.first_idx()",
+      "iter_last_idx","%s.last_idx()",
+      "iter_next_idx","%s.next_idx(%s)",
+      "cont_clear","%s.clear()"
     ]);/*}}}*/
     CLASS_PROPERTIES["List"] = new Dict(
     [/*{{{*/
       "description","Container class implementing abstract data type list.",
       "iter_index_name","index",
       "iter_element_name","element",
-      "iter_first_idx", "%s.first_idx()",
-      "iter_last_idx", "%s.last_idx()",
-      "iter_next_idx", "%s.next_idx(%s)",
-      "cont_clear", "%s.clear()"
+      "iter_first_idx","%s.first_idx()",
+      "iter_last_idx","%s.last_idx()",
+      "iter_next_idx","%s.next_idx(%s)",
+      "cont_clear","%s.clear()"
     ]);/*}}}*/
     CLASS_PROPERTIES["Tree"] = class_Tree = new Dict(
     [/*{{{*/
@@ -393,10 +393,10 @@ class Main
       "iter_indexes",[0,2,3],
       "iter_index_name","index",
       "iter_element_name","element",
-      "iter_first_idx", "%s.first_idx()",
-      "iter_last_idx", "%s.last_idx()",
-      "iter_next_idx", "%s.next_idx(%s)",
-      "cont_clear", "%s.clear()"
+      "iter_first_idx","%s.first_idx()",
+      "iter_last_idx","%s.last_idx()",
+      "iter_next_idx","%s.next_idx(%s)",
+      "cont_clear","%s.clear()"
     ]);/*}}}*/
     CLASS_PROPERTIES["Dict"] = class_Dict = new Dict(
     [/*{{{*/
@@ -407,13 +407,13 @@ class Main
       "contain_values",["One","Two","Seven"],
       "iter_index_name","key",
       "iter_element_name","key",
-      "iter_first_idx", "%s.first_idx()",
-      "iter_last_idx", "%s.last_idx()",
-      "iter_next_idx", "%s.next_idx(%s)",
-      "iter_first_key", "%s.first_key()",
-      "iter_last_key", "%s.last_key()",
-      "iter_remove_key", "%s.remove_key(%s)",
-      "cont_clear", "%s.clear()"
+      "iter_first_idx","%s.first_idx()",
+      "iter_last_idx","%s.last_idx()",
+      "iter_next_idx","%s.next_idx(%s)",
+      "iter_first_key","%s.first_key()",
+      "iter_last_key","%s.last_key()",
+      "iter_remove_key","%s.remove_key(%s)",
+      "cont_clear","%s.clear()"
     ]);/*}}}*/
     CLASS_PROPERTIES["Sys"] = class_Sys = new Dict(
     [/*{{{*/
@@ -714,10 +714,10 @@ class Main
     {
       class_Char["methods"] = new Dict(
       [/*{{{*/
-        "Char#1", new MethodDescr
+        "Char#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` from method parameter." % m_target_name,
-["Object of class %s or %s." % [doc_class_ref("Char"), doc_class_ref("Integer")]],
+["Object of class %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer")]],
 new Blank(),"
 (\"obj: %%c\\n\" %% new Char(%s)).print();
 (\"obj: %%c\\n\" %% new Char(%s)).print();
@@ -730,7 +730,7 @@ new Blank(),"
     {
       class_Integer["methods"] = new Dict(
       [/*{{{*/
-        "Integer#1", new MethodDescr
+        "Integer#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` from method parameter." % m_target_name,
 ["Object of class %s, %s, %s or %s." % 
@@ -746,7 +746,7 @@ new Blank(),"
      get_property("Integer","create_example"),
      get_property("Float","create_example")]
 ),/*}}}*/
-        "Integer#2", new MethodDescr
+        "Integer#2",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` from its string representation." % m_target_name,
 ["Object of class %s, containing string representation of integer value." % doc_class_ref("String"),
@@ -780,7 +780,7 @@ new Blank(),"
       ]);/*}}}*/
       class_Float["methods"] = new Dict(
       [/*{{{*/
-        "Float#1", new MethodDescr
+        "Float#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` from method parameter." % m_target_name,
 ["Object of class %s, %s, %s or %s." % 
@@ -797,13 +797,13 @@ new Blank(),"
      get_property("Integer","create_example"),
      get_property("Float","create_example")]
 ),/*}}}*/
-        "sin#0", gm_trigo_t0("sine","sin"),
-        "cos#0", gm_trigo_t0("cosine","cos"),
-        "tan#0", gm_trigo_t0("tangent","tan"),
-        "asin#0", gm_trigo_t1("sine","asin"),
-        "acos#0", gm_trigo_t1("cosine","acos"),
-        "atan#0", gm_trigo_t1("tangent","atan"),
-        "exp#0", new MethodDescr
+        "sin#0",gm_trigo_t0("sine","sin"),
+        "cos#0",gm_trigo_t0("cosine","cos"),
+        "tan#0",gm_trigo_t0("tangent","tan"),
+        "asin#0",gm_trigo_t1("sine","asin"),
+        "acos#0",gm_trigo_t1("cosine","acos"),
+        "atan#0",gm_trigo_t1("tangent","atan"),
+        "exp#0",new MethodDescr
 (/*{{{*/
 "Compute value of e (the base  of  natural  logarithms) raised to the power
 determined by value of object of class `%s`." % m_target_name,
@@ -813,7 +813,7 @@ determined by value of object of class `%s`." % m_target_name,
 (\"res: %f\\n\" % 10.0.exp()).print();
 "
 ),/*}}}*/
-        "log#0", new MethodDescr
+        "log#0",new MethodDescr
 (/*{{{*/
 "Compute natural logarithm of value of object of class `%s`." % m_target_name,
 [],"Object of class %s." % doc_class_ref(m_target_name),"
@@ -822,7 +822,7 @@ determined by value of object of class `%s`." % m_target_name,
 (\"res: %f\\n\" % 22026.465795.log()).print();
 "
 ),/*}}}*/
-        "pow#1", new MethodDescr
+        "pow#1",new MethodDescr
 (/*{{{*/
 "Compute power of value of object of class `%s` raised to the value given by method parameter." % m_target_name,
 ["Object of class %s, %s or %s." % [doc_class_ref("Char"),doc_class_ref("Integer"),doc_class_ref("Float")]],
@@ -837,7 +837,7 @@ determined by value of object of class `%s`." % m_target_name,
      get_property("Integer","create_small"),
      get_property("Float","create_small")]
 ),/*}}}*/
-        "sqrt#0", new MethodDescr
+        "sqrt#0",new MethodDescr
 (/*{{{*/
 "Compute nonnegative square root of value of object of class `%s`." % m_target_name,
 [],"Object of class %s." % doc_class_ref(m_target_name),"
@@ -846,7 +846,7 @@ determined by value of object of class `%s`." % m_target_name,
 (\"res: %f\\n\" % 11..sqrt()).print();
 "
 ),/*}}}*/
-        "cbrt#0", new MethodDescr
+        "cbrt#0",new MethodDescr
 (/*{{{*/
 "Compute real cube root of value of object of class `%s`." % m_target_name,
 [],"Object of class %s." % doc_class_ref(m_target_name),"
@@ -855,7 +855,7 @@ determined by value of object of class `%s`." % m_target_name,
 (\"res: %f\\n\" % 11..cbrt()).print();
 "
 ),/*}}}*/
-        "hypot#1", new MethodDescr
+        "hypot#1",new MethodDescr
 (/*{{{*/
 "Compute length of the hypotenuse of a right-angled triangle with sides
 determined by value of object of class `%s` and method parameter." % m_target_name,
@@ -871,7 +871,7 @@ determined by value of object of class `%s` and method parameter." % m_target_na
      get_property("Integer","create_example"),
      get_property("Float","create_example")]
 ),/*}}}*/
-        "classify#0", new MethodDescr
+        "classify#0",new MethodDescr
 (/*{{{*/
 "Return %s identifying float number class." % doc_class_ref("Integer"),
 [],"Object of class %s." % doc_class_ref("Integer"),"
@@ -882,7 +882,7 @@ determined by value of object of class `%s` and method parameter." % m_target_na
 " % [get_property("Float","create_zero"),
      get_property("Float","create_example")]
 ),/*}}}*/
-        "isnan#0", new MethodDescr
+        "isnan#0",new MethodDescr
 (/*{{{*/
 "Test if value of object of class `%s` is not an number." % m_target_name,
 [],"Object of class %s." % doc_class_ref("Integer"),"
@@ -897,7 +897,7 @@ determined by value of object of class `%s` and method parameter." % m_target_na
     {
       class_String["methods"] = new Dict(
       [/*{{{*/
-        "String#1", new MethodDescr
+        "String#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` from method parameter." % m_target_name,
 ["Object of class %s, %s, %s or %s." % 
@@ -917,7 +917,7 @@ obj = new String(%s);
      get_property("Float","create_example"),
      get_property("String","create_example")]
 ),/*}}}*/
-        "operator_binary_plus_equal#1", new MethodDescr
+        "operator_binary_plus_equal#1",new MethodDescr
 (/*{{{*/
 "Append and assign operator `+=`. Operator appends value of method parameter to value of object of class `%s`." % m_target_name,
 ["Object of class %s." % doc_class_ref("String")],
@@ -928,7 +928,7 @@ obj += \" How are you?\";
 (\"obj: %%s\\n\" %% obj).print();
 " % get_code(m_target_name,"obj","create_example")
 ),/*}}}*/
-        "operator_binary_asterisk_equal#1", new MethodDescr
+        "operator_binary_asterisk_equal#1",new MethodDescr
 (/*{{{*/
 "Repeat and assign operator `*=`. Repeat value of object of class `%s` `x` times, where `x` is given by method parameter." % m_target_name,
 ["Type convertible to integer."],
@@ -939,7 +939,7 @@ obj *= 5;
 (\"obj: %%s\\n\" %% obj).print();
 " % get_code(m_target_name,"obj","create_example")
 ),/*}}}*/
-        "operator_binary_plus#1", new MethodDescr
+        "operator_binary_plus#1",new MethodDescr
 (/*{{{*/
 "Append operator `+`. Append value of method parameter to value of object of class `%s`." % m_target_name,
 ["Object of class %s." % doc_class_ref("String")],
@@ -949,7 +949,7 @@ obj *= 5;
 (\"res: %%s\\n\" %% (obj + \" How are you?\")).print();
 " % get_code(m_target_name,"obj","create_example")
 ),/*}}}*/
-        "operator_binary_asterisk#1", new MethodDescr
+        "operator_binary_asterisk#1",new MethodDescr
 (/*{{{*/
 "Repeat operator `*`. Repeat value of object of class `%s` `x` times, where `x` is given by method parameter." % m_target_name,
 ["Type convertible to integer."],
@@ -959,7 +959,7 @@ obj *= 5;
 (\"res: %%s\\n\" %% (obj * 5)).print();
 " % get_code(m_target_name,"obj","create_example")
 ),/*}}}*/
-        "operator_binary_percent#1", new MethodDescr
+        "operator_binary_percent#1",new MethodDescr
 (/*{{{*/
 "String format operator `%%`. Value of class `%s` is formatted according to formating characters contained in it." % m_target_name,
 ["Any type supported by formating characters or object of class %s." % doc_class_ref("Array")],
@@ -974,7 +974,7 @@ obj *= 5;
      get_property("Float","create_example"),
      get_property("String","create_example")]
 ),/*}}}*/
-        "create#1", new MethodDescr
+        "create#1",new MethodDescr
 (/*{{{*/
 "Creates new object of class `%s` which size is given by method parameter." % m_target_name,
 ["Type convertible to integer."],
@@ -989,7 +989,7 @@ obj = String.create(%s);
      get_property("Integer","create_example"),
      get_property("Float","create_example")]
 ),/*}}}*/
-        "split#1", new MethodDescr
+        "split#1",new MethodDescr
 (/*{{{*/
 "Split object of class `%s` to object of class %s containing one or more objects of class `%s`." % [m_target_name,doc_class_ref("Array"),m_target_name],
 ["Object of class %s." % doc_class_ref("String")],
@@ -999,7 +999,7 @@ obj = String.create(%s);
 (\"res: %%s\\n\" %% $obj.split(\" \")).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "join#1", new MethodDescr
+        "join#1",new MethodDescr
 (/*{{{*/
 "Objects of iterable which is given as method parameter are converted to
 strings by call of its to_string#0 method.  Result strings are then
@@ -1014,7 +1014,7 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
 (\"res: %%s\\n\" %% $\" \".join(obj)).print();
 " % [get_property("Array","create_example"),get_property("Dict","create_example")]
 ),/*}}}*/
-        "head#1", new MethodDescr
+        "head#1",new MethodDescr
 (/*{{{*/
 "Retrieve substring of object of class `%s` containing first `n` characters, where `n` is given by method parameter." % m_target_name,
 ["Object of class convertible to %s." % doc_class_ref("Integer")],
@@ -1025,7 +1025,7 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
 (\"obj.head(-1): %%s\\n\" %% obj.head(-1)).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "tail#1", new MethodDescr
+        "tail#1",new MethodDescr
 (/*{{{*/
 "Retrieve substring of object of class `%s` containing last `n` characters, where `n` is given by method parameter." % m_target_name,
 ["Object of class convertible to %s." % doc_class_ref("Integer")],
@@ -1036,7 +1036,7 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
 (\"obj.tail(-3): %%s\\n\" %% obj.tail(-3)).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "range#2", new MethodDescr
+        "range#2",new MethodDescr
 (/*{{{*/
 "From object of class `%s` retrieve substring identified by indexes of first and last character in source string." % m_target_name,
 ["Object of class convertible to %s." % doc_class_ref("Integer"),
@@ -1048,7 +1048,7 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
 (\"obj.range(-1,-1): %%s\\n\" %% obj.range(-1,-1)).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "get_idx#1", new MethodDescr
+        "get_idx#1",new MethodDescr
 (/*{{{*/
 "Retrieve index of substring given by method parameter in object of class `%s`." % m_target_name,
 ["Object of class %s." % doc_class_ref("String")],
@@ -1061,7 +1061,7 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
 (\"obj.get_idx(\\\"Test\\\"): %%s\\n\" %% $obj.get_idx(\"Test\")).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "get_idxs#1", new MethodDescr
+        "get_idxs#1",new MethodDescr
 (/*{{{*/
 "Retrieve all indexes of substring given by method parameter in object of class `%s`." % m_target_name,
 ["Object of class %s." % doc_class_ref("String")],
@@ -1072,7 +1072,7 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
 (\"obj.get_idxs(\\\"e\\\"): %%s\\n\" %% $obj.get_idxs(\"e\")).print();
 " % get_code(m_target_class,"obj","create_repeated")
 ),/*}}}*/
-        "replace#2", new MethodDescr
+        "replace#2",new MethodDescr
 (/*{{{*/
 "In object of class `%s` replace all substrings given as first method parameter by string given as second method parameter." % m_target_name,
 ["Object of class %s identifying substrings to be replaced by second method parameter." % doc_class_ref("String"),
@@ -1090,7 +1090,7 @@ obj = [\"numbers:\",1,2,3,4,\"end\"];
     {
       class_Array["methods"] = new Dict(
       [/*{{{*/
-        "operator_binary_ls_br_equal#1", new MethodDescr
+        "operator_binary_ls_br_equal#1",new MethodDescr
 (/*{{{*/
 "Copy values of elements retrieved from method parameter to values of elements
 of object of class `%s`." % m_target_name,
@@ -1105,7 +1105,7 @@ obj <= [1,2,3];
 (\"a,b,c: %s\\n\" % $[a,b,c]).print();
 "
 ),/*}}}*/
-        "item#1", new MethodDescr
+        "item#1",new MethodDescr
 (/*{{{*/
 "Retrieve element from object of class `%s` stored at requested index position." % m_target_name,
 ["Type convertible to integer."],
@@ -1125,7 +1125,7 @@ get_property(m_target_name,"iter_next_idx") % ["obj","idx"]
 ]
 ),/*}}}*/
 
-        "resize#1", new MethodDescr
+        "resize#1",new MethodDescr
 (/*{{{*/
 "Resize object of class `%s` to size given by method parameter. New
 elements are initialized to objects of class %s." % [m_target_name,doc_class_ref("Blank")],
@@ -1197,7 +1197,7 @@ obj.resize(8);
       ]);/*}}}*/
       class_Exception["methods"] = new Dict(
       [/*{{{*/
-        "Exception#1", new MethodDescr
+        "Exception#1",new MethodDescr
 (/*{{{*/
 "Creates user exception (object of class `%s`) encapsulating object given by method parameter." % m_target_name,
 ["Any type."],
@@ -1206,7 +1206,7 @@ new Blank(),"
 (\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "throw#0", new MethodDescr
+        "throw#0",new MethodDescr
 (/*{{{*/
 "Throws exception represented by object of class `%s`." % m_target_name,
 [],new Blank(),"
@@ -1220,7 +1220,7 @@ catch (exc)
 }
 " % get_property(m_target_name,"create_example")
 ),/*}}}*/
-        "get_type#0", new MethodDescr
+        "get_type#0",new MethodDescr
 (/*{{{*/
 "Retrieve object of class %s representing type of exception." % doc_class_ref("Error"),
 [],"* Object of class %s." % doc_class_ref("Error"),"
@@ -1228,7 +1228,7 @@ catch (exc)
 (\"obj.get_type(): %%s\\n\" %% $obj.get_type()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "get_value#0", new MethodDescr
+        "get_value#0",new MethodDescr
 (/*{{{*/
 "Retrieve value encapsulated by object of type `%s`." % m_target_name,
 [],"* Any type.","
@@ -1236,7 +1236,7 @@ catch (exc)
 (\"obj.get_value(): %%s\\n\" %% obj.get_value()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "get_file_name#0", new MethodDescr
+        "get_file_name#0",new MethodDescr
 (/*{{{*/
 "Return name of source file in which object of class `%s` was thrown." % m_target_name,
 [],"* Object of class %s if exception was thrown.
@@ -1252,7 +1252,7 @@ catch (exc)
 }
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "get_line#0", new MethodDescr
+        "get_line#0",new MethodDescr
 (/*{{{*/
 "Return line of source file in which object of class `%s` was thrown." % m_target_name,
 [],"* Object of class %s if exception was thrown.
@@ -1268,7 +1268,7 @@ catch (exc)
 }
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "error_print#0", new MethodDescr
+        "error_print#0",new MethodDescr
 (/*{{{*/
 "Print information about exception described by object of class `%s` to
 error output of process." % m_target_name,
@@ -1289,7 +1289,7 @@ catch (exc)
     {
       class_Type["methods"] = new Dict(
       [/*{{{*/
-        "Type#1", new MethodDescr
+        "Type#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` identifying type of method parameter." % m_target_name,
 ["Any type."],
@@ -1316,7 +1316,7 @@ obj = new Type(\"Hello world\");
       ]);/*}}}*/
       class_Mutex["methods"] = new Dict(
       [/*{{{*/
-        "lock#0", new MethodDescr
+        "lock#0",new MethodDescr
 (/*{{{*/
 "Try to lock object of class `%s` by calling thread. If mutex is already
 locked, calling thread blocks until the mutex becomes available." %
@@ -1328,7 +1328,7 @@ m_target_name,
 obj.unlock();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "try_lock#0", new MethodDescr
+        "try_lock#0",new MethodDescr
 (/*{{{*/
 "Try to lock object of class `%s` by calling thread. If mutex is already
 locked, method do not blocks and returns object of class %s immediately." %
@@ -1340,7 +1340,7 @@ locked, method do not blocks and returns object of class %s immediately." %
 obj.unlock();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "unlock#0", new MethodDescr
+        "unlock#0",new MethodDescr
 (/*{{{*/
 "Unlock object of class `%s` owned by calling thread." % m_target_name,
 [],"* Object of class %s if object of class `%s` was successfully unlocked.
@@ -1369,7 +1369,7 @@ obj.lock();
       ]);/*}}}*/
       class_Thread["methods"] = new Dict(
       [/*{{{*/
-        "join#0", new MethodDescr
+        "join#0",new MethodDescr
 (/*{{{*/
 "Method waits for thread specified by object of class `%s` to terminate." % m_target_name,
 [],"* Value returned by entry method of successfully joined thread.
@@ -1378,7 +1378,7 @@ obj.lock();
 (\"obj.join(): %%s\\n\" %% $obj.join()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "try_join#0", new MethodDescr
+        "try_join#0",new MethodDescr
 (/*{{{*/
 "Method tries to join thread specified by object of class `%s`. Method returns
 immediately even if thread was not yet terminated." % m_target_name,
@@ -1390,7 +1390,7 @@ Sys.sleep(100);
 (\"obj.try_join(): %%s\\n\" %% $obj.try_join()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "detach#0", new MethodDescr
+        "detach#0",new MethodDescr
 (/*{{{*/
 "Method marks thread specified by object of class `%s` as detached.
 When detached thread terminates its resources are released without need for
@@ -1401,7 +1401,7 @@ joining." % m_target_name,
 (\"obj.detach(): %%s\\n\" %% $obj.detach()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "yield#0", new MethodDescr
+        "yield#0",new MethodDescr
 (/*{{{*/
 "Method suspend thread execution in favor of other threads running in system.",
 [],"* Object of class %s." % doc_class_ref("Blank"),"
@@ -1415,7 +1415,7 @@ joining." % m_target_name,
     {
       class_Delegate["methods"] = new Dict(
       [/*{{{*/
-        "Delegate#3", new MethodDescr
+        "Delegate#3",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` referring to method
 of object given as first parameter, with name given by second parameter,
@@ -1425,7 +1425,7 @@ and accepting count of parameters given by third parameter." % m_target_name,
 (\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "call#1", new MethodDescr
+        "call#1",new MethodDescr
 (/*{{{*/
 "Calls method identified by object of class `%s`. Parameters 
 of called method are retrieved from object of class %s, which is given as
@@ -1436,7 +1436,7 @@ res = obj.call([1,2]);
 (\"res: %%s\\n\" %% $res).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "papply#1", new MethodDescr
+        "papply#1",new MethodDescr
 (/*{{{*/
 "Partially apply parameters of method identified by object of class `%s`. Parameters 
 of partially applied method are retrieved from object of class %s, which is given as
@@ -1455,7 +1455,7 @@ res.call([2]);
     {
       class_Set["methods"] = new Dict(
       [/*{{{*/
-        "remove#1", new MethodDescr
+        "remove#1",new MethodDescr
 (/*{{{*/
 "From object of class `%s` remove elements with value equal to value of method
 parameter." % m_target_name,
@@ -1467,7 +1467,7 @@ obj.remove(4);
 (\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "operator_binary_minus_equal#1", new MethodDescr
+        "operator_binary_minus_equal#1",new MethodDescr
 (/*{{{*/
 "Set difference operator `-=`. Creates object of class `%s` containing
 elements from first object of class `%s` that are not contained in second
@@ -1481,7 +1481,7 @@ obj_0 -= obj_1;
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
-        "operator_binary_ampersand_equal#1", new MethodDescr
+        "operator_binary_ampersand_equal#1",new MethodDescr
 (/*{{{*/
 "Set intersection operator `&=`. Creates object of class `%s` containing
 elements contained in both source objects of class `%s`. Value of variable is
@@ -1494,7 +1494,7 @@ obj_0 &= obj_1;
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
-        "operator_binary_pipe_equal#1", new MethodDescr
+        "operator_binary_pipe_equal#1",new MethodDescr
 (/*{{{*/
 "Set union operator `|=`. Creates object of class `%s` containing elements
 from both source objects of class `%s`. Value of variable is set to result
@@ -1507,7 +1507,7 @@ obj_0 |= obj_1;
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
-        "operator_binary_circumflex_equal#1", new MethodDescr
+        "operator_binary_circumflex_equal#1",new MethodDescr
 (/*{{{*/
 "Set symmetric difference operator `^=`. Creates object of class `%s`
 containing elements from both source objects of class `%s` that are contained
@@ -1521,7 +1521,7 @@ obj_0 ^= obj_1;
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
-        "operator_binary_ampersand#1", new MethodDescr
+        "operator_binary_ampersand#1",new MethodDescr
 (/*{{{*/
 "Set intersection operator `&`. Creates object of class `%s` containing
 elements contained in both source objects of class `%s`." % [m_target_name,m_target_name],
@@ -1533,7 +1533,7 @@ res = obj_0 & obj_1;
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
-        "operator_binary_pipe#1", new MethodDescr
+        "operator_binary_pipe#1",new MethodDescr
 (/*{{{*/
 "Set union operator `|`. Creates object of class `%s` containing elements from
 both source objects of class `%s`." % [m_target_name,m_target_name],
@@ -1545,7 +1545,7 @@ res = obj_0 | obj_1;
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
-        "operator_binary_circumflex#1", new MethodDescr
+        "operator_binary_circumflex#1",new MethodDescr
 (/*{{{*/
 "Set symmetric difference operator `^`. Creates object of class `%s`
 containing elements from both source objects of class `%s` that are contained
@@ -1558,7 +1558,7 @@ res = obj_0 ^ obj_1;
 " % [get_code(m_target_class,"obj_0","create_example"),
      get_code(m_target_class,"obj_1","create_compare")]
 ),/*}}}*/
-        "operator_binary_rs_br_equal#1", new MethodDescr
+        "operator_binary_rs_br_equal#1",new MethodDescr
 (/*{{{*/
 "Subset test operator `>=`. Test if object of class `%s` given by method
 parameter is subset of object of class `%s`." % [m_target_name,m_target_name],
@@ -1574,7 +1574,7 @@ obj_1 = new Set(obj_0[0:2:]);
 (\"obj_1 >= obj_0: %%d\\n\" %% (obj_1 >= obj_0)).print();
 " % get_code(m_target_class,"obj_0","create_example")
 ),/*}}}*/
-        "operator_binary_ls_br_equal#1", new MethodDescr
+        "operator_binary_ls_br_equal#1",new MethodDescr
 (/*{{{*/
 "Superset test operator `<=`. Test if object of class `%s` given by method
 parameter is superset of object of class `%s`." % [m_target_name,m_target_name],
@@ -1590,7 +1590,7 @@ obj_1 = new Set(obj_0[0:2:]);
 (\"obj_1 <= obj_0: %%d\\n\" %% (obj_1 <= obj_0)).print();
 " % get_code(m_target_class,"obj_0","create_example")
 ),/*}}}*/
-        "operator_binary_minus#1", new MethodDescr
+        "operator_binary_minus#1",new MethodDescr
 (/*{{{*/
 "Set difference operator `-`. Creates object of class `%s` containing elements
 from first object of class `%s` that are not contained in second object of
@@ -1610,7 +1610,7 @@ res = obj_0 - obj_1;
     {
       class_Tree["methods"] = new Dict(
       [/*{{{*/
-        "insert#1", new MethodDescr
+        "insert#1",new MethodDescr
 (/*{{{*/
 "Insert method parameter to object of class `%s`." % m_target_name,
 ["Any type."],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -1629,7 +1629,7 @@ obj.insert(7);
     {
       class_Dict["methods"] = new Dict(
       [/*{{{*/
-        "Dict#1", new MethodDescr
+        "Dict#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` based on elements retrieved from method
 parameter. Values of parameter elements represents alternating keys and values
@@ -1657,7 +1657,7 @@ of new object of class `%s`." % [m_target_name,m_target_name],
       ]);/*}}}*/
       class_Sys["methods"] = new Dict(
       [/*{{{*/
-        "sleep#1", new MethodDescr
+        "sleep#1",new MethodDescr
 (/*{{{*/
 "Suspends execution for the given number of milliseconds.",
 ["Type convertible to integer."],new Blank(),"
@@ -1666,7 +1666,7 @@ Sys.sleep(250);
 (\"time: %d ms\\n\" % new Time().milli_sec()).print();
 "
 ),/*}}}*/
-        "srand#1", new MethodDescr
+        "srand#1",new MethodDescr
 (/*{{{*/
 "Seeds the pseudo-random number generator.",
 ["Type convertible to integer."],new Blank(),"
@@ -1675,7 +1675,7 @@ Sys.srand(12345);
 (\"rand: %d\\n\" % Sys.rand()).print();
 "
 ),/*}}}*/
-        "rand#0", new MethodDescr
+        "rand#0",new MethodDescr
 (/*{{{*/
 "Returns a pseudo-random integer in range from `0` to `Sys.RAND_MAX`.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -1685,28 +1685,28 @@ Sys.srand(12345);
 (\"rand: %d\\n\" % Sys.rand()).print();
 "
 ),/*}}}*/
-        "getpid#0", new MethodDescr
+        "getpid#0",new MethodDescr
 (/*{{{*/
 "Returns process identifier of current process.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
 (\"type: %s\\n\" % $(type Sys.getpid())).print();
 "
 ),/*}}}*/
-        "getuid#0", new MethodDescr
+        "getuid#0",new MethodDescr
 (/*{{{*/
 "Returns user identifier of current process.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
 (\"type: %s\\n\" % $(type Sys.getuid())).print();
 "
 ),/*}}}*/
-        "getgid#0", new MethodDescr
+        "getgid#0",new MethodDescr
 (/*{{{*/
 "Returns group identifier of current process.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
 (\"type: %s\\n\" % $(type Sys.getgid())).print();
 "
 ),/*}}}*/
-        "system#1", new MethodDescr
+        "system#1",new MethodDescr
 (/*{{{*/
 "Executes shell command described by string parameter.",
 ["Object of class %s containing shell command to be executed." % doc_class_ref("String")],
@@ -1715,7 +1715,7 @@ res = Sys.system(\"echo Hello from shell\");
 (\"exit status: %d\\n\" % res).print();
 "
 ),/*}}}*/
-        "exit#1", new MethodDescr
+        "exit#1",new MethodDescr
 (/*{{{*/
 "Terminates current process with given exit code.",
 ["Type convertible to integer representing exit code."],new Blank(),"
@@ -1724,7 +1724,7 @@ res = Sys.system(\"echo Hello from shell\");
 (\"this would not be reached\\n\").print();
 "
 ),/*}}}*/
-        "open#2", new MethodDescr
+        "open#2",new MethodDescr
 (/*{{{*/
 "Opens file and returns object of class %s." % doc_class_ref("File"),
 ["Object of class %s containing path to file." % doc_class_ref("String"),
@@ -1737,7 +1737,7 @@ file.close();
 Sys.remove(\"temporary\");
 "
 ),/*}}}*/
-        "popen#2", new MethodDescr
+        "popen#2",new MethodDescr
 (/*{{{*/
 "Opens process pipe and returns object of class %s." % doc_class_ref("Pipe"),
 ["Object of class %s containing system command." % doc_class_ref("String"),
@@ -1748,7 +1748,7 @@ pipe.read().print();
 pipe.close();
 "
 ),/*}}}*/
-        "pipe#0", new MethodDescr
+        "pipe#0",new MethodDescr
 (/*{{{*/
 "Creates anonymous pipe and returns array of two objects of class %s. First
 element is read end, second is write end." % doc_class_ref("Pipe"),
@@ -1759,7 +1759,7 @@ pipes[0].read().print();
 pipes[0].close();
 "
 ),/*}}}*/
-        "mkdir#1", new MethodDescr
+        "mkdir#1",new MethodDescr
 (/*{{{*/
 "Creates directory in file system.",
 ["Object of class %s containing path of directory to create." % doc_class_ref("String")],new Blank(),"
@@ -1768,7 +1768,7 @@ Sys.mkdir(\"test_dir\");
 Sys.rmdir(\"test_dir\");
 "
 ),/*}}}*/
-        "rmdir#1", new MethodDescr
+        "rmdir#1",new MethodDescr
 (/*{{{*/
 "Removes empty directory from file system.",
 ["Object of class %s containing path of directory to remove." % doc_class_ref("String")],new Blank(),"
@@ -1778,7 +1778,7 @@ Sys.rmdir(\"test_dir\");
 (\"is_dir: %d\\n\" % Sys.is_dir(\"test_dir\")).print();
 "
 ),/*}}}*/
-        "chdir#1", new MethodDescr
+        "chdir#1",new MethodDescr
 (/*{{{*/
 "Changes current working directory.",
 ["Object of class %s containing path of target directory." % doc_class_ref("String")],new Blank(),"
@@ -1790,7 +1790,7 @@ Sys.chdir(cwd);
 Sys.rmdir(\"test_dir\");
 "
 ),/*}}}*/
-        "listdir#1", new MethodDescr
+        "listdir#1",new MethodDescr
 (/*{{{*/
 "Returns list of entries in directory.",
 ["Object of class %s containing path to directory." % doc_class_ref("String")],
@@ -1805,7 +1805,7 @@ Sys.remove(\"test_dir/b.txt\");
 Sys.rmdir(\"test_dir\");
 "
 ),/*}}}*/
-        "mkfifo#1", new MethodDescr
+        "mkfifo#1",new MethodDescr
 (/*{{{*/
 "Creates named pipe (FIFO) in file system.",
 ["Object of class %s containing path of named pipe to create." % doc_class_ref("String")],new Blank(),"
@@ -1814,7 +1814,7 @@ Sys.mkfifo(\"test_fifo\");
 Sys.remove(\"test_fifo\");
 "
 ),/*}}}*/
-        "chmod#2", new MethodDescr
+        "chmod#2",new MethodDescr
 (/*{{{*/
 "Changes file permissions.",
 ["Object of class %s containing file path." % doc_class_ref("String"),
@@ -1825,7 +1825,7 @@ Sys.chmod(\"temporary\",0644);
 Sys.remove(\"temporary\");
 "
 ),/*}}}*/
-        "remove#1", new MethodDescr
+        "remove#1",new MethodDescr
 (/*{{{*/
 "Deletes file or directory from file system.",
 ["Object of class %s." % doc_class_ref("String")],new Blank(),"
@@ -1835,7 +1835,7 @@ Sys.remove(\"temporary\");
 (\"Sys.is_file(): %d\\n\" % Sys.is_file(\"temporary\")).print();
 "
 ),/*}}}*/
-        "rename#2", new MethodDescr
+        "rename#2",new MethodDescr
 (/*{{{*/
 "Renames file or directory.",
 ["Object of class %s containing source path." % doc_class_ref("String"),
@@ -1847,7 +1847,7 @@ Sys.rename(\"temporary\",\"temporary_new\");
 Sys.remove(\"temporary_new\");
 "
 ),/*}}}*/
-        "link#2", new MethodDescr
+        "link#2",new MethodDescr
 (/*{{{*/
 "Creates hard link to file.",
 ["Object of class %s containing path to existing file." % doc_class_ref("String"),
@@ -1859,14 +1859,14 @@ Sys.remove(\"temporary_link\");
 Sys.remove(\"temporary\");
 "
 ),/*}}}*/
-        "getcwd#0", new MethodDescr
+        "getcwd#0",new MethodDescr
 (/*{{{*/
 "Returns current working directory path.",
 [],"* Object of class %s." % doc_class_ref("String"),"
 (\"type: %s\\n\" % $(type Sys.getcwd())).print();
 "
 ),/*}}}*/
-        "setenv#2", new MethodDescr
+        "setenv#2",new MethodDescr
 (/*{{{*/
 "Sets environment variable.",
 ["Object of class %s containing variable name." % doc_class_ref("String"),
@@ -1875,7 +1875,7 @@ Sys.setenv(\"TEST_VAR\",\"hello\");
 (\"TEST_VAR: %s\\n\" % Sys.getenv(\"TEST_VAR\")).print();
 "
 ),/*}}}*/
-        "getenv#1", new MethodDescr
+        "getenv#1",new MethodDescr
 (/*{{{*/
 "Returns value of environment variable.",
 ["Object of class %s containing variable name." % doc_class_ref("String")],
@@ -1884,7 +1884,7 @@ Sys.setenv(\"TEST_VAR\",\"hello\");
 (\"TEST_VAR: %s\\n\" % Sys.getenv(\"TEST_VAR\")).print();
 "
 ),/*}}}*/
-        "is_file#1", new MethodDescr
+        "is_file#1",new MethodDescr
 (/*{{{*/
 "Tests whether given path refers to a regular file.",
 ["Object of class %s containing file path." % doc_class_ref("String")],
@@ -1895,7 +1895,7 @@ new File(\"temporary\",\"w\").write_close(\"data\");
 Sys.remove(\"temporary\");
 "
 ),/*}}}*/
-        "is_dir#1", new MethodDescr
+        "is_dir#1",new MethodDescr
 (/*{{{*/
 "Tests whether given path refers to a directory.",
 ["Object of class %s containing directory path." % doc_class_ref("String")],
@@ -1906,7 +1906,7 @@ Sys.mkdir(\"test_dir\");
 Sys.rmdir(\"test_dir\");
 "
 ),/*}}}*/
-        "size#1", new MethodDescr
+        "size#1",new MethodDescr
 (/*{{{*/
 "Returns size of file in bytes.",
 ["Object of class %s containing file path." % doc_class_ref("String")],
@@ -1916,7 +1916,7 @@ new File(\"temporary\",\"w\").write_close(\"Hello world\\n\");
 Sys.remove(\"temporary\");
 "
 ),/*}}}*/
-        "time#0", new MethodDescr
+        "time#0",new MethodDescr
 (/*{{{*/
 "Returns current Unix time in seconds.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -1930,7 +1930,7 @@ Sys.remove(\"temporary\");
     {
       class_Pipe["methods"] = new Dict(
       [/*{{{*/
-        "Pipe#2", new MethodDescr
+        "Pipe#2",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s`, based on system command to be executed and file
 open flags." % m_target_name,
@@ -1940,7 +1940,7 @@ open flags." % m_target_name,
 obj.read().print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "pid#0", new MethodDescr
+        "pid#0",new MethodDescr
 (/*{{{*/
 "Retrieve pid of process on other side of pipe.",
 [],
@@ -1970,7 +1970,7 @@ obj.read().print();
       ]);/*}}}*/
       class_File["methods"] = new Dict(
       [/*{{{*/
-        "File#2", new MethodDescr
+        "File#2",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s`, based on file path and file open flags." % m_target_name,
 ["Object of class %s containing path to file." % doc_class_ref("String"),
@@ -1979,7 +1979,7 @@ obj.read().print();
 obj.read().print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "seek#2", new MethodDescr
+        "seek#2",new MethodDescr
 (/*{{{*/
 "Sets file position indicator of stream represented by object of class `%s`.
 New position in bytes is obtained by adding offset to given position
@@ -1994,7 +1994,7 @@ obj.seek(0,File.SEEK_SET);
 (\"line: %%s\\n\" %% obj.readln()).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "tell#0", new MethodDescr
+        "tell#0",new MethodDescr
 (/*{{{*/
 "Return of file position indicator of stream represented by object of class
 `%s`." % m_target_name,
@@ -2040,7 +2040,7 @@ obj.readln();
       ]);/*}}}*/
       class_Socket["methods"] = new Dict(
       [/*{{{*/
-        "Socket#2", new MethodDescr
+        "Socket#2",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` with given domain and type." % m_target_name,
 ["Type convertible to integer representing communication domain (e.g. `Socket.AF_INET`).",
@@ -2050,7 +2050,7 @@ obj = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
 obj.close();
 "
 ),/*}}}*/
-        "listen#2", new MethodDescr
+        "listen#2",new MethodDescr
 (/*{{{*/
 "Binds socket to address and starts listening for incoming connections.",
 ["Object of class %s representing address to bind to." % doc_class_ref("SocketAddr"),
@@ -2059,7 +2059,7 @@ obj.close();
 (\"obj: %%s\\n\" %% $obj).print();
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "accept#0", new MethodDescr
+        "accept#0",new MethodDescr
 (/*{{{*/
 "Accepts incoming connection on listening socket. Returns array containing
 new connected socket and address of connecting peer.",
@@ -2068,7 +2068,7 @@ new connected socket and address of connecting peer.",
 (\"obj: %%s\\n\" %% $obj).print();
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "connect#1", new MethodDescr
+        "connect#1",new MethodDescr
 (/*{{{*/
 "Connects socket to given address.",
 ["Object of class %s representing address to connect to." % doc_class_ref("SocketAddr")],new Blank(),"
@@ -2076,7 +2076,7 @@ new connected socket and address of connecting peer.",
 (\"obj: %%s\\n\" %% $obj).print();
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "bind#1", new MethodDescr
+        "bind#1",new MethodDescr
 (/*{{{*/
 "Binds socket to given local address.",
 ["Object of class %s representing local address to bind to." % doc_class_ref("SocketAddr")],new Blank(),"
@@ -2086,7 +2086,7 @@ obj.bind(new SocketAddr(\"127.0.0.1\",0));
 obj.close();
 "
 ),/*}}}*/
-        "sendto#2", new MethodDescr
+        "sendto#2",new MethodDescr
 (/*{{{*/
 "Sends data to given address using connectionless socket.",
 ["Object of class %s containing data to send." % doc_class_ref("String"),
@@ -2097,7 +2097,7 @@ obj.bind(new SocketAddr(\"127.0.0.1\",0));
 obj.close();
 "
 ),/*}}}*/
-        "recvfrom#0", new MethodDescr
+        "recvfrom#0",new MethodDescr
 (/*{{{*/
 "Receives data from connectionless socket. Returns array containing received
 data string and sender address.",
@@ -2108,7 +2108,7 @@ obj.bind(new SocketAddr(\"127.0.0.1\",0));
 obj.close();
 "
 ),/*}}}*/
-        "close#0", new MethodDescr
+        "close#0",new MethodDescr
 (/*{{{*/
 "Closes socket and releases associated resources.",
 [],new Blank(),"
@@ -2117,7 +2117,7 @@ obj.close();
 (\"closed\\n\").print();
 "
 ),/*}}}*/
-        "set_timeout#2", new MethodDescr
+        "set_timeout#2",new MethodDescr
 (/*{{{*/
 "Sets socket send/receive timeout.",
 ["Type convertible to integer representing timeout seconds.",
@@ -2127,7 +2127,7 @@ obj.set_timeout(5,0);
 (\"timeout set\\n\").print();
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "sockopt#3", new MethodDescr
+        "sockopt#3",new MethodDescr
 (/*{{{*/
 "Sets socket option.",
 ["Type convertible to integer representing option level (e.g. `Socket.SOL_SOCKET`).",
@@ -2139,7 +2139,7 @@ obj.sockopt(Socket.SOL_SOCKET,Socket.SO_BROADCAST,1);
 obj.close();
 "
 ),/*}}}*/
-        "sockopt#2", new MethodDescr
+        "sockopt#2",new MethodDescr
 (/*{{{*/
 "Retrieves socket option value.",
 ["Type convertible to integer representing option level (e.g. `Socket.SOL_SOCKET`).",
@@ -2150,7 +2150,7 @@ obj = new Socket(Socket.AF_INET,Socket.SOCK_STREAM);
 obj.close();
 "
 ),/*}}}*/
-        "write#1", new MethodDescr
+        "write#1",new MethodDescr
 (/*{{{*/
 "Writes data to connected socket.",
 ["Object of class %s containing data to write." % doc_class_ref("String")],new Blank(),"
@@ -2159,7 +2159,7 @@ obj.write(\"Hello\\n\");
 (\"written\\n\").print();
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "read#0", new MethodDescr
+        "read#0",new MethodDescr
 (/*{{{*/
 "Reads all available data from socket.",
 [],"* Object of class %s." % doc_class_ref("String"),"
@@ -2168,7 +2168,7 @@ data = obj.read();
 (\"data: %%s\\n\" %% data).print();
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "read#1", new MethodDescr
+        "read#1",new MethodDescr
 (/*{{{*/
 "Reads exactly given number of bytes from socket.",
 ["Type convertible to integer representing number of bytes to read."],
@@ -2178,7 +2178,7 @@ data = obj.read(5);
 (\"data: %%s\\n\" %% data).print();
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "get_fd#0", new MethodDescr
+        "get_fd#0",new MethodDescr
 (/*{{{*/
 "Returns underlying file descriptor of socket.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2194,7 +2194,7 @@ obj.close();
     {
       class_Buffer["methods"] = new Dict(
       [/*{{{*/
-        "size#0", new MethodDescr
+        "size#0",new MethodDescr
 (/*{{{*/
 "Returns size of buffer in bytes.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2208,7 +2208,7 @@ obj.close();
     {
       class_SocketAddr["methods"] = new Dict(
       [/*{{{*/
-        "SocketAddr#2", new MethodDescr
+        "SocketAddr#2",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` from hostname or IP address string and port number." % m_target_name,
 ["Object of class %s containing hostname or IP address." % doc_class_ref("String"),
@@ -2217,7 +2217,7 @@ obj = new SocketAddr(\"127.0.0.1\",8080);
 (\"obj: %s\\n\" % $obj).print();
 "
 ),/*}}}*/
-        "name#0", new MethodDescr
+        "name#0",new MethodDescr
 (/*{{{*/
 "Returns hostname or IP address of socket address.",
 [],"* Object of class %s." % doc_class_ref("String"),"
@@ -2225,7 +2225,7 @@ obj = new SocketAddr(\"127.0.0.1\",8080);
 (\"name: %s\\n\" % obj.name()).print();
 "
 ),/*}}}*/
-        "port#0", new MethodDescr
+        "port#0",new MethodDescr
 (/*{{{*/
 "Returns port number of socket address.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2240,7 +2240,7 @@ obj = new SocketAddr(\"127.0.0.1\",8080);
     {
       class_Regex["methods"] = new Dict(
       [/*{{{*/
-        "Regex#1", new MethodDescr
+        "Regex#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` from regular expression pattern string." % m_target_name,
 ["Object of class %s containing POSIX regular expression pattern." % doc_class_ref("String")],new Blank(),"
@@ -2248,7 +2248,7 @@ obj = new Regex(\"[0-9]+\");
 (\"obj: %s\\n\" % $obj).print();
 "
 ),/*}}}*/
-        "match#1", new MethodDescr
+        "match#1",new MethodDescr
 (/*{{{*/
 "Matches regular expression against input string. Returns array with start
 and end positions of match, or object of class %s if no match found." % doc_class_ref("Blank"),
@@ -2261,7 +2261,7 @@ res = obj.match(\"no digits\");
 (\"match: %s\\n\" % $res).print();
 "
 ),/*}}}*/
-        "match#2", new MethodDescr
+        "match#2",new MethodDescr
 (/*{{{*/
 "Matches regular expression against input string with capture groups. Returns
 array of sub-arrays with start and end positions for each group, or object
@@ -2274,7 +2274,7 @@ res = obj.match(\"abc 123\",3);
 (\"match: %s\\n\" % $res).print();
 "
 ),/*}}}*/
-        "match_from#2", new MethodDescr
+        "match_from#2",new MethodDescr
 (/*{{{*/
 "Matches regular expression against input string starting at given byte offset.
 Returns array with start and end positions (absolute), or object of class
@@ -2287,7 +2287,7 @@ res = obj.match_from(\"abc 123 def 456\",8);
 (\"match: %s\\n\" % $res).print();
 "
 ),/*}}}*/
-        "split#1", new MethodDescr
+        "split#1",new MethodDescr
 (/*{{{*/
 "Splits input string by regular expression pattern.",
 ["Object of class %s containing input string." % doc_class_ref("String")],
@@ -2297,7 +2297,7 @@ res = obj.split(\"one, two, three\");
 (\"parts: %s\\n\" % $res).print();
 "
 ),/*}}}*/
-        "replace#2", new MethodDescr
+        "replace#2",new MethodDescr
 (/*{{{*/
 "Replaces all occurrences of regular expression pattern in input string with
 replacement string.",
@@ -2359,7 +2359,7 @@ res = obj.replace(\"abc 123 def 456\",\"NUM\");
       ]);/*}}}*/
       class_Signal["methods"] = new Dict(
       [/*{{{*/
-        "bind#2", new MethodDescr
+        "bind#2",new MethodDescr
 (/*{{{*/
 "Binds signal handler delegate to given signal number. Handler delegate must
 accept one parameter. Can only be called from main thread.",
@@ -2369,7 +2369,7 @@ accept one parameter. Can only be called from main thread.",
 (\"Signal class\\n\").print();
 "
 ),/*}}}*/
-        "unbind#1", new MethodDescr
+        "unbind#1",new MethodDescr
 (/*{{{*/
 "Removes signal handler for given signal number. Can only be called from main thread.",
 ["Type convertible to integer representing signal number."],new Blank(),"
@@ -2377,7 +2377,7 @@ accept one parameter. Can only be called from main thread.",
 (\"Signal class\\n\").print();
 "
 ),/*}}}*/
-        "send#2", new MethodDescr
+        "send#2",new MethodDescr
 (/*{{{*/
 "Sends signal to process identified by process ID.",
 ["Type convertible to integer representing target process ID.",
@@ -2405,7 +2405,7 @@ accept one parameter. Can only be called from main thread.",
       ]);/*}}}*/
       class_Poll["methods"] = new Dict(
       [/*{{{*/
-        "Poll#1", new MethodDescr
+        "Poll#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` from array of alternating file descriptor and
 event pairs." % m_target_name,
@@ -2417,7 +2417,7 @@ obj = new Poll([pipe[0].get_fd(),Poll.POLLIN]);
 pipe[0].close();
 "
 ),/*}}}*/
-        "ready#1", new MethodDescr
+        "ready#1",new MethodDescr
 (/*{{{*/
 "Polls file descriptors with given timeout. Returns `1` if any file descriptor
 is ready, `0` if timeout expired.",
@@ -2430,7 +2430,7 @@ obj = new Poll([pipe[0].get_fd(),Poll.POLLIN]);
 pipe[0].close();
 "
 ),/*}}}*/
-        "poll#1", new MethodDescr
+        "poll#1",new MethodDescr
 (/*{{{*/
 "Polls file descriptors with given timeout. Returns array of revents values
 for each file descriptor, or object of class %s on timeout." % doc_class_ref("Blank"),
@@ -2451,7 +2451,7 @@ pipe[0].close();
     {
       class_Timer["methods"] = new Dict(
       [/*{{{*/
-        "Timer#0", new MethodDescr
+        "Timer#0",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s`." % m_target_name,
 [],new Blank(),"
@@ -2459,7 +2459,7 @@ obj = new Timer();
 (\"obj: %s\\n\" % $obj).print();
 "
 ),/*}}}*/
-        "schedule#3", new MethodDescr
+        "schedule#3",new MethodDescr
 (/*{{{*/
 "Schedules callback to be called after given delay. Returns record index that
 can be used to cancel scheduled callback.",
@@ -2474,7 +2474,7 @@ Sys.sleep(150);
 obj.process();
 "
 ),/*}}}*/
-        "cancel#1", new MethodDescr
+        "cancel#1",new MethodDescr
 (/*{{{*/
 "Cancels scheduled timer callback identified by record index.",
 ["Type convertible to integer representing record index returned by [`schedule#3`](#schedule%233)."],new Blank(),"
@@ -2484,7 +2484,7 @@ obj.cancel(idx);
 (\"cancelled\\n\").print();
 "
 ),/*}}}*/
-        "process#0", new MethodDescr
+        "process#0",new MethodDescr
 (/*{{{*/
 "Fires all scheduled callbacks whose delay has expired.",
 [],new Blank(),"
@@ -2494,7 +2494,7 @@ Sys.sleep(100);
 obj.process();
 "
 ),/*}}}*/
-        "remain#0", new MethodDescr
+        "remain#0",new MethodDescr
 (/*{{{*/
 "Returns time remaining in milliseconds until next scheduled event, or object
 of class %s if no timers are scheduled." % doc_class_ref("Blank"),
@@ -2504,7 +2504,7 @@ obj.schedule(1000,new Delegate(this,\"timer_cb\",1),\"data\");
 (\"type: %s\\n\" % $(type obj.remain())).print();
 "
 ),/*}}}*/
-        "timeout#0", new MethodDescr
+        "timeout#0",new MethodDescr
 (/*{{{*/
 "Returns time remaining in milliseconds until next scheduled event. Returns
 `0` if a timer has already expired.",
@@ -2532,7 +2532,7 @@ obj.schedule(1000,new Delegate(this,\"timer_cb\",1),\"data\");
       ]);/*}}}*/
       class_Clock["methods"] = new Dict(
       [/*{{{*/
-        "getres#1", new MethodDescr
+        "getres#1",new MethodDescr
 (/*{{{*/
 "Returns resolution of given clock as array of seconds and nanoseconds.",
 ["Type convertible to integer representing clock identifier (e.g. `Clock.CLOCK_REALTIME`)."],
@@ -2541,7 +2541,7 @@ res = Clock.getres(Clock.CLOCK_REALTIME);
 (\"resolution: %s\\n\" % $res).print();
 "
 ),/*}}}*/
-        "gettime#1", new MethodDescr
+        "gettime#1",new MethodDescr
 (/*{{{*/
 "Returns current time of given clock as array of seconds and nanoseconds.",
 ["Type convertible to integer representing clock identifier (e.g. `Clock.CLOCK_MONOTONIC`)."],
@@ -2550,7 +2550,7 @@ time = Clock.gettime(Clock.CLOCK_MONOTONIC);
 (\"time: %s\\n\" % $time).print();
 "
 ),/*}}}*/
-        "settime#2", new MethodDescr
+        "settime#2",new MethodDescr
 (/*{{{*/
 "Sets time of given clock.",
 ["Type convertible to integer representing clock identifier.",
@@ -2566,7 +2566,7 @@ time = Clock.gettime(Clock.CLOCK_MONOTONIC);
     {
       class_Time["methods"] = new Dict(
       [/*{{{*/
-        "Time#0", new MethodDescr
+        "Time#0",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` representing current time." % m_target_name,
 [],new Blank(),"
@@ -2574,7 +2574,7 @@ obj = new Time();
 (\"type: %s\\n\" % $(type obj)).print();
 "
 ),/*}}}*/
-        "Time#1", new MethodDescr
+        "Time#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` from given value. Accepts integer (nanoseconds),
 float, object of class `%s`, or string in format `\"YYYYMMDDHHmmSS\"`." % [m_target_name,m_target_name],
@@ -2585,7 +2585,7 @@ obj = new Time(\"20250101120000\");
 (\"obj: %s\\n\" % $obj).print();
 "
 ),/*}}}*/
-        "value#0", new MethodDescr
+        "value#0",new MethodDescr
 (/*{{{*/
 "Returns raw time value in nanoseconds.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2593,7 +2593,7 @@ obj = new Time(\"20250315143025\");
 (\"value: %d\\n\" % obj.value()).print();
 "
 ),/*}}}*/
-        "nano_sec#0", new MethodDescr
+        "nano_sec#0",new MethodDescr
 (/*{{{*/
 "Returns time value in nanoseconds.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2601,7 +2601,7 @@ obj = new Time(\"20250315143025\");
 (\"nano_sec: %d\\n\" % obj.nano_sec()).print();
 "
 ),/*}}}*/
-        "micro_sec#0", new MethodDescr
+        "micro_sec#0",new MethodDescr
 (/*{{{*/
 "Returns time value in microseconds.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2609,7 +2609,7 @@ obj = new Time(\"20250315143025\");
 (\"micro_sec: %d\\n\" % obj.micro_sec()).print();
 "
 ),/*}}}*/
-        "milli_sec#0", new MethodDescr
+        "milli_sec#0",new MethodDescr
 (/*{{{*/
 "Returns time value in milliseconds.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2617,7 +2617,7 @@ obj = new Time(\"20250315143025\");
 (\"milli_sec: %d\\n\" % obj.milli_sec()).print();
 "
 ),/*}}}*/
-        "seconds#0", new MethodDescr
+        "seconds#0",new MethodDescr
 (/*{{{*/
 "Returns time value in seconds.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2625,7 +2625,7 @@ obj = new Time(\"20250315143025\");
 (\"seconds: %d\\n\" % obj.seconds()).print();
 "
 ),/*}}}*/
-        "minutes#0", new MethodDescr
+        "minutes#0",new MethodDescr
 (/*{{{*/
 "Returns time value in minutes.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2633,7 +2633,7 @@ obj = new Time(\"20250315143025\");
 (\"minutes: %d\\n\" % obj.minutes()).print();
 "
 ),/*}}}*/
-        "hours#0", new MethodDescr
+        "hours#0",new MethodDescr
 (/*{{{*/
 "Returns time value in hours.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2641,7 +2641,7 @@ obj = new Time(\"20250315143025\");
 (\"hours: %d\\n\" % obj.hours()).print();
 "
 ),/*}}}*/
-        "days#0", new MethodDescr
+        "days#0",new MethodDescr
 (/*{{{*/
 "Returns time value in days.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2649,7 +2649,7 @@ obj = new Time(\"20250315143025\");
 (\"days: %d\\n\" % obj.days()).print();
 "
 ),/*}}}*/
-        "datetime#0", new MethodDescr
+        "datetime#0",new MethodDescr
 (/*{{{*/
 "Returns array of 10 integers representing date and time components:
 `[year, month, day, weekday, hour, minute, second, millisecond, microsecond, nanosecond]`.",
@@ -2659,7 +2659,7 @@ dt = obj.datetime();
 (\"datetime: %s\\n\" % $dt).print();
 "
 ),/*}}}*/
-        "day_of_week#0", new MethodDescr
+        "day_of_week#0",new MethodDescr
 (/*{{{*/
 "Returns day of week as integer.",
 [],"* Object of class %s." % doc_class_ref("Integer"),"
@@ -2674,7 +2674,7 @@ obj = new Time(\"20250101120000\");
     {
       class_FinalAutomata["methods"] = new Dict(
       [/*{{{*/
-        "FinalAutomata#1", new MethodDescr
+        "FinalAutomata#1",new MethodDescr
 (/*{{{*/
 "Creates final automata recognizing terminal symbols, from array of strings
 describing regular expressions.",
@@ -2685,7 +2685,7 @@ expressions describing terminal symbols." %
 (\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "get_source#1", new MethodDescr
+        "get_source#1",new MethodDescr
 (/*{{{*/
 "Creates object of class %s that can be used for retrieval of terminal symbol indexes." % doc_class_ref("FaSource"),
 ["Object of class %s representing source string in which terminals should be recognized." % doc_class_ref("String")],
@@ -2702,7 +2702,7 @@ obj = fa.get_source(\"Hello world\");
     {
       class_FaSource["methods"] = new Dict(
       [/*{{{*/
-        "next_terminal#0", new MethodDescr
+        "next_terminal#0",new MethodDescr
 (/*{{{*/
 "Retrieve next terminal symbol identified by object of class %s. If no terminal
 symbol was recognized, method will return object of class %s." %
@@ -2718,7 +2718,7 @@ while(Blank != (term = obj.next_terminal()))
 }
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "old_input_idx#0", new MethodDescr
+        "old_input_idx#0",new MethodDescr
 (/*{{{*/
 "Retrieve index in source string that refers to beginning of last recognized terminal symbol.",
 [],
@@ -2731,7 +2731,7 @@ while(Blank != (term = obj.next_terminal()))
 }
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "input_idx#0", new MethodDescr
+        "input_idx#0",new MethodDescr
 (/*{{{*/
 "Retrieve index in source string referring to first character that was not yet processed by final automata.",
 [],
@@ -2744,7 +2744,7 @@ while(Blank != (term = obj.next_terminal()))
 }
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "terminal#2", new MethodDescr
+        "terminal#2",new MethodDescr
 (/*{{{*/
 "Retrieve string that was recognized as last terminal symbol by final automata.",
 ["Type convertible to integer, representing offset from terminal begin.",
@@ -2758,7 +2758,7 @@ while(Blank != (term = obj.next_terminal()))
 }
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "terminal_length#0", new MethodDescr
+        "terminal_length#0",new MethodDescr
 (/*{{{*/
 "Retrieve length of last terminal symbol recognized by final automata.",
 [],
@@ -2771,7 +2771,7 @@ while(Blank != (term = obj.next_terminal()))
 }
 " % get_property(m_target_name,"create_example_obj")
 ),/*}}}*/
-        "next_item#0", new MethodDescr
+        "next_item#0",new MethodDescr
 (/*{{{*/
 "Retrieve next terminal symbol identified by object of class %s. If no terminal symbol was recognized, method will return object of class %s. Presence of this method implies that object of class `%s` is iterable." %
 [doc_class_ref("Integer"),doc_class_ref("Blank"),m_target_name],
@@ -2793,7 +2793,7 @@ for (term <- obj)
     {
       class_Parser["methods"] = new Dict(
       [/*{{{*/
-        "Parser#1", new MethodDescr
+        "Parser#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s` based on string containing description of language terminal
 symbols and its grammar rules." % m_target_name,
@@ -2803,7 +2803,7 @@ its grammar rules." % doc_class_ref("String")],new Blank(),"
 (\"obj: %%s\\n\" %% $obj).print();
 " % get_code(m_target_class,"obj","create_example")
 ),/*}}}*/
-        "parse#2", new MethodDescr
+        "parse#2",new MethodDescr
 (/*{{{*/
 "Parse source string given as first method parameter, and for each reduction
 occurred according to language grammar rules, call delegate given as second
@@ -2823,14 +2823,14 @@ obj.parse(\"!!test\",new Delegate(this,\"parse_cb\",1));
     {
       class_ParseState["methods"] = new Dict(
       [/*{{{*/
-        "rule_idx#0", new MethodDescr
+        "rule_idx#0",new MethodDescr
 (/*{{{*/
 "Retrieve index of rule according to which reduction occurred.",
 [],"* Object of class %s representing index of rule according to which reduction occurred." % doc_class_ref("Integer"),"
 (\"a_state.rule_idx(): %d\\n\" % a_state.rule_idx()).print();
 "
 ),/*}}}*/
-        "rule_body#1", new MethodDescr
+        "rule_body#1",new MethodDescr
 (/*{{{*/
 "Retrieve substring of parsed source string which is represented by item in
 rule body at position identified by index given as method parameter.",
@@ -2842,7 +2842,7 @@ else
   (\"%s\\n\" % a_state.rule_body(0)).print();
 "
 ),/*}}}*/
-        "old_input_idx#0", new MethodDescr
+        "old_input_idx#0",new MethodDescr
 (/*{{{*/
 "Retrieve index to source string that refers to beginning of last recognized
 terminal symbol.",
@@ -2851,7 +2851,7 @@ terminal symbol.",
 (\"a_state.old_input_idx(): %d\\n\" % a_state.old_input_idx()).print();
 "
 ),/*}}}*/
-        "input_idx#0", new MethodDescr
+        "input_idx#0",new MethodDescr
 (/*{{{*/
 "Retrieve index to source string referring to first character that was not yet
 processed by parser.",
@@ -2867,7 +2867,7 @@ processed by parser.",
     {
       class_Pack["methods"] = new Dict(
       [/*{{{*/
-        "pack#1", new MethodDescr
+        "pack#1",new MethodDescr
 (/*{{{*/
 "Convert object of any type to its binary representation.",
 ["Any type."],"* Object of class %s." % doc_class_ref("String"),"
@@ -2875,7 +2875,7 @@ data = Pack.pack(%s);
 (\"data.length(): %%d\\n\" %% data.length()).print();
 " % get_property("Dict","create_example")
 ),/*}}}*/
-        "unpack#1", new MethodDescr
+        "unpack#1",new MethodDescr
 (/*{{{*/
 "Creates object from its binary representation.",
 ["Object of class %s." % doc_class_ref("String")],
@@ -2885,7 +2885,7 @@ result = Pack.unpack(data);
 (\"result: %%s\\n\" %% $result).print();
 " % get_property("Dict","create_example")
 ),/*}}}*/
-        "code#2", new MethodDescr
+        "code#2",new MethodDescr
 (/*{{{*/
 "Convert list of objects to their binary representation. Binary format of
 encoded objects is determined by first method parameter. Parser
@@ -2898,7 +2898,7 @@ data = Pack.code(\"bhif\",[127,32767,2147483647,1.0]);
 (\"data.length(): %d\\n\" % data.length()).print();
 "
 ),/*}}}*/
-        "decode#2", new MethodDescr
+        "decode#2",new MethodDescr
 (/*{{{*/
 "Convert binary string to array of objects. Binary format of encoded objects
 is determined by first method parameter. Parser of binary format string is
@@ -2920,7 +2920,7 @@ result = Pack.decode(format,data);
     {
       class_Algo["methods"] = new Dict(
       [/*{{{*/
-        "all_true#1", new MethodDescr
+        "all_true#1",new MethodDescr
 (/*{{{*/
 "Test if all elements in iterable object are true.",
 ["Iterable type."],
@@ -2933,7 +2933,7 @@ obj = [1,2,3,4,5,6];
 (\"result: %d\\n\" % Algo.all_true(obj)).print();
 "
 ),/*}}}*/
-        "any_true#1", new MethodDescr
+        "any_true#1",new MethodDescr
 (/*{{{*/
 "Test if any element in iterable object is true.",
 ["Iterable type."],
@@ -2946,7 +2946,7 @@ obj = [0,0,0,0,1,0];
 (\"result: %d\\n\" % Algo.any_true(obj)).print();
 "
 ),/*}}}*/
-        "map#2", new MethodDescr
+        "map#2",new MethodDescr
 (/*{{{*/
 "Creates object of type %s containing elements from input iterable object
 transformed by given map function." % doc_class_ref("Array"),
@@ -2962,7 +2962,7 @@ result = Algo.map(new Range(1,5),:(size) return new Integer[size];);
 (\"result: %s\\n\" % $result).print();
 "
 ),/*}}}*/
-        "reduce#3", new MethodDescr
+        "reduce#3",new MethodDescr
 (/*{{{*/
 "Reduces all elements of iterable type object to one value.",
 ["Initial value.",
@@ -2978,7 +2978,7 @@ result = Algo.reduce(0,new Range(1,10),:(acc,value) return acc + value;);
 (\"result: %d\\n\" % result).print();
 "
 ),/*}}}*/
-        "filter#2", new MethodDescr
+        "filter#2",new MethodDescr
 (/*{{{*/
 "Creates object of type %s containing elements from input iterable object
 for which filter function returns true." % doc_class_ref("Array"),
@@ -2994,7 +2994,7 @@ result = Algo.filter(new Range(1,10),:(value) return value & 1;);
 (\"result: %s\\n\" % $result).print();
 "
 ),/*}}}*/
-        "zip#1", new MethodDescr
+        "zip#1",new MethodDescr
 (/*{{{*/
 "Creates object of type %s containing interleaved elements from input iterable objects." % doc_class_ref("Array"),
 ["Object of class %s containing iterable objects." % doc_class_ref("Array")],
@@ -3003,7 +3003,7 @@ result = Algo.zip([\"Hello\",new Range(1,10)]);
 (\"result: %s\\n\" % $result).print();
 "
 ),/*}}}*/
-        "tuple_zip#1", new MethodDescr
+        "tuple_zip#1",new MethodDescr
 (/*{{{*/
 "Creates object of type %s containing objects of type %s that are composed from
 elements of input iterable objects." % [doc_class_ref("Array"),doc_class_ref("Array")],
@@ -3020,7 +3020,7 @@ result = Algo.tuple_zip([\"Hello\",new Range(1,10)]);
     {
       class_Filter["methods"] = new Dict(
       [/*{{{*/
-        "map#2", new MethodDescr
+        "map#2",new MethodDescr
 (/*{{{*/
 "Creates object of type `%s` representing iterable containing elements
 from input iterable object transformed by given map function." % m_target_name,
@@ -3036,7 +3036,7 @@ result = Filter.map(new Range(1,5),:(size) return new Integer[size];);
 (\"result: %s\\n\" % $result[::]).print();
 "
 ),/*}}}*/
-        "filter#2", new MethodDescr
+        "filter#2",new MethodDescr
 (/*{{{*/
 "Creates object of type `%s` representing iterable containing elements from
 input iterable object for which filter function returns true." % m_target_name,
@@ -3052,7 +3052,7 @@ result = Filter.filter(new Range(1,10),:(value) return value & 1;);
 (\"result: %s\\n\" % $result[::]).print();
 "
 ),/*}}}*/
-        "next_item#0", new MethodDescr
+        "next_item#0",new MethodDescr
 (/*{{{*/
 "Retrieve next element from iterable object `%s`." % m_target_name,
 [],"Next element from iterable object `%s`." % m_target_name,"
@@ -3069,7 +3069,7 @@ while (Blank != (element = obj.next_item()))
     {
       class_Range["methods"] = new Dict(
       [/*{{{*/
-        "Range#1", new MethodDescr
+        "Range#1",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s`, representing infinite sequence, starting by method parameter." % m_target_name,
 ["First value in generated sequence."],new Blank(),"
@@ -3078,7 +3078,7 @@ obj = new Range(10);
 (\"obj: %s\\n\" % $obj[:10:]).print();
 "
 ),/*}}}*/
-        "Range#2", new MethodDescr
+        "Range#2",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s`, based on first and last values of requested
 sequence." % m_target_name,
@@ -3089,7 +3089,7 @@ sequence." % m_target_name,
 (\"obj: %%s\\n\" %% $obj[::]).print();
 " % get_code(m_target_name,"obj","create_example")
 ),/*}}}*/
-        "Range#3", new MethodDescr
+        "Range#3",new MethodDescr
 (/*{{{*/
 "Creates object of class `%s`, based on first, last and step value
 of requested sequence." % m_target_name,
@@ -3102,7 +3102,7 @@ obj = new Range(0,-19,-2);
 (\"obj: %s\\n\" % $obj[::]).print();
 "
 ),/*}}}*/
-        "next_item#0", new MethodDescr
+        "next_item#0",new MethodDescr
 (/*{{{*/
 "Retrieve next element from iterable object `%s`." % m_target_name,
 [],"Next element from iterable object `%s`." % m_target_name,"
@@ -3119,7 +3119,7 @@ while (Blank != (element = obj.next_item()))
     {
       class_Json["methods"] = new Dict(
       [/*{{{*/
-        "create#1", new MethodDescr
+        "create#1",new MethodDescr
 (/*{{{*/
 "Create object of class %s containing `JSON` representation of method parameter." % doc_class_ref("String"),
 ["Object of class %s." % doc_class_ref("Dict")],
@@ -3128,7 +3128,7 @@ obj = Json.create(%s);
 (\"obj: %%s\\n\" %% obj).print();
 " % get_property("Dict","create_example")
 ),/*}}}*/
-        "create_nice#2", new MethodDescr
+        "create_nice#2",new MethodDescr
 (/*{{{*/
 "Create object of class %s containing `JSON` representation of method parameter.
 Output is formatted in Human readable format." % doc_class_ref("String"),
@@ -3140,7 +3140,7 @@ obj = Json.create_nice(dict,\"   \");
 (\"obj: %%s\\n\" %% obj).print();
 " % get_code("Dict","dict","create_example")
 ),/*}}}*/
-        "create_nice#3", new MethodDescr
+        "create_nice#3",new MethodDescr
 (/*{{{*/
 "Create object of class %s containing `JSON` representation of method parameter.
 Output is formatted in Human readable format, and all but first line are indented by given string." % doc_class_ref("String"),
@@ -3153,7 +3153,7 @@ obj = Json.create_nice(dict,\"   \",\"|||\");
 (\"obj: %%s\\n\" %% obj).print();
 " % get_code("Dict","dict","create_example")
 ),/*}}}*/
-        "parse#1", new MethodDescr
+        "parse#1",new MethodDescr
 (/*{{{*/
 "Parse object of class %s containing `JSON` representation of object." % doc_class_ref("String"),
 ["Object of class %s containing `JSON` representation of object." % doc_class_ref("String")],

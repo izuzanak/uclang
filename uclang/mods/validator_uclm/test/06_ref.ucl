@@ -9,16 +9,16 @@ class Main
 
     // - ref pass -
     schema = new Dict([
-      "base", ["type", type Integer, ">=", 0],
-      "ref_entry", ["ref", "base"]
+      "base",["type",type Integer,">=",0],
+      "ref_entry",["ref","base"]
     ]);
     v = new Validator(schema);
-    v.validate("ref_entry", 10);
+    v.validate("ref_entry",10);
 
     // - ref fail (value fails referenced rule) -
     caught = 0;
     try {
-      v.validate("ref_entry", -1);
+      v.validate("ref_entry",-1);
     }
     catch (e)
     {
@@ -32,7 +32,7 @@ class Main
     // - ref fail (type mismatch in referenced rule) -
     caught = 0;
     try {
-      v.validate("ref_entry", "string_val");
+      v.validate("ref_entry","string_val");
     }
     catch (e)
     {
@@ -45,16 +45,16 @@ class Main
 
     // - chained refs: a -> b -> c -
     schema = new Dict([
-      "base", ["==", 42],
-      "mid", ["ref", "base"],
-      "top", ["ref", "mid"]
+      "base",["==",42],
+      "mid",["ref","base"],
+      "top",["ref","mid"]
     ]);
     v = new Validator(schema);
-    v.validate("top", 42);
+    v.validate("top",42);
 
     caught = 0;
     try {
-      v.validate("top", 99);
+      v.validate("top",99);
     }
     catch (e)
     {
@@ -69,23 +69,23 @@ class Main
     // ref-if validates the whole Dict against the referenced schema
     // when the specified key exists in the Dict
     schema = new Dict([
-      "with_addr", ["type", type Dict, "items", [
-        "address", ["type", type String, "length >=", 1]
+      "with_addr",["type",type Dict,"items",[
+        "address",["type",type String,"length >=",1]
       ]],
-      "entry", ["ref-if", ["with_addr", "address"]]
+      "entry",["ref-if",["with_addr","address"]]
     ]);
     v = new Validator(schema);
 
     // key present - whole dict validated against with_addr
-    v.validate("entry", new Dict(["address", "123 Main St"]));
+    v.validate("entry",new Dict(["address","123 Main St"]));
 
-    // key absent - validation is skipped, passes
-    v.validate("entry", new Dict(["other", "value"]));
+    // key absent - validation is skipped,passes
+    v.validate("entry",new Dict(["other","value"]));
 
     // key present with invalid value
     caught = 0;
     try {
-      v.validate("entry", new Dict(["address", ""]));
+      v.validate("entry",new Dict(["address",""]));
     }
     catch (e)
     {
@@ -99,7 +99,7 @@ class Main
     // - ref-if requires Dict -
     caught = 0;
     try {
-      v.validate("entry", "not_a_dict");
+      v.validate("entry","not_a_dict");
     }
     catch (e)
     {
@@ -112,25 +112,25 @@ class Main
 
     // - ref-type: constructs lookup name from ref + "-" + dict[key] -
     schema = new Dict([
-      "widget-button", ["type", type Dict, "items", ["label", ["type", type String]]],
-      "widget-text", ["type", type Dict, "items", ["content", ["type", type String]]],
-      "entry", ["ref-type", ["widget", "kind"]]
+      "widget-button",["type",type Dict,"items",["label",["type",type String]]],
+      "widget-text",["type",type Dict,"items",["content",["type",type String]]],
+      "entry",["ref-type",["widget","kind"]]
     ]);
     v = new Validator(schema);
 
     // button type
-    v.validate("entry", new Dict(["kind", "button", "label", "Click"]));
+    v.validate("entry",new Dict(["kind","button","label","Click"]));
 
     // text type
-    v.validate("entry", new Dict(["kind", "text", "content", "Hello"]));
+    v.validate("entry",new Dict(["kind","text","content","Hello"]));
 
     // key absent - validation is skipped
-    v.validate("entry", new Dict(["other", "data"]));
+    v.validate("entry",new Dict(["other","data"]));
 
     // - ref-type requires Dict -
     caught = 0;
     try {
-      v.validate("entry", "not_a_dict");
+      v.validate("entry","not_a_dict");
     }
     catch (e)
     {

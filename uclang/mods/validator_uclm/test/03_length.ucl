@@ -8,25 +8,25 @@ class Main
   {/*{{{*/
 
     schema = new Dict([
-      "leq", ["length ==", 5],
-      "lne", ["length !=", 5],
-      "llt", ["length <", 5],
-      "lgt", ["length >", 5],
-      "lle", ["length <=", 5],
-      "lge", ["length >=", 5]
+      "leq",["length ==",5],
+      "lne",["length !=",5],
+      "llt",["length <",5],
+      "lgt",["length >",5],
+      "lle",["length <=",5],
+      "lge",["length >=",5]
     ]);
     v = new Validator(schema);
 
     // - length == string pass -
-    v.validate("leq", "hello");
+    v.validate("leq","hello");
 
     // - length == array pass -
-    v.validate("leq", [1,2,3,4,5]);
+    v.validate("leq",[1,2,3,4,5]);
 
     // - length == fail -
     caught = 0;
     try {
-      v.validate("leq", "hi");
+      v.validate("leq","hi");
     }
     catch (e)
     {
@@ -38,12 +38,12 @@ class Main
     }
 
     // - length != pass -
-    v.validate("lne", "hi");
+    v.validate("lne","hi");
 
     // - length != fail -
     caught = 0;
     try {
-      v.validate("lne", "hello");
+      v.validate("lne","hello");
     }
     catch (e)
     {
@@ -55,12 +55,12 @@ class Main
     }
 
     // - length < pass -
-    v.validate("llt", "hi");
+    v.validate("llt","hi");
 
     // - length < fail (equal) -
     caught = 0;
     try {
-      v.validate("llt", "hello");
+      v.validate("llt","hello");
     }
     catch (e)
     {
@@ -74,7 +74,7 @@ class Main
     // - length < fail (greater) -
     caught = 0;
     try {
-      v.validate("llt", "hello!");
+      v.validate("llt","hello!");
     }
     catch (e)
     {
@@ -86,12 +86,12 @@ class Main
     }
 
     // - length > pass -
-    v.validate("lgt", "hello!");
+    v.validate("lgt","hello!");
 
     // - length > fail (equal) -
     caught = 0;
     try {
-      v.validate("lgt", "hello");
+      v.validate("lgt","hello");
     }
     catch (e)
     {
@@ -105,7 +105,7 @@ class Main
     // - length > fail (lesser) -
     caught = 0;
     try {
-      v.validate("lgt", "hi");
+      v.validate("lgt","hi");
     }
     catch (e)
     {
@@ -117,15 +117,15 @@ class Main
     }
 
     // - length <= pass (equal) -
-    v.validate("lle", "hello");
+    v.validate("lle","hello");
 
     // - length <= pass (less) -
-    v.validate("lle", "hi");
+    v.validate("lle","hi");
 
     // - length <= fail -
     caught = 0;
     try {
-      v.validate("lle", "hello!");
+      v.validate("lle","hello!");
     }
     catch (e)
     {
@@ -137,15 +137,15 @@ class Main
     }
 
     // - length >= pass (equal) -
-    v.validate("lge", "hello");
+    v.validate("lge","hello");
 
     // - length >= pass (greater) -
-    v.validate("lge", "hello!");
+    v.validate("lge","hello!");
 
     // - length >= fail -
     caught = 0;
     try {
-      v.validate("lge", "hi");
+      v.validate("lge","hi");
     }
     catch (e)
     {

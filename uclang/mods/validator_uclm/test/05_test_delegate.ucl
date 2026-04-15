@@ -8,14 +8,14 @@ class Main
   {/*{{{*/
 
     // - test delegate pass -
-    schema = new Dict(["positive", ["test", :(val) { return val > 0; }]]);
+    schema = new Dict(["positive",["test",:(val) { return val > 0; }]]);
     v = new Validator(schema);
-    v.validate("positive", 5);
+    v.validate("positive",5);
 
     // - test delegate fail -
     caught = 0;
     try {
-      v.validate("positive", -1);
+      v.validate("positive",-1);
     }
     catch (e)
     {
@@ -27,11 +27,11 @@ class Main
     }
 
     // - return 0 means fail -
-    schema = new Dict(["always_fail", ["test", :(val) { return 0; }]]);
+    schema = new Dict(["always_fail",["test",:(val) { return 0; }]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("always_fail", 42);
+      v.validate("always_fail",42);
     }
     catch (e)
     {
@@ -43,18 +43,18 @@ class Main
     }
 
     // - return nonzero means pass -
-    schema = new Dict(["always_pass", ["test", :(val) { return 1; }]]);
+    schema = new Dict(["always_pass",["test",:(val) { return 1; }]]);
     v = new Validator(schema);
-    v.validate("always_pass", 42);
+    v.validate("always_pass",42);
 
     // - delegate with string value -
-    schema = new Dict(["long_str", ["test", :(val) { return val.length() > 3; }]]);
+    schema = new Dict(["long_str",["test",:(val) { return val.length() > 3; }]]);
     v = new Validator(schema);
-    v.validate("long_str", "hello");
+    v.validate("long_str","hello");
 
     caught = 0;
     try {
-      v.validate("long_str", "hi");
+      v.validate("long_str","hi");
     }
     catch (e)
     {

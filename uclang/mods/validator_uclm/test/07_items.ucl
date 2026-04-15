@@ -9,18 +9,18 @@ class Main
 
     // - items dict pass -
     schema = new Dict([
-      "person", ["items", [
-        "name", ["type", type String],
-        "age", ["type", type Integer]
+      "person",["items",[
+        "name",["type",type String],
+        "age",["type",type Integer]
       ]]
     ]);
     v = new Validator(schema);
-    v.validate("person", new Dict(["name", "Alice", "age", 30]));
+    v.validate("person",new Dict(["name","Alice","age",30]));
 
     // - items dict fail -
     caught = 0;
     try {
-      v.validate("person", new Dict(["name", "Alice", "age", "thirty"]));
+      v.validate("person",new Dict(["name","Alice","age","thirty"]));
     }
     catch (e)
     {
@@ -33,18 +33,18 @@ class Main
 
     // - items dict fail: stack verification -
     schema = new Dict([
-      "entry", ["items", [
-        "name", ["type", type String],
-        "age", ["type", type Integer, ">=", 0]
+      "entry",["items",[
+        "name",["type",type String],
+        "age",["type",type Integer,">=",0]
       ]]
     ]);
     v = new Validator(schema);
     try {
-      v.validate("entry", new Dict(["name", "Bob", "age", -5]));
+      v.validate("entry",new Dict(["name","Bob","age",-5]));
     }
     catch (e)
     {
-      if (v.props_stack() != ["entry", "items", "age", ">="])
+      if (v.props_stack() != ["entry","items","age",">="])
       {
         new Exception("expected props_stack [entry,items,age,>=], got %s" % $v.props_stack()).throw();
       }
@@ -56,24 +56,24 @@ class Main
 
     // - items array pass -
     schema = new Dict([
-      "arr", ["items", [
-        0, ["==", 0],
-        1, ["==", 0],
-        2, ["==", "Hello"]
+      "arr",["items",[
+        0,["==",0],
+        1,["==",0],
+        2,["==","Hello"]
       ]]
     ]);
     v = new Validator(schema);
-    v.validate("arr", [0, 0, "Hello"]);
+    v.validate("arr",[0,0,"Hello"]);
 
     // - items array fail with stack -
     caught = 0;
     try {
-      v.validate("arr", [0, 0, 0]);
+      v.validate("arr",[0,0,0]);
     }
     catch (e)
     {
       caught = 1;
-      if (v.props_stack() != ["arr", "items", 2, "=="])
+      if (v.props_stack() != ["arr","items",2,"=="])
       {
         new Exception("expected props_stack [arr,items,2,==], got %s" % $v.props_stack()).throw();
       }
@@ -89,24 +89,24 @@ class Main
 
     // - items dict pass (from C test) -
     schema = new Dict([
-      "test", ["items", [
-        0, ["==", 0],
-        1, ["==", 0],
-        2, ["==", "Hello"]
+      "test",["items",[
+        0,["==",0],
+        1,["==",0],
+        2,["==","Hello"]
       ]]
     ]);
     v = new Validator(schema);
-    v.validate("test", new Dict([0, 0, 1, 0, 2, "Hello"]));
+    v.validate("test",new Dict([0,0,1,0,2,"Hello"]));
 
     // - items dict fail with stack -
     caught = 0;
     try {
-      v.validate("test", new Dict([0, 0, 1, 1, 2, "Hello"]));
+      v.validate("test",new Dict([0,0,1,1,2,"Hello"]));
     }
     catch (e)
     {
       caught = 1;
-      if (v.props_stack() != ["test", "items", 1, "=="])
+      if (v.props_stack() != ["test","items",1,"=="])
       {
         new Exception("expected props_stack [test,items,1,==], got %s" % $v.props_stack()).throw();
       }
@@ -122,24 +122,24 @@ class Main
 
     // - opt-items all present pass -
     schema = new Dict([
-      "opt", ["opt-items", [
-        "email", ["type", type String],
-        "phone", ["type", type String]
+      "opt",["opt-items",[
+        "email",["type",type String],
+        "phone",["type",type String]
       ]]
     ]);
     v = new Validator(schema);
-    v.validate("opt", new Dict(["email", "a@b.c", "phone", "123"]));
+    v.validate("opt",new Dict(["email","a@b.c","phone","123"]));
 
     // - opt-items partial pass -
-    v.validate("opt", new Dict(["email", "a@b.c"]));
+    v.validate("opt",new Dict(["email","a@b.c"]));
 
     // - opt-items none present pass -
-    v.validate("opt", new Dict(["other", "value"]));
+    v.validate("opt",new Dict(["other","value"]));
 
     // - opt-items fail -
     caught = 0;
     try {
-      v.validate("opt", new Dict(["email", 123]));
+      v.validate("opt",new Dict(["email",123]));
     }
     catch (e)
     {
@@ -153,7 +153,7 @@ class Main
     // - opt-items requires Dict -
     caught = 0;
     try {
-      v.validate("opt", [1, 2, 3]);
+      v.validate("opt",[1,2,3]);
     }
     catch (e)
     {

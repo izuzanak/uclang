@@ -8,22 +8,22 @@ class Main
   {/*{{{*/
 
     schema = new Dict([
-      "eq", ["==", 10],
-      "ne", ["!=", 10],
-      "lt", ["<", 10],
-      "gt", [">", 10],
-      "le", ["<=", 10],
-      "ge", [">=", 10]
+      "eq",["==",10],
+      "ne",["!=",10],
+      "lt",["<",10],
+      "gt",[">",10],
+      "le",["<=",10],
+      "ge",[">=",10]
     ]);
     v = new Validator(schema);
 
     // - == pass -
-    v.validate("eq", 10);
+    v.validate("eq",10);
 
     // - == fail -
     caught = 0;
     try {
-      v.validate("eq", 5);
+      v.validate("eq",5);
     }
     catch (e)
     {
@@ -35,12 +35,12 @@ class Main
     }
 
     // - != pass -
-    v.validate("ne", 5);
+    v.validate("ne",5);
 
     // - != fail -
     caught = 0;
     try {
-      v.validate("ne", 10);
+      v.validate("ne",10);
     }
     catch (e)
     {
@@ -52,12 +52,12 @@ class Main
     }
 
     // - < pass -
-    v.validate("lt", 5);
+    v.validate("lt",5);
 
     // - < fail (equal) -
     caught = 0;
     try {
-      v.validate("lt", 10);
+      v.validate("lt",10);
     }
     catch (e)
     {
@@ -71,7 +71,7 @@ class Main
     // - < fail (greater) -
     caught = 0;
     try {
-      v.validate("lt", 15);
+      v.validate("lt",15);
     }
     catch (e)
     {
@@ -83,12 +83,12 @@ class Main
     }
 
     // - > pass -
-    v.validate("gt", 15);
+    v.validate("gt",15);
 
     // - > fail (equal) -
     caught = 0;
     try {
-      v.validate("gt", 10);
+      v.validate("gt",10);
     }
     catch (e)
     {
@@ -102,7 +102,7 @@ class Main
     // - > fail (lesser) -
     caught = 0;
     try {
-      v.validate("gt", 5);
+      v.validate("gt",5);
     }
     catch (e)
     {
@@ -114,15 +114,15 @@ class Main
     }
 
     // - <= pass (equal) -
-    v.validate("le", 10);
+    v.validate("le",10);
 
     // - <= pass (less) -
-    v.validate("le", 5);
+    v.validate("le",5);
 
     // - <= fail -
     caught = 0;
     try {
-      v.validate("le", 15);
+      v.validate("le",15);
     }
     catch (e)
     {
@@ -134,15 +134,15 @@ class Main
     }
 
     // - >= pass (equal) -
-    v.validate("ge", 10);
+    v.validate("ge",10);
 
     // - >= pass (greater) -
-    v.validate("ge", 15);
+    v.validate("ge",15);
 
     // - >= fail -
     caught = 0;
     try {
-      v.validate("ge", 5);
+      v.validate("ge",5);
     }
     catch (e)
     {
@@ -154,13 +154,13 @@ class Main
     }
 
     // - == with strings -
-    schema = new Dict(["str_eq", ["==", "hello"]]);
+    schema = new Dict(["str_eq",["==","hello"]]);
     v = new Validator(schema);
-    v.validate("str_eq", "hello");
+    v.validate("str_eq","hello");
 
     caught = 0;
     try {
-      v.validate("str_eq", "world");
+      v.validate("str_eq","world");
     }
     catch (e)
     {

@@ -8,19 +8,19 @@ class Main
   {/*{{{*/
 
     // - all-items array pass -
-    schema = new Dict(["all_int", ["all-items", ["==", 10]]]);
+    schema = new Dict(["all_int",["all-items",["==",10]]]);
     v = new Validator(schema);
-    v.validate("all_int", [10, 10, 10]);
+    v.validate("all_int",[10,10,10]);
 
     // - all-items array fail with stack -
     caught = 0;
     try {
-      v.validate("all_int", [10, 10, 11]);
+      v.validate("all_int",[10,10,11]);
     }
     catch (e)
     {
       caught = 1;
-      if (v.props_stack() != ["all_int", "all-items", 2, "=="])
+      if (v.props_stack() != ["all_int","all-items",2,"=="])
       {
         new Exception("expected props_stack [all_int,all-items,2,==], got %s" % $v.props_stack()).throw();
       }
@@ -35,19 +35,19 @@ class Main
     }
 
     // - all-items dict pass -
-    schema = new Dict(["all_str", ["all-items", ["type", type String]]]);
+    schema = new Dict(["all_str",["all-items",["type",type String]]]);
     v = new Validator(schema);
-    v.validate("all_str", new Dict(["a", "hello", "b", "world"]));
+    v.validate("all_str",new Dict(["a","hello","b","world"]));
 
     // - all-items dict fail with stack -
     caught = 0;
     try {
-      v.validate("all_str", new Dict(["a", "hello", "b", 42]));
+      v.validate("all_str",new Dict(["a","hello","b",42]));
     }
     catch (e)
     {
       caught = 1;
-      if (v.props_stack() != ["all_str", "all-items", "b", "type"])
+      if (v.props_stack() != ["all_str","all-items","b","type"])
       {
         new Exception("expected props_stack [all_str,all-items,b,type], got %s" % $v.props_stack()).throw();
       }
@@ -62,25 +62,25 @@ class Main
     }
 
     // - all-items empty array pass -
-    v.validate("all_str", []);
+    v.validate("all_str",[]);
 
     // - all-items empty dict pass -
-    v.validate("all_str", new Dict());
+    v.validate("all_str",new Dict());
 
-    // - all-items with dict, all equal 10 (from C test) -
-    schema = new Dict(["test", ["all-items", ["==", 10]]]);
+    // - all-items with dict,all equal 10 (from C test) -
+    schema = new Dict(["test",["all-items",["==",10]]]);
     v = new Validator(schema);
-    v.validate("test", new Dict(["first", 10, "second", 10, "third", 10]));
+    v.validate("test",new Dict(["first",10,"second",10,"third",10]));
 
     // - all-items dict fail (third != 10) -
     caught = 0;
     try {
-      v.validate("test", new Dict(["first", 10, "second", 10, "third", 11]));
+      v.validate("test",new Dict(["first",10,"second",10,"third",11]));
     }
     catch (e)
     {
       caught = 1;
-      if (v.props_stack() != ["test", "all-items", "third", "=="])
+      if (v.props_stack() != ["test","all-items","third","=="])
       {
         new Exception("expected props_stack [test,all-items,third,==], got %s" % $v.props_stack()).throw();
       }
@@ -96,15 +96,15 @@ class Main
 
     // - all-items with ref to another entry -
     schema = new Dict([
-      "int_rule", ["type", type Integer],
-      "arr_ref", ["all-items", "int_rule"]
+      "int_rule",["type",type Integer],
+      "arr_ref",["all-items","int_rule"]
     ]);
     v = new Validator(schema);
-    v.validate("arr_ref", [1, 2, 3]);
+    v.validate("arr_ref",[1,2,3]);
 
     caught = 0;
     try {
-      v.validate("arr_ref", [1, "two", 3]);
+      v.validate("arr_ref",[1,"two",3]);
     }
     catch (e)
     {

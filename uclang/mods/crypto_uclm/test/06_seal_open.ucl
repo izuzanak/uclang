@@ -13,13 +13,13 @@ class Main
     parts.last() = "test_rsa_public.pem";
     pub_path  = parts.to_string("/");
 
-    priv = CryptoPKey.load_private(priv_path, "");
-    pub  = CryptoPKey.load_public(pub_path, "");
+    priv = CryptoPKey.load_private(priv_path,"");
+    pub  = CryptoPKey.load_public(pub_path,"");
 
     msg = "this is a test message for sealing" * 5;
 
     // - seal message to public key -
-    seal = new CryptoSeal("aes-256-cbc", [pub]);
+    seal = new CryptoSeal("aes-256-cbc",[pub]);
     ct = seal.update(msg) + seal.finalize();
     enc_keys = seal.keys();
     iv = seal.iv();
@@ -37,8 +37,8 @@ class Main
       new Exception("seal ciphertext equals plaintext").throw();
     }
 
-    // - open with matching private key (param order: name, enc_key, iv, priv_key) -
-    open = new CryptoOpen("aes-256-cbc", enc_keys[0], iv, priv);
+    // - open with matching private key (param order: name,enc_key,iv,priv_key) -
+    open = new CryptoOpen("aes-256-cbc",enc_keys[0],iv,priv);
     pt = open.update(ct) + open.finalize();
 
     if (pt != msg)
@@ -48,10 +48,10 @@ class Main
 
     // - seal with CryptoCipherInfo object form -
     info = new CryptoCipherInfo("aes-256-cbc");
-    seal = new CryptoSeal(info, [pub]);
+    seal = new CryptoSeal(info,[pub]);
     ct = seal.update(msg) + seal.finalize();
 
-    open = new CryptoOpen(info, seal.keys()[0], seal.iv(), priv);
+    open = new CryptoOpen(info,seal.keys()[0],seal.iv(),priv);
     if ((open.update(ct) + open.finalize()) != msg)
     {
       new Exception("seal/open with CipherInfo object failed").throw();

@@ -8,15 +8,15 @@ class Main
   {/*{{{*/
 
     // - multiple properties: bounded integer -
-    schema = new Dict(["bounded", ["type", type Integer, ">=", 0, "<=", 100]]);
+    schema = new Dict(["bounded",["type",type Integer,">=",0,"<=",100]]);
     v = new Validator(schema);
-    v.validate("bounded", 50);
-    v.validate("bounded", 0);
-    v.validate("bounded", 100);
+    v.validate("bounded",50);
+    v.validate("bounded",0);
+    v.validate("bounded",100);
 
     caught = 0;
     try {
-      v.validate("bounded", 150);
+      v.validate("bounded",150);
     }
     catch (e)
     {
@@ -29,7 +29,7 @@ class Main
 
     caught = 0;
     try {
-      v.validate("bounded", -1);
+      v.validate("bounded",-1);
     }
     catch (e)
     {
@@ -42,7 +42,7 @@ class Main
 
     caught = 0;
     try {
-      v.validate("bounded", "string");
+      v.validate("bounded","string");
     }
     catch (e)
     {
@@ -55,19 +55,19 @@ class Main
 
     // - reusable type definitions (web_gen.ucl pattern) -
     schema = new Dict([
-      "uint", ["regex", "^[0-9][0-9]*$"],
-      "path", ["regex", "^[a-zA-Z0-9/._-]*$"],
-      "config", ["type", type Dict, "items", [
-        "port", "uint",
-        "dir", "path"
+      "uint",["regex","^[0-9][0-9]*$"],
+      "path",["regex","^[a-zA-Z0-9/._-]*$"],
+      "config",["type",type Dict,"items",[
+        "port","uint",
+        "dir","path"
       ]]
     ]);
     v = new Validator(schema);
-    v.validate("config", new Dict(["port", "8080", "dir", "data/files"]));
+    v.validate("config",new Dict(["port","8080","dir","data/files"]));
 
     caught = 0;
     try {
-      v.validate("config", new Dict(["port", "abc", "dir", "data/files"]));
+      v.validate("config",new Dict(["port","abc","dir","data/files"]));
     }
     catch (e)
     {
@@ -79,16 +79,16 @@ class Main
     }
 
     // - in combined with type -
-    schema = new Dict(["protocol", [
-      "type", type String,
-      "in", new Set(["http", "https", "ftp", "sftp"])
+    schema = new Dict(["protocol",[
+      "type",type String,
+      "in",new Set(["http","https","ftp","sftp"])
     ]]);
     v = new Validator(schema);
-    v.validate("protocol", "https");
+    v.validate("protocol","https");
 
     caught = 0;
     try {
-      v.validate("protocol", "gopher");
+      v.validate("protocol","gopher");
     }
     catch (e)
     {
@@ -100,11 +100,11 @@ class Main
     }
 
     // - entry not found -
-    schema = new Dict(["exists", ["type", type Integer]]);
+    schema = new Dict(["exists",["type",type Integer]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("nonexistent", 42);
+      v.validate("nonexistent",42);
     }
     catch (e)
     {
@@ -116,11 +116,11 @@ class Main
     }
 
     // - wrong properties array size (odd) -
-    schema = new Dict(["bad", ["type"]]);
+    schema = new Dict(["bad",["type"]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("bad", 42);
+      v.validate("bad",42);
     }
     catch (e)
     {
@@ -132,11 +132,11 @@ class Main
     }
 
     // - invalid property id -
-    schema = new Dict(["bad_prop", ["nonexistent_prop", 42]]);
+    schema = new Dict(["bad_prop",["nonexistent_prop",42]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("bad_prop", 42);
+      v.validate("bad_prop",42);
     }
     catch (e)
     {
@@ -148,11 +148,11 @@ class Main
     }
 
     // - in with non-Set prop value -
-    schema = new Dict(["bad_in", ["in", [1, 2, 3]]]);
+    schema = new Dict(["bad_in",["in",[1,2,3]]]);
     v = new Validator(schema);
     caught = 0;
     try {
-      v.validate("bad_in", 1);
+      v.validate("bad_in",1);
     }
     catch (e)
     {
@@ -164,7 +164,7 @@ class Main
     }
 
     // - value_stack/props_stack before validate returns blank -
-    v = new Validator(new Dict(["x", ["type", type Integer]]));
+    v = new Validator(new Dict(["x",["type",type Integer]]));
     vs = v.value_stack();
     if ($vs != "<blank>")
     {
@@ -177,7 +177,7 @@ class Main
     }
 
     // - to_string returns Validator -
-    v = new Validator(new Dict(["x", ["type", type Integer]]));
+    v = new Validator(new Dict(["x",["type",type Integer]]));
     if ($v != "Validator")
     {
       new Exception("to_string should return 'Validator', got '%s'" % $v).throw();
@@ -192,19 +192,19 @@ class Main
 
     // - nested items with ref -
     schema = new Dict([
-      "name_rule", ["type", type String, "length >=", 1],
-      "age_rule", ["type", type Integer, ">=", 0, "<=", 150],
-      "person", ["type", type Dict, "items", [
-        "name", "name_rule",
-        "age", "age_rule"
+      "name_rule",["type",type String,"length >=",1],
+      "age_rule",["type",type Integer,">=",0,"<=",150],
+      "person",["type",type Dict,"items",[
+        "name","name_rule",
+        "age","age_rule"
       ]]
     ]);
     v = new Validator(schema);
-    v.validate("person", new Dict(["name", "Alice", "age", 30]));
+    v.validate("person",new Dict(["name","Alice","age",30]));
 
     caught = 0;
     try {
-      v.validate("person", new Dict(["name", "", "age", 30]));
+      v.validate("person",new Dict(["name","","age",30]));
     }
     catch (e)
     {
@@ -217,7 +217,7 @@ class Main
 
     caught = 0;
     try {
-      v.validate("person", new Dict(["name", "Bob", "age", -1]));
+      v.validate("person",new Dict(["name","Bob","age",-1]));
     }
     catch (e)
     {
@@ -230,11 +230,11 @@ class Main
 
     // - stack depth on nested failure -
     try {
-      v.validate("person", new Dict(["name", "Bob", "age", 200]));
+      v.validate("person",new Dict(["name","Bob","age",200]));
     }
     catch (e)
     {
-      if (v.props_stack() != ["person", "items", "age", "age_rule", "<="])
+      if (v.props_stack() != ["person","items","age","age_rule","<="])
       {
         new Exception("expected props_stack [person,items,age,age_rule,<=], got %s" % $v.props_stack()).throw();
       }

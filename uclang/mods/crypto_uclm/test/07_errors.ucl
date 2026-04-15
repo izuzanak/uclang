@@ -53,7 +53,7 @@ class Main
 
     // - CryptoEncrypt with wrong key length throws -
     caught = 0;
-    try { new CryptoEncrypt("aes-256-cbc", "short", Crypto.random(16)); }
+    try { new CryptoEncrypt("aes-256-cbc","short",Crypto.random(16)); }
     catch (e) { caught = 1; }
     if (caught != 1)
     {
@@ -62,7 +62,7 @@ class Main
 
     // - CryptoEncrypt with wrong IV length throws -
     caught = 0;
-    try { new CryptoEncrypt("aes-256-cbc", Crypto.random(32), ""); }
+    try { new CryptoEncrypt("aes-256-cbc",Crypto.random(32),""); }
     catch (e) { caught = 1; }
     if (caught != 1)
     {
@@ -71,7 +71,7 @@ class Main
 
     // - CryptoDecrypt with wrong key length throws -
     caught = 0;
-    try { new CryptoDecrypt("aes-256-cbc", "short", Crypto.random(16)); }
+    try { new CryptoDecrypt("aes-256-cbc","short",Crypto.random(16)); }
     catch (e) { caught = 1; }
     if (caught != 1)
     {
@@ -80,7 +80,7 @@ class Main
 
     // - CryptoPKey.load_private on nonexistent file throws -
     caught = 0;
-    try { CryptoPKey.load_private("/nonexistent/path.pem", ""); }
+    try { CryptoPKey.load_private("/nonexistent/path.pem",""); }
     catch (e) { caught = 1; }
     if (caught != 1)
     {
@@ -89,7 +89,7 @@ class Main
 
     // - CryptoPKey.load_public on nonexistent file throws -
     caught = 0;
-    try { CryptoPKey.load_public("/nonexistent/path.pem", ""); }
+    try { CryptoPKey.load_public("/nonexistent/path.pem",""); }
     catch (e) { caught = 1; }
     if (caught != 1)
     {
@@ -98,7 +98,7 @@ class Main
 
     // - CryptoSeal with empty public-key array throws -
     caught = 0;
-    try { new CryptoSeal("aes-256-cbc", []); }
+    try { new CryptoSeal("aes-256-cbc",[]); }
     catch (e) { caught = 1; }
     if (caught != 1)
     {

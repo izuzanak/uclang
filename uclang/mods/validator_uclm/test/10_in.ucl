@@ -8,16 +8,16 @@ class Main
   {/*{{{*/
 
     // - in with strings pass -
-    schema = new Dict(["color", ["in", new Set(["red", "green", "blue"])]]);
+    schema = new Dict(["color",["in",new Set(["red","green","blue"])]]);
     v = new Validator(schema);
-    v.validate("color", "red");
-    v.validate("color", "green");
-    v.validate("color", "blue");
+    v.validate("color","red");
+    v.validate("color","green");
+    v.validate("color","blue");
 
     // - in with strings fail -
     caught = 0;
     try {
-      v.validate("color", "yellow");
+      v.validate("color","yellow");
     }
     catch (e)
     {
@@ -29,16 +29,16 @@ class Main
     }
 
     // - in with integers pass -
-    schema = new Dict(["num", ["in", new Set([1, 2, 3])]]);
+    schema = new Dict(["num",["in",new Set([1,2,3])]]);
     v = new Validator(schema);
-    v.validate("num", 1);
-    v.validate("num", 2);
-    v.validate("num", 3);
+    v.validate("num",1);
+    v.validate("num",2);
+    v.validate("num",3);
 
     // - in with integers fail -
     caught = 0;
     try {
-      v.validate("num", 4);
+      v.validate("num",4);
     }
     catch (e)
     {
@@ -50,14 +50,14 @@ class Main
     }
 
     // - in with realistic values (from web_gen.ucl) -
-    schema = new Dict(["period", ["in", new Set(["1", "5", "10", "15", "30", "60"])]]);
+    schema = new Dict(["period",["in",new Set(["1","5","10","15","30","60"])]]);
     v = new Validator(schema);
-    v.validate("period", "10");
-    v.validate("period", "60");
+    v.validate("period","10");
+    v.validate("period","60");
 
     caught = 0;
     try {
-      v.validate("period", "7");
+      v.validate("period","7");
     }
     catch (e)
     {
