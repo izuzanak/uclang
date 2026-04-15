@@ -162,6 +162,30 @@ void *run_interpreter(void *data)
             continue;
           }
 #endif
+          // - test version argument -
+          else if (strcmp(arg_ptr,"version") == 0)
+          {
+            fprintf(stdout,"%s %s\n",c_name_str,c_version_str);
+            exit(0);
+          }
+          // - test help argument -
+          else if (strcmp(arg_ptr,"help") == 0)
+          {
+            fprintf(stdout,
+              "Usage: %s [OPTIONS] <script_file> [script_args...]\n"
+              "\n"
+              "Options:\n"
+              "  --mods=<path>      Set custom modules path (overrides UCLANG_MODS_PATH)\n",
+              c_name_str);
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
+            fprintf(stdout,
+              "  --spawner=<path>   Set spawner configuration file\n");
+#endif
+            fprintf(stdout,
+              "  --version          Show version information and exit\n"
+              "  --help             Show this help message and exit\n");
+            exit(0);
+          }
         }
 
         // - argument was not recognized -
