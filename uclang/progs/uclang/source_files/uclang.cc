@@ -175,15 +175,13 @@ void *run_interpreter(void *data)
               "Usage: %s [OPTIONS] <script_file> [script_args...]\n"
               "\n"
               "Options:\n"
-              "  --mods=<path>      Set custom modules path (overrides UCLANG_MODS_PATH)\n",
-              c_name_str);
+              "  --mods=<path>      Set custom modules path (overrides UCLANG_MODS_PATH)\n"
 #if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
-            fprintf(stdout,
-              "  --spawner=<path>   Set spawner configuration file\n");
+              "  --spawner=<path>   Set spawner configuration file\n"
 #endif
-            fprintf(stdout,
               "  --version          Show version information and exit\n"
-              "  --help             Show this help message and exit\n");
+              "  --help             Show this help message and exit\n",
+              c_name_str);
             exit(0);
           }
         }
