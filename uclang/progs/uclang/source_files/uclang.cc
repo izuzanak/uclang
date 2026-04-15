@@ -6,6 +6,21 @@ include "uclang.h"
 // - global interpreter pointer -
 interpreter_s *interpreter_ptr = nullptr;
 
+void print_help(FILE *out)
+{/*{{{*/
+  fprintf(out,
+    "Usage: %s [OPTIONS] <script_file> [script_args...]\n"
+    "\n"
+    "Options:\n"
+    "  --mods=<path>      Set custom modules path (overrides UCLANG_MODS_PATH)\n"
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
+    "  --spawner=<path>   Set spawner configuration file\n"
+#endif
+    "  --version          Show version information and exit\n"
+    "  --help             Show this help message and exit\n",
+    c_name_str);
+}/*}}}*/
+
 #if SYSTEM_TYPE_UNIX_SIGACTION == ENABLED
 void term_signal_handler(int signum)
 {/*{{{*/
@@ -171,19 +186,7 @@ void *run_interpreter(void *data)
           // - test help argument -
           else if (strcmp(arg_ptr,"help") == 0)
           {
-            fprintf(stdout,
-              "Usage: %s [OPTIONS] <script_file> [script_args...]\n"
-              "\n"
-              "Options:\n"
-              "  --mods=<path>      Set custom modules path (overrides UCLANG_MODS_PATH)\n",
-              c_name_str);
-#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
-            fprintf(stdout,
-              "  --spawner=<path>   Set spawner configuration file\n");
-#endif
-            fprintf(stdout,
-              "  --version          Show version information and exit\n"
-              "  --help             Show this help message and exit\n");
+            print_help(stdout);
             exit(0);
           }
         }
@@ -198,6 +201,7 @@ void *run_interpreter(void *data)
     if (argc <= arg_idx)
     {
       fprintf(stderr,"%s: Expected argument with name of script\n",argv[0]);
+      print_help(stderr);
 
       mods_path.clear();
 
@@ -209,6 +213,7 @@ void *run_interpreter(void *data)
     if (!source.source_string.load_text_file(argv[arg_idx]))
     {
       fprintf(stderr,"%s: Cannot open source file \"%s\"\n",argv[0],argv[arg_idx]);
+      print_help(stderr);
 
       mods_path.clear();
       source.clear();
