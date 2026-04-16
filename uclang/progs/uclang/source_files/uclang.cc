@@ -181,12 +181,18 @@ void *run_interpreter(void *data)
           else if (strcmp(arg_ptr,"version") == 0)
           {
             fprintf(stdout,"%s %s\n",c_name_str,c_version_str);
+
+            mods_path.clear();
+
             exit(0);
           }
           // - test help argument -
           else if (strcmp(arg_ptr,"help") == 0)
           {
             print_help(stdout);
+
+            mods_path.clear();
+
             exit(0);
           }
         }
@@ -213,7 +219,6 @@ void *run_interpreter(void *data)
     if (!source.source_string.load_text_file(argv[arg_idx]))
     {
       fprintf(stderr,"%s: Cannot open source file \"%s\"\n",argv[0],argv[arg_idx]);
-      print_help(stderr);
 
       mods_path.clear();
       source.clear();
