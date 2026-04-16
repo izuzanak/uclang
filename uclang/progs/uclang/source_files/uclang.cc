@@ -6,6 +6,21 @@ include "uclang.h"
 // - global interpreter pointer -
 interpreter_s *interpreter_ptr = nullptr;
 
+void print_help(FILE *out)
+{/*{{{*/
+  fprintf(out,
+    "Usage: %s [OPTIONS] <script_file> [script_args...]\n"
+    "\n"
+    "Options:\n"
+    "  --mods=<path>      Set custom modules path (overrides UCLANG_MODS_PATH)\n"
+#if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
+    "  --spawner=<path>   Set spawner configuration file\n"
+#endif
+    "  --version          Show version information and exit\n"
+    "  --help             Show this help message and exit\n",
+    c_name_str);
+}/*}}}*/
+
 #if SYSTEM_TYPE_UNIX_SIGACTION == ENABLED
 void term_signal_handler(int signum)
 {/*{{{*/
@@ -162,6 +177,24 @@ void *run_interpreter(void *data)
             continue;
           }
 #endif
+          // - test version argument -
+          else if (strcmp(arg_ptr,"version") == 0)
+          {
+            fprintf(stdout,"%s %s\n",c_name_str,c_version_str);
+
+            mods_path.clear();
+
+            exit(0);
+          }
+          // - test help argument -
+          else if (strcmp(arg_ptr,"help") == 0)
+          {
+            print_help(stdout);
+
+            mods_path.clear();
+
+            exit(0);
+          }
         }
 
         // - argument was not recognized -
@@ -174,6 +207,7 @@ void *run_interpreter(void *data)
     if (argc <= arg_idx)
     {
       fprintf(stderr,"%s: Expected argument with name of script\n",argv[0]);
+      print_help(stderr);
 
       mods_path.clear();
 

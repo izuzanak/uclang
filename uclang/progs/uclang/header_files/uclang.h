@@ -8,6 +8,12 @@ include "spawner.h"
 @end
 
 /*!
+ * \brief print usage/help message
+ * \param out - output stream (stdout or stderr)
+ */
+void print_help(FILE *out);
+
+/*!
  * \brief function executing script interpreter
  * \param data - data pointing to int argument cnt and char * array (argc,argv)
  */
