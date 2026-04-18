@@ -12,12 +12,12 @@ void print_help(FILE *out)
     "Usage: %s [OPTIONS] <script_file> [script_args...]\n"
     "\n"
     "Options:\n"
-    "  --mods=<path>      Set custom modules path (overrides UCLANG_MODS_PATH)\n"
+    "  --mods=<path>      Module search directories, separated by colons\n"
 #if SYSTEM_TYPE_UNIX_SPAWNER == ENABLED
-    "  --spawner=<path>   Set spawner configuration file\n"
+    "  --spawner=<path>   Path of spawner named pipe\n"
 #endif
-    "  --version          Show version information and exit\n"
-    "  --help             Show this help message and exit\n",
+    "  --version          Show version and exit\n"
+    "  --help             Show this help and exit\n",
     c_name_str);
 }/*}}}*/
 
