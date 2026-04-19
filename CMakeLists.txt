@@ -1,6 +1,18 @@
 
 cmake_minimum_required(VERSION 3.0.2...3.13)
 
+option(FILC_BUILD "Build with Fil-C compiler (/opt/fil/)" OFF)
+
+if(FILC_BUILD)
+  set(CMAKE_C_COMPILER "/opt/fil/bin/filcc")
+  set(CMAKE_CXX_COMPILER "/opt/fil/bin/fil++")
+  set(PKG_CONFIG_EXECUTABLE "/opt/fil/bin/pkg-config")
+  set(CMAKE_FIND_ROOT_PATH "/opt/fil")
+  set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+  set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+  set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+endif()
+
 find_package(PkgConfig)
 
 project(uclang)
@@ -16,8 +28,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 enable_testing()
 
 # - update compilation flags -
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfatal-errors -Wno-class-memaccess")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=undefined -fprofile-arcs -ftest-coverage")
+if(FILC_BUILD)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfatal-errors -Wno-unused-variable -Wno-nontrivial-memcall -Wno-vla-cxx-extension")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfatal-errors -Wno-class-memaccess")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=undefined -fprofile-arcs -ftest-coverage")
+endif()
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 # - process target source file -

@@ -250,8 +250,13 @@ union v_data_type
   operator double () const { return bd; }                      // NOLINT
   template <class T> operator T* () const { return (T *)ptr; } // NOLINT
 
+#ifdef __FILC__
+  v_data_type(const v_data_type &a_src) { memcpy(this,&a_src,sizeof(v_data_type)); }
+  v_data_type& operator=(const v_data_type &a_src) { memcpy(this,&a_src,sizeof(v_data_type)); return *this; }
+#else
   v_data_type(const v_data_type &a_src) : lli(a_src.lli) {}
   v_data_type& operator=(const v_data_type &a_src) { lli = a_src.lli; return *this; }
+#endif
   bool operator==(const v_data_type &a_second) { return lli == a_second.lli; }
 };
 
