@@ -37,7 +37,7 @@ void gf_uclvar_operator_plus(interpreter_thread_s &it,unsigned source_pos,void *
 
 void gf_uclvar_get_string(interpreter_thread_s &it,unsigned source_pos,void *a_value,string_s &a_string)
 {/*{{{*/
-  unsigned strings_size = 0; // NOLINT(clang-diagnostic-unused-but-set-variable)
+  unsigned strings_size = 0;
   string_s *s_ptr = &a_string;
 
   BIC_CALL_TO_STRING(it,a_value,source_pos,
@@ -48,7 +48,7 @@ void gf_uclvar_get_string(interpreter_thread_s &it,unsigned source_pos,void *a_v
   CONT_INIT_CLEAR(bc_array_s,buff);
   buff.push('"');
 
-  if (a_string.size > 1)
+  if (strings_size > 0 && a_string.size > 1)
   {
     char *c_ptr = a_string.data;
     char *c_ptr_end = c_ptr + a_string.size - 1;

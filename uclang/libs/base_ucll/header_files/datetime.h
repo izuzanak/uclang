@@ -111,7 +111,7 @@ inline void datetime_s_clear(datetime_s *a_this)
 
 inline void datetime_s::init()
 {/*{{{*/
-  memset(this,0,sizeof(datetime_s));
+  memset((void *)this,0,sizeof(datetime_s));
 }/*}}}*/
 
 inline void datetime_s::swap(datetime_s &second)
@@ -136,7 +136,7 @@ inline void datetime_s::swap(datetime_s &second)
 
 inline datetime_s &datetime_s::operator=(const datetime_s &src)
 {/*{{{*/
-  memcpy(this,&src,sizeof(datetime_s));
+  memcpy((void *)this,&src,sizeof(datetime_s));
   return *this;
 }/*}}}*/
 

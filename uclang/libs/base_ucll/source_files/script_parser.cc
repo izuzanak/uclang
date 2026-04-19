@@ -8441,7 +8441,7 @@ void script_parser_s::element_search()
         vn_ri_ep_map.used = variable_symbol_names.used;
 
         debug_assert(vn_ri_ep_map.data != nullptr);
-        memset(vn_ri_ep_map.data,(int)c_idx_not_exist,vn_ri_ep_map.used*sizeof(ri_ep_s));
+        memset((void *)vn_ri_ep_map.data,(int)c_idx_not_exist,vn_ri_ep_map.used*sizeof(ri_ep_s));
 
       }
       while(++cl_idx < class_records.used);
