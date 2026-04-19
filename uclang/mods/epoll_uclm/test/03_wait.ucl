@@ -1,0 +1,93 @@
+
+import sys;
+import epoll;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    pp = Sys.pipe();
+    rd_fd = pp[0].get_fd();
+    wr_fd = pp[1].get_fd();
+
+    // --- timeout case: empty pipe, 0ms timeout ---
+    ep = new Epoll(Epoll.CLOEXEC);
+    ep.add(rd_fd,Epoll.EPOLLIN);
+
+    result = ep.wait(1,0);
+    if (Blank != result)
+    {
+      new Exception("wait timeout: expected Blank, got %s" % $result).throw();
+    }
+
+    // --- writable fd: pipe write end is immediately writable ---
+    ep2 = new Epoll(Epoll.CLOEXEC);
+    ep2.add(wr_fd,Epoll.EPOLLOUT);
+
+    result = ep2.wait(1,100);
+    if (Blank == result)
+    {
+      new Exception("wait writable: expected events, got Blank").throw();
+    }
+
+    // - result is array with at least 2 elements [fd, events] -
+    if (result.length() < 2)
+    {
+      new Exception("wait writable: expected >= 2 elements, got %d" % result.length()).throw();
+    }
+
+    // - fd matches -
+    if (result[0] != wr_fd)
+    {
+      new Exception("wait writable fd: expected %d, got %d" % [wr_fd,result[0]]).throw();
+    }
+
+    // - EPOLLOUT should be set -
+    if (Epoll.EPOLLOUT & result[1] == 0)
+    {
+      new Exception("wait writable: EPOLLOUT not set in events").throw();
+    }
+
+    // --- readable fd: write data then check EPOLLIN ---
+    pp[1].write("test data\n");
+    pp[1].flush();
+
+    result = ep.wait(1,100);
+    if (Blank == result)
+    {
+      new Exception("wait readable: expected events, got Blank").throw();
+    }
+
+    if (result[0] != rd_fd)
+    {
+      new Exception("wait readable fd: expected %d, got %d" % [rd_fd,result[0]]).throw();
+    }
+
+    if (Epoll.EPOLLIN & result[1] == 0)
+    {
+      new Exception("wait readable: EPOLLIN not set").throw();
+    }
+
+    // --- multi-fd: both fds ready ---
+    ep3 = new Epoll(Epoll.CLOEXEC);
+    ep3.add(rd_fd,Epoll.EPOLLIN);
+    ep3.add(wr_fd,Epoll.EPOLLOUT);
+
+    result = ep3.wait(10,100);
+    if (Blank == result)
+    {
+      new Exception("wait multi: expected events, got Blank").throw();
+    }
+
+    // - should have 4 elements (2 fds x 2 per fd) -
+    if (result.length() != 4)
+    {
+      new Exception("wait multi: expected 4 elements, got %d" % result.length()).throw();
+    }
+
+    // - cleanup -
+    pp[0].close();
+    pp[1].close();
+  }/*}}}*/
+}

@@ -1,0 +1,105 @@
+
+import sys;
+import epoll;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    ep = new Epoll(Epoll.CLOEXEC);
+
+    // - update with odd-length array throws -
+    caught = 0;
+    try {
+      ep.update([1]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("update odd array did not throw").throw();
+    }
+
+    // - update with wrong fd type (string) throws -
+    caught = 0;
+    try {
+      ep.update(["bad",Epoll.EPOLLIN]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("update wrong fd type did not throw").throw();
+    }
+
+    // - update with wrong events type (string) throws -
+    caught = 0;
+    try {
+      ep.update([1,"bad"]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("update wrong events type did not throw").throw();
+    }
+
+    // - wait with max_events = 0 throws -
+    caught = 0;
+    try {
+      ep.wait(0,100);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("wait max_events=0 did not throw").throw();
+    }
+
+    // - wait with max_events = -1 throws -
+    caught = 0;
+    try {
+      ep.wait(-1,100);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("wait max_events=-1 did not throw").throw();
+    }
+
+    // - add with regular file fd throws (epoll rejects regular files) -
+    pid = Sys.getpid();
+    tmp = "/tmp/ucltest_epoll_05_%d.txt" % pid;
+    file = new File(tmp,"w");
+    file.write("test");
+    file.flush();
+    file_fd = file.get_fd();
+
+    caught = 0;
+    try {
+      ep.add(file_fd,Epoll.EPOLLIN);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("add regular file fd did not throw").throw();
+    }
+    file.close();
+    Sys.remove(tmp);
+  }/*}}}*/
+}

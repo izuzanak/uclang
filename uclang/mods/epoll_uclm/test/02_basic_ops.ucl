@@ -1,0 +1,101 @@
+
+import sys;
+import epoll;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - constructor with 0 flags -
+    ep = new Epoll(0);
+    if ($ep != "Epoll")
+    {
+      new Exception("Epoll(0) to_string: expected Epoll, got %s" % $ep).throw();
+    }
+
+    // - constructor with CLOEXEC -
+    ep = new Epoll(Epoll.CLOEXEC);
+    if ($ep != "Epoll")
+    {
+      new Exception("Epoll(CLOEXEC) to_string: expected Epoll, got %s" % $ep).throw();
+    }
+
+    // - create pipe for testable fds -
+    pp = Sys.pipe();
+    rd_fd = pp[0].get_fd();
+    wr_fd = pp[1].get_fd();
+
+    // - has before add returns 0 -
+    if (ep.has(rd_fd) != 0)
+    {
+      new Exception("has before add: expected 0, got %d" % ep.has(rd_fd)).throw();
+    }
+
+    // - add returns self -
+    ret = ep.add(rd_fd,Epoll.EPOLLIN);
+    if ($ret != "Epoll")
+    {
+      new Exception("add return: expected Epoll, got %s" % $ret).throw();
+    }
+
+    // - has after add returns 1 -
+    if (ep.has(rd_fd) != 1)
+    {
+      new Exception("has after add: expected 1, got %d" % ep.has(rd_fd)).throw();
+    }
+
+    // - add second fd -
+    ep.add(wr_fd,Epoll.EPOLLOUT);
+    if (ep.has(wr_fd) != 1)
+    {
+      new Exception("has wr_fd after add: expected 1, got %d" % ep.has(wr_fd)).throw();
+    }
+
+    // - del returns self -
+    ret = ep.del(rd_fd);
+    if ($ret != "Epoll")
+    {
+      new Exception("del return: expected Epoll, got %s" % $ret).throw();
+    }
+
+    // - has after del returns 0 -
+    if (ep.has(rd_fd) != 0)
+    {
+      new Exception("has after del: expected 0, got %d" % ep.has(rd_fd)).throw();
+    }
+
+    // - other fd still tracked -
+    if (ep.has(wr_fd) != 1)
+    {
+      new Exception("has wr_fd after del rd_fd: expected 1, got %d" % ep.has(wr_fd)).throw();
+    }
+
+    // - re-add rd_fd for reinit test -
+    ep.add(rd_fd,Epoll.EPOLLIN);
+
+    // - reinit returns self -
+    ret = ep.reinit();
+    if ($ret != "Epoll")
+    {
+      new Exception("reinit return: expected Epoll, got %s" % $ret).throw();
+    }
+
+    // - fds still tracked after reinit -
+    if (ep.has(rd_fd) != 1)
+    {
+      new Exception("has rd_fd after reinit: expected 1, got %d" % ep.has(rd_fd)).throw();
+    }
+    if (ep.has(wr_fd) != 1)
+    {
+      new Exception("has wr_fd after reinit: expected 1, got %d" % ep.has(wr_fd)).throw();
+    }
+
+    // - add with modified events (re-add same fd = modify) -
+    ep.add(rd_fd,Epoll.EPOLLIN | Epoll.EPOLLPRI);
+
+    // - cleanup -
+    pp[0].close();
+    pp[1].close();
+  }/*}}}*/
+}

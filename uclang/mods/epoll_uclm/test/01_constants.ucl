@@ -1,0 +1,58 @@
+
+import epoll;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - $Epoll static to_string -
+    if ($Epoll != "Epoll")
+    {
+      new Exception("Epoll to_string: expected Epoll, got %s" % $Epoll).throw();
+    }
+
+    // - CLOEXEC create flag -
+    if (type Epoll.CLOEXEC != type Integer)
+    {
+      new Exception("CLOEXEC: expected Integer type").throw();
+    }
+
+    // - event type constants (8) -
+    event_consts = [
+      Epoll.EPOLLIN,
+      Epoll.EPOLLOUT,
+      Epoll.EPOLLRDHUP,
+      Epoll.EPOLLPRI,
+      Epoll.EPOLLERR,
+      Epoll.EPOLLHUP,
+      Epoll.EPOLLET,
+      Epoll.EPOLLONESHOT,
+    ];
+
+    if (event_consts.length() != 8)
+    {
+      new Exception("event constants: expected 8, got %d" % event_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < event_consts.length())
+    {
+      if (type event_consts[idx] != type Integer)
+      {
+        new Exception("event constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    // - EPOLLIN and EPOLLOUT should be positive -
+    if (Epoll.EPOLLIN <= 0)
+    {
+      new Exception("EPOLLIN: expected positive, got %d" % Epoll.EPOLLIN).throw();
+    }
+    if (Epoll.EPOLLOUT <= 0)
+    {
+      new Exception("EPOLLOUT: expected positive, got %d" % Epoll.EPOLLOUT).throw();
+    }
+  }/*}}}*/
+}

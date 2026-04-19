@@ -1,0 +1,86 @@
+
+import sys;
+import epoll;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    pp1 = Sys.pipe();
+    pp2 = Sys.pipe();
+    rd1 = pp1[0].get_fd();
+    wr1 = pp1[1].get_fd();
+    rd2 = pp2[0].get_fd();
+    wr2 = pp2[1].get_fd();
+
+    ep = new Epoll(Epoll.CLOEXEC);
+
+    // - update with empty array is no-op -
+    ret = ep.update([]);
+    if ($ret != "Epoll")
+    {
+      new Exception("update empty return: expected Epoll, got %s" % $ret).throw();
+    }
+
+    // - update adds new fds -
+    ep.update([wr1,Epoll.EPOLLOUT,wr2,Epoll.EPOLLOUT]);
+    if (ep.has(wr1) != 1)
+    {
+      new Exception("update add wr1: expected has=1, got %d" % ep.has(wr1)).throw();
+    }
+    if (ep.has(wr2) != 1)
+    {
+      new Exception("update add wr2: expected has=1, got %d" % ep.has(wr2)).throw();
+    }
+
+    // - verify both are writable via wait -
+    result = ep.wait(10,100);
+    if (Blank == result)
+    {
+      new Exception("update wait: expected events, got Blank").throw();
+    }
+    if (result.length() != 4)
+    {
+      new Exception("update wait: expected 4 elements, got %d" % result.length()).throw();
+    }
+
+    // - update replacing set: keep wr1, drop wr2, add rd1 -
+    pp1[1].write("data\n");
+    pp1[1].flush();
+    ep.update([wr1,Epoll.EPOLLOUT,rd1,Epoll.EPOLLIN]);
+
+    // - wr2 should be gone -
+    if (ep.has(wr2) != 0)
+    {
+      new Exception("update replace wr2: expected has=0, got %d" % ep.has(wr2)).throw();
+    }
+    // - rd1 should be added -
+    if (ep.has(rd1) != 1)
+    {
+      new Exception("update replace rd1: expected has=1, got %d" % ep.has(rd1)).throw();
+    }
+    // - wr1 should still be there -
+    if (ep.has(wr1) != 1)
+    {
+      new Exception("update replace wr1: expected has=1, got %d" % ep.has(wr1)).throw();
+    }
+
+    // - update to empty set removes everything -
+    ep.update([]);
+    if (ep.has(wr1) != 0)
+    {
+      new Exception("update empty wr1: expected has=0, got %d" % ep.has(wr1)).throw();
+    }
+    if (ep.has(rd1) != 0)
+    {
+      new Exception("update empty rd1: expected has=0, got %d" % ep.has(rd1)).throw();
+    }
+
+    // - cleanup -
+    pp1[0].close();
+    pp1[1].close();
+    pp2[0].close();
+    pp2[1].close();
+  }/*}}}*/
+}
