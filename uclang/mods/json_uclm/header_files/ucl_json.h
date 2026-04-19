@@ -16,7 +16,7 @@ include "script_parser.h"
 
 extern unsigned c_rm_class_dict;
 
-const unsigned max_number_string_length = 128;
+USED const unsigned max_number_string_length = 128;
 
 const unsigned c_json_rule_cnt = 24;
 extern const unsigned json_rule_head_idxs[c_json_rule_cnt];
@@ -27,7 +27,7 @@ extern const unsigned json_rule_body_lengths[c_json_rule_cnt];
 #define JSON_REDUCE(VALUE) c_json_lalr_table_reduce_base + VALUE
 #define JSON_GOTO(VALUE) VALUE
 
-const unsigned c_json_lalr_table_reduce_base = 0x80000000;
+USED const unsigned c_json_lalr_table_reduce_base = 0x80000000;
 const unsigned c_json_terminal_plus_nonterminal_cnt = 30;
 const unsigned json_lalr_state_cnt = 32;
 

@@ -10,8 +10,8 @@ include "script_parser.h"
  * contants and definitions
  */
 
-const double c_earth_radius_meters = 6371000.0;
-const double c_math_pi = 3.14159265358979323846264338327950288L;
+USED const double c_earth_radius_meters = 6371000.0;
+USED const double c_math_pi = 3.14159265358979323846264338327950288L;
 
 /*
  * definition of structure latlon_s

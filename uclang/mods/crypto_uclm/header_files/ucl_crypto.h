@@ -20,7 +20,7 @@ include "script_parser.h"
 #define EVP_MD_CTX_MD EVP_MD_CTX_md
 #endif
 
-const char c_base16_map[] = "0123456789abcdef";
+USED const char c_base16_map[] = "0123456789abcdef";
 
 /*
  * definition of class crypto_c

@@ -33,8 +33,8 @@ include "script_parser.h"
  * global definitions and constants
  */
 
-const int value_on  = 1;
-const int value_off = 0;
+USED const int value_on  = 1;
+USED const int value_off = 0;
 
 #ifdef __GNUC__
 // - should match glibc structure -

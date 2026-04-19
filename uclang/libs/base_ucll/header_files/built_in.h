@@ -7,7 +7,7 @@ include "basic.h"
 @end
 
 // - count of built in method names -
-const unsigned c_built_in_method_cnt = 50;
+USED const unsigned c_built_in_method_cnt = 50;
 
 // - indexes of built in methods -
 enum

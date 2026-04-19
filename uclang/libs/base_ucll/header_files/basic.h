@@ -16,6 +16,8 @@
   __attribute__((cleanup(TYPE ## _clear))) TYPE NAME = {};\
   NAME.init();
 
+#define USED __attribute__((unused))
+
 // - GCC un/likely macros -
 #ifdef __GNUC__
 #define likely(x) __builtin_expect(!!(x),1)
@@ -277,17 +279,17 @@ libbase_ucll_EXPORT extern const char *c_name_str;
 libbase_ucll_EXPORT extern const char *c_version_str;
 
 // - basic constants -
-const unsigned c_array_add = 4; // 64
-const unsigned c_idx_not_exist = UINT_MAX;
+USED const unsigned c_array_add = 4; // 64
+USED const unsigned c_idx_not_exist = UINT_MAX;
 
 // - bit count of basic types -
-const unsigned INT_BIT = (sizeof(int)*CHAR_BIT);
-const unsigned UINT_BIT = (sizeof(unsigned)*CHAR_BIT);
+USED const unsigned INT_BIT = (sizeof(int)*CHAR_BIT);
+USED const unsigned UINT_BIT = (sizeof(unsigned)*CHAR_BIT);
 
 // - pi number definitions -
-const float c_pi_number = 3.14159265358979323844f;
-const float c_2pi_number = 6.28318530717958647688f;
-const float c_pid2_number = 1.57079632679489661922f;
+USED const float c_pi_number = 3.14159265358979323844f;
+USED const float c_2pi_number = 6.28318530717958647688f;
+USED const float c_pid2_number = 1.57079632679489661922f;
 
 // - logarithm of two (needed by red-black tree container) -
 const float c_log_of_2 = logf(2.0f);

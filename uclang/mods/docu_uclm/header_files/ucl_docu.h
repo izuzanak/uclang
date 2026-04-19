@@ -23,7 +23,7 @@ extern const unsigned dp_rule_body_lengths[c_dp_rule_cnt];
 #define DP_REDUCE(VALUE) c_dp_lalr_table_reduce_base + VALUE
 #define DP_GOTO(VALUE) VALUE
 
-const unsigned c_dp_lalr_table_reduce_base = 0x80000000;
+USED const unsigned c_dp_lalr_table_reduce_base = 0x80000000;
 const unsigned c_dp_terminal_plus_nonterminal_cnt = 26;
 const unsigned dp_lalr_state_cnt = 30;
 

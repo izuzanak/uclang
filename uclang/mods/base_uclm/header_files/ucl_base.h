@@ -17,7 +17,7 @@ include "script_parser.h"
 
 #define IT_INTERPRETER ((interpreter_s *)it.interpreter_ptr)
 
-const unsigned max_number_string_length = 20;
+USED const unsigned max_number_string_length = 20;
 
 // - string format terminals -
 enum

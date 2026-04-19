@@ -11,21 +11,21 @@ include "basic.h"
  */
 
 // - days in constants -
-const unsigned c_days_to_epoch     = 134774;
-const unsigned c_days_in_400_years = 146097;
-const unsigned c_days_in_100_years = 36524;
-const unsigned c_days_in_4_years   = 1461;
+USED const unsigned c_days_to_epoch     = 134774;
+USED const unsigned c_days_in_400_years = 146097;
+USED const unsigned c_days_in_100_years = 36524;
+USED const unsigned c_days_in_4_years   = 1461;
 
 // - number of days in month -
-const unsigned c_month_days[] = {31,28,31,30,31,30,31,31,30,31,30,31,0};
-const unsigned c_month_days_leap[] = {31,29,31,30,31,30,31,31,30,31,30,31,0};
+USED const unsigned c_month_days[] = {31,28,31,30,31,30,31,31,30,31,30,31,0};
+USED const unsigned c_month_days_leap[] = {31,29,31,30,31,30,31,31,30,31,30,31,0};
 libbase_ucll_EXPORT extern const unsigned *c_month_days_arr[2];
 
 // - number of days of month to end of year -
-const unsigned c_month_days_to_year_end[] = {0,31,59,90,120,151,181,212,243,273,304,334};
+USED const unsigned c_month_days_to_year_end[] = {0,31,59,90,120,151,181,212,243,273,304,334};
 
 // - count of datetime values  -
-const unsigned c_datetime_value_cnt = 10;
+USED const unsigned c_datetime_value_cnt = 10;
 
 /*
  * definition of structure datetime_s

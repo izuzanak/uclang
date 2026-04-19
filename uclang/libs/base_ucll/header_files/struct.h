@@ -181,7 +181,7 @@ ri_ep_s
 idx_size_s;
 @end
 
-const ri_ep_s c_blank_ri_ep = {c_idx_not_exist,c_idx_not_exist};
+USED const ri_ep_s c_blank_ri_ep = {c_idx_not_exist,c_idx_not_exist};
 
 #define record_idx ui_first
 #define element_position ui_second

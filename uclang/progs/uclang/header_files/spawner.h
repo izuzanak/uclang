@@ -25,7 +25,7 @@ extern const unsigned spwn_rule_body_lengths[c_spwn_rule_cnt];
 #define SPWN_REDUCE(VALUE) c_spwn_lalr_table_reduce_base + VALUE
 #define SPWN_GOTO(VALUE) VALUE
 
-const unsigned c_spwn_lalr_table_reduce_base = 0x80000000;
+USED const unsigned c_spwn_lalr_table_reduce_base = 0x80000000;
 const unsigned c_spwn_terminal_plus_nonterminal_cnt = 23;
 const unsigned spwn_lalr_state_cnt = 31;
 

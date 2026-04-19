@@ -14,7 +14,7 @@ include "basic.h"
 libbase_ucll_EXPORT extern const char c_string_terminating_char;
 
 // - tabulator size -
-const unsigned c_tabulator_size = 8;
+USED const unsigned c_tabulator_size = 8;
 
 /*
  * definition of structure string_s

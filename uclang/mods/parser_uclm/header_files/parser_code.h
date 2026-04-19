@@ -10,11 +10,11 @@ include "script_parser.h"
 
 const unsigned c_base_char_cnt = 256;
 const unsigned c_def_special_char_cnt = 3;
-const unsigned c_no_char_base = c_base_char_cnt + c_def_special_char_cnt;
+USED const unsigned c_no_char_base = c_base_char_cnt + c_def_special_char_cnt;
 
-const unsigned short reg_char_white =  c_base_char_cnt;     // 'w' {' ','\b','\t','\n','\v','\f','\r'}
-const unsigned short reg_char_digit =  c_base_char_cnt + 1; // 'd' {'0' - '9'}
-const unsigned short reg_char_letter = c_base_char_cnt + 2; // 'l' {'a' - 'z','A' - 'Z'}
+USED const unsigned short reg_char_white =  c_base_char_cnt;     // 'w' {' ','\b','\t','\n','\v','\f','\r'}
+USED const unsigned short reg_char_digit =  c_base_char_cnt + 1; // 'd' {'0' - '9'}
+USED const unsigned short reg_char_letter = c_base_char_cnt + 2; // 'l' {'a' - 'z','A' - 'Z'}
 
 // - PARSER error identifiers -
 enum
@@ -79,7 +79,7 @@ extern const unsigned reg_rule_body_lengths[c_reg_rule_cnt];
 #define REG_REDUCE(VALUE) c_reg_lalr_table_reduce_base + VALUE
 #define REG_GOTO(VALUE) VALUE
 
-const unsigned c_reg_lalr_table_reduce_base = 0x80000000;
+USED const unsigned c_reg_lalr_table_reduce_base = 0x80000000;
 const unsigned c_reg_terminal_plus_nonterminal_cnt = 21;
 const unsigned c_reg_lalr_state_cnt = 23;
 
