@@ -1,0 +1,147 @@
+
+import lang;
+
+class Outer
+{
+  class Inner
+  {
+    public Inner() {}
+  }
+
+  public Outer() {}
+}
+
+class WithVars
+{
+  static public VAR_A = 10;
+
+  public WithVars() {}
+}
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - ClassRef constructor from any value -
+    cr = new ClassRef(42);
+    if (cr.name() != "Integer")
+    {
+      new Exception("ClassRef(42).name(): expected Integer, got %s" % cr.name()).throw();
+    }
+
+    cr = new ClassRef("hello");
+    if (cr.name() != "String")
+    {
+      new Exception("ClassRef(\"hello\").name(): expected String, got %s" % cr.name()).throw();
+    }
+
+    cr = new ClassRef([1,2]);
+    if (cr.name() != "Array")
+    {
+      new Exception("ClassRef([1,2]).name(): expected Array, got %s" % cr.name()).throw();
+    }
+
+    // - to_string -
+    cr = Lang.cls("Integer");
+    if ($cr != "ClassRef")
+    {
+      new Exception("$ClassRef: expected \"ClassRef\", got \"%s\"" % $cr).throw();
+    }
+
+    // - is_built_in: 1 for built-in -
+    if (cr.is_built_in() != 1)
+    {
+      new Exception("Integer.is_built_in(): expected 1, got %s" % $cr.is_built_in()).throw();
+    }
+
+    // - is_built_in: 0 for user-defined -
+    main_ref = Lang.cls("Main");
+    if (main_ref.is_built_in() != 0)
+    {
+      new Exception("Main.is_built_in(): expected 0, got %s" % $main_ref.is_built_in()).throw();
+    }
+
+    // - parent of top-level built-in is Blank -
+    if (Blank != Lang.cls("Integer").parent())
+    {
+      new Exception("Integer.parent(): expected Blank").throw();
+    }
+
+    // - methods returns non-empty array for Integer -
+    methods = Lang.cls("Integer").methods();
+    if ($(type methods) != "Array")
+    {
+      new Exception("Integer.methods() type: expected Array").throw();
+    }
+    if (methods.length() == 0)
+    {
+      new Exception("Integer.methods() returned empty array").throw();
+    }
+    if ($methods[0] != "MethodRef")
+    {
+      new Exception("Integer.methods()[0]: expected MethodRef, got %s" % $methods[0]).throw();
+    }
+
+    // - method lookup -
+    m = Lang.cls("Integer").method("to_string#0");
+    if (m.name() != "to_string#0")
+    {
+      new Exception("Integer.method(\"to_string#0\"): expected to_string#0, got %s" % m.name()).throw();
+    }
+
+    // - vars on class with static var -
+    vars = Lang.cls("WithVars").vars();
+    if ($(type vars) != "Array")
+    {
+      new Exception("WithVars.vars() type: expected Array").throw();
+    }
+    if (vars.length() == 0)
+    {
+      new Exception("WithVars.vars() returned empty array").throw();
+    }
+
+    // - variable lookup -
+    v = Lang.cls("WithVars").variable("VAR_A");
+    if (v.name() != "VAR_A")
+    {
+      new Exception("WithVars.variable(\"VAR_A\"): expected VAR_A, got %s" % v.name()).throw();
+    }
+
+    // - nested class: classes() on Outer contains Inner -
+    outer_ref = Lang.cls("Outer");
+    inner_classes = outer_ref.classes();
+    if (inner_classes.length() == 0)
+    {
+      new Exception("Outer.classes() returned empty array").throw();
+    }
+
+    found = 0;
+    for (c <- inner_classes)
+    {
+      if (c.name() == "Inner")
+      {
+        found = 1;
+      }
+    }
+    if (found != 1)
+    {
+      new Exception("Outer.classes() does not contain Inner").throw();
+    }
+
+    // - cls lookup for nested class -
+    inner_ref = outer_ref.cls("Inner");
+    if (inner_ref.name() != "Inner")
+    {
+      new Exception("Outer.cls(\"Inner\"): expected Inner, got %s" % inner_ref.name()).throw();
+    }
+
+    // - assignment operator -
+    a = Lang.cls("Integer");
+    b = a;
+    if (b.name() != "Integer")
+    {
+      new Exception("ClassRef assignment: expected Integer, got %s" % b.name()).throw();
+    }
+  }/*}}}*/
+}

@@ -1,0 +1,104 @@
+
+import lang;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - name returns "uclang" -
+    name = Lang.name();
+    if ($(type name) != "String")
+    {
+      new Exception("Lang.name() type: expected String, got %s" % $(type name)).throw();
+    }
+    if (name != "uclang")
+    {
+      new Exception("Lang.name(): expected \"uclang\", got \"%s\"" % name).throw();
+    }
+
+    // - version returns non-empty string -
+    ver = Lang.version();
+    if ($(type ver) != "String")
+    {
+      new Exception("Lang.version() type: expected String, got %s" % $(type ver)).throw();
+    }
+    if (ver.length() == 0)
+    {
+      new Exception("Lang.version() returned empty string").throw();
+    }
+
+    // - classes returns non-empty array -
+    classes = Lang.classes();
+    if ($(type classes) != "Array")
+    {
+      new Exception("Lang.classes() type: expected Array, got %s" % $(type classes)).throw();
+    }
+    if (classes.length() == 0)
+    {
+      new Exception("Lang.classes() returned empty array").throw();
+    }
+
+    // - classes elements are ClassRef -
+    if ($classes[0] != "ClassRef")
+    {
+      new Exception("Lang.classes()[0]: expected ClassRef, got %s" % $classes[0]).throw();
+    }
+
+    // - cls finds built-in class -
+    int_ref = Lang.cls("Integer");
+    if (int_ref.name() != "Integer")
+    {
+      new Exception("Lang.cls(\"Integer\"): expected name Integer, got %s" % int_ref.name()).throw();
+    }
+
+    // - cls finds String class -
+    str_ref = Lang.cls("String");
+    if (str_ref.name() != "String")
+    {
+      new Exception("Lang.cls(\"String\"): expected name String, got %s" % str_ref.name()).throw();
+    }
+
+    // - cls finds user-defined Main class -
+    main_ref = Lang.cls("Main");
+    if (main_ref.name() != "Main")
+    {
+      new Exception("Lang.cls(\"Main\"): expected name Main, got %s" % main_ref.name()).throw();
+    }
+
+    // - to_string returns a string -
+    s = $Lang;
+    if ($(type s) != "String")
+    {
+      new Exception("$Lang type: expected String, got %s" % $(type s)).throw();
+    }
+
+    // - classes contains Integer -
+    found = 0;
+    for (c <- Lang.classes())
+    {
+      if (c.name() == "Integer")
+      {
+        found = 1;
+      }
+    }
+    if (found != 1)
+    {
+      new Exception("Lang.classes() does not contain Integer").throw();
+    }
+
+    // - classes contains String -
+    found = 0;
+    for (c <- Lang.classes())
+    {
+      if (c.name() == "String")
+      {
+        found = 1;
+      }
+    }
+    if (found != 1)
+    {
+      new Exception("Lang.classes() does not contain String").throw();
+    }
+  }/*}}}*/
+}

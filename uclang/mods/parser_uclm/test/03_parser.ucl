@@ -1,0 +1,87 @@
+
+import parser;
+
+class Main
+{
+  static c_rules = ("
+    init_code: {null}
+    terminals:
+      number {d.d*}
+      plus {'+'}
+      _SKIP_ {w.w*}
+      _END_ {'\\0'}
+    nonterminals:
+      <start> <exp>
+    rules:
+      <start> -> <exp> _END_       ->> {null}
+      <exp> -> number              ->> {null}
+      <exp> -> <exp> plus number   ->> {null}
+  ");
+
+  m_reduce_count = 0;
+
+  // - parse callback counting reductions -
+  public parse_cb(a_state)
+  {/*{{{*/
+    m_reduce_count += 1;
+  }/*}}}*/
+
+  public Main()
+  {/*{{{*/
+
+    // - construction with valid rules -
+    parser = new Parser(c_rules);
+    if ($(type parser) != "Parser")
+    {
+      new Exception("Parser type: expected Parser, got %s" % $(type parser)).throw();
+    }
+
+    // - to_string returns "Parser" -
+    if ($parser != "Parser")
+    {
+      new Exception("$Parser: expected \"Parser\", got \"%s\"" % $parser).throw();
+    }
+
+    // - parse calls delegate for each reduction -
+    cb = new Delegate(this,"parse_cb",1);
+    m_reduce_count = 0;
+    parser.parse("1 + 2",cb);
+
+    // rules: <exp> -> number (for "1"), <exp> -> <exp> plus number (for "+ 2")
+    if (m_reduce_count != 2)
+    {
+      new Exception("parse reductions: expected 2, got %d" % m_reduce_count).throw();
+    }
+
+    // - parse with more terms -
+    m_reduce_count = 0;
+    parser.parse("1 + 2 + 3",cb);
+
+    // rules: <exp> -> number (for "1"), <exp> -> <exp> plus number (for "+ 2"),
+    //         <exp> -> <exp> plus number (for "+ 3")
+    if (m_reduce_count != 3)
+    {
+      new Exception("parse 3 terms: expected 3 reductions, got %d" % m_reduce_count).throw();
+    }
+
+    // - parse single number -
+    m_reduce_count = 0;
+    parser.parse("42",cb);
+    if (m_reduce_count != 1)
+    {
+      new Exception("parse single: expected 1 reduction, got %d" % m_reduce_count).throw();
+    }
+
+    // - parse returns the parser object -
+    result = parser.parse("1",cb);
+    if ($(type result) != "Parser")
+    {
+      new Exception("parse return type: expected Parser, got %s" % $(type result)).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    new Main();
+  }/*}}}*/
+}

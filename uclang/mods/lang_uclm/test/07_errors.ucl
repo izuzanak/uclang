@@ -1,0 +1,107 @@
+
+import lang;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - Lang.cls with unknown class -
+    caught = 0;
+    try {
+      Lang.cls("NonExistentClass1234");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Lang.cls(unknown) did not throw").throw();
+    }
+
+    // - NamespaceRef.nspace with unknown namespace -
+    caught = 0;
+    try {
+      NamespaceRef.global().nspace("NonExistentNamespace1234");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("NamespaceRef.nspace(unknown) did not throw").throw();
+    }
+
+    // - NamespaceRef.cls with unknown class -
+    caught = 0;
+    try {
+      NamespaceRef.global().cls("NonExistentClass1234");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("NamespaceRef.cls(unknown) did not throw").throw();
+    }
+
+    // - ClassRef.cls with unknown subclass -
+    caught = 0;
+    try {
+      Lang.cls("Integer").cls("NonExistentSubclass1234");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ClassRef.cls(unknown) did not throw").throw();
+    }
+
+    // - ClassRef.method with unknown method -
+    caught = 0;
+    try {
+      Lang.cls("Integer").method("nonexistent_method#0");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ClassRef.method(unknown) did not throw").throw();
+    }
+
+    // - ClassRef.variable with unknown variable -
+    caught = 0;
+    try {
+      Lang.cls("Integer").variable("nonexistent_var");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ClassRef.variable(unknown) did not throw").throw();
+    }
+
+    // - MethodRef.param with unknown parameter -
+    caught = 0;
+    try {
+      Lang.cls("Main").method("main#1").param("nonexistent_param");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("MethodRef.param(unknown) did not throw").throw();
+    }
+  }/*}}}*/
+}

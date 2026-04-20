@@ -1,0 +1,172 @@
+
+import parser;
+
+class Main
+{
+  static c_rules = ("
+    init_code: {null}
+    terminals:
+      number {d.d*}
+      plus {'+'}
+      _SKIP_ {w.w*}
+      _END_ {'\\0'}
+    nonterminals:
+      <start> <exp>
+    rules:
+      <start> -> <exp> _END_       ->> {null}
+      <exp> -> number              ->> {null}
+      <exp> -> <exp> plus number   ->> {null}
+  ");
+
+  m_rule_idxs = [];
+  m_rule_bodies = [];
+  m_types = [];
+  m_old_idxs = [];
+  m_input_idxs = [];
+
+  // - parse callback collecting state info -
+  public parse_cb(a_state)
+  {/*{{{*/
+    m_rule_idxs.push(a_state.rule_idx());
+
+    // - collect rule_body values based on rule -
+    switch (a_state.rule_idx())
+    {
+    case 1:
+      // <exp> -> number
+      m_rule_bodies.push(a_state.rule_body(0));
+    case 2:
+      // <exp> -> <exp> plus number
+      m_rule_bodies.push(a_state.rule_body(2));
+    }
+
+    // - to_string returns "ParseState" -
+    m_types.push($a_state);
+
+    // - collect position info -
+    m_old_idxs.push(a_state.old_input_idx());
+    m_input_idxs.push(a_state.input_idx());
+  }/*}}}*/
+
+  public Main()
+  {/*{{{*/
+
+    parser = new Parser(c_rules);
+    cb = new Delegate(this,"parse_cb",1);
+
+    // - rule_idx returns correct indices -
+    m_rule_idxs = [];
+    m_rule_bodies = [];
+    m_types = [];
+    m_old_idxs = [];
+    m_input_idxs = [];
+    parser.parse("1 + 2",cb);
+
+    // rule 1: <exp> -> number (for "1")
+    // rule 2: <exp> -> <exp> plus number (for "1 + 2")
+    if (m_rule_idxs != [1, 2])
+    {
+      new Exception("rule_idxs: expected [1,2], got %s" % $m_rule_idxs).throw();
+    }
+
+    // - rule_body extracts correct text -
+    // first reduction: rule_body(0) = "1"
+    // second reduction: rule_body(2) = "2"
+    if (m_rule_bodies != ["1", "2"])
+    {
+      new Exception("rule_bodies: expected [\"1\",\"2\"], got %s" % $m_rule_bodies).throw();
+    }
+
+    // - to_string returns "ParseState" inside callback -
+    for (t <- m_types)
+    {
+      if (t != "ParseState")
+      {
+        new Exception("ParseState to_string: expected \"ParseState\", got \"%s\"" % t).throw();
+      }
+    }
+
+    // - old_input_idx and input_idx return integers -
+    for (idx <- m_old_idxs)
+    {
+      if ($(type idx) != "Integer")
+      {
+        new Exception("old_input_idx type: expected Integer, got %s" % $(type idx)).throw();
+      }
+    }
+    for (idx <- m_input_idxs)
+    {
+      if ($(type idx) != "Integer")
+      {
+        new Exception("input_idx type: expected Integer, got %s" % $(type idx)).throw();
+      }
+    }
+
+    // - rule_body for all body elements of rule 2 -
+    m_rule_idxs = [];
+    m_rule_bodies = [];
+    m_types = [];
+    m_old_idxs = [];
+    m_input_idxs = [];
+
+    // use a second callback to collect all body parts of rule 2
+    parser.parse("10 + 20",new Delegate(this,"parse_cb_full",1));
+
+    if (m_rule_bodies[0] != "10")
+    {
+      new Exception("rule_body full [0]: expected \"10\", got \"%s\"" % m_rule_bodies[0]).throw();
+    }
+    if (m_rule_bodies[1] != "10")
+    {
+      new Exception("rule_body full [1] (exp text): expected \"10\", got \"%s\"" % m_rule_bodies[1]).throw();
+    }
+    if (m_rule_bodies[2] != "+")
+    {
+      new Exception("rule_body full [2]: expected \"+\", got \"%s\"" % m_rule_bodies[2]).throw();
+    }
+    if (m_rule_bodies[3] != "20")
+    {
+      new Exception("rule_body full [3]: expected \"20\", got \"%s\"" % m_rule_bodies[3]).throw();
+    }
+
+    // - three-term parse rule indices -
+    m_rule_idxs = [];
+    m_rule_bodies = [];
+    m_types = [];
+    m_old_idxs = [];
+    m_input_idxs = [];
+    parser.parse("1 + 2 + 3",cb);
+
+    if (m_rule_idxs != [1, 2, 2])
+    {
+      new Exception("three-term rule_idxs: expected [1,2,2], got %s" % $m_rule_idxs).throw();
+    }
+    if (m_rule_bodies != ["1", "2", "3"])
+    {
+      new Exception("three-term bodies: expected [\"1\",\"2\",\"3\"], got %s" % $m_rule_bodies).throw();
+    }
+  }/*}}}*/
+
+  // - callback collecting all body parts -
+  public parse_cb_full(a_state)
+  {/*{{{*/
+    switch (a_state.rule_idx())
+    {
+    case 1:
+      // <exp> -> number
+      m_rule_bodies.push(a_state.rule_body(0));
+    case 2:
+      {
+        // <exp> -> <exp> plus number : 3 body elements
+        m_rule_bodies.push(a_state.rule_body(0));
+        m_rule_bodies.push(a_state.rule_body(1));
+        m_rule_bodies.push(a_state.rule_body(2));
+      }
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    new Main();
+  }/*}}}*/
+}

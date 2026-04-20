@@ -1,0 +1,92 @@
+
+import lang;
+
+class WithVars
+{
+  static public VAR_A = 10;
+  static public VAR_B = "hello";
+
+  public WithVars() {}
+}
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    cls = Lang.cls("WithVars");
+
+    // - variable lookup -
+    v = cls.variable("VAR_A");
+    if ($v != "VarRef")
+    {
+      new Exception("$VarRef: expected \"VarRef\", got \"%s\"" % $v).throw();
+    }
+
+    // - name -
+    if (v.name() != "VAR_A")
+    {
+      new Exception("VarRef.name(): expected VAR_A, got %s" % v.name()).throw();
+    }
+
+    // - parent returns ClassRef -
+    p = v.parent();
+    if (Blank == p)
+    {
+      new Exception("VarRef.parent(): expected ClassRef, got Blank").throw();
+    }
+    if (p.name() != "WithVars")
+    {
+      new Exception("VarRef.parent().name(): expected WithVars, got %s" % p.name()).throw();
+    }
+
+    // - vars returns array with correct count -
+    vars = cls.vars();
+    if ($(type vars) != "Array")
+    {
+      new Exception("vars() type: expected Array").throw();
+    }
+    if (vars.length() != 2)
+    {
+      new Exception("WithVars.vars(): expected length 2, got %d" % vars.length()).throw();
+    }
+
+    // - all elements are VarRef -
+    for (vr <- vars)
+    {
+      if ($vr != "VarRef")
+      {
+        new Exception("vars() element: expected VarRef, got %s" % $vr).throw();
+      }
+    }
+
+    // - find VAR_B by iterating -
+    found = 0;
+    for (vr <- vars)
+    {
+      if (vr.name() == "VAR_B")
+      {
+        found = 1;
+      }
+    }
+    if (found != 1)
+    {
+      new Exception("vars() does not contain VAR_B").throw();
+    }
+
+    // - second variable lookup -
+    vb = cls.variable("VAR_B");
+    if (vb.name() != "VAR_B")
+    {
+      new Exception("variable(\"VAR_B\"): expected VAR_B, got %s" % vb.name()).throw();
+    }
+
+    // - assignment operator -
+    a = v;
+    b = a;
+    if (b.name() != "VAR_A")
+    {
+      new Exception("VarRef assignment: expected VAR_A, got %s" % b.name()).throw();
+    }
+  }/*}}}*/
+}

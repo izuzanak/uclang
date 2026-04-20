@@ -1,0 +1,117 @@
+
+import lang;
+
+class ParamTest
+{
+  public ParamTest() {}
+
+  public compute(alpha,beta,gamma)
+  {
+    return alpha + beta + gamma;
+  }
+}
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    method = Lang.cls("ParamTest").method("compute#3");
+
+    // - param lookup -
+    p = method.param("alpha");
+    if ($p != "ParamRef")
+    {
+      new Exception("$ParamRef: expected \"ParamRef\", got \"%s\"" % $p).throw();
+    }
+
+    // - name -
+    if (p.name() != "alpha")
+    {
+      new Exception("ParamRef.name(): expected alpha, got %s" % p.name()).throw();
+    }
+
+    // - parent returns MethodRef -
+    pm = p.parent();
+    if (Blank == pm)
+    {
+      new Exception("ParamRef.parent(): expected MethodRef, got Blank").throw();
+    }
+    if ($pm != "MethodRef")
+    {
+      new Exception("ParamRef.parent() type: expected MethodRef, got %s" % $pm).throw();
+    }
+    if (pm.name() != "compute#3")
+    {
+      new Exception("ParamRef.parent().name(): expected compute#3, got %s" % pm.name()).throw();
+    }
+
+    // - parent chain: ParamRef -> MethodRef -> ClassRef -
+    pc = p.parent().parent();
+    if (Blank == pc)
+    {
+      new Exception("param.parent().parent(): expected ClassRef, got Blank").throw();
+    }
+    if (pc.name() != "ParamTest")
+    {
+      new Exception("param.parent().parent().name(): expected ParamTest, got %s" % pc.name()).throw();
+    }
+
+    // - params returns array of length 3 -
+    params = method.params();
+    if (params.length() != 3)
+    {
+      new Exception("compute#3.params(): expected length 3, got %d" % params.length()).throw();
+    }
+
+    // - all params are ParamRef -
+    for (pr <- params)
+    {
+      if ($pr != "ParamRef")
+      {
+        new Exception("params() element: expected ParamRef, got %s" % $pr).throw();
+      }
+    }
+
+    // - verify all param names -
+    names = [];
+    for (pr <- params)
+    {
+      names.push(pr.name());
+    }
+
+    found_alpha = 0;
+    found_beta = 0;
+    found_gamma = 0;
+    for (n <- names)
+    {
+      if (n == "alpha") { found_alpha = 1; }
+      if (n == "beta") { found_beta = 1; }
+      if (n == "gamma") { found_gamma = 1; }
+    }
+    if (found_alpha != 1 or found_beta != 1 or found_gamma != 1)
+    {
+      new Exception("params() missing expected names").throw();
+    }
+
+    // - lookup other params -
+    pb = method.param("beta");
+    if (pb.name() != "beta")
+    {
+      new Exception("param(\"beta\"): expected beta, got %s" % pb.name()).throw();
+    }
+    pg = method.param("gamma");
+    if (pg.name() != "gamma")
+    {
+      new Exception("param(\"gamma\"): expected gamma, got %s" % pg.name()).throw();
+    }
+
+    // - assignment operator -
+    a = p;
+    b = a;
+    if (b.name() != "alpha")
+    {
+      new Exception("ParamRef assignment: expected alpha, got %s" % b.name()).throw();
+    }
+  }/*}}}*/
+}

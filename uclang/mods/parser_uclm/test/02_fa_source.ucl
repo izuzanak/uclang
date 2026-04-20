@@ -1,0 +1,165 @@
+
+import parser;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - shared FinalAutomata objects -
+    fa_d = new FinalAutomata(["d.d*"]);
+    fa_dl = new FinalAutomata(["d.d*", "l.l*"]);
+
+    // - next_terminal returns terminal index -
+    fs = fa_d.get_source("12345");
+    term = fs.next_terminal();
+    if (term != 0)
+    {
+      new Exception("next_terminal: expected 0, got %s" % $term).throw();
+    }
+
+    // - terminal(0,0) returns full matched text -
+    if (fs.terminal(0,0) != "12345")
+    {
+      new Exception("terminal(0,0): expected \"12345\", got \"%s\"" % fs.terminal(0,0)).throw();
+    }
+
+    // - next_terminal returns Blank when exhausted -
+    term = fs.next_terminal();
+    if (Blank != term)
+    {
+      new Exception("next_terminal exhausted: expected Blank, got %s" % $term).throw();
+    }
+
+    // - multiple terminal types: digits and letters -
+    fs = fa_dl.get_source("abc123");
+    term1 = fs.next_terminal();
+    if (term1 != 1)
+    {
+      new Exception("multi-type first: expected 1 (letters), got %s" % $term1).throw();
+    }
+    if (fs.terminal(0,0) != "abc")
+    {
+      new Exception("multi-type first text: expected \"abc\", got \"%s\"" % fs.terminal(0,0)).throw();
+    }
+    term2 = fs.next_terminal();
+    if (term2 != 0)
+    {
+      new Exception("multi-type second: expected 0 (digits), got %s" % $term2).throw();
+    }
+    if (fs.terminal(0,0) != "123")
+    {
+      new Exception("multi-type second text: expected \"123\", got \"%s\"" % fs.terminal(0,0)).throw();
+    }
+
+    // - old_input_idx and input_idx -
+    fs = fa_dl.get_source("abc123");
+    fs.next_terminal();
+    if (fs.old_input_idx() != 0)
+    {
+      new Exception("old_input_idx after first: expected 0, got %d" % fs.old_input_idx()).throw();
+    }
+    if (fs.input_idx() != 3)
+    {
+      new Exception("input_idx after first: expected 3, got %d" % fs.input_idx()).throw();
+    }
+    fs.next_terminal();
+    if (fs.old_input_idx() != 3)
+    {
+      new Exception("old_input_idx after second: expected 3, got %d" % fs.old_input_idx()).throw();
+    }
+    if (fs.input_idx() != 6)
+    {
+      new Exception("input_idx after second: expected 6, got %d" % fs.input_idx()).throw();
+    }
+
+    // - terminal_length -
+    fs = fa_dl.get_source("abc123");
+    fs.next_terminal();
+    if (fs.terminal_length() != 3)
+    {
+      new Exception("terminal_length first: expected 3, got %d" % fs.terminal_length()).throw();
+    }
+    fs.next_terminal();
+    if (fs.terminal_length() != 3)
+    {
+      new Exception("terminal_length second: expected 3, got %d" % fs.terminal_length()).throw();
+    }
+
+    // - terminal with offsets (percent and quote delimiters) -
+    fa_delim = new FinalAutomata(["'%'.l.l*.'%'", "'\"'.l.l*.'\"'"]);
+    fs = fa_delim.get_source("%name%");
+    fs.next_terminal();
+    if (fs.terminal(1,-1) != "name")
+    {
+      new Exception("terminal(1,-1): expected \"name\", got \"%s\"" % fs.terminal(1,-1)).throw();
+    }
+
+    fs = fa_delim.get_source("\"hello\"");
+    fs.next_terminal();
+    if (fs.terminal(1,-1) != "hello")
+    {
+      new Exception("terminal(1,-1) quotes: expected \"hello\", got \"%s\"" % fs.terminal(1,-1)).throw();
+    }
+
+    // - for-each iteration -
+    fs = fa_dl.get_source("abc123def456");
+    terms = [];
+    for (term <- fs)
+    {
+      terms.push(term);
+    }
+    if (terms != [1, 0, 1, 0])
+    {
+      new Exception("for-each iteration: expected [1,0,1,0], got %s" % $terms).throw();
+    }
+
+    // - multi-pattern scanning: whitespace, digits, letters -
+    fa = new FinalAutomata(["w.w*", "d.d*", "l.l*"]);
+    fs = fa.get_source("hello 123 world");
+    terms = [];
+    texts = [];
+    for (term <- fs)
+    {
+      terms.push(term);
+      texts.push(fs.terminal(0,0));
+    }
+    if (terms != [2, 0, 1, 0, 2])
+    {
+      new Exception("multi-pattern terms: expected [2,0,1,0,2], got %s" % $terms).throw();
+    }
+    if (texts != ["hello", " ", "123", " ", "world"])
+    {
+      new Exception("multi-pattern texts: expected [hello, ,123, ,world], got %s" % $texts).throw();
+    }
+
+    // - empty source returns Blank immediately -
+    fs = fa_d.get_source("");
+    if (Blank != fs.next_terminal())
+    {
+      new Exception("empty source: expected Blank").throw();
+    }
+
+    // - single-shot recognition pattern (full string match) -
+    fa = new FinalAutomata(["l.l*.\".tar\"", "l.l*.\".zip\""]);
+    if (fa.get_source("file.tar").next_terminal() != 0)
+    {
+      new Exception("single-shot .tar: expected 0").throw();
+    }
+    if (fa.get_source("file.zip").next_terminal() != 1)
+    {
+      new Exception("single-shot .zip: expected 1").throw();
+    }
+    if (Blank != fa.get_source("file.txt").next_terminal())
+    {
+      new Exception("single-shot .txt: expected Blank").throw();
+    }
+
+    // - to_string returns "FaSource" -
+    fs = fa_d.get_source("123");
+    if ($fs != "FaSource")
+    {
+      new Exception("$FaSource: expected \"FaSource\", got \"%s\"" % $fs).throw();
+    }
+  }/*}}}*/
+}

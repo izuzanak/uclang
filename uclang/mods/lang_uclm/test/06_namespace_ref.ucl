@@ -1,0 +1,73 @@
+
+import lang;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - global returns NamespaceRef -
+    ns = NamespaceRef.global();
+    if ($ns != "NamespaceRef")
+    {
+      new Exception("$NamespaceRef.global(): expected \"NamespaceRef\", got \"%s\"" % $ns).throw();
+    }
+
+    // - name returns String -
+    n = ns.name();
+    if ($(type n) != "String")
+    {
+      new Exception("NamespaceRef.name() type: expected String, got %s" % $(type n)).throw();
+    }
+
+    // - classes returns non-empty array -
+    classes = ns.classes();
+    if ($(type classes) != "Array")
+    {
+      new Exception("NamespaceRef.classes() type: expected Array").throw();
+    }
+    if (classes.length() == 0)
+    {
+      new Exception("NamespaceRef.classes() returned empty array").throw();
+    }
+
+    // - classes elements are ClassRef -
+    if ($classes[0] != "ClassRef")
+    {
+      new Exception("NamespaceRef.classes()[0]: expected ClassRef, got %s" % $classes[0]).throw();
+    }
+
+    // - cls finds built-in class -
+    int_ref = ns.cls("Integer");
+    if (int_ref.name() != "Integer")
+    {
+      new Exception("NamespaceRef.cls(\"Integer\"): expected Integer, got %s" % int_ref.name()).throw();
+    }
+
+    // - cls finds user-defined class -
+    main_ref = ns.cls("Main");
+    if (main_ref.name() != "Main")
+    {
+      new Exception("NamespaceRef.cls(\"Main\"): expected Main, got %s" % main_ref.name()).throw();
+    }
+
+    // - namespaces returns an array -
+    nspaces = ns.namespaces();
+    if ($(type nspaces) != "Array")
+    {
+      new Exception("NamespaceRef.namespaces() type: expected Array").throw();
+    }
+
+    // - assignment operator -
+    a = ns;
+    b = a;
+    if ($b != "NamespaceRef")
+    {
+      new Exception("NamespaceRef assignment failed").throw();
+    }
+    if (b.name() != ns.name())
+    {
+      new Exception("NamespaceRef assignment: name mismatch").throw();
+    }
+  }/*}}}*/
+}

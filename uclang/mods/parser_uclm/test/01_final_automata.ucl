@@ -1,0 +1,127 @@
+
+import parser;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - construction from single-regex array -
+    fa = new FinalAutomata(["d.d*"]);
+    if ($(type fa) != "FinalAutomata")
+    {
+      new Exception("FinalAutomata type: expected FinalAutomata, got %s" % $(type fa)).throw();
+    }
+
+    // - construction from multi-regex array -
+    fa = new FinalAutomata(["d.d*", "l.l*", "w.w*"]);
+    if ($(type fa) != "FinalAutomata")
+    {
+      new Exception("multi-regex FinalAutomata type: expected FinalAutomata, got %s" % $(type fa)).throw();
+    }
+
+    // - to_string returns "FinalAutomata" -
+    if ($fa != "FinalAutomata")
+    {
+      new Exception("$FinalAutomata: expected \"FinalAutomata\", got \"%s\"" % $fa).throw();
+    }
+
+    // - get_source returns FaSource -
+    fs = fa.get_source("hello123");
+    if ($(type fs) != "FaSource")
+    {
+      new Exception("get_source type: expected FaSource, got %s" % $(type fs)).throw();
+    }
+
+    // - get_source with empty string does not throw -
+    fs = fa.get_source("");
+    if ($(type fs) != "FaSource")
+    {
+      new Exception("get_source(\"\") type: expected FaSource, got %s" % $(type fs)).throw();
+    }
+
+    // - literal char regex -
+    fa = new FinalAutomata(["'a'.'b'.'c'"]);
+    fs = fa.get_source("abc");
+    term = fs.next_terminal();
+    if (term != 0)
+    {
+      new Exception("literal regex: expected terminal 0, got %s" % $term).throw();
+    }
+    if (fs.terminal(0,0) != "abc")
+    {
+      new Exception("literal regex terminal: expected \"abc\", got \"%s\"" % fs.terminal(0,0)).throw();
+    }
+
+    // - alternation regex -
+    fa = new FinalAutomata(["'a'+'b'"]);
+    fs = fa.get_source("a");
+    if (fs.next_terminal() != 0)
+    {
+      new Exception("alternation 'a': expected terminal 0").throw();
+    }
+    fs = fa.get_source("b");
+    if (fs.next_terminal() != 0)
+    {
+      new Exception("alternation 'b': expected terminal 0").throw();
+    }
+
+    // - kleene star regex -
+    fa = new FinalAutomata(["'a'.'a'*"]);
+    fs = fa.get_source("aaa");
+    if (fs.next_terminal() != 0)
+    {
+      new Exception("kleene star: expected terminal 0").throw();
+    }
+    if (fs.terminal(0,0) != "aaa")
+    {
+      new Exception("kleene star terminal: expected \"aaa\", got \"%s\"" % fs.terminal(0,0)).throw();
+    }
+
+    // - character range regex -
+    fa = new FinalAutomata(["<az>"]);
+    fs = fa.get_source("m");
+    if (fs.next_terminal() != 0)
+    {
+      new Exception("char range: expected terminal 0").throw();
+    }
+
+    // - digit, letter, whitespace shorthands -
+    fa = new FinalAutomata(["d", "l", "w"]);
+    fs = fa.get_source("5");
+    if (fs.next_terminal() != 0)
+    {
+      new Exception("digit shorthand: expected terminal 0").throw();
+    }
+    fs = fa.get_source("x");
+    if (fs.next_terminal() != 1)
+    {
+      new Exception("letter shorthand: expected terminal 1").throw();
+    }
+    fs = fa.get_source(" ");
+    if (fs.next_terminal() != 2)
+    {
+      new Exception("whitespace shorthand: expected terminal 2").throw();
+    }
+
+    // - identifier pattern -
+    fa = new FinalAutomata(["('_'+l).('_'+l+d)*"]);
+    fs = fa.get_source("my_var1");
+    if (fs.next_terminal() != 0)
+    {
+      new Exception("identifier pattern: expected terminal 0").throw();
+    }
+    if (fs.terminal(0,0) != "my_var1")
+    {
+      new Exception("identifier terminal: expected \"my_var1\", got \"%s\"" % fs.terminal(0,0)).throw();
+    }
+
+    // - assignment operator -
+    fa = new FinalAutomata(["d.d*"]);
+    fa2 = fa;
+    if ($fa2 != "FinalAutomata")
+    {
+      new Exception("assignment: expected FinalAutomata, got %s" % $fa2).throw();
+    }
+  }/*}}}*/
+}

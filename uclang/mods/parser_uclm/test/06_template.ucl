@@ -1,0 +1,134 @@
+
+import parser;
+import containers;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    fa = new FinalAutomata([
+      "'%'.!'%'*.'%'",
+      "!'%'.!'%'*",
+    ]);
+
+    // - pure literal text -
+    fs = fa.get_source("hello world");
+    terms = [];
+    for (term <- fs)
+    {
+      terms.push(term);
+    }
+    if (terms != [1])
+    {
+      new Exception("literal terms: expected [1], got %s" % $terms).throw();
+    }
+    fs = fa.get_source("hello world");
+    fs.next_terminal();
+    if (fs.terminal(0,0) != "hello world")
+    {
+      new Exception("literal text: expected \"hello world\", got \"%s\"" % fs.terminal(0,0)).throw();
+    }
+
+    // - single variable reference -
+    fs = fa.get_source("%name%");
+    term = fs.next_terminal();
+    if (term != 0)
+    {
+      new Exception("single var term: expected 0, got %s" % $term).throw();
+    }
+    if (fs.terminal(1,-1) != "name")
+    {
+      new Exception("single var name: expected \"name\", got \"%s\"" % fs.terminal(1,-1)).throw();
+    }
+
+    // - variable surrounded by literals -
+    fs = fa.get_source("Hello %name%!");
+    terms = [];
+    texts = [];
+    for (term <- fs)
+    {
+      terms.push(term);
+      texts.push(fs.terminal(0,0));
+    }
+    if (terms != [1, 0, 1])
+    {
+      new Exception("surrounded terms: expected [1,0,1], got %s" % $terms).throw();
+    }
+    if (texts[0] != "Hello ")
+    {
+      new Exception("surrounded text[0]: expected \"Hello \", got \"%s\"" % texts[0]).throw();
+    }
+    if (texts[1] != "%name%")
+    {
+      new Exception("surrounded text[1]: expected \"%%name%%\", got \"%s\"" % texts[1]).throw();
+    }
+    if (texts[2] != "!")
+    {
+      new Exception("surrounded text[2]: expected \"!\", got \"%s\"" % texts[2]).throw();
+    }
+
+    // - multiple variables -
+    fs = fa.get_source("%a% and %b%");
+    terms = [];
+    for (term <- fs)
+    {
+      terms.push(term);
+    }
+    if (terms != [0, 1, 0])
+    {
+      new Exception("multi var terms: expected [0,1,0], got %s" % $terms).throw();
+    }
+
+    // - end-to-end template substitution -
+    config = new Dict([
+      "greeting","Hello",
+      "name","World",
+    ]);
+
+    template = "%greeting% %name%!";
+    result_parts = [];
+    fs = fa.get_source(template);
+    for (term <- fs)
+    {
+      if (term == 0)
+      {
+        result_parts.push(config[fs.terminal(1,-1)]);
+      }
+      else
+      {
+        result_parts.push(fs.terminal(0,0));
+      }
+    }
+
+    result = result_parts.to_string("");
+    if (result != "Hello World!")
+    {
+      new Exception("template result: expected \"Hello World!\", got \"%s\"" % result).throw();
+    }
+
+    // - adjacent variables -
+    fs = fa.get_source("%a%%b%");
+    terms = [];
+    for (term <- fs)
+    {
+      terms.push(term);
+    }
+    if (terms != [0, 0])
+    {
+      new Exception("adjacent terms: expected [0,0], got %s" % $terms).throw();
+    }
+
+    // - variable name extraction from adjacent -
+    names = [];
+    fs = fa.get_source("%first%%second%");
+    for (term <- fs)
+    {
+      names.push(fs.terminal(1,-1));
+    }
+    if (names != ["first", "second"])
+    {
+      new Exception("adjacent names: expected [\"first\",\"second\"], got %s" % $names).throw();
+    }
+  }/*}}}*/
+}

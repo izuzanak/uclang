@@ -1,0 +1,127 @@
+
+import lang;
+
+class Sample
+{
+  public Sample() {}
+
+  static public static_method()
+  {
+    return 0;
+  }
+
+  public instance_method(x,y)
+  {
+    return x + y;
+  }
+}
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    sample_ref = Lang.cls("Sample");
+
+    // - get instance method -
+    m = sample_ref.method("instance_method#2");
+    if ($m != "MethodRef")
+    {
+      new Exception("$MethodRef: expected \"MethodRef\", got \"%s\"" % $m).throw();
+    }
+
+    // - name returns full name#count format -
+    if (m.name() != "instance_method#2")
+    {
+      new Exception("method name: expected instance_method#2, got %s" % m.name()).throw();
+    }
+
+    // - name format: split by # -
+    parts = m.name().split("#");
+    if (parts.length() != 2)
+    {
+      new Exception("method name split: expected 2 parts, got %d" % parts.length()).throw();
+    }
+    if (parts[0] != "instance_method")
+    {
+      new Exception("method name part 0: expected instance_method, got %s" % parts[0]).throw();
+    }
+    if (parts[1] != "2")
+    {
+      new Exception("method name part 1: expected 2, got %s" % parts[1]).throw();
+    }
+
+    // - is_static: 0 for instance method -
+    if (m.is_static() != 0)
+    {
+      new Exception("instance_method.is_static(): expected 0, got %s" % $m.is_static()).throw();
+    }
+
+    // - is_static: 1 for static method -
+    sm = sample_ref.method("static_method#0");
+    if (sm.is_static() != 1)
+    {
+      new Exception("static_method.is_static(): expected 1, got %s" % $sm.is_static()).throw();
+    }
+
+    // - parent returns ClassRef -
+    p = m.parent();
+    if (Blank == p)
+    {
+      new Exception("instance_method.parent(): expected ClassRef, got Blank").throw();
+    }
+    if (p.name() != "Sample")
+    {
+      new Exception("instance_method.parent().name(): expected Sample, got %s" % p.name()).throw();
+    }
+
+    // - params returns array of ParamRef -
+    params = m.params();
+    if ($(type params) != "Array")
+    {
+      new Exception("params() type: expected Array").throw();
+    }
+    if (params.length() != 2)
+    {
+      new Exception("instance_method#2 params: expected length 2, got %d" % params.length()).throw();
+    }
+    if ($params[0] != "ParamRef")
+    {
+      new Exception("params()[0]: expected ParamRef, got %s" % $params[0]).throw();
+    }
+
+    // - param lookup by name -
+    px = m.param("x");
+    if (px.name() != "x")
+    {
+      new Exception("param(\"x\").name(): expected x, got %s" % px.name()).throw();
+    }
+    py = m.param("y");
+    if (py.name() != "y")
+    {
+      new Exception("param(\"y\").name(): expected y, got %s" % py.name()).throw();
+    }
+
+    // - params on zero-arg method returns empty array -
+    sm_params = sm.params();
+    if (sm_params.length() != 0)
+    {
+      new Exception("static_method#0 params: expected length 0, got %d" % sm_params.length()).throw();
+    }
+
+    // - built-in method: main#1 is static -
+    main_m = Lang.cls("Main").method("main#1");
+    if (main_m.is_static() != 1)
+    {
+      new Exception("Main.main#1.is_static(): expected 1").throw();
+    }
+
+    // - assignment operator -
+    a = m;
+    b = a;
+    if (b.name() != "instance_method#2")
+    {
+      new Exception("MethodRef assignment: expected instance_method#2, got %s" % b.name()).throw();
+    }
+  }/*}}}*/
+}

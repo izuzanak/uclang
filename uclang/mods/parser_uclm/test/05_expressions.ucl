@@ -1,0 +1,223 @@
+
+import parser;
+
+class Main
+{
+  // - parser rules for arithmetic expressions -
+  static c_parser_rules = ("
+    init_code: {null}
+
+    terminals:
+      oct_int_const {'0'.<07>*}
+      dec_int_const {<19>.d*}
+      hex_int_const {'0'.[xX].(<09>+<af>+<AF>).(<09>+<af>+<AF>)*}
+
+      lr_br {'('}
+      rr_br {')'}
+
+      plus {'+'}
+      minus {'-'}
+      asterisk {'*'}
+      slash {'/'}
+      percent {'%'}
+
+      _SKIP_ {w.w*}
+      _END_ {'\\0'}
+
+    nonterminals:
+      <start> <exp> <C> <B> <A>
+
+    rules:
+      <start> -> <exp> _END_  ->> {null}
+      <exp> -> <C>            ->> {null}
+      <C> -> <C> plus <B>     ->> {null}
+      <C> -> <C> minus <B>    ->> {null}
+      <C> -> <B>              ->> {null}
+      <B> -> <B> asterisk <A> ->> {null}
+      <B> -> <B> slash <A>    ->> {null}
+      <B> -> <B> percent <A>  ->> {null}
+      <B> -> <A>              ->> {null}
+      <A> -> lr_br <C> rr_br  ->> {null}
+      <A> -> oct_int_const    ->> {null}
+      <A> -> dec_int_const    ->> {null}
+      <A> -> hex_int_const    ->> {null}
+  ");
+
+  // - action identifiers -
+  static ACTION_CNT = 0;
+  static ACTION_NONE     = ACTION_CNT++;
+  static ACTION_PLUS     = ACTION_CNT++;
+  static ACTION_MINUS    = ACTION_CNT++;
+  static ACTION_ASTERISK = ACTION_CNT++;
+  static ACTION_SLASH    = ACTION_CNT++;
+  static ACTION_PERCENT  = ACTION_CNT++;
+  static ACTION_OCT_INT  = ACTION_CNT++;
+  static ACTION_DEC_INT  = ACTION_CNT++;
+  static ACTION_HEX_INT  = ACTION_CNT++;
+
+  // - rule index to action mapping -
+  static c_action_map =
+  [
+    ACTION_NONE,
+    ACTION_NONE,
+    ACTION_PLUS,
+    ACTION_MINUS,
+    ACTION_NONE,
+    ACTION_ASTERISK,
+    ACTION_SLASH,
+    ACTION_PERCENT,
+    ACTION_NONE,
+    ACTION_NONE,
+    ACTION_OCT_INT,
+    ACTION_DEC_INT,
+    ACTION_HEX_INT
+  ];
+
+  m_stack = [];
+
+  // - parser callback -
+  public parse_cb(a_state)
+  {/*{{{*/
+    switch (c_action_map[a_state.rule_idx()])
+    {
+    case ACTION_PLUS:
+      m_stack[m_stack.length() - 2] += m_stack.pop();
+    case ACTION_MINUS:
+      m_stack[m_stack.length() - 2] -= m_stack.pop();
+    case ACTION_ASTERISK:
+      m_stack[m_stack.length() - 2] *= m_stack.pop();
+    case ACTION_SLASH:
+      m_stack[m_stack.length() - 2] /= m_stack.pop();
+    case ACTION_PERCENT:
+      m_stack[m_stack.length() - 2] %= m_stack.pop();
+    case ACTION_OCT_INT:
+      m_stack.push(new Integer(a_state.rule_body(0),8));
+    case ACTION_DEC_INT:
+      m_stack.push(new Integer(a_state.rule_body(0),10));
+    case ACTION_HEX_INT:
+      m_stack.push(new Integer(a_state.rule_body(0),16));
+    }
+  }/*}}}*/
+
+  // - evaluate expression and return result -
+  public eval(a_parser,a_cb,a_source)
+  {/*{{{*/
+    m_stack = [];
+    a_parser.parse(a_source,a_cb);
+    return m_stack.pop();
+  }/*}}}*/
+
+  public Main()
+  {/*{{{*/
+    parser = new Parser(c_parser_rules);
+    cb = new Delegate(this,"parse_cb",1);
+
+    // - simple addition -
+    if (eval(parser,cb,"1 + 2") != 3)
+    {
+      new Exception("1 + 2: expected 3").throw();
+    }
+
+    // - simple subtraction -
+    if (eval(parser,cb,"5 - 3") != 2)
+    {
+      new Exception("5 - 3: expected 2").throw();
+    }
+
+    // - simple multiplication -
+    if (eval(parser,cb,"4 * 3") != 12)
+    {
+      new Exception("4 * 3: expected 12").throw();
+    }
+
+    // - simple division -
+    if (eval(parser,cb,"10 / 3") != 3)
+    {
+      new Exception("10 / 3: expected 3").throw();
+    }
+
+    // - simple modulo -
+    if (eval(parser,cb,"10 % 3") != 1)
+    {
+      new Exception("10 % 3: expected 1").throw();
+    }
+
+    // - operator precedence: mul before add -
+    if (eval(parser,cb,"2 + 3 * 4") != 14)
+    {
+      new Exception("2 + 3 * 4: expected 14").throw();
+    }
+
+    // - operator precedence: div before sub -
+    if (eval(parser,cb,"10 - 6 / 2") != 7)
+    {
+      new Exception("10 - 6 / 2: expected 7").throw();
+    }
+
+    // - parenthesized expression -
+    if (eval(parser,cb,"(2 + 3) * 4") != 20)
+    {
+      new Exception("(2 + 3) * 4: expected 20").throw();
+    }
+
+    // - nested parentheses -
+    if (eval(parser,cb,"((1 + 2) * (3 + 4))") != 21)
+    {
+      new Exception("((1 + 2) * (3 + 4)): expected 21").throw();
+    }
+
+    // - octal literal -
+    if (eval(parser,cb,"010") != 8)
+    {
+      new Exception("010 (octal): expected 8").throw();
+    }
+
+    // - hex literal -
+    if (eval(parser,cb,"0xff") != 255)
+    {
+      new Exception("0xff: expected 255").throw();
+    }
+
+    // - hex uppercase -
+    if (eval(parser,cb,"0X1F") != 31)
+    {
+      new Exception("0X1F: expected 31").throw();
+    }
+
+    // - mixed octal and hex -
+    if (eval(parser,cb,"010 + 0x10") != 24)
+    {
+      new Exception("010 + 0x10: expected 24").throw();
+    }
+
+    // - complex expression -
+    if (eval(parser,cb,"5 * (10 + 2) - 0x10") != 44)
+    {
+      new Exception("5 * (10 + 2) - 0x10: expected 44").throw();
+    }
+
+    // - left-to-right associativity for sub -
+    if (eval(parser,cb,"10 - 3 - 2") != 5)
+    {
+      new Exception("10 - 3 - 2: expected 5").throw();
+    }
+
+    // - left-to-right associativity for div -
+    if (eval(parser,cb,"24 / 4 / 2") != 3)
+    {
+      new Exception("24 / 4 / 2: expected 3").throw();
+    }
+
+    // - all operators combined -
+    result = eval(parser,cb,"(10 + 3) * 2 - 8 / 2 + 010 % 3");
+    if (result != 24)
+    {
+      new Exception("(10 + 3) * 2 - 8 / 2 + 010 %% 3: expected 24, got %d" % result).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    new Main();
+  }/*}}}*/
+}

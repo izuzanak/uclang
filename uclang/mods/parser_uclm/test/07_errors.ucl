@@ -1,0 +1,314 @@
+
+import parser;
+
+class Main
+{
+  m_saved_state = new Blank();
+
+  // - callback that saves parse state reference -
+  public save_state_cb(a_state)
+  {/*{{{*/
+    m_saved_state = a_state;
+  }/*}}}*/
+
+  // - callback that tests rule_body out of range -
+  m_body_caught = 0;
+  public body_error_cb(a_state)
+  {/*{{{*/
+    try {
+      a_state.rule_body(99);
+    }
+    catch (e)
+    {
+      m_body_caught = 1;
+    }
+  }/*}}}*/
+
+  public Main()
+  {/*{{{*/
+
+    // === FinalAutomata errors ===
+
+    // - empty regex array -
+    caught = 0;
+    try {
+      new FinalAutomata([]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("FinalAutomata([]): expected exception").throw();
+    }
+
+    // - non-string element in array -
+    caught = 0;
+    try {
+      new FinalAutomata(["d.d*", 42]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("FinalAutomata([..., 42]): expected exception").throw();
+    }
+
+    // - invalid regex syntax -
+    caught = 0;
+    try {
+      new FinalAutomata(["((("]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("FinalAutomata invalid regex: expected exception").throw();
+    }
+
+    // - terminal with out-of-range offset (begin > end) -
+    fa = new FinalAutomata(["d.d*"]);
+    fs = fa.get_source("123");
+    fs.next_terminal();
+    caught = 0;
+    try {
+      fs.terminal(5,0);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("terminal(5,0): expected exception").throw();
+    }
+
+    // - terminal with positive end offset exceeding length -
+    caught = 0;
+    try {
+      fs.terminal(0,1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("terminal(0,1): expected exception").throw();
+    }
+
+    // === Parser construction errors ===
+
+    // - invalid rules format -
+    caught = 0;
+    try {
+      new Parser("not valid rules");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Parser invalid format: expected exception").throw();
+    }
+
+    // - duplicate terminal -
+    caught = 0;
+    try {
+      new Parser("
+        init_code: {null}
+        terminals: x {'x'} x {'y'} _END_ {'\\0'}
+        nonterminals: <start>
+        rules: <start> -> x _END_ ->> {null}
+      ");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Parser duplicate terminal: expected exception").throw();
+    }
+
+    // - undefined terminal in rule -
+    caught = 0;
+    try {
+      new Parser("
+        init_code: {null}
+        terminals: x {'x'} _END_ {'\\0'}
+        nonterminals: <start>
+        rules: <start> -> y _END_ ->> {null}
+      ");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Parser undefined terminal: expected exception").throw();
+    }
+
+    // - undefined nonterminal in rule -
+    caught = 0;
+    try {
+      new Parser("
+        init_code: {null}
+        terminals: x {'x'} _END_ {'\\0'}
+        nonterminals: <start>
+        rules: <start> -> <missing> _END_ ->> {null}
+      ");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Parser undefined nonterminal: expected exception").throw();
+    }
+
+    // - invalid terminal regex in rules -
+    caught = 0;
+    try {
+      new Parser("
+        init_code: {null}
+        terminals: bad {(((} _END_ {'\\0'}
+        nonterminals: <start>
+        rules: <start> -> bad _END_ ->> {null}
+      ");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("Parser invalid terminal regex: expected exception").throw();
+    }
+
+    // === Parser parse-time errors ===
+
+    // - grammar with two rules so reductions fire via callback -
+    parser = new Parser("
+      init_code: {null}
+      terminals: number {d.d*} _SKIP_ {w.w*} _END_ {'\\0'}
+      nonterminals: <start> <exp>
+      rules:
+        <start> -> <exp> _END_ ->> {null}
+        <exp> -> number        ->> {null}
+    ");
+    cb = new Delegate(this,"save_state_cb",1);
+
+    // - unrecognized terminal -
+    caught = 0;
+    try {
+      parser.parse("abc",cb);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse unrecognized terminal: expected exception").throw();
+    }
+
+    // - syntax error (valid terminals, invalid sequence) -
+    caught = 0;
+    try {
+      parser.parse("1 2",cb);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("parse syntax error: expected exception").throw();
+    }
+
+    // === ParseState errors ===
+
+    // - save state from callback, then use outside -
+    m_saved_state = new Blank();
+    parser.parse("42",cb);
+
+    // - rule_idx outside callback -
+    caught = 0;
+    try {
+      m_saved_state.rule_idx();
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ParseState.rule_idx outside callback: expected exception").throw();
+    }
+
+    // - old_input_idx outside callback -
+    caught = 0;
+    try {
+      m_saved_state.old_input_idx();
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ParseState.old_input_idx outside callback: expected exception").throw();
+    }
+
+    // - input_idx outside callback -
+    caught = 0;
+    try {
+      m_saved_state.input_idx();
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ParseState.input_idx outside callback: expected exception").throw();
+    }
+
+    // - rule_body outside callback -
+    caught = 0;
+    try {
+      m_saved_state.rule_body(0);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("ParseState.rule_body outside callback: expected exception").throw();
+    }
+
+    // - rule_body index exceeds body size (inside callback) -
+    // rule 1: <exp> -> number (body_size 1), so rule_body(99) is out of range
+    m_body_caught = 0;
+    parser.parse("42",new Delegate(this,"body_error_cb",1));
+    if (m_body_caught != 1)
+    {
+      new Exception("ParseState.rule_body(99) inside callback: expected exception").throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    new Main();
+  }/*}}}*/
+}
