@@ -1,6 +1,9 @@
 
 if(OS_LINUX)
-  set(LIBPAM_FOUND TRUE)
+  find_path(PATH_PAM_APPL_H NAMES "security/pam_appl.h")
+  if(PATH_PAM_APPL_H)
+    set(LIBPAM_FOUND TRUE)
+  endif()
 endif()
 
 if(LIBPAM_FOUND)
