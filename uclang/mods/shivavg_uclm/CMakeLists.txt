@@ -1,5 +1,23 @@
 
-find_library(OPENVG_LIBRARY OpenVG "${EXT_LIBS}/ShivaVG-0.2.1/src/.libs")
+if(PKG_CONFIG_FOUND)
+  pkg_search_module(OPENVG "vg")
+  if(OPENVG_FOUND)
+    set(OPENVG_LIBRARY ${OPENVG_LIBRARIES})
+  endif()
+endif()
+
+if(NOT OPENVG_LIBRARY)
+  find_package(ShivaVG CONFIG QUIET)
+  if(ShivaVG_FOUND)
+    if(TARGET ShivaVG::OpenVG)
+      set(OPENVG_LIBRARY ShivaVG::OpenVG)
+    endif()
+  endif()
+endif()
+
+if(NOT OPENVG_LIBRARY)
+  find_library(OPENVG_LIBRARY OpenVG "${EXT_LIBS}/ShivaVG-0.2.1/src/.libs")
+endif()
 
 if(OPENVG_LIBRARY)
   set(CONF_DO_BUILD TRUE)

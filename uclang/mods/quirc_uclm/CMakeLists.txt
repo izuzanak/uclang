@@ -1,5 +1,23 @@
 
-find_library(QUIRC_LIBRARY quirc "${EXT_LIBS}/quirc/quirc-1.0")
+if(PKG_CONFIG_FOUND)
+  pkg_search_module(QUIRC "quirc")
+  if(QUIRC_FOUND)
+    set(QUIRC_LIBRARY ${QUIRC_LIBRARIES})
+  endif()
+endif()
+
+if(NOT QUIRC_LIBRARY)
+  find_package(Quirc CONFIG QUIET)
+  if(Quirc_FOUND)
+    if(TARGET Quirc::quirc)
+      set(QUIRC_LIBRARY Quirc::quirc)
+    endif()
+  endif()
+endif()
+
+if(NOT QUIRC_LIBRARY)
+  find_library(QUIRC_LIBRARY quirc "${EXT_LIBS}/quirc/quirc-1.0")
+endif()
 
 if(QUIRC_LIBRARY)
   set(CONF_DO_BUILD TRUE)

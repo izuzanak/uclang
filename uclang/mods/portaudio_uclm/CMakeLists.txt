@@ -3,6 +3,28 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(LIBPORTAUDIO "portaudio-2.0 >= 19")
 endif()
 
+if(NOT LIBPORTAUDIO_FOUND)
+  find_package(portaudio CONFIG QUIET)
+  if(portaudio_FOUND)
+    set(LIBPORTAUDIO_FOUND TRUE)
+    if(TARGET portaudio)
+      get_target_property(LIBPORTAUDIO_INCLUDE_DIRS portaudio
+          INTERFACE_INCLUDE_DIRECTORIES)
+      set(LIBPORTAUDIO_LIBRARIES portaudio)
+    endif()
+  endif()
+endif()
+
+if(NOT LIBPORTAUDIO_FOUND)
+  find_path(LIBPORTAUDIO_INCLUDE_DIR portaudio.h)
+  find_library(LIBPORTAUDIO_LIBRARY NAMES portaudio)
+  if(LIBPORTAUDIO_INCLUDE_DIR AND LIBPORTAUDIO_LIBRARY)
+    set(LIBPORTAUDIO_FOUND TRUE)
+    set(LIBPORTAUDIO_INCLUDE_DIRS ${LIBPORTAUDIO_INCLUDE_DIR})
+    set(LIBPORTAUDIO_LIBRARIES ${LIBPORTAUDIO_LIBRARY})
+  endif()
+endif()
+
 if(LIBPORTAUDIO_FOUND)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS

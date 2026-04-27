@@ -3,6 +3,28 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(LIBPROLOG "swipl >= 7.2.3")
 endif()
 
+if(NOT LIBPROLOG_FOUND)
+  find_package(SWIPL CONFIG QUIET)
+  if(SWIPL_FOUND)
+    set(LIBPROLOG_FOUND TRUE)
+    if(TARGET SWIPL::libswipl)
+      get_target_property(LIBPROLOG_INCLUDE_DIRS SWIPL::libswipl
+          INTERFACE_INCLUDE_DIRECTORIES)
+      set(LIBPROLOG_LIBRARIES SWIPL::libswipl)
+    endif()
+  endif()
+endif()
+
+if(NOT LIBPROLOG_FOUND)
+  find_path(LIBPROLOG_INCLUDE_DIR SWI-Prolog.h)
+  find_library(LIBPROLOG_LIBRARY NAMES swipl)
+  if(LIBPROLOG_INCLUDE_DIR AND LIBPROLOG_LIBRARY)
+    set(LIBPROLOG_FOUND TRUE)
+    set(LIBPROLOG_INCLUDE_DIRS ${LIBPROLOG_INCLUDE_DIR})
+    set(LIBPROLOG_LIBRARIES ${LIBPROLOG_LIBRARY})
+  endif()
+endif()
+
 if(LIBPROLOG_FOUND)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS

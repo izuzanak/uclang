@@ -3,6 +3,28 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(LIBFUSE "fuse >= 2.9.3")
 endif()
 
+if(NOT LIBFUSE_FOUND)
+  find_package(FUSE CONFIG QUIET)
+  if(FUSE_FOUND)
+    set(LIBFUSE_FOUND TRUE)
+    if(TARGET FUSE::FUSE)
+      get_target_property(LIBFUSE_INCLUDE_DIRS FUSE::FUSE
+          INTERFACE_INCLUDE_DIRECTORIES)
+      set(LIBFUSE_LIBRARIES FUSE::FUSE)
+    endif()
+  endif()
+endif()
+
+if(NOT LIBFUSE_FOUND)
+  find_path(LIBFUSE_INCLUDE_DIR fuse.h PATH_SUFFIXES fuse)
+  find_library(LIBFUSE_LIBRARY NAMES fuse)
+  if(LIBFUSE_INCLUDE_DIR AND LIBFUSE_LIBRARY)
+    set(LIBFUSE_FOUND TRUE)
+    set(LIBFUSE_INCLUDE_DIRS ${LIBFUSE_INCLUDE_DIR})
+    set(LIBFUSE_LIBRARIES ${LIBFUSE_LIBRARY})
+  endif()
+endif()
+
 if(LIBFUSE_FOUND)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS

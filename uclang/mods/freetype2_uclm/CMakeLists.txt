@@ -3,6 +3,28 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(LIBFREETYPE2 "freetype2 >= 22.1.16")
 endif()
 
+if(NOT LIBFREETYPE2_FOUND)
+  find_package(Freetype CONFIG QUIET)
+  if(Freetype_FOUND)
+    set(LIBFREETYPE2_FOUND TRUE)
+    if(TARGET Freetype::Freetype)
+      get_target_property(LIBFREETYPE2_INCLUDE_DIRS Freetype::Freetype
+          INTERFACE_INCLUDE_DIRECTORIES)
+      set(LIBFREETYPE2_LIBRARIES Freetype::Freetype)
+    endif()
+  endif()
+endif()
+
+if(NOT LIBFREETYPE2_FOUND)
+  find_path(LIBFREETYPE2_INCLUDE_DIR ft2build.h PATH_SUFFIXES freetype2)
+  find_library(LIBFREETYPE2_LIBRARY NAMES freetype)
+  if(LIBFREETYPE2_INCLUDE_DIR AND LIBFREETYPE2_LIBRARY)
+    set(LIBFREETYPE2_FOUND TRUE)
+    set(LIBFREETYPE2_INCLUDE_DIRS ${LIBFREETYPE2_INCLUDE_DIR})
+    set(LIBFREETYPE2_LIBRARIES ${LIBFREETYPE2_LIBRARY})
+  endif()
+endif()
+
 if(LIBFREETYPE2_FOUND)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS

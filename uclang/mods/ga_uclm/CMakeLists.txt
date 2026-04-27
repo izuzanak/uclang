@@ -1,5 +1,24 @@
 
-find_library(GA_LIBRARY ga "${EXT_LIBS}/galib/galib247/ga")
+if(PKG_CONFIG_FOUND)
+  pkg_search_module(GA "galib")
+  if(GA_FOUND)
+    set(GA_LIBRARY ${GA_LIBRARIES})
+  endif()
+endif()
+
+if(NOT GA_FOUND)
+  find_package(GAlib CONFIG QUIET)
+  if(GAlib_FOUND)
+    set(GA_FOUND TRUE)
+    if(TARGET GAlib::ga)
+      set(GA_LIBRARY GAlib::ga)
+    endif()
+  endif()
+endif()
+
+if(NOT GA_LIBRARY)
+  find_library(GA_LIBRARY ga "${EXT_LIBS}/galib/galib247/ga")
+endif()
 
 if(GA_LIBRARY)
   set(CONF_DO_BUILD TRUE)
