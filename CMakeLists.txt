@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 3.0.2...3.13)
 
 option(FILC_BUILD "Build with Fil-C compiler (/opt/fil/)" OFF)
 
+set(COMPONENTS "" CACHE STRING
+    "Comma-separated list of components to build.")
+
 if(FILC_BUILD)
   set(CMAKE_C_COMPILER "/opt/fil/bin/filcc")
   set(CMAKE_CXX_COMPILER "/opt/fil/bin/fil++")
@@ -26,6 +29,16 @@ set(MF_MODS_FILE "${CMAKE_CURRENT_SOURCE_DIR}/uclang_build/mf_mods.py")
 set_property(GLOBAL PROPERTY TARGET_MESSAGES OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 enable_testing()
+
+if(COMPONENTS)
+  string(REPLACE "," ";" COMPONENTS_LIST "${COMPONENTS}")
+  list(TRANSFORM COMPONENTS_LIST STRIP)
+  list(REMOVE_ITEM COMPONENTS_LIST "")
+  set(COMPONENTS_FILTER TRUE)
+  set_property(GLOBAL PROPERTY COMPONENTS_REMAINING "${COMPONENTS_LIST}")
+else()
+  set(COMPONENTS_FILTER FALSE)
+endif()
 
 # - update compilation flags -
 if(FILC_BUILD)
@@ -87,6 +100,13 @@ file(GLOB MODULE_DIRS "" "${CMAKE_CURRENT_SOURCE_DIR}/${COMPS_DIR}/*")
 foreach(COMP_DIR ${MODULE_DIRS})
   get_filename_component(COMP_NAME ${COMP_DIR} NAME)
 
+  if(COMPONENTS_FILTER)
+    get_property(REMAINING GLOBAL PROPERTY COMPONENTS_REMAINING)
+    if(NOT "${COMP_NAME}" IN_LIST REMAINING)
+      continue()
+    endif()
+  endif()
+
   set(CONF_DO_BUILD FALSE)
   set(COMP_DO_BUILD FALSE)
 
@@ -101,6 +121,15 @@ foreach(COMP_DIR ${MODULE_DIRS})
 
     if(CONF_DO_BUILD)
       set(COMP_DO_BUILD TRUE)
+    endif()
+
+    if(COMPONENTS_FILTER)
+      if(NOT CONF_DO_BUILD)
+        message(FATAL_ERROR
+            "COMPONENTS: component '${COMP_NAME}' cannot be built.")
+      endif()
+      list(REMOVE_ITEM REMAINING "${COMP_NAME}")
+      set_property(GLOBAL PROPERTY COMPONENTS_REMAINING "${REMAINING}")
     endif()
 
     if(COMP_DO_BUILD)
@@ -156,6 +185,14 @@ process_components("uclang/progs")
 
 # - process modules -
 process_components("uclang/mods")
+
+if(COMPONENTS_FILTER)
+  get_property(REMAINING GLOBAL PROPERTY COMPONENTS_REMAINING)
+  if(REMAINING)
+    message(FATAL_ERROR
+        "COMPONENTS: following components were not found: ${REMAINING}")
+  endif()
+endif()
 
 # - module tests -
 set(TEST_RUNNER "${CMAKE_CURRENT_SOURCE_DIR}/build/scripts/test.ucl")
