@@ -32,7 +32,8 @@ struct av_format_s
   AVFormatContext *format_ctx;
   AVCodecContext **codec_ctxs;
   AVPacket packet;
-  int proc_size;
+  int eof;
+  unsigned drain_idx;
 
   inline void init();
   inline void clear(interpreter_thread_s &it);
@@ -98,7 +99,8 @@ inline void av_format_s::init()
   format_ctx = nullptr;
   codec_ctxs = nullptr;
   packet.size = 0;
-  proc_size = 0;
+  eof = 0;
+  drain_idx = 0;
 }/*}}}*/
 
 inline void av_format_s::clear(interpreter_thread_s &it)
@@ -126,7 +128,7 @@ inline void av_format_s::clear(interpreter_thread_s &it)
           // - if codec context exists -
           if (*cc_ptr != nullptr)
           {
-            avcodec_close(*cc_ptr);
+            avcodec_free_context(cc_ptr);
           }
         } while(++cc_ptr < cc_ptr_end);
       }

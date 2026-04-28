@@ -534,24 +534,33 @@ method stream_decode
   }
 
   AVStream *stream = avf_ptr->format_ctx->streams[stream_idx];
-  AVCodec *codec;
+  const AVCodec *codec;
 
   // - ERROR -
-  if ((codec = avcodec_find_decoder(stream->codec->codec_id)) == nullptr)
+  if ((codec = avcodec_find_decoder(stream->codecpar->codec_id)) == nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_CANNOT_FIND_STREAM_DECODER,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
+  // - allocate decoder context and copy stream parameters into it -
+  AVCodecContext *codec_ctx = avcodec_alloc_context3(codec);
+
   // - ERROR -
-  if (avcodec_open2(stream->codec,codec,nullptr) < 0)
+  if (codec_ctx == nullptr ||
+      avcodec_parameters_to_context(codec_ctx,stream->codecpar) < 0 ||
+      avcodec_open2(codec_ctx,codec,nullptr) < 0)
   {
+    if (codec_ctx != nullptr)
+    {
+      avcodec_free_context(&codec_ctx);
+    }
     exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_CANNOT_INITIALIZE_CODEC_CONTEXT,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 
   // - add context to format codec context array -
-  avf_ptr->codec_ctxs[stream_idx] = stream->codec;
+  avf_ptr->codec_ctxs[stream_idx] = codec_ctx;
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -568,13 +577,6 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
   AVCodecContext **codec_ctxs = avf_ptr->codec_ctxs;
 
   AVPacket &packet = avf_ptr->packet;
-  AVPacket tmp_packet;
-  av_init_packet(&tmp_packet);
-
-  // - initialize temporary packet -
-  tmp_packet.side_data_elems = 0;
-
-  int &proc_size = avf_ptr->proc_size;
 
   // - allocate frame -
   AVFrame *frame = av_frame_alloc();
@@ -603,19 +605,57 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
   // - read next frame -
   do {
 
+    // - drain buffered frames after end of input -
+    if (avf_ptr->eof)
+    {
+      while (avf_ptr->drain_idx < format_ctx->nb_streams)
+      {
+        unsigned di = avf_ptr->drain_idx;
+        AVCodecContext *dctx = codec_ctxs[di];
+        if (dctx == nullptr ||
+            format_ctx->streams[di]->codecpar->codec_type != AVMEDIA_TYPE_VIDEO)
+        {
+          avf_ptr->drain_idx = di + 1;
+          continue;
+        }
+
+        int rr = avcodec_receive_frame(dctx,frame);
+        if (rr == 0)
+        {
+          packet.stream_index = di;
+          BIC_AV_FORMAT_SET_RESULT_FRAME(c_bi_class_av_video_frame);
+          return true;
+        }
+
+        // - this stream is fully drained -
+        avf_ptr->drain_idx = di + 1;
+      }
+
+      BIC_AV_FORMAT_FREE_PACKET();
+      BIC_AV_FORMAT_FREE_FRAME();
+
+      BIC_SET_RESULT_BLANK();
+      return true;
+    }
+
     // - if packet is empty -
     if (packet.size == 0)
     {
-      proc_size = 0;
-
       // - read next packet -
       if (av_read_frame(format_ctx,&packet) < 0)
       {
-        BIC_AV_FORMAT_FREE_PACKET();
-        BIC_AV_FORMAT_FREE_FRAME();
-
-        BIC_SET_RESULT_BLANK();
-        return true;
+        // - signal end of stream to each decoder, then drain -
+        unsigned ns = format_ctx->nb_streams;
+        for (unsigned i = 0; i < ns; i++)
+        {
+          if (codec_ctxs[i] != nullptr)
+          {
+            avcodec_send_packet(codec_ctxs[i],nullptr);
+          }
+        }
+        avf_ptr->eof = 1;
+        avf_ptr->drain_idx = 0;
+        continue;
       }
     }
 
@@ -627,21 +667,21 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
     }
     else
     {
-      // - modify temporary packet -
-      tmp_packet.data = packet.data + proc_size;
-      tmp_packet.size = packet.size - proc_size;
-
-      int got_frame;
-      int proc_bytes;
-
-      switch (format_ctx->streams[packet.stream_index]->codec->codec_type)
+      switch (format_ctx->streams[packet.stream_index]->codecpar->codec_type)
       {
         case AVMEDIA_TYPE_VIDEO:
           {/*{{{*/
-            proc_bytes = avcodec_decode_video2(codec_ctx,frame,&got_frame,&tmp_packet);
+
+            // - try to receive a decoded frame already buffered by the decoder -
+            int rr = avcodec_receive_frame(codec_ctx,frame);
+            if (rr == 0)
+            {
+              BIC_AV_FORMAT_SET_RESULT_FRAME(c_bi_class_av_video_frame);
+              return true;
+            }
 
             // - ERROR -
-            if (proc_bytes < 0)
+            if (rr != AVERROR(EAGAIN) && rr != AVERROR_EOF)
             {
               BIC_AV_FORMAT_FREE_PACKET();
               BIC_AV_FORMAT_FREE_FRAME();
@@ -650,16 +690,17 @@ bool bic_av_format_method_next_frame_0(interpreter_thread_s &it,unsigned stack_b
               return false;
             }
 
-            // - free packet if all its data was read -
-            if ((proc_size += proc_bytes) >= packet.size)
-            {
-              BIC_AV_FORMAT_FREE_PACKET();
-            }
+            // - feed the current packet to the decoder -
+            int sr = avcodec_send_packet(codec_ctx,&packet);
+            BIC_AV_FORMAT_FREE_PACKET();
 
-            if (got_frame)
+            // - ERROR -
+            if (sr < 0 && sr != AVERROR(EAGAIN))
             {
-              BIC_AV_FORMAT_SET_RESULT_FRAME(c_bi_class_av_video_frame);
-              return true;
+              BIC_AV_FORMAT_FREE_FRAME();
+
+              exception_s::throw_exception(it,module.error_base + c_error_AV_FORMAT_PACKED_DECODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+              return false;
             }
           }/*}}}*/
           break;
@@ -807,7 +848,7 @@ bool bic_av_stream_method_codec_type_0(interpreter_thread_s &it,unsigned stack_b
   av_stream_s *avs_ptr = (av_stream_s *)dst_location->v_data_ptr;
   av_format_s *avf_ptr = (av_format_s *)avs_ptr->format_ctx_ptr->v_data_ptr;
 
-  long long int result = avf_ptr->format_ctx->streams[avs_ptr->stream_idx]->codec->codec_type;
+  long long int result = avf_ptr->format_ctx->streams[avs_ptr->stream_idx]->codecpar->codec_type;
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
