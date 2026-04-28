@@ -9,6 +9,8 @@ include "script_parser.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgcodecs/legacy/constants_c.h>
+#include <opencv2/videoio/legacy/constants_c.h>
 
 using namespace cv;
 
@@ -95,9 +97,6 @@ inline void cv_writer_s::clear(interpreter_thread_s &it)
 
 inline opencv_c::opencv_c()
 {/*{{{*/
-  debug_message_2(fprintf(stderr,"cvInitSystem()\n"););
-
-  cvInitSystem(0,nullptr);
 }/*}}}*/
 
 inline opencv_c::~opencv_c()

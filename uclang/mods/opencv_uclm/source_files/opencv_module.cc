@@ -764,7 +764,7 @@ method CvWindow
   try
   {
     // - create opencv window -
-    cvNamedWindow(string_ptr->data);
+    cv::namedWindow(string_ptr->data);
   }
 
   // - ERROR -
