@@ -2058,10 +2058,6 @@ built_in_variable_s gmp_rational_variables[] =
   case c_bi_class_integer:\
     gmp_c::mpq_ ## OPERATION ## _lli(*res_ptr,*mpq_ptr,(long long int)src_0_location->v_data_ptr);\
     break;\
-  case c_bi_class_float:\
-    mpq_set_d(*res_ptr,(double)src_0_location->v_data_ptr);\
-    mpq_ ## OPERATION(*res_ptr,*mpq_ptr,*res_ptr);\
-    break;\
   default:\
     if (src_0_location->v_type == c_bi_class_gmp_integer)\
     {\
@@ -2550,10 +2546,6 @@ bool bic_gmp_rational_operator_binary_asterisk_equal(interpreter_thread_s &it,un
   case c_bi_class_integer:
     gmp_c::mpq_mul_lli(*res_ptr,*mpq_ptr,(long long int)src_0_location->v_data_ptr);
     break;
-  case c_bi_class_float:
-    mpq_set_d(*res_ptr,(double)src_0_location->v_data_ptr);
-    mpq_mul(*res_ptr,*mpq_ptr,*res_ptr);
-    break;
   default:
     if (src_0_location->v_type == c_bi_class_gmp_integer)
     {
@@ -2638,24 +2630,6 @@ bool bic_gmp_rational_operator_binary_slash_equal(interpreter_thread_s &it,unsig
     }
 
     gmp_c::mpq_set_lli(*res_ptr,divider);
-    mpq_div(*res_ptr,*mpq_ptr,*res_ptr);
-  }
-  break;
-  case c_bi_class_float:
-  {
-    double divider = (double)src_0_location->v_data_ptr;
-
-    // - ERROR -
-    if (divider == 0.0)
-    {
-      mpq_clear(*res_ptr);
-      cfree(res_ptr);
-
-      exception_s::throw_exception(it,c_error_DIVISION_BY_ZERO,operands[c_source_pos_idx],(location_s *)it.blank_location);
-      return false;
-    }
-
-    mpq_set_d(*res_ptr,divider);
     mpq_div(*res_ptr,*mpq_ptr,*res_ptr);
   }
   break;
@@ -3203,13 +3177,71 @@ bool bic_gmp_rational_method_GmpRational_1(interpreter_thread_s &it,unsigned sta
   case c_bi_class_integer:
     gmp_c::mpq_set_lli(*mpq_ptr,(long long int)src_0_location->v_data_ptr);
     break;
-  case c_bi_class_float:
-    mpq_set_d(*mpq_ptr,(double)src_0_location->v_data_ptr);
-    break;
   case c_bi_class_string:
+  {/*{{{*/
+    string_s *string_ptr = (string_s *)src_0_location->v_data_ptr;
+
+    char *string_data = string_ptr->data;
+    unsigned string_len = string_ptr->size - 1;
+
+    // - scan for decimal point -
+    char *dot_ptr = nullptr;
+
+    if (string_len)
+    {
+      char *s_ptr = string_data;
+      char *s_ptr_end = s_ptr + string_len;
+      do {
+        if (*s_ptr == '.')
+        {
+          dot_ptr = s_ptr;
+          break;
+        }
+      } while(++s_ptr < s_ptr_end);
+    }
+
+    char stack_buffer[256];
+    CONT_INIT_CLEAR(bc_array_s,heap_buffer);
+
+    const char *parse_data = string_data;
+    int parse_base = 0;
+
+    // - decimal-point form -
+    if (dot_ptr != nullptr)
+    {
+      unsigned frac_digits = (string_data + string_len) - (dot_ptr + 1);
+      unsigned buffer_size = string_len + frac_digits + 3;
+
+      // - use stack buffer for short strings, bc_array_s for long ones -
+      char *buffer = stack_buffer;
+      if (buffer_size > sizeof(stack_buffer))
+      {
+        heap_buffer.copy_resize(buffer_size);
+        buffer = heap_buffer.data;
+      }
+
+      // - build "<digits, dot removed>/1<frac_digits zeros>" -
+      char *s_ptr = string_data;
+      char *s_ptr_end = s_ptr + string_len;
+      char *b_ptr = buffer;
+
+      do {
+        if (s_ptr != dot_ptr) { *b_ptr++ = *s_ptr; }
+      } while(++s_ptr < s_ptr_end);
+
+      *b_ptr++ = '/';
+      *b_ptr++ = '1';
+      while (frac_digits > 0) { *b_ptr++ = '0'; --frac_digits; }
+      *b_ptr = '\0';
+
+      parse_data = buffer;
+      parse_base = 10;
+    }
+
+    int parse_error = mpq_set_str(*mpq_ptr,parse_data,parse_base);
 
     // - ERROR -
-    if (mpq_set_str(*mpq_ptr,((string_s *)src_0_location->v_data_ptr)->data,0))
+    if (parse_error)
     {
       exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_GMP_NUMBER_CONVERT_INVALID_STRING,operands[c_source_pos_idx],src_0_location);
       new_exception->params.push(c_bi_class_gmp_rational);
@@ -3221,6 +3253,7 @@ bool bic_gmp_rational_method_GmpRational_1(interpreter_thread_s &it,unsigned sta
     mpq_canonicalize(*mpq_ptr);
 
     break;
+  }/*}}}*/
   default:
     if (src_0_location->v_type == c_bi_class_gmp_integer)
     {

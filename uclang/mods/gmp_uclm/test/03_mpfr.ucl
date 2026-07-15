@@ -1,0 +1,93 @@
+
+import gmp;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - default construction is zero -
+    zero = new MpfrFixed();
+    if (zero != new MpfrFixed(0))
+    {
+      new Exception("MpfrFixed default: expected 0, got %s" % $zero).throw();
+    }
+
+    one = new MpfrFixed(1);
+    two = new MpfrFixed(2);
+
+    // - construction from integer / float / string / string+base -
+    if (new MpfrFixed(2) != two)
+    {
+      new Exception("MpfrFixed from int failed").throw();
+    }
+    if (new MpfrFixed(2.5) != new MpfrFixed("2.5",10))
+    {
+      new Exception("MpfrFixed from float/string mismatch").throw();
+    }
+
+    // - cross-type construction from GmpInteger -
+    if (new MpfrFixed(new GmpInteger(2)) != two)
+    {
+      new Exception("MpfrFixed from GmpInteger failed").throw();
+    }
+
+    // - exact arithmetic -
+    if (new MpfrFixed("2.5",10) + new MpfrFixed("2.5",10) != new MpfrFixed(5))
+    {
+      new Exception("mpfr addition failed").throw();
+    }
+    if (new MpfrFixed(6) - new MpfrFixed(4) != two)
+    {
+      new Exception("mpfr subtraction failed").throw();
+    }
+    if (new MpfrFixed(3) * new MpfrFixed(4) != new MpfrFixed(12))
+    {
+      new Exception("mpfr multiplication failed").throw();
+    }
+    if (new MpfrFixed(10) / new MpfrFixed(4) != new MpfrFixed("2.5",10))
+    {
+      new Exception("mpfr division failed").throw();
+    }
+
+    // - comparison -
+    if (!(one < two) || !(two > one) || one == two)
+    {
+      new Exception("mpfr comparison failed").throw();
+    }
+    if (two.compare(one) != 1 || one.compare(two) != -1 || two.compare(new MpfrFixed(2)) != 0)
+    {
+      new Exception("mpfr compare#1 failed").throw();
+    }
+
+    // - math on exactly-representable points -
+    if (new MpfrFixed(4).sqrt() != two)
+    {
+      new Exception("sqrt(4) failed: got %s" % $(new MpfrFixed(4).sqrt())).throw();
+    }
+    if (two.pow(new MpfrFixed(10)) != new MpfrFixed(1024))
+    {
+      new Exception("pow(2,10) failed").throw();
+    }
+    if (new MpfrFixed(27).cbrt() != new MpfrFixed(3))
+    {
+      new Exception("cbrt(27) failed").throw();
+    }
+    if (new MpfrFixed(3).hypot(new MpfrFixed(4)) != new MpfrFixed(5))
+    {
+      new Exception("hypot(3,4) failed").throw();
+    }
+    if (zero.sin() != zero || zero.cos() != one || zero.tan() != zero)
+    {
+      new Exception("sin/cos/tan at 0 failed").throw();
+    }
+    if (zero.exp() != one || one.log() != zero)
+    {
+      new Exception("exp(0)/log(1) failed").throw();
+    }
+    if (zero.asin() != zero || zero.atan() != zero || one.acos() != zero)
+    {
+      new Exception("asin/acos/atan failed").throw();
+    }
+  }/*}}}*/
+}

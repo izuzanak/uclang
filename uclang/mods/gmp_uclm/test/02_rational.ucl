@@ -1,0 +1,135 @@
+
+import gmp;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - default construction is zero -
+    zero = new GmpRational();
+    if (zero != new GmpRational(0))
+    {
+      new Exception("GmpRational default: expected 0, got %s" % $zero).throw();
+    }
+
+    // - construction from integer -
+    ival = new GmpRational(5);
+    if ($ival != "5")
+    {
+      new Exception("GmpRational from int: got %s" % $ival).throw();
+    }
+
+    // - construction from string with base -
+    r = new GmpRational("22/7",10);
+    if ($r != "22/7")
+    {
+      new Exception("GmpRational from string: got %s" % $r).throw();
+    }
+
+    // - construction from single-argument decimal-point string (123.45 -> 2469/20) -
+    dec = new GmpRational("123.45");
+    if ($dec != "2469/20")
+    {
+      new Exception("GmpRational from decimal string: got %s" % $dec).throw();
+    }
+
+    // - negative decimal (-123.45 -> -2469/20) -
+    ndec = new GmpRational("-123.45");
+    if ($ndec != "-2469/20")
+    {
+      new Exception("GmpRational from negative decimal string: got %s" % $ndec).throw();
+    }
+
+    // - leading dot (.45 -> 9/20) -
+    ldec = new GmpRational(".45");
+    if ($ldec != "9/20")
+    {
+      new Exception("GmpRational from leading-dot decimal: got %s" % $ldec).throw();
+    }
+
+    // - trailing dot (123. -> 123) -
+    tdec = new GmpRational("123.");
+    if ($tdec != "123")
+    {
+      new Exception("GmpRational from trailing-dot decimal: got %s" % $tdec).throw();
+    }
+
+    // - single-argument fraction string still parses (no base) -
+    sr = new GmpRational("22/7");
+    if ($sr != "22/7")
+    {
+      new Exception("GmpRational from single-arg fraction string: got %s" % $sr).throw();
+    }
+
+    // - long decimal string exercises the heap-fallback buffer (> 256 bytes); 1.000... == 1 -
+    zeros = "";
+    i = 0;
+    while (i < 300) { zeros += "0"; i += 1; }
+    longdec = new GmpRational("1." + zeros);
+    if (longdec != new GmpRational(1))
+    {
+      new Exception("GmpRational long decimal (heap path): got %s" % $longdec).throw();
+    }
+
+    // - num#0 / den#0 return GmpInteger parts -
+    if ($r.num() != "22" || $r.den() != "7")
+    {
+      new Exception("num/den: got %s/%s" % [$r.num(),$r.den()]).throw();
+    }
+
+    // - construction from numerator / denominator, auto-canonicalized -
+    half = new GmpRational(1,2);
+    if ($half != "1/2")
+    {
+      new Exception("GmpRational from num/den: got %s" % $half).throw();
+    }
+    reduced = new GmpRational(2,4);
+    if (reduced != half)
+    {
+      new Exception("GmpRational canonicalize 2/4: got %s" % $reduced).throw();
+    }
+
+    // - construction from (GmpInteger, GmpInteger) -
+    gi = new GmpRational(new GmpInteger(3),new GmpInteger(6));
+    if (gi != half)
+    {
+      new Exception("GmpRational from GmpInteger pair: got %s" % $gi).throw();
+    }
+
+    // - arithmetic: 1/2 + 1/3 == 5/6 -
+    third = new GmpRational(1,3);
+    if (half + third != new GmpRational(5,6))
+    {
+      new Exception("rational addition: got %s" % $(half + third)).throw();
+    }
+
+    // - subtraction: 1/2 - 1/3 == 1/6 -
+    if (half - third != new GmpRational(1,6))
+    {
+      new Exception("rational subtraction: got %s" % $(half - third)).throw();
+    }
+
+    // - multiplication: (2/3)*(3/4) == 1/2 -
+    if (new GmpRational(2,3) * new GmpRational(3,4) != half)
+    {
+      new Exception("rational multiplication failed").throw();
+    }
+
+    // - division: (1/2)/(1/4) == 2 -
+    if (half / new GmpRational(1,4) != new GmpRational(2))
+    {
+      new Exception("rational division failed").throw();
+    }
+
+    // - comparison -
+    if (!(third < half) || !(half > third) || third == half)
+    {
+      new Exception("rational comparison failed").throw();
+    }
+    if (half.compare(third) != 1 || third.compare(half) != -1 || half.compare(new GmpRational(1,2)) != 0)
+    {
+      new Exception("rational compare#1 failed").throw();
+    }
+  }/*}}}*/
+}

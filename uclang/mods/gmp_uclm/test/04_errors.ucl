@@ -1,0 +1,77 @@
+
+import gmp;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - base out of range (<2 or >62) must throw -
+    caught = 0;
+    try { z = new GmpInteger("10",99); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("GmpInteger base 99 did not throw").throw();
+    }
+
+    caught = 0;
+    try { z = new GmpRational("22/7",99); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("GmpRational base 99 did not throw").throw();
+    }
+
+    caught = 0;
+    try { z = new MpfrFixed("1.5",99); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("MpfrFixed base 99 did not throw").throw();
+    }
+
+    // - invalid literals must throw -
+    caught = 0;
+    try { z = new GmpInteger("not_a_number",10); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("GmpInteger invalid literal did not throw").throw();
+    }
+
+    caught = 0;
+    try { z = new GmpRational("garbage",10); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("GmpRational invalid literal did not throw").throw();
+    }
+
+    caught = 0;
+    try { z = new MpfrFixed("xyz",10); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("MpfrFixed invalid literal did not throw").throw();
+    }
+
+    // - malformed decimal-point string must throw (multiple dots) -
+    caught = 0;
+    try { z = new GmpRational("1.2.3"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("GmpRational malformed decimal did not throw").throw();
+    }
+
+    // - mixing a decimal point and a fraction slash must throw -
+    caught = 0;
+    try { z = new GmpRational("1.5/2"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("GmpRational decimal+slash did not throw").throw();
+    }
+  }/*}}}*/
+}

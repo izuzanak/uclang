@@ -1,0 +1,147 @@
+
+import gmp;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - default construction is zero -
+    zero = new GmpInteger();
+    if (zero != new GmpInteger(0))
+    {
+      new Exception("GmpInteger default: expected 0, got %s" % $zero).throw();
+    }
+
+    // - construction from integer -
+    val = new GmpInteger(123456789);
+    if (val != new GmpInteger(123456789))
+    {
+      new Exception("GmpInteger from int: got %s" % $val).throw();
+    }
+
+    // - construction from negative integer -
+    neg = new GmpInteger(-987654321);
+    if (neg != new GmpInteger(-987654321))
+    {
+      new Exception("GmpInteger from negative: got %s" % $neg).throw();
+    }
+
+    // - construction from float truncates -
+    fval = new GmpInteger(3.9);
+    if (fval != new GmpInteger(3))
+    {
+      new Exception("GmpInteger from float: expected 3, got %s" % $fval).throw();
+    }
+
+    // - construction from decimal string with base -
+    big = new GmpInteger("123456789012345678901234567890",10);
+    if ($big != "123456789012345678901234567890")
+    {
+      new Exception("GmpInteger big string: got %s" % $big).throw();
+    }
+
+    // - cross-type construction from GmpRational truncates -
+    from_rat = new GmpInteger(new GmpRational("22/7",10));
+    if (from_rat != new GmpInteger(3))
+    {
+      new Exception("GmpInteger from rational: expected 3, got %s" % $from_rat).throw();
+    }
+
+    // - arithmetic + - * / % -
+    a = new GmpInteger(6);
+    b = new GmpInteger(4);
+    if (a + b != new GmpInteger(10))
+    {
+      new Exception("addition: got %s" % $(a + b)).throw();
+    }
+    if (a - b != new GmpInteger(2))
+    {
+      new Exception("subtraction: got %s" % $(a - b)).throw();
+    }
+    if (a * b != new GmpInteger(24))
+    {
+      new Exception("multiplication: got %s" % $(a * b)).throw();
+    }
+    if (a / b != new GmpInteger(1))
+    {
+      new Exception("division: got %s" % $(a / b)).throw();
+    }
+    if (a % b != new GmpInteger(2))
+    {
+      new Exception("modulo: got %s" % $(a % b)).throw();
+    }
+
+    // - large product overflows native int64, must stay exact -
+    prod = new GmpInteger("1000000000000",10) * new GmpInteger("1000000000000",10);
+    if ($prod != "1000000000000000000000000")
+    {
+      new Exception("bignum product: got %s" % $prod).throw();
+    }
+
+    // - comparison operators -
+    if (!(a > b) || !(b < a) || !(a >= new GmpInteger(6)) || !(a <= new GmpInteger(6)))
+    {
+      new Exception("comparison operators failed").throw();
+    }
+    if (a == b || !(a != b))
+    {
+      new Exception("equality operators failed").throw();
+    }
+
+    // - compare#1 returns -1 / 0 / 1 -
+    if (a.compare(b) != 1 || b.compare(a) != -1 || a.compare(new GmpInteger(6)) != 0)
+    {
+      new Exception("compare#1 failed").throw();
+    }
+
+    // - unary minus -
+    if (-a != new GmpInteger(-6))
+    {
+      new Exception("unary minus: got %s" % $(-a)).throw();
+    }
+
+    // - increment / decrement -
+    c = new GmpInteger(7);
+    c++;
+    ++c;
+    if (c != new GmpInteger(9))
+    {
+      new Exception("increment: expected 9, got %s" % $c).throw();
+    }
+    c--;
+    --c;
+    if (c != new GmpInteger(7))
+    {
+      new Exception("decrement: expected 7, got %s" % $c).throw();
+    }
+
+    // - compound assignment -
+    d = new GmpInteger(10);
+    d += new GmpInteger(5);
+    d -= new GmpInteger(3);
+    d *= new GmpInteger(2);
+    if (d != new GmpInteger(24))
+    {
+      new Exception("compound assign: expected 24, got %s" % $d).throw();
+    }
+
+    // - bitwise operators -
+    x = new GmpInteger(12);
+    y = new GmpInteger(10);
+    if (x & y != new GmpInteger(8) || x | y != new GmpInteger(14) || x ^ y != new GmpInteger(6))
+    {
+      new Exception("bitwise operators failed").throw();
+    }
+
+    // - shift (right operand is a plain Integer) -
+    if (new GmpInteger(1) << 10 != new GmpInteger(1024))
+    {
+      new Exception("left shift failed").throw();
+    }
+    if (new GmpInteger(1024) >> 10 != new GmpInteger(1))
+    {
+      new Exception("right shift failed").throw();
+    }
+  }/*}}}*/
+}

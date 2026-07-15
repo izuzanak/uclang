@@ -20,6 +20,15 @@ find_package(PkgConfig)
 
 project(uclang)
 
+# - project definitions, used by both C preprocessor and container generator -
+if(NOT DEFINED PROJECT_DEFS)
+  set(PROJECT_DEFS
+     )
+endif()
+
+string(REPLACE ";" " " C_PROJECT_DEFS "${PROJECT_DEFS}")
+string(REPLACE "-D" "--def=" CONT_PROJECT_DEFS "${PROJECT_DEFS}")
+
 set(PROC_DIR "${CMAKE_CURRENT_BINARY_DIR}/proc_files")
 file(MAKE_DIRECTORY ${PROC_DIR})
 
@@ -42,22 +51,22 @@ endif()
 
 # - update compilation flags -
 if(FILC_BUILD)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfatal-errors -Wno-vla-cxx-extension")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfatal-errors -Wno-vla-cxx-extension ${C_PROJECT_DEFS}")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fprofile-arcs -ftest-coverage")
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfatal-errors")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wfatal-errors ${C_PROJECT_DEFS}")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address -fsanitize=undefined -fprofile-arcs -ftest-coverage")
 endif()
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
 # - process target source file -
 function(process_source TARGET)
-  execute_process(COMMAND ${PROCESS_BIN} --deps "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS}
+  execute_process(COMMAND ${PROCESS_BIN} ${CONT_PROJECT_DEFS} --deps "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS}
       OUTPUT_VARIABLE DEPS
       ERROR_QUIET)
   add_custom_command(OUTPUT "${PROC_DIR}/p.${TARGET}.cc"
       DEPENDS ${DEPS}
-      COMMAND ${PROCESS_BIN} --geninc "--output" "${PROC_DIR}/p.${TARGET}.cc" "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS})
+      COMMAND ${PROCESS_BIN} ${CONT_PROJECT_DEFS} --geninc "--output" "${PROC_DIR}/p.${TARGET}.cc" "${SOURCE_DIR}/${TARGET}.cc" ${COMP_HEADER_DIRS})
 endfunction()
 
 # - process component -
