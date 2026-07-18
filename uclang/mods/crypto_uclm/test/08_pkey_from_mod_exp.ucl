@@ -1,0 +1,49 @@
+
+import crypto;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - binary big-endian modulus and exponent of a 2048 bit RSA public key -
+    modulus = Crypto.decode_base64("pc/WYgmopix4Xp4+Ls+082UqiP3mqwHFsttQpRV1E7wFM2GLIqEA1nj491fwXgS1OMnNst7xm5x/TZ5FXbb0jdsZNsNFEQVhUyhhFXK4L5UT0fNaGAtwKo7i5U5TOuzcPpGc+ZJh87NoFtCqCHQFTKThZ8lMYOWcI+PXfOWd9YdimDveG31ZXwNNTfmfYfoHYH8JegfX1eODcekJslnHU5SVESL0852+VMNHyZPqOy4Hlz/g5sOoDHfypOQYMpGwil67OMjf3venI3dbFreaEbjIfJOZ9p2hVuBvemURf2PKLkNNekDi6ucoCtvSx9+S62QdU4vh+I+h24YMuPZvOw==");
+    exponent = Crypto.decode_base64("AQAB");
+
+    // - RSA-SHA256 (PKCS#1 v1.5) signature of msg made with the matching private key -
+    msg = "message signed for the rsa_public_from_mod_exp test";
+    sig = Crypto.decode_base64("TuEROzb66XMT4oakaey4hzXqZkzA3hHD+ARCM843x5Mp6AL6xI8TCcmBX5yrTSZxuMYaX09ZQvpD+x3sGlqHdMmsP9G1Zpf8Cx9WY3sGz/6nqXTwIuhuUwqAr4T6u0k2b4qmzbKfjnVPgYdgrXv/A5nkxMiPKPIbGB0IMTvGxxB9cAU5MVDG9P6hxfW67vR4q6jZ0/6FHiTgwqkJ0z7lREjF/S0qPVsSyDi3JGhIu01NqxktC5CkVEVeCOCGZev6ONn/XkvfOmLliQ2qMb5a7EUi3Obiphnw7rbJrOKVKmu2uMT2xKebLMs6Yi7ifrEo13ygiZnO+KIc9o7u9KNsuQ==");
+
+    if (modulus.length() != 256)
+    {
+      new Exception("unexpected modulus length").throw();
+    }
+
+    pub = CryptoPKey.rsa_public_from_mod_exp(modulus,exponent);
+
+    // - verify OK with constructed public key -
+    v = new CryptoDigestVerify("RSA-SHA256",pub);
+    v.update(msg);
+    if (v.verify(sig) != 1)
+    {
+      new Exception("verify with constructed key failed").throw();
+    }
+
+    // - multi-update verify over the same message -
+    v2 = new CryptoDigestVerify("RSA-SHA256",pub);
+    v2.update("message signed for ");
+    v2.update("the rsa_public_from_mod_exp test");
+    if (v2.verify(sig) != 1)
+    {
+      new Exception("multi-update verify with constructed key failed").throw();
+    }
+
+    // - verify fails on tampered message -
+    v3 = new CryptoDigestVerify("RSA-SHA256",pub);
+    v3.update(msg + "x");
+    if (v3.verify(sig) == 1)
+    {
+      new Exception("verify with tampered message unexpectedly succeeded").throw();
+    }
+  }/*}}}*/
+}

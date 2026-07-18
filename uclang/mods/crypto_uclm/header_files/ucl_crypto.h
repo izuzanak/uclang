@@ -12,6 +12,14 @@ include "script_parser.h"
 #include <openssl/err.h>
 #include <openssl/rand.h>
 #include <openssl/opensslv.h>
+#include <openssl/bn.h>
+
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+#include <openssl/param_build.h>
+#include <openssl/core_names.h>
+#else
+#include <openssl/rsa.h>
+#endif
 
 // - replace deprecated function -
 #if OPENSSL_VERSION_MAJOR >= 3

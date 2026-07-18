@@ -31,6 +31,7 @@ enum
   c_error_CRYPTO_INVALID_BASE_DATA_SIZE = 0,
   c_error_CRYPTO_INVALID_BASE_DATA,
   c_error_CRYPTO_PKEY_CANNOT_READ_KEY_FROM_FILE,
+  c_error_CRYPTO_PKEY_CANNOT_CREATE_RSA_KEY,
   c_error_CRYPTO_DIGEST_INVALID_ALGORITHM_NAME,
   c_error_CRYPTO_DIGEST_CREATE_INIT_ERROR,
   c_error_CRYPTO_DIGEST_UPDATE_ERROR,
@@ -88,6 +89,7 @@ void bic_crypto_pkey_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_crypto_pkey_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_pkey_method_load_private_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_pkey_method_load_public_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_crypto_pkey_method_rsa_public_from_mod_exp_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_pkey_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_pkey_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

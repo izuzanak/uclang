@@ -23,7 +23,7 @@ EXPORT built_in_module_s module =
   crypto_classes,         // Classes
 
   0,                      // Error base index
-  20,                     // Error count
+  21,                     // Error count
   crypto_error_strings,   // Error strings
 
   crypto_initialize,      // Initialize function
@@ -52,6 +52,7 @@ const char *crypto_error_strings[] =
   "error_CRYPTO_INVALID_BASE_DATA_SIZE",
   "error_CRYPTO_INVALID_BASE_DATA",
   "error_CRYPTO_PKEY_CANNOT_READ_KEY_FROM_FILE",
+  "error_CRYPTO_PKEY_CANNOT_CREATE_RSA_KEY",
   "error_CRYPTO_DIGEST_INVALID_ALGORITHM_NAME",
   "error_CRYPTO_DIGEST_CREATE_INIT_ERROR",
   "error_CRYPTO_DIGEST_UPDATE_ERROR",
@@ -139,6 +140,13 @@ bool crypto_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot read key from file: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_PKEY_CANNOT_CREATE_RSA_KEY:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot create RSA public key from modulus and exponent\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_CRYPTO_DIGEST_INVALID_ALGORITHM_NAME:
@@ -591,7 +599,7 @@ built_in_class_s crypto_pkey_class =
 {/*{{{*/
   "CryptoPKey",
   c_modifier_public | c_modifier_final,
-  5, crypto_pkey_methods,
+  6, crypto_pkey_methods,
   3, crypto_pkey_variables,
   bic_crypto_pkey_consts,
   bic_crypto_pkey_init,
@@ -625,6 +633,11 @@ built_in_method_s crypto_pkey_methods[] =
     "load_public#2",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_crypto_pkey_method_load_public_2
+  },
+  {
+    "rsa_public_from_mod_exp#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_pkey_method_rsa_public_from_mod_exp_2
   },
   {
     "to_string#0",
@@ -752,6 +765,124 @@ bool bic_crypto_pkey_method_load_private_2(interpreter_thread_s &it,unsigned sta
 bool bic_crypto_pkey_method_load_public_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_CRYPTO_PKEY_LOAD_KEY("load_public#2",PEM_read_PUBKEY,true);
+}/*}}}*/
+
+bool bic_crypto_pkey_method_rsa_public_from_mod_exp_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+modulus:c_bi_class_string
+exponent:c_bi_class_string
+>
+class c_bi_class_crypto_pkey
+method rsa_public_from_mod_exp
+static_method
+; @end
+
+  string_s *mod_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *exp_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - ERROR -
+  if (mod_ptr->size <= 1 || exp_ptr->size <= 1)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_PKEY_CANNOT_CREATE_RSA_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - convert binary big-endian strings to big numbers -
+  BIGNUM *mod_bn = BN_bin2bn((const unsigned char *)mod_ptr->data,mod_ptr->size - 1,nullptr);
+  BIGNUM *exp_bn = BN_bin2bn((const unsigned char *)exp_ptr->data,exp_ptr->size - 1,nullptr);
+
+  EVP_PKEY *pkey = nullptr;
+
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+  if (mod_bn != nullptr && exp_bn != nullptr)
+  {
+    OSSL_PARAM_BLD *param_bld = OSSL_PARAM_BLD_new();
+    if (param_bld != nullptr)
+    {
+      if (OSSL_PARAM_BLD_push_BN(param_bld,OSSL_PKEY_PARAM_RSA_N,mod_bn) &&
+          OSSL_PARAM_BLD_push_BN(param_bld,OSSL_PKEY_PARAM_RSA_E,exp_bn))
+      {
+        OSSL_PARAM *params = OSSL_PARAM_BLD_to_param(param_bld);
+        if (params != nullptr)
+        {
+          EVP_PKEY_CTX *pkey_ctx = EVP_PKEY_CTX_new_from_name(nullptr,"RSA",nullptr);
+          if (pkey_ctx != nullptr)
+          {
+            if (EVP_PKEY_fromdata_init(pkey_ctx) <= 0 ||
+                EVP_PKEY_fromdata(pkey_ctx,&pkey,EVP_PKEY_PUBLIC_KEY,params) <= 0)
+            {
+              pkey = nullptr;
+            }
+
+            EVP_PKEY_CTX_free(pkey_ctx);
+          }
+
+          OSSL_PARAM_free(params);
+        }
+      }
+
+      OSSL_PARAM_BLD_free(param_bld);
+    }
+  }
+
+  if (mod_bn != nullptr) { BN_free(mod_bn); }
+  if (exp_bn != nullptr) { BN_free(exp_bn); }
+#else
+  if (mod_bn != nullptr && exp_bn != nullptr)
+  {
+    RSA *rsa = RSA_new();
+    if (rsa != nullptr)
+    {
+      if (RSA_set0_key(rsa,mod_bn,exp_bn,nullptr))
+      {
+        // - big numbers are now owned by rsa -
+        mod_bn = nullptr;
+        exp_bn = nullptr;
+
+        pkey = EVP_PKEY_new();
+        if (pkey != nullptr)
+        {
+          if (EVP_PKEY_assign_RSA(pkey,rsa))
+          {
+            // - rsa is now owned by pkey -
+            rsa = nullptr;
+          }
+          else
+          {
+            EVP_PKEY_free(pkey);
+            pkey = nullptr;
+          }
+        }
+      }
+
+      if (rsa != nullptr) { RSA_free(rsa); }
+    }
+  }
+
+  if (mod_bn != nullptr) { BN_free(mod_bn); }
+  if (exp_bn != nullptr) { BN_free(exp_bn); }
+#endif
+
+  // - ERROR -
+  if (pkey == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_PKEY_CANNOT_CREATE_RSA_KEY,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - create crypto_pkey_s object -
+  crypto_pkey_s *ck_ptr = (crypto_pkey_s *)cmalloc(sizeof(crypto_pkey_s));
+  ck_ptr->init();
+
+  ck_ptr->pkey = pkey;
+  ck_ptr->ispub = true;
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_crypto_pkey,ck_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
 }/*}}}*/
 
 bool bic_crypto_pkey_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
