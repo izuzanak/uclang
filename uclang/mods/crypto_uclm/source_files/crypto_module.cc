@@ -23,7 +23,7 @@ EXPORT built_in_module_s module =
   crypto_classes,         // Classes
 
   0,                      // Error base index
-  21,                     // Error count
+  24,                     // Error count
   crypto_error_strings,   // Error strings
 
   crypto_initialize,      // Initialize function
@@ -70,6 +70,9 @@ const char *crypto_error_strings[] =
   "error_CRYPTO_CIPHER_EMPTY_PUBLIC_KEY_ARRAY",
   "error_CRYPTO_CIPHER_EXPECTED_PUBLIC_KEY",
   "error_CRYPTO_CIPHER_INVALID_PRIVATE_PUBLIC_KEY",
+  "error_CRYPTO_KDF_UNSUPPORTED_ALGORITHM",
+  "error_CRYPTO_KDF_INVALID_PARAMETER",
+  "error_CRYPTO_KDF_DERIVE_ERROR",
 };/*}}}*/
 
 // - CRYPTO initialize -
@@ -269,6 +272,27 @@ bool crypto_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nInvalid type of private/public key\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_CRYPTO_KDF_UNSUPPORTED_ALGORITHM:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nUnsupported key derivation algorithm: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_KDF_INVALID_PARAMETER:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nInvalid or missing key derivation parameter: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_KDF_DERIVE_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nKey derivation error: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   default:
     return false;
   }
@@ -281,7 +305,11 @@ built_in_class_s crypto_class =
 {/*{{{*/
   "Crypto",
   c_modifier_public | c_modifier_final,
-  7, crypto_methods,
+  8
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+  + 1
+#endif
+  , crypto_methods,
   0, crypto_variables,
   bic_crypto_consts,
   bic_crypto_init,
@@ -325,6 +353,18 @@ built_in_method_s crypto_methods[] =
     "decode_base64#1",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_crypto_method_decode_base64_1
+  },
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+  {
+    "kdf_derive#5",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_method_kdf_derive_5
+  },
+#endif
+  {
+    "memcmp#2",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_crypto_method_memcmp_2
   },
   {
     "to_string#0",
@@ -572,6 +612,227 @@ static_method
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,target_ptr);
   BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+
+#define BIC_CRYPTO_KDF_ERROR_STRING(C_STRING) \
+/*{{{*/\
+string_s *err_string_ptr = it.get_new_string_ptr();\
+err_string_ptr->set(strlen(C_STRING),C_STRING);\
+\
+BIC_CREATE_NEW_LOCATION_REFS(err_location,c_bi_class_string,err_string_ptr,0);\
+/*}}}*/
+
+bool bic_crypto_method_kdf_derive_5(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+algorithm:c_bi_class_string
+password:c_bi_class_string
+salt:c_bi_class_string
+params:c_bi_class_array
+length:retrieve_integer
+>
+class c_bi_class_crypto
+method kdf_derive
+static_method
+; @end
+
+  string_s *algorithm_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *password_ptr = (string_s *)src_1_location->v_data_ptr;
+  string_s *salt_ptr = (string_s *)src_2_location->v_data_ptr;
+
+  // - resolve algorithm -
+  int algo = crypto_kdf_s::algorithm_idx(*algorithm_ptr);
+
+  // - ERROR -
+  if (algo < 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_KDF_UNSUPPORTED_ALGORITHM,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  // - ERROR -
+  if (length <= 0 || length > (long long int)UINT32_MAX)
+  {
+    BIC_CRYPTO_KDF_ERROR_STRING("length");
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_KDF_INVALID_PARAMETER,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  // - parameter descriptions per algorithm -
+  //   {name,required,is_string,seen,ival,sval}
+  crypto_kdf_param_s argon2id_params[] =
+  {
+    {OSSL_KDF_PARAM_ITER,true,false,false,0,nullptr},
+    {OSSL_KDF_PARAM_ARGON2_MEMCOST,true,false,false,0,nullptr},
+    {OSSL_KDF_PARAM_ARGON2_LANES,false,false,false,1,nullptr},
+  };
+  crypto_kdf_param_s scrypt_params[] =
+  {
+    {OSSL_KDF_PARAM_SCRYPT_N,true,false,false,0,nullptr},
+    {OSSL_KDF_PARAM_SCRYPT_R,true,false,false,0,nullptr},
+    {OSSL_KDF_PARAM_SCRYPT_P,true,false,false,0,nullptr},
+  };
+  crypto_kdf_param_s pbkdf2_params[] =
+  {
+    {OSSL_KDF_PARAM_ITER,true,false,false,0,nullptr},
+    {OSSL_KDF_PARAM_DIGEST,true,true,false,0,nullptr},
+  };
+
+  crypto_kdf_param_s *kdf_params = nullptr;
+  unsigned kdf_param_cnt = 0;
+
+  switch (algo)
+  {
+  case c_crypto_kdf_argon2id:
+    kdf_params = argon2id_params;
+    kdf_param_cnt = sizeof(argon2id_params)/sizeof(argon2id_params[0]);
+    break;
+  case c_crypto_kdf_scrypt:
+    kdf_params = scrypt_params;
+    kdf_param_cnt = sizeof(scrypt_params)/sizeof(scrypt_params[0]);
+    break;
+  case c_crypto_kdf_pbkdf2:
+    kdf_params = pbkdf2_params;
+    kdf_param_cnt = sizeof(pbkdf2_params)/sizeof(pbkdf2_params[0]);
+    break;
+  default:
+    cassert(0);
+  }
+
+  // - read parameters from array -
+  const char *bad_name = nullptr;
+
+  // - ERROR -
+  if (!crypto_kdf_s::read_params(it,src_3_location,kdf_params,kdf_param_cnt,&bad_name))
+  {
+    BIC_CRYPTO_KDF_ERROR_STRING(bad_name);
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_KDF_INVALID_PARAMETER,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  // - build ossl parameter array (storage must outlive EVP_KDF_derive) -
+  uint32_t u32_values[3] = {0,0,0};
+  uint64_t u64_value = 0;
+  OSSL_PARAM ossl_params[6];
+  unsigned op_idx = 0;
+
+  ossl_params[op_idx++] = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_PASSWORD,password_ptr->data,password_ptr->size - 1);
+  ossl_params[op_idx++] = OSSL_PARAM_construct_octet_string(OSSL_KDF_PARAM_SALT,salt_ptr->data,salt_ptr->size - 1);
+
+  switch (algo)
+  {
+#if OPENSSL_VERSION_NUMBER >= 0x30200000L
+  case c_crypto_kdf_argon2id:
+    {
+      u32_values[0] = (uint32_t)argon2id_params[0].ival;
+      u32_values[1] = (uint32_t)argon2id_params[1].ival;
+      u32_values[2] = (uint32_t)argon2id_params[2].ival;
+
+      ossl_params[op_idx++] = OSSL_PARAM_construct_uint32(OSSL_KDF_PARAM_ITER,&u32_values[0]);
+      ossl_params[op_idx++] = OSSL_PARAM_construct_uint32(OSSL_KDF_PARAM_ARGON2_MEMCOST,&u32_values[1]);
+      ossl_params[op_idx++] = OSSL_PARAM_construct_uint32(OSSL_KDF_PARAM_ARGON2_LANES,&u32_values[2]);
+    }
+    break;
+#endif
+  case c_crypto_kdf_scrypt:
+    {
+      u64_value = (uint64_t)scrypt_params[0].ival;
+      u32_values[0] = (uint32_t)scrypt_params[1].ival;
+      u32_values[1] = (uint32_t)scrypt_params[2].ival;
+
+      ossl_params[op_idx++] = OSSL_PARAM_construct_uint64(OSSL_KDF_PARAM_SCRYPT_N,&u64_value);
+      ossl_params[op_idx++] = OSSL_PARAM_construct_uint32(OSSL_KDF_PARAM_SCRYPT_R,&u32_values[0]);
+      ossl_params[op_idx++] = OSSL_PARAM_construct_uint32(OSSL_KDF_PARAM_SCRYPT_P,&u32_values[1]);
+    }
+    break;
+  case c_crypto_kdf_pbkdf2:
+    {
+      u32_values[0] = (uint32_t)pbkdf2_params[0].ival;
+
+      ossl_params[op_idx++] = OSSL_PARAM_construct_uint32(OSSL_KDF_PARAM_ITER,&u32_values[0]);
+      ossl_params[op_idx++] = OSSL_PARAM_construct_utf8_string(OSSL_KDF_PARAM_DIGEST,pbkdf2_params[1].sval->data,0);
+    }
+    break;
+  default:
+    cassert(0);
+  }
+
+  ossl_params[op_idx++] = OSSL_PARAM_construct_end();
+
+  ERR_clear_error();
+
+  // - fetch kdf implementation -
+  EVP_KDF *kdf = EVP_KDF_fetch(nullptr,c_crypto_kdf_names[algo],nullptr);
+
+  // - ERROR -
+  if (kdf == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_KDF_UNSUPPORTED_ALGORITHM,operands[c_source_pos_idx],src_0_location);
+    return false;
+  }
+
+  EVP_KDF_CTX *kctx = EVP_KDF_CTX_new(kdf);
+  EVP_KDF_free(kdf);
+
+  // - ERROR -
+  if (kctx == nullptr)
+  {
+    BIC_CRYPTO_KDF_ERROR_STRING(crypto_kdf_s::error_reason());
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_KDF_DERIVE_ERROR,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  // - derive key -
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->create(length);
+
+  int derive_result = EVP_KDF_derive(kctx,(unsigned char *)string_ptr->data,length,ossl_params);
+  EVP_KDF_CTX_free(kctx);
+
+  // - ERROR -
+  if (derive_result != 1)
+  {
+    string_ptr->clear();
+    cfree(string_ptr);
+
+    BIC_CRYPTO_KDF_ERROR_STRING(crypto_kdf_s::error_reason());
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_KDF_DERIVE_ERROR,operands[c_source_pos_idx],err_location);
+    return false;
+  }
+
+  BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_string,string_ptr);
+  BIC_SET_RESULT(new_location);
+
+  return true;
+}/*}}}*/
+
+#endif
+
+bool bic_crypto_method_memcmp_2(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+first:c_bi_class_string
+second:c_bi_class_string
+>
+class c_bi_class_crypto
+method memcmp
+static_method
+; @end
+
+  string_s *first_ptr = (string_s *)src_0_location->v_data_ptr;
+  string_s *second_ptr = (string_s *)src_1_location->v_data_ptr;
+
+  // - constant time comparison, lengths must match -
+  long long int result = first_ptr->size == second_ptr->size &&
+    CRYPTO_memcmp(first_ptr->data,second_ptr->data,first_ptr->size - 1) == 0;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
 
   return true;
 }/*}}}*/

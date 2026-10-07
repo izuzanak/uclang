@@ -1,0 +1,294 @@
+
+import crypto;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - kdf_derive checks, run by 09_kdf.ucl only when the method is compiled in -
+
+    // - PBKDF2-HMAC-SHA256 known vectors (RFC 7914 section 11) -
+    // - parameters are an array of interleaved names and values -
+    params = ["iter",1,"digest","SHA256"];
+    key = Crypto.kdf_derive("PBKDF2","password","salt",params,32);
+    if (Crypto.encode_base16(key) != "120fb6cffcf8b32c43e7225256c4f837a86548c92ccc35480805987cb70be17b")
+    {
+      new Exception("PBKDF2(iter=1): got %s" % Crypto.encode_base16(key)).throw();
+    }
+
+    params = ["iter",4096,"digest","SHA256"];
+    key = Crypto.kdf_derive("PBKDF2","password","salt",params,32);
+    if (Crypto.encode_base16(key) != "c5e478d59288c841aa530db6845c4c8d962893a001ce4e11a4963873aa98134a")
+    {
+      new Exception("PBKDF2(iter=4096): got %s" % Crypto.encode_base16(key)).throw();
+    }
+
+    // - output length follows a_length -
+    key16 = Crypto.kdf_derive("PBKDF2","password","salt",params,16);
+    if (key16.length() != 16)
+    {
+      new Exception("PBKDF2 length: expected 16, got %s" % $key16.length()).throw();
+    }
+    if (key16 != key[0:15:])
+    {
+      new Exception("PBKDF2 16-byte key is not a prefix of 32-byte key").throw();
+    }
+
+    // - SCRYPT known vector (RFC 7914 section 12) -
+    params = ["n",1024,"r",8,"p",16];
+    key = Crypto.kdf_derive("SCRYPT","password","NaCl",params,64);
+    if (Crypto.encode_base16(key) != "fdbabe1c9d3472007856e7190d01e9fe7c6ad7cbc8237830e77376634b3731622eaf30d92e22a3886ff109279d9830dac727afb94a83ee6d8360cbdfa2cc0640")
+    {
+      new Exception("SCRYPT: got %s" % Crypto.encode_base16(key)).throw();
+    }
+
+    // - determinism and salt sensitivity -
+    key2 = Crypto.kdf_derive("SCRYPT","password","NaCl",params,64);
+    if (key != key2)
+    {
+      new Exception("SCRYPT: not deterministic").throw();
+    }
+    key3 = Crypto.kdf_derive("SCRYPT","password","NaCk",params,64);
+    if (key == key3)
+    {
+      new Exception("SCRYPT: different salt produced same key").throw();
+    }
+
+    // - ARGON2ID (OpenSSL >= 3.2), unsupported builds throw on first use -
+    argon_ok = 1;
+    params = ["iter",2,"memcost",65536,"lanes",4];
+    try { key = Crypto.kdf_derive("ARGON2ID","password","somesalt",params,32); }
+    catch (e) { argon_ok = 0; }
+
+    if (argon_ok)
+    {
+      if (Crypto.encode_base16(key) != "1a9677b0afe81fda7b548895e7a1bfeb8668ffc19a530e37e088a668fab1c02a")
+      {
+        new Exception("ARGON2ID: got %s" % Crypto.encode_base16(key)).throw();
+      }
+
+      // - lanes is optional (default 1) -
+      params = ["iter",2,"memcost",8192];
+      key_small = Crypto.kdf_derive("ARGON2ID","password","somesalt",params,32);
+      if (key_small.length() != 32 or key_small == key)
+      {
+        new Exception("ARGON2ID: small memcost result invalid").throw();
+      }
+    }
+
+    // - runtime algorithm selection with fallback -
+    if (argon_ok)
+    {
+      algo = "ARGON2ID";
+      params = ["iter",1,"memcost",1024];
+    }
+    else
+    {
+      algo = "SCRYPT";
+      params = ["n",1024,"r",8,"p",1];
+    }
+    salt = Crypto.random(16);
+    hash = Crypto.kdf_derive(algo,"hunter2",salt,params,32);
+    verify = Crypto.kdf_derive(algo,"hunter2",salt,params,32);
+    if (Crypto.memcmp(hash,verify) != 1)
+    {
+      new Exception("fallback algorithm %s: verify mismatch" % algo).throw();
+    }
+    wrong = Crypto.kdf_derive(algo,"hunter3",salt,params,32);
+    if (Crypto.memcmp(hash,wrong) != 0)
+    {
+      new Exception("fallback algorithm %s: wrong password accepted" % algo).throw();
+    }
+
+    // - error paths -
+    good = ["iter",1,"digest","SHA256"];
+
+    // - unknown algorithm throws -
+    caught = 0;
+    try { Crypto.kdf_derive("BOGUS","pw","salt",good,32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(unknown algorithm): expected throw").throw();
+    }
+
+    // - lowercase algorithm name throws -
+    caught = 0;
+    try { Crypto.kdf_derive("pbkdf2","pw","salt",good,32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(lowercase algorithm): expected throw").throw();
+    }
+
+    // - params not an Array throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt","iter",32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(params not an Array): expected throw").throw();
+    }
+
+    // - empty params throws (required parameters missing) -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",[],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(params empty): expected throw").throw();
+    }
+
+    // - odd-length params throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",["iter",1,"digest"],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(params odd length): expected throw").throw();
+    }
+
+    // - password not a String throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2",123,"salt",good,32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(password not a String): expected throw").throw();
+    }
+
+    // - salt not a String throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw",123,good,32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(salt not a String): expected throw").throw();
+    }
+
+    // - zero length throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",good,0); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(length zero): expected throw").throw();
+    }
+
+    // - negative length throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",good,-1); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(length negative): expected throw").throw();
+    }
+
+    // - missing digest throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",["iter",1],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(missing digest): expected throw").throw();
+    }
+
+    // - missing iter throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",["digest","SHA256"],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(missing iter): expected throw").throw();
+    }
+
+    // - unknown parameter name throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",["iter",1,"digest","SHA256","bogus",1],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(unknown parameter): expected throw").throw();
+    }
+
+    // - iter not an Integer throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",["iter","x","digest","SHA256"],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(iter not Integer): expected throw").throw();
+    }
+
+    // - iter zero throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",["iter",0,"digest","SHA256"],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(iter zero): expected throw").throw();
+    }
+
+    // - iter negative throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",["iter",-5,"digest","SHA256"],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(iter negative): expected throw").throw();
+    }
+
+    // - digest not a String throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",["iter",1,"digest",256],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(digest not String): expected throw").throw();
+    }
+
+    // - non-string parameter name throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",[1,1],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(non-string parameter name): expected throw").throw();
+    }
+
+    // - invalid digest name (EVP_KDF failure) throws -
+    caught = 0;
+    try { Crypto.kdf_derive("PBKDF2","pw","salt",["iter",1,"digest","NOSUCHDIGEST"],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(invalid digest name): expected throw").throw();
+    }
+
+    // - SCRYPT missing p throws -
+    caught = 0;
+    try { Crypto.kdf_derive("SCRYPT","pw","salt",["n",1024,"r",8],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(SCRYPT missing p): expected throw").throw();
+    }
+
+    // - SCRYPT n not a power of two (EVP_KDF failure) throws -
+    caught = 0;
+    try { Crypto.kdf_derive("SCRYPT","pw","salt",["n",1000,"r",8,"p",1],32); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("kdf_derive(SCRYPT n not power of two): expected throw").throw();
+    }
+
+    // - good params are still usable after error paths -
+    key = Crypto.kdf_derive("PBKDF2","password","salt",good,32);
+    if (Crypto.encode_base16(key) != "120fb6cffcf8b32c43e7225256c4f837a86548c92ccc35480805987cb70be17b")
+    {
+      new Exception("PBKDF2 after errors: got %s" % Crypto.encode_base16(key)).throw();
+    }
+  }/*}}}*/
+}

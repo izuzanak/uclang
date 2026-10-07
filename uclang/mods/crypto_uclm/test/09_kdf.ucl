@@ -1,0 +1,56 @@
+
+import crypto;
+import lang;
+import sys;
+
+class Main
+{
+  static public main(argv)
+  {/*{{{*/
+
+    // - memcmp -
+    if (Crypto.memcmp("abc","abc") != 1)
+    {
+      new Exception("memcmp(abc,abc): expected 1").throw();
+    }
+    if (Crypto.memcmp("abc","abd") != 0)
+    {
+      new Exception("memcmp(abc,abd): expected 0").throw();
+    }
+    if (Crypto.memcmp("abc","abcd") != 0)
+    {
+      new Exception("memcmp(abc,abcd): expected 0").throw();
+    }
+    if (Crypto.memcmp("","") != 1)
+    {
+      new Exception("memcmp(empty,empty): expected 1").throw();
+    }
+    if (Crypto.memcmp("\0a","\0b") != 0)
+    {
+      new Exception("memcmp(binary with NUL): expected 0").throw();
+    }
+    if (Crypto.memcmp("\0a","\0a") != 1)
+    {
+      new Exception("memcmp(binary with NUL equal): expected 1").throw();
+    }
+
+    // - kdf_derive exists only for OpenSSL >= 3.0, older builds skip its checks -
+    kdf_available = 1;
+    try { Lang.cls("Crypto").method("kdf_derive#5"); }
+    catch (e) { kdf_available = 0; }
+
+    if (kdf_available)
+    {
+      // - derive helper path from script path (argv[0]) -
+      parts = argv[0].split("/");
+      parts.last() = "09_kdf_helper.ucl";
+      helper_path = parts.to_string("/");
+
+      // - helper output and exit code propagate to the test runner -
+      if (Sys.system("uclang %s" % helper_path) != 0)
+      {
+        new Exception("kdf helper script failed").throw();
+      }
+    }
+  }/*}}}*/
+}

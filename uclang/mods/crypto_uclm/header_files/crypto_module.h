@@ -49,6 +49,9 @@ enum
   c_error_CRYPTO_CIPHER_EMPTY_PUBLIC_KEY_ARRAY,
   c_error_CRYPTO_CIPHER_EXPECTED_PUBLIC_KEY,
   c_error_CRYPTO_CIPHER_INVALID_PRIVATE_PUBLIC_KEY,
+  c_error_CRYPTO_KDF_UNSUPPORTED_ALGORITHM,
+  c_error_CRYPTO_KDF_INVALID_PARAMETER,
+  c_error_CRYPTO_KDF_DERIVE_ERROR,
 };
 
 // - CRYPTO error strings -
@@ -74,6 +77,10 @@ bool bic_crypto_method_encode_base16_1(interpreter_thread_s &it,unsigned stack_b
 bool bic_crypto_method_decode_base16_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_method_encode_base64_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_method_decode_base64_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+bool bic_crypto_method_kdf_derive_5(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
+bool bic_crypto_method_memcmp_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_crypto_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

@@ -17,6 +17,7 @@ include "script_parser.h"
 #if OPENSSL_VERSION_NUMBER >= 0x30000000L
 #include <openssl/param_build.h>
 #include <openssl/core_names.h>
+#include <openssl/kdf.h>
 #else
 #include <openssl/rsa.h>
 #endif
@@ -107,6 +108,55 @@ struct crypto_seal_s
   inline void init();
   inline void clear(interpreter_thread_s &it);
 };
+
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+
+// - kdf algorithm identifiers -
+enum
+{/*{{{*/
+  c_crypto_kdf_argon2id = 0,
+  c_crypto_kdf_scrypt,
+  c_crypto_kdf_pbkdf2,
+  c_crypto_kdf_count,
+};/*}}}*/
+
+// - kdf algorithm names (indexed by identifier above) -
+extern const char *c_crypto_kdf_names[];
+
+/*
+ * definition of structure crypto_kdf_param_s
+ */
+
+// - description of one kdf parameter read from parameter array -
+//   name is the array key, value is either String or positive Integer -
+struct crypto_kdf_param_s
+{
+  const char *name;
+  bool required;
+  bool is_string;
+  bool seen;
+  long long int ival;
+  string_s *sval;
+};
+
+/*
+ * definition of structure crypto_kdf_s
+ */
+
+struct crypto_kdf_s
+{
+  // - resolve algorithm identifier from its name, returns -1 for unknown or compiled-out names -
+  static int algorithm_idx(string_s &a_name);
+
+  // - read parameters from array of interleaved names and values, on error set a_bad_name and return false -
+  static bool read_params(interpreter_thread_s &it,location_s *a_array_location,
+      crypto_kdf_param_s *a_params,unsigned a_count,const char **a_bad_name);
+
+  // - retrieve last openssl error reason as c string -
+  static const char *error_reason();
+};
+
+#endif
 
 /*
  * inline methods of class crypto_c
