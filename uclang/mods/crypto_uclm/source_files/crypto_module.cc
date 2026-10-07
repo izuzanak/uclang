@@ -665,12 +665,14 @@ static_method
 
   // - parameter descriptions per algorithm -
   //   {name,required,is_string,seen,ival,sval}
+#if OPENSSL_VERSION_NUMBER >= 0x30200000L
   crypto_kdf_param_s argon2id_params[] =
   {
     {OSSL_KDF_PARAM_ITER,true,false,false,0,nullptr},
     {OSSL_KDF_PARAM_ARGON2_MEMCOST,true,false,false,0,nullptr},
     {OSSL_KDF_PARAM_ARGON2_LANES,false,false,false,1,nullptr},
   };
+#endif
   crypto_kdf_param_s scrypt_params[] =
   {
     {OSSL_KDF_PARAM_SCRYPT_N,true,false,false,0,nullptr},
@@ -688,10 +690,12 @@ static_method
 
   switch (algo)
   {
+#if OPENSSL_VERSION_NUMBER >= 0x30200000L
   case c_crypto_kdf_argon2id:
     kdf_params = argon2id_params;
     kdf_param_cnt = sizeof(argon2id_params)/sizeof(argon2id_params[0]);
     break;
+#endif
   case c_crypto_kdf_scrypt:
     kdf_params = scrypt_params;
     kdf_param_cnt = sizeof(scrypt_params)/sizeof(scrypt_params[0]);
