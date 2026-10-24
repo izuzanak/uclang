@@ -358,7 +358,7 @@ method SnmpSession
   snmp_session_s::exists = true;
 
   int argc = array_ptr->used + 1;
-  char **argv = (char **)cmalloc(argc*sizeof(char *));
+  char **argv = (char **)cmalloc_array(argc,sizeof(char *));
 
   // - set program name argument -
   argv[0] = (char *)"appname";

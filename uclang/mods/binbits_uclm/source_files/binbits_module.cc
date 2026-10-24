@@ -2373,7 +2373,7 @@ bool bic_bin_array_method_to_string_0(interpreter_thread_s &it,unsigned stack_ba
 \
     do {\
       s_ptr->setf(FORMAT,*e_ptr);\
-      strings_size += s_ptr->size - 1;\
+      strings_size = size_add(strings_size,s_ptr->size - 1);\
     }\
     while(++s_ptr,++e_ptr < e_ptr_end);\
   }\
@@ -4246,7 +4246,7 @@ bool bic_bin_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_bas
       MAP_NAME ## _s &key_value = tree_ptr->data[kv_idx].object;\
 \
       s_ptr->setf(FORMAT,key_value.key,key_value.value);\
-      strings_size += s_ptr->size - 1;\
+      strings_size = size_add(strings_size,s_ptr->size - 1);\
 \
       kv_idx = tree_ptr->get_stack_next_idx(kv_idx,&stack_ptr,stack);\
     } while(++s_ptr,kv_idx != c_idx_not_exist);\

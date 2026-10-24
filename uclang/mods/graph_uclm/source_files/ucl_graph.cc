@@ -312,7 +312,7 @@ void graph_s::duplicate(graph_s &a_src)
   edge_rb_tree_s &s_edges = a_src.edges;
 
   // - source to duplicate vertex map -
-  unsigned *v_map = (unsigned *)cmalloc(s_vertices.used*sizeof(unsigned));
+  unsigned *v_map = (unsigned *)cmalloc_array(s_vertices.used,sizeof(unsigned));
 
   // - insert vertices to duplicate graph -
   if (s_vertices.root_idx != c_idx_not_exist)
@@ -355,7 +355,7 @@ void graph_s::adjacent_vertices(unsigned a_vertex_idx,ui_array_s &a_vertex_idxs)
 {/*{{{*/
   a_vertex_idxs.used = 0;
 
-  bool *v_unused = (bool *)cmalloc(vertices.used*sizeof(bool));
+  bool *v_unused = (bool *)cmalloc_array(vertices.used,sizeof(bool));
   memset(v_unused,true,vertices.used*sizeof(bool));
 
   // - set of edges incident to vertex -
@@ -453,7 +453,7 @@ bool graph_s::minimum_spanning_tree_kruskals(ui_array_s &a_edge_idxs)
 
   unsigned v_used_cnt = 0;
 
-  bool *v_used = (bool *)cmalloc(vertices.used*sizeof(bool));
+  bool *v_used = (bool *)cmalloc_array(vertices.used,sizeof(bool));
   memset(v_used,false,vertices.used*sizeof(bool));
 
   // - traverse throught all edges -
@@ -587,10 +587,10 @@ bool graph_s::minimum_spanning_tree_kruskals(ui_array_s &a_edge_idxs)
   CONT_INIT_CLEAR(value_idx_rb_tree_s,vvi_set);\
   vvi_set.ucl_prepare(it,source_pos);\
 \
-  unsigned *vi_vvi_map = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));\
+  unsigned *vi_vvi_map = (unsigned *)cmalloc_array(vertices.used,sizeof(unsigned));\
   memset(vi_vvi_map,c_idx_not_exist,vertices.used*sizeof(unsigned));\
 \
-  bool *v_done = (bool *)cmalloc(vertices.used*sizeof(bool));\
+  bool *v_done = (bool *)cmalloc_array(vertices.used,sizeof(bool));\
   memset(v_done,false,vertices.used*sizeof(bool));\
 \
   /* - process source vertex - */\
@@ -750,7 +750,7 @@ bool graph_s::shortest_path_digraph_dijkstra(unsigned a_src_vertex_idx,unsigned 
 {/*{{{*/\
   a_edge_idxs.used = 0;\
 \
-  bool *v_used = (bool *)cmalloc(vertices.used*sizeof(bool));\
+  bool *v_used = (bool *)cmalloc_array(vertices.used,sizeof(bool));\
   memset(v_used,false,vertices.used*sizeof(bool));\
 \
   CONT_INIT_CLEAR(ui_queue_s,v_queue);\
@@ -851,10 +851,10 @@ bool graph_s::BFS_digraph(unsigned a_src_vertex_idx,unsigned a_trg_vertex_idx,ui
 {/*{{{*/\
   a_edge_idxs.used = 0;\
 \
-  bool *v_used = (bool *)cmalloc(vertices.used*sizeof(bool));\
+  bool *v_used = (bool *)cmalloc_array(vertices.used,sizeof(bool));\
   memset(v_used,false,vertices.used*sizeof(bool));\
 \
-  unsigned *v_edge_idx = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));\
+  unsigned *v_edge_idx = (unsigned *)cmalloc_array(vertices.used,sizeof(unsigned));\
 \
   CONT_INIT_CLEAR(ui_array_s,v_stack);\
 \
@@ -950,7 +950,7 @@ bool graph_s::strongly_connected_components_tarjans(ui_array_s &a_comp_idxs)
   a_comp_idxs.used = a_comp_idxs.size;
   memset(a_comp_idxs.data,c_idx_not_exist,a_comp_idxs.used*sizeof(unsigned));
 
-  unsigned *v_edge_idx = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));
+  unsigned *v_edge_idx = (unsigned *)cmalloc_array(vertices.used,sizeof(unsigned));
 
   CONT_INIT_CLEAR(ui_array_s,v_stack);
 
@@ -1046,10 +1046,10 @@ bool graph_s::is_weakly_connected_graph()
     return true;
   }
 
-  bool *v_map = (bool *)cmalloc(vertices.used*sizeof(bool));
+  bool *v_map = (bool *)cmalloc_array(vertices.used,sizeof(bool));
   memset(v_map,false,vertices.used*sizeof(bool));
 
-  bool *e_map = (bool *)cmalloc(edges.used*sizeof(bool));
+  bool *e_map = (bool *)cmalloc_array(edges.used,sizeof(bool));
   memset(e_map,false,edges.used*sizeof(bool));
 
   // - traverse throught all edges, closure incident to vertices of first edge -
@@ -1161,10 +1161,10 @@ bool graph_s::is_strongly_connected_graph_tarjans()
     return true;
   }
 
-  unsigned *v_mark = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));
+  unsigned *v_mark = (unsigned *)cmalloc_array(vertices.used,sizeof(unsigned));
   memset(v_mark,c_idx_not_exist,vertices.used*sizeof(unsigned));
 
-  unsigned *v_edge_idx = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));
+  unsigned *v_edge_idx = (unsigned *)cmalloc_array(vertices.used,sizeof(unsigned));
 
   CONT_INIT_CLEAR(ui_array_s,v_stack);
   v_stack.push(vertices.root_idx);
@@ -1309,11 +1309,9 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
   type = a_graph_type;
 
   // - create vertex map array -
-#ifdef _MSC_VER
-  unsigned *vertex_map = (unsigned *)cmalloc(a_vertex_cnt*sizeof(unsigned));
-#else
-  unsigned vertex_map[a_vertex_cnt];
-#endif
+  CONT_CLEAR(ui_array_s,vertex_map_arr);
+  vertex_map_arr.init_size(a_vertex_cnt);
+  unsigned *vertex_map = vertex_map_arr.data;
 
   // - insert vertices to graph -
   {
@@ -1331,11 +1329,9 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
   memset(imat.data,false,imat.used*sizeof(bool));
 
   // - create unused vertices array -
-#ifdef _MSC_VER
-  bool *used_vertices = (bool *)cmalloc(a_vertex_cnt*sizeof(bool));
-#else
-  bool used_vertices[a_vertex_cnt];
-#endif
+  CONT_CLEAR(bb_array_s,used_vertices_arr);
+  used_vertices_arr.init_size(a_vertex_cnt);
+  bool *used_vertices = used_vertices_arr.data;
   memset(used_vertices,false,a_vertex_cnt*sizeof(bool));
 
   // - create graph spanning tree -
@@ -1368,9 +1364,6 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
 
   } while(unused_vertex_cnt > 0);
 
-#ifdef _MSC_VER
-  cfree(used_vertices);
-#endif
 
   unsigned edge_cnt = a_edge_cnt - (a_vertex_cnt - 1);
   if (edge_cnt > 0) {
@@ -1391,9 +1384,6 @@ bool graph_s::generate_connected(unsigned a_vertex_cnt,unsigned a_edge_cnt,unsig
 
   imat.clear();
 
-#ifdef _MSC_VER
-  cfree(vertex_map);
-#endif
 
   return true;
 }/*}}}*/

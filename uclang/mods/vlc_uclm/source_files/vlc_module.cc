@@ -499,7 +499,7 @@ method video_set_format
   vp_ptr->pitch  = pitch;
 
   vp_ptr->frame_count = 0;
-  vp_ptr->pixels = cmalloc(height*pitch);
+  vp_ptr->pixels = cmalloc_array(height,pitch);
 
   BIC_CREATE_NEW_LOCATION(new_location,c_bi_class_vlc_player,vp_ptr);
   BIC_SET_RESULT(new_location);

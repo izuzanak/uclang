@@ -13,7 +13,7 @@ EXPORT built_in_module_s module =
   lightning_classes,         // Classes
 
   0,                         // Error base index
-  2,                         // Error count
+  8,                         // Error count
   lightning_error_strings,   // Error strings
 
   lightning_initialize,      // Initialize function
@@ -31,6 +31,12 @@ const char *lightning_error_strings[] =
 {/*{{{*/
   "error_LIGHTNING_PARSER_UNRECOGNIZED_TERMINAL",
   "error_LIGHTNING_PARSER_SYNTAX_ERROR",
+  "error_LIGHTNING_PARSER_DUPLICIT_FUNCTION_DEFINITION",
+  "error_LIGHTNING_PARSER_DUPLICIT_PARAMETER_IDENTIFIER",
+  "error_LIGHTNING_PARSER_DUPLICIT_VAR_PARAM_IDENTIFIER",
+  "error_LIGHTNING_PARSER_UNKNOWN_DATA_TYPE",
+  "error_LIGHTNING_PARSER_UNDECLARED_VARIABLE",
+  "error_LIGHTNING_PARSER_INCOMPATIBLE_VALUE_TYPES",
 };/*}}}*/
 
 // - LIGHTNING initialize -
@@ -54,6 +60,12 @@ bool lightning_print_exception(interpreter_s &it,exception_s &exception)
   {
   case c_error_LIGHTNING_PARSER_UNRECOGNIZED_TERMINAL:
   case c_error_LIGHTNING_PARSER_SYNTAX_ERROR:
+  case c_error_LIGHTNING_PARSER_DUPLICIT_FUNCTION_DEFINITION:
+  case c_error_LIGHTNING_PARSER_DUPLICIT_PARAMETER_IDENTIFIER:
+  case c_error_LIGHTNING_PARSER_DUPLICIT_VAR_PARAM_IDENTIFIER:
+  case c_error_LIGHTNING_PARSER_UNKNOWN_DATA_TYPE:
+  case c_error_LIGHTNING_PARSER_UNDECLARED_VARIABLE:
+  case c_error_LIGHTNING_PARSER_INCOMPATIBLE_VALUE_TYPES:
     {
       string_s &ltg_source = *((string_s *)((location_s *)exception.obj_location)->v_data_ptr);
       unsigned ltg_source_pos = exception.params[0];
@@ -72,6 +84,36 @@ bool lightning_print_exception(interpreter_s &it,exception_s &exception)
       case c_error_LIGHTNING_PARSER_SYNTAX_ERROR:
         print_error_show_line(ltg_source,ltg_source_pos);
         fprintf(stderr,"Wrong program syntax\n");
+        fprintf(stderr," ---------------------------------------- \n");
+        break;
+      case c_error_LIGHTNING_PARSER_DUPLICIT_FUNCTION_DEFINITION:
+        print_error_show_line(ltg_source,ltg_source_pos);
+        fprintf(stderr,"Duplicit function definition\n");
+        fprintf(stderr," ---------------------------------------- \n");
+        break;
+      case c_error_LIGHTNING_PARSER_DUPLICIT_PARAMETER_IDENTIFIER:
+        print_error_show_line(ltg_source,ltg_source_pos);
+        fprintf(stderr,"Duplicit parameter identifier\n");
+        fprintf(stderr," ---------------------------------------- \n");
+        break;
+      case c_error_LIGHTNING_PARSER_DUPLICIT_VAR_PARAM_IDENTIFIER:
+        print_error_show_line(ltg_source,ltg_source_pos);
+        fprintf(stderr,"Duplicit variable/parameter identifier\n");
+        fprintf(stderr," ---------------------------------------- \n");
+        break;
+      case c_error_LIGHTNING_PARSER_UNKNOWN_DATA_TYPE:
+        print_error_show_line(ltg_source,ltg_source_pos);
+        fprintf(stderr,"Unknown data type\n");
+        fprintf(stderr," ---------------------------------------- \n");
+        break;
+      case c_error_LIGHTNING_PARSER_UNDECLARED_VARIABLE:
+        print_error_show_line(ltg_source,ltg_source_pos);
+        fprintf(stderr,"Variable was not declared\n");
+        fprintf(stderr," ---------------------------------------- \n");
+        break;
+      case c_error_LIGHTNING_PARSER_INCOMPATIBLE_VALUE_TYPES:
+        print_error_show_line(ltg_source,ltg_source_pos);
+        fprintf(stderr,"Incompatible value type/s for operation\n");
         fprintf(stderr," ---------------------------------------- \n");
         break;
       }
@@ -272,8 +314,8 @@ method create_fun
   }
 
   // FIXME debug test
-  fprintf(stderr,"parser.tmp_val_types.used:  %u\n",parser.tmp_val_types.used);
-  fprintf(stderr,"parser.exp_values.used: %u\n",parser.exp_values.used);
+  //fprintf(stderr,"parser.tmp_val_types.used:  %u\n",parser.tmp_val_types.used);
+  //fprintf(stderr,"parser.exp_values.used: %u\n",parser.exp_values.used);
   //fprintf(stderr,"parser.label_idxs.used:     %u\n",parser.label_idxs.used);
   //fprintf(stderr,"parser.cb_label_idxs.used:  %u\n",parser.cb_label_idxs.used);
 
@@ -287,8 +329,11 @@ method create_fun
   // - clear jit state -
   jit_clear_state();
 
+  // - register function signature -
+  js_ptr->ucl_signatures.swap_insert(parser.ucl_signature);
+
   // FIXME debug output
-  jit_disassemble();
+  //jit_disassemble();
 
   BIC_SET_RESULT_DESTINATION();
 

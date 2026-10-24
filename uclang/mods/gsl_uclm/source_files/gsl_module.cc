@@ -251,8 +251,8 @@ method GslSpline
 
   size_t size = x_arr_ptr->used;
 
-  double *xa = (double *)cmalloc(size*sizeof(double));
-  double *ya = (double *)cmalloc(size*sizeof(double));
+  double *xa = (double *)cmalloc_array(size,sizeof(double));
+  double *ya = (double *)cmalloc_array(size,sizeof(double));
 
   if (size > 0)
   {

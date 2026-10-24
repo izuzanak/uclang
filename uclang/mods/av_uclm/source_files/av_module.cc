@@ -369,7 +369,7 @@ bool bic_av_format_operator_binary_equal(interpreter_thread_s &it,unsigned stack
   avf_ptr->format_ctx = format_ctx;\
 \
   /* - allocate and set memory to zero - */\
-  avf_ptr->codec_ctxs = (AVCodecContext **)cmalloc(format_ctx->nb_streams*sizeof(AVCodecContext *));\
+  avf_ptr->codec_ctxs = (AVCodecContext **)cmalloc_array(format_ctx->nb_streams,sizeof(AVCodecContext *));\
   memset(avf_ptr->codec_ctxs,0,format_ctx->nb_streams*sizeof(AVCodecContext *));\
 \
   dst_location->v_data_ptr = (av_format_s *)avf_ptr;\

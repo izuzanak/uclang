@@ -698,7 +698,7 @@ bool bic_unicode_char_method_compare_1(interpreter_thread_s &it,unsigned stack_b
 bool bic_unicode_char_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING(
-    string_ptr->data = (char *)cmalloc(4*sizeof(char));
+    string_ptr->data = (char *)cmalloc_array(4,sizeof(char));
 
     utf8proc_ssize_t count = utf8proc_encode_char(
       (utf8proc_int32_t)dst_location->v_data_ptr,

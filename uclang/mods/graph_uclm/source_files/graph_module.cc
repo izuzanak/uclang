@@ -451,10 +451,10 @@ bool bic_graph_pack(location_s *location_ptr,bc_array_s &stream,pointer_array_s 
   vertex_rb_tree_s &vertices = graph_ptr->vertices;
   edge_rb_tree_s &edges = graph_ptr->edges;
 
-  pointer *v_locations = (pointer *)cmalloc(vertices.count*sizeof(pointer));
+  pointer *v_locations = (pointer *)cmalloc_array(vertices.count,sizeof(pointer));
   debug_assert(memset(v_locations,0,vertices.count*sizeof(pointer)) == v_locations);
 
-  unsigned *v_idx_to_v_pos = (unsigned *)cmalloc(vertices.used*sizeof(unsigned));
+  unsigned *v_idx_to_v_pos = (unsigned *)cmalloc_array(vertices.used,sizeof(unsigned));
 
   // - process graph vertices -
   if (vertices.root_idx != c_idx_not_exist)
@@ -542,7 +542,7 @@ bool bic_graph_unpack(interpreter_thread_s &it,location_s *location_ptr,bc_array
     return false;
   }
 
-  unsigned *v_pos_to_v_idx = (unsigned *)cmalloc(vertex_cnt*sizeof(unsigned));
+  unsigned *v_pos_to_v_idx = (unsigned *)cmalloc_array(vertex_cnt,sizeof(unsigned));
 
   // - process vertices -
   if (vertex_cnt > 0)
@@ -663,7 +663,7 @@ bool bic_graph_method_Graph_1(interpreter_thread_s &it,unsigned stack_base,uli *
     // - initialize graph type from host graph -
     graph_ptr->type = hg_ptr->type;
 
-    unsigned *v_hg_to_g_map = (unsigned *)cmalloc(hg_vertices.used*sizeof(unsigned));
+    unsigned *v_hg_to_g_map = (unsigned *)cmalloc_array(hg_vertices.used,sizeof(unsigned));
     memset(v_hg_to_g_map,c_idx_not_exist,hg_vertices.used*sizeof(unsigned));
 
     if (sg_vertex_idxs.used != 0)
@@ -798,7 +798,7 @@ method subgraph
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
-  bool *e_used = (bool *)cmalloc(graph_ptr->edges.used*sizeof(bool));
+  bool *e_used = (bool *)cmalloc_array(graph_ptr->edges.used,sizeof(bool));
   memset(e_used,false,graph_ptr->edges.used*sizeof(bool));
 
   CONT_INIT_CLEAR(ui_array_s,edge_idxs);
@@ -876,10 +876,10 @@ method subgraph
 
   graph_s *graph_ptr = (graph_s *)dst_location->v_data_ptr;
 
-  bool *v_used = (bool *)cmalloc(graph_ptr->vertices.used*sizeof(bool));
+  bool *v_used = (bool *)cmalloc_array(graph_ptr->vertices.used,sizeof(bool));
   memset(v_used,false,graph_ptr->vertices.used*sizeof(bool));
 
-  bool *e_used = (bool *)cmalloc(graph_ptr->edges.used*sizeof(bool));
+  bool *e_used = (bool *)cmalloc_array(graph_ptr->edges.used,sizeof(bool));
   memset(e_used,false,graph_ptr->edges.used*sizeof(bool));
 
   CONT_INIT_CLEAR(ui_array_s,vertex_idxs);

@@ -861,7 +861,7 @@ built_in_variable_s fd_variables[] =
 \
   if (array_ptr->used > 32)\
   {\
-    iov_data = (iovec *)cmalloc(array_ptr->used*sizeof(iovec));\
+    iov_data = (iovec *)cmalloc_array(array_ptr->used,sizeof(iovec));\
   }\
 \
   pointer *p_ptr = array_ptr->data;\
@@ -931,7 +931,7 @@ built_in_variable_s fd_variables[] =
 \
   if (array_ptr->used > 32)\
   {\
-    iov_data = (iovec *)cmalloc(array_ptr->used*sizeof(iovec));\
+    iov_data = (iovec *)cmalloc_array(array_ptr->used,sizeof(iovec));\
   }\
 \
   pointer_array_s *result_array_ptr = it.get_new_array_ptr();\

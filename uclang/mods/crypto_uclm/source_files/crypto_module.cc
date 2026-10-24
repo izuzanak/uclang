@@ -23,7 +23,7 @@ EXPORT built_in_module_s module =
   crypto_classes,         // Classes
 
   0,                      // Error base index
-  24,                     // Error count
+  25,                     // Error count
   crypto_error_strings,   // Error strings
 
   crypto_initialize,      // Initialize function
@@ -73,6 +73,7 @@ const char *crypto_error_strings[] =
   "error_CRYPTO_KDF_UNSUPPORTED_ALGORITHM",
   "error_CRYPTO_KDF_INVALID_PARAMETER",
   "error_CRYPTO_KDF_DERIVE_ERROR",
+  "error_CRYPTO_CIPHER_TOO_MANY_PUBLIC_KEYS",
 };/*}}}*/
 
 // - CRYPTO initialize -
@@ -291,6 +292,13 @@ bool crypto_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nKey derivation error: %s\n",((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_CRYPTO_CIPHER_TOO_MANY_PUBLIC_KEYS:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nToo many public keys in array\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -2989,6 +2997,13 @@ method CryptoSeal
   BIC_CREATE_NEW_LOCATION(keys_location,c_bi_class_array,keys_array_ptr);
 
   int npubk = pkey_array_ptr->used;
+
+  if (npubk > 4096)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CRYPTO_CIPHER_TOO_MANY_PUBLIC_KEYS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   EVP_PKEY *pubk[npubk];
   unsigned char *ek[npubk];
   int ekl[npubk];

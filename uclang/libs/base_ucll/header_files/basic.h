@@ -151,6 +151,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <stdint.h>
 
 #if SYSTEM_TYPE == SYSTEM_TYPE_WINDOWS
 #include <winsock2.h>
@@ -518,16 +519,70 @@ inline long long int tm_time_diff()
 #endif
 }/*}}}*/
 
-// - definition of cmalloc function -
-inline void *cmalloc(unsigned a_size)
+inline void *cmalloc(size_t a_size)
 {/*{{{*/
-  return malloc(a_size);
+
+  // - ERROR -
+  cassert(a_size <= UINT_MAX);
+
+  void *location = malloc(a_size);
+
+  // - ERROR -
+  cassert(location != nullptr || a_size == 0);
+
+  return location;
 }/*}}}*/
 
-// - definition of crealloc function -
-inline void *crealloc(void *a_location,unsigned a_size)
+inline void *cmalloc_array(size_t a_count,size_t a_size)
 {/*{{{*/
-  return realloc(a_location,a_size);
+
+  // - ERROR -
+  cassert(a_size == 0 || a_count <= SIZE_MAX/a_size);
+
+  return cmalloc(a_count*a_size);
+}/*}}}*/
+
+inline void *crealloc(void *a_location,size_t a_size)
+{/*{{{*/
+
+  // - ERROR -
+  cassert(a_size <= UINT_MAX);
+
+  void *location = realloc(a_location,a_size);
+
+  // - ERROR -
+  cassert(location != nullptr || a_size == 0);
+
+  return location;
+}/*}}}*/
+
+inline void *crealloc_array(void *a_location,size_t a_count,size_t a_size)
+{/*{{{*/
+
+  // - ERROR -
+  cassert(a_size == 0 || a_count <= SIZE_MAX/a_size);
+
+  return crealloc(a_location,a_count*a_size);
+}/*}}}*/
+
+// - checked unsigned size arithmetic -
+inline unsigned size_add(unsigned a_first,unsigned a_second)
+{/*{{{*/
+
+  // - ERROR -
+  cassert(a_first <= UINT_MAX - a_second);
+
+  return a_first + a_second;
+}/*}}}*/
+
+inline unsigned size_mul(unsigned a_first,unsigned a_second)
+{/*{{{*/
+  size_t total = (size_t)a_first*(size_t)a_second;
+
+  // - ERROR -
+  cassert(total <= UINT_MAX);
+
+  return (unsigned)total;
 }/*}}}*/
 
 // - definition of cfree function -

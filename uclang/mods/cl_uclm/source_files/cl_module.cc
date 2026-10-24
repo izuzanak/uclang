@@ -1706,6 +1706,12 @@ method enqueue_nd_range_kernel
     return false;
   }
 
+  if (work_dim > 1024)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CL_COMMAND_QUEUE_ENQUEUE_KERNEL_INVALID_WORK_SIZE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
   size_t global_work_size[work_dim];
 
   pointer *gws_ptr = gws_array_ptr->data;

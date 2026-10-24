@@ -548,7 +548,7 @@ method listdir
 
   // - create read buffer -
   const int c_read_buff_size = 1024;
-  char *read_buff = (char *)cmalloc(c_read_buff_size*sizeof(char));
+  char *read_buff = (char *)cmalloc_array(c_read_buff_size,sizeof(char));
 
   int read_cnt;
   do

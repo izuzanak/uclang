@@ -4847,7 +4847,7 @@ method Poll
 
   if (array_ptr->used > 0)
   {
-    fds = (pollfd *)cmalloc(nfds*sizeof(pollfd));
+    fds = (pollfd *)cmalloc_array(nfds,sizeof(pollfd));
 
     // - fill pollfd structures -
     pointer *p_ptr = array_ptr->data;

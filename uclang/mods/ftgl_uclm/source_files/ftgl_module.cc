@@ -403,11 +403,11 @@ method push_back
   unsigned vert_cnt = vert_array_ptr->used/vb_ptr->vert_item_cnt;
 
   // - create vertex data buffer -
-  void *vert_buffer = cmalloc(vert_cnt*vb_ptr->vert_size);
+  void *vert_buffer = cmalloc_array(vert_cnt,vb_ptr->vert_size);
   char *v_ptr = (char *)vert_buffer;
 
   // - create index data buffer -
-  unsigned *idx_buffer = (unsigned *)cmalloc(idx_array_ptr->used*sizeof(unsigned));
+  unsigned *idx_buffer = (unsigned *)cmalloc_array(idx_array_ptr->used,sizeof(unsigned));
   unsigned *i_ptr = idx_buffer;
 
   // - retrieve item types array -
@@ -659,7 +659,7 @@ built_in_variable_s gl_font_variables[] =
   if (string_ptr->size > 1)\
   {\
     /* - convert string to wchar string - */\
-    unsigned *wstring = (unsigned *)cmalloc(string_ptr->size*sizeof(unsigned));\
+    unsigned *wstring = (unsigned *)cmalloc_array(string_ptr->size,sizeof(unsigned));\
     int wsize = string_s::utf8_to_utf32(string_ptr->data,wstring,string_ptr->size);\
 \
     /* - ERROR - */\

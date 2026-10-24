@@ -284,14 +284,16 @@ method LedMat
   }
 
   // - alloc command byte + data size -
-  uc *data = (uc *)cmalloc(1 + row_cnt*(col_cnt >> 3)*sizeof(uc));
+  size_t data_size = (size_t)row_cnt*(size_t)(col_cnt >> 3);
 
   // - ERROR -
-  if (data == nullptr)
+  if (data_size + 1 > UINT_MAX)
   {
     exception_s::throw_exception(it,module.error_base + c_error_LEDMAT_MEMORY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
+
+  uc *data = (uc *)cmalloc(data_size + 1);
 
   // - create ledmat object -
   ledmat_s *lm_ptr = (ledmat_s *)cmalloc(sizeof(ledmat_s));
@@ -538,14 +540,16 @@ method LedMatBuffer
     return false;
   }
 
-  uc *data = (uc *)cmalloc(row_cnt*(col_cnt >> 3)*sizeof(uc));
+  size_t data_size = (size_t)row_cnt*(size_t)(col_cnt >> 3);
 
   // - ERROR -
-  if (data == nullptr)
+  if (data_size > UINT_MAX)
   {
     exception_s::throw_exception(it,module.error_base + c_error_LEDMAT_BUFFER_MEMORY_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
+
+  uc *data = (uc *)cmalloc(data_size);
 
   // - create ledmat object -
   ledmat_buffer_s *lmb_ptr = (ledmat_buffer_s *)cmalloc(sizeof(ledmat_buffer_s));

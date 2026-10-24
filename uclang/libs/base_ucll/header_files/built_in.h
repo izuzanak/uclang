@@ -315,7 +315,7 @@ enum
 #define BIC_CONT_TO_STRING_0_CONSTRUCT() \
   {/*{{{*/\
     /* - adjust result string size - */\
-    strings_size += 1 + (strings.used != 0 ? strings.used - 1 : 0) + 2;\
+    strings_size = size_add(strings_size,size_add(strings.used != 0 ? strings.used - 1 : 0,3));\
 \
     /* - create result string data - */\
     string_ptr->size = strings_size;\
@@ -356,7 +356,7 @@ enum
     if (strings.used != 0)\
     {\
       /* - adjust result string size - */\
-      strings_size += (del_string_ptr->size - 1)*(strings.used - 1) + 1;\
+      strings_size = size_add(strings_size,size_add(size_mul(del_string_ptr->size - 1,strings.used - 1),1));\
 \
       /* - create result string data - */\
       string_ptr->size = strings_size;\
@@ -501,7 +501,7 @@ enum
 \
       /* - copy string from location - */\
       *s_ptr = *((string_s *)ret_location->v_data_ptr);\
-      strings_size += s_ptr->size - 1;\
+      strings_size = size_add(strings_size,s_ptr->size - 1);\
 \
       IT.release_stack_from(new_stack_base);\
     }\

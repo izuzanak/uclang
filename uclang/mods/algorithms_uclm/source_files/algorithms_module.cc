@@ -18,7 +18,7 @@ EXPORT built_in_module_s module =
   algorithms_classes,         // Classes
 
   0,                          // Error base index
-  5,                          // Error count
+  6,                          // Error count
   algorithms_error_strings,   // Error strings
 
   algorithms_initialize,      // Initialize function
@@ -41,6 +41,7 @@ const char *algorithms_error_strings[] =
   "error_ALGO_FILTER_INDEX_EXCEEDS_ARRAY_RANGE",
   "error_ALGO_FILTER_UNDEFINED_DICTIONARY_KEY",
   "error_RANGE_START_END_TYPES_DIFFERS",
+  "error_ALGO_ZIP_TOO_MANY_ITERABLES",
 };/*}}}*/
 
 // - ALGORITHMS initialize -
@@ -122,6 +123,13 @@ bool algorithms_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nDifferent types of range start/end values\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_ALGO_ZIP_TOO_MANY_ITERABLES:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nToo many iterables in zip array\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   default:
@@ -963,11 +971,19 @@ static_method
   if (array_ptr->used > 0)
   {
     unsigned iter_cnt = array_ptr->used;
-#ifdef _MSC_VER
-    iterable_s *iterables = (iterable_s *)cmalloc(iter_cnt*sizeof(iterable_s));
-#else
-    iterable_s iterables[iter_cnt];
-#endif
+
+    // - ERROR -
+    if (iter_cnt > UINT_MAX/sizeof(iterable_s))
+    {
+      it.release_location_ptr(array_location);
+
+      exception_s::throw_exception(it,module.error_base + c_error_ALGO_ZIP_TOO_MANY_ITERABLES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    CONT_CLEAR(bc_array_s,iterables_buf);
+    iterables_buf.init_size(iter_cnt*sizeof(iterable_s));
+    iterable_s *iterables = (iterable_s *)iterables_buf.data;
 
     // - retrieve iterable locations -
     iterable_s *i_ptr = iterables;
@@ -984,9 +1000,6 @@ static_method
       // - ERROR -
       if (i_ptr->type == c_idx_not_exist)
       {
-#ifdef _MSC_VER
-        cfree(iterables);
-#endif
         it.release_location_ptr(array_location);
 
         exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1002,36 +1015,15 @@ static_method
     do {
       if (i_ptr->type == c_iter_first_idx_next_idx_item)
       {
-#ifdef _MSC_VER
-        // - retrieve first index -
-        BIC_CALL_FIRST_IDX(it,i_ptr->location,i_ptr->index,operands[c_source_pos_idx],
-          cfree(iterables);
-          it.release_location_ptr(array_location);
-          return false;
-        );
-#else
         // - retrieve first index -
         BIC_CALL_FIRST_IDX(it,i_ptr->location,i_ptr->index,operands[c_source_pos_idx],
           it.release_location_ptr(array_location);
           return false;
         );
-#endif
       }
     } while(++i_ptr < i_ptr_end);
 
 
-#ifdef _MSC_VER
-#define BIC_ALGO_ZIP_RELEASE_ITERABLES() \
-{/*{{{*/\
-  iterable_s *i_ptr = iterables;\
-  iterable_s *i_ptr_end = i_ptr + iter_cnt;\
-  do {\
-    i_ptr->clear(it);\
-  } while(++i_ptr < i_ptr_end);\
-\
-  cfree(iterables);\
-}/*}}}*/
-#else
 #define BIC_ALGO_ZIP_RELEASE_ITERABLES() \
 {/*{{{*/\
   iterable_s *i_ptr = iterables;\
@@ -1040,7 +1032,6 @@ static_method
     i_ptr->clear(it);\
   } while(++i_ptr < i_ptr_end);\
 }/*}}}*/
-#endif
 
 #define BIC_ALGO_ZIP_RELEASE() \
 {/*{{{*/\
@@ -1158,11 +1149,19 @@ static_method
   if (array_ptr->used > 0)
   {
     unsigned iter_cnt = array_ptr->used;
-#ifdef _MSC_VER
-    iterable_s *iterables = (iterable_s *)cmalloc(iter_cnt*sizeof(iterable_s));
-#else
-    iterable_s iterables[iter_cnt];
-#endif
+
+    // - ERROR -
+    if (iter_cnt > UINT_MAX/sizeof(iterable_s))
+    {
+      it.release_location_ptr(array_location);
+
+      exception_s::throw_exception(it,module.error_base + c_error_ALGO_ZIP_TOO_MANY_ITERABLES,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    CONT_CLEAR(bc_array_s,iterables_buf);
+    iterables_buf.init_size(iter_cnt*sizeof(iterable_s));
+    iterable_s *iterables = (iterable_s *)iterables_buf.data;
 
     // - retrieve iterable locations -
     iterable_s *i_ptr = iterables;
@@ -1179,9 +1178,6 @@ static_method
       // - ERROR -
       if (i_ptr->type == c_idx_not_exist)
       {
-#ifdef _MSC_VER
-        cfree(iterables);
-#endif
         it.release_location_ptr(array_location);
 
         exception_s *new_exception = exception_s::throw_exception(it,c_error_OBJECT_OF_CLASS_IS_NOT_ITERABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);
@@ -1197,36 +1193,15 @@ static_method
     do {
       if (i_ptr->type == c_iter_first_idx_next_idx_item)
       {
-#ifdef _MSC_VER
-        // - retrieve first index -
-        BIC_CALL_FIRST_IDX(it,i_ptr->location,i_ptr->index,operands[c_source_pos_idx],
-          cfree(iterables);
-          it.release_location_ptr(array_location);
-          return false;
-        );
-#else
         // - retrieve first index -
         BIC_CALL_FIRST_IDX(it,i_ptr->location,i_ptr->index,operands[c_source_pos_idx],
           it.release_location_ptr(array_location);
           return false;
         );
-#endif
       }
     } while(++i_ptr < i_ptr_end);
 
 
-#ifdef _MSC_VER
-#define BIC_ALGO_TUPLE_ZIP_RELEASE_ITERABLES() \
-{/*{{{*/\
-  iterable_s *i_ptr = iterables;\
-  iterable_s *i_ptr_end = i_ptr + iter_cnt;\
-  do {\
-    i_ptr->clear(it);\
-  } while(++i_ptr < i_ptr_end);\
-\
-  cfree(iterables);\
-}/*}}}*/
-#else
 #define BIC_ALGO_TUPLE_ZIP_RELEASE_ITERABLES() \
 {/*{{{*/\
   iterable_s *i_ptr = iterables;\
@@ -1235,7 +1210,6 @@ static_method
     i_ptr->clear(it);\
   } while(++i_ptr < i_ptr_end);\
 }/*}}}*/
-#endif
 
 #define BIC_ALGO_TUPLE_ZIP_RELEASE() \
 {/*{{{*/\

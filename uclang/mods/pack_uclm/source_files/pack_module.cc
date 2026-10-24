@@ -595,6 +595,13 @@ static_method
 #define PC_PROCESS_ELEMENT(TYPE,CLASS_TYPE,RETRIEVE_CODE) \
   {/*{{{*/\
     count == 0 && (count = 1);\
+\
+    if (count > UINT_MAX/sizeof(TYPE))\
+    {\
+      exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_PACKING_OBJECT,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      return false;\
+    }\
+\
     data_size = count*sizeof(TYPE);\
 \
     if (data_size > c_temp_size)\
@@ -1009,6 +1016,15 @@ static_method
 #define PD_PROCESS_ELEMENT(TYPE,CLASS_TYPE,RETRIEVE_CODE) \
   {/*{{{*/\
     count == 0 && (count = 1);\
+\
+    if (count > UINT_MAX/sizeof(TYPE))\
+    {\
+      PD_CLEAR_DATA();\
+\
+      exception_s::throw_exception(it,module.error_base + c_error_PACK_ERROR_WHILE_UNPACKING_VALUE_STREAM,operands[c_source_pos_idx],(location_s *)it.blank_location);\
+      return false;\
+    }\
+\
     data_size = count*sizeof(TYPE);\
 \
     if (data_size > 0)\

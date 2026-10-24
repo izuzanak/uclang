@@ -446,7 +446,7 @@ built_in_variable_s image_variables[] =
   }\
 \
   /* - create target row pointer array - */\
-  png_bytepp row_ptrs = (png_bytepp)cmalloc(height*sizeof(png_bytep));\
+  png_bytepp row_ptrs = (png_bytepp)cmalloc_array(height,sizeof(png_bytep));\
 \
   /* - fill target row pointer array - */\
   BIC_IMAGE_CREATE_ROW_PTRS(img_ptr,row_ptrs)\
@@ -1105,7 +1105,7 @@ method write_png_file
   png_write_info(png_ptr,info_ptr);
 
   // - create target row pointer array -
-  png_bytepp row_ptrs = (png_bytepp)cmalloc(height*sizeof(png_bytep));
+  png_bytepp row_ptrs = (png_bytepp)cmalloc_array(height,sizeof(png_bytep));
 
   // - fill target row pointer array -
   BIC_IMAGE_CREATE_ROW_PTRS(img_ptr,row_ptrs)

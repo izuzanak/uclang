@@ -13,7 +13,7 @@ void gmp_c::setf(string_s &a_target,const char *a_format,...)
   const size_t init_size = 128;
   va_list ap;
 
-  a_target.data = (char *)cmalloc(init_size*sizeof(char));
+  a_target.data = (char *)cmalloc_array(init_size,sizeof(char));
 
   va_start(ap,a_format);
   int length = mpfr_vsnprintf(a_target.data,init_size,a_format,ap);
@@ -24,7 +24,7 @@ void gmp_c::setf(string_s &a_target,const char *a_format,...)
   if (a_target.size > init_size)
   {
     cfree(a_target.data);
-    a_target.data = (char *)cmalloc(a_target.size*sizeof(char));
+    a_target.data = (char *)cmalloc_array(a_target.size,sizeof(char));
 
     va_start(ap,a_format);
     mpfr_vsnprintf(a_target.data,a_target.size,a_format,ap);

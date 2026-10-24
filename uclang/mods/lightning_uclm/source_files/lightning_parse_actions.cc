@@ -149,7 +149,7 @@ bool(*ltg_pa_callers[c_ltg_parse_action_cnt])(ltg_parser_s &_this) =
 
 bool ltg_pa_null(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_null\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_null\n"););
 
   return true;
 }/*}}}*/
@@ -185,12 +185,9 @@ bool ltg_pa_function(ltg_parser_s &_this)
   // - ERROR -
   if (ucl_jit_state->ucl_signatures.get_idx(ucl_signature) != c_idx_not_exist)
   {
-    // FIXME TODO throw proper exception
-    cassert(0);
-
-    //interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
-    //exception_s *new_exception = exception_s::throw_exception(it,c_error_JIT_PARSER_DUPLICIT_FUNCTION_DEFINITION,0,(location_s *)it.blank_location);
-    //new_exception->params.push(_this.fun_name_pos.ui_first);
+    interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_LIGHTNING_PARSER_DUPLICIT_FUNCTION_DEFINITION,0,(location_s *)it.blank_location);
+    new_exception->params.push(_this.fun_name_pos.ui_first);
 
     return false;
   }
@@ -265,12 +262,9 @@ bool ltg_pa_fun_parameter(ltg_parser_s &_this)
   // - ERROR -
   if (val_idx < val_records.used)
   {
-    // FIXME TODO throw proper exception
-    cassert(0);
-
-    //interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
-    //exception_s *new_exception = exception_s::throw_exception(it,c_error_JIT_PARSER_DUPLICIT_PARAMETER_IDENTIFIER,0,(location_s *)it.blank_location);
-    //new_exception->params.push(lse.terminal_start);
+    interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_LIGHTNING_PARSER_DUPLICIT_PARAMETER_IDENTIFIER,0,(location_s *)it.blank_location);
+    new_exception->params.push(lse.terminal_start);
 
     return false;
   }
@@ -314,12 +308,9 @@ bool ltg_pa_type(ltg_parser_s &_this)
   // - ERROR -
   if (type_id == c_idx_not_exist)
   {
-    // FIXME TODO throw proper exception
-    cassert(0);
-
-    //interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
-    //exception_s *new_exception = exception_s::throw_exception(it,c_error_JIT_PARSER_UNKNOWN_DATA_TYPE,0,(location_s *)it.blank_location);
-    //new_exception->params.push(lse.terminal_start);
+    interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_LIGHTNING_PARSER_UNKNOWN_DATA_TYPE,0,(location_s *)it.blank_location);
+    new_exception->params.push(lse.terminal_start);
 
     return false;
   }
@@ -332,7 +323,11 @@ bool ltg_pa_type(ltg_parser_s &_this)
 
 bool ltg_pa_pointer(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_pointer\n");
+  val_types_s &tmp_val_types = _this.tmp_val_types;
+
+  // *****
+
+  tmp_val_types.last().pointer_level++;
 
   return true;
 }/*}}}*/
@@ -352,7 +347,7 @@ bool ltg_pa_declaration_end(ltg_parser_s &_this)
 
 bool ltg_pa_modifier_volatile(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_modifier_volatile\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_modifier_volatile\n"););
 
   return true;
 }/*}}}*/
@@ -380,14 +375,11 @@ bool ltg_pa_declare_expression(ltg_parser_s &_this)
   // - ERROR -
   if (!val_record_0.are_assignable(val_record_1))
   {
-    // FIXME TODO throw proper exception
-    cassert(0);
+    lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 2];
 
-    //lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 2];
-
-    //interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
-    //exception_s *new_exception = exception_s::throw_exception(it,c_error_JIT_PARSER_INCOMPATIBLE_VALUE_TYPES,0,(location_s *)it.blank_location);
-    //new_exception->params.push(lse.terminal_start);
+    interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_LIGHTNING_PARSER_INCOMPATIBLE_VALUE_TYPES,0,(location_s *)it.blank_location);
+    new_exception->params.push(lse.terminal_start);
 
     return false;
   }
@@ -407,7 +399,7 @@ bool ltg_pa_declare_expression(ltg_parser_s &_this)
 
 bool ltg_pa_declare_array(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_declare_array\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_declare_array\n"););
 
   return true;
 }/*}}}*/
@@ -433,12 +425,9 @@ bool ltg_pa_variable(ltg_parser_s &_this)
   // - ERROR -
   if (val_idx < val_records.used)
   {
-    // FIXME TODO throw proper exception
-    cassert(0);
-
-    //interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
-    //exception_s *new_exception = exception_s::throw_exception(it,c_error_JIT_PARSER_DUPLICIT_VAR_PARAM_IDENTIFIER,0,(location_s *)it.blank_location);
-    //new_exception->params.push(lse.terminal_start);
+    interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_LIGHTNING_PARSER_DUPLICIT_VAR_PARAM_IDENTIFIER,0,(location_s *)it.blank_location);
+    new_exception->params.push(lse.terminal_start);
 
     return false;
   }
@@ -494,105 +483,105 @@ bool ltg_pa_command_block_begin(ltg_parser_s &_this)
 
 bool ltg_pa_if_condition(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_if_condition\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_if_condition\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_if_statement(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_if_statement\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_if_statement\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_if_else_statement(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_if_else_statement\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_if_else_statement\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_if_else(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_if_else\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_if_else\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_while_statement(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_while_statement\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_while_statement\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_while_begin(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_while_begin\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_while_begin\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_while_condition(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_while_condition\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_while_condition\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_do_while_statement(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_do_while_statement\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_do_while_statement\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_do_while_begin(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_do_while_begin\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_do_while_begin\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_do_while_pre_condition(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_do_while_pre_condition\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_do_while_pre_condition\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_break(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_break\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_break\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_continue(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_continue\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_continue\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_return(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_return\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_return\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_label(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_label\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_label\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_goto(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_goto\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_goto\n"););
 
   return true;
 }/*}}}*/
@@ -625,14 +614,11 @@ bool ltg_pa_operator_binary_equal(ltg_parser_s &_this)
   // - ERROR -
   if (!val_record_0.are_assignable(val_record_1))
   {
-    // FIXME TODO throw proper exception
-    cassert(0);
+    lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 2];
 
-    //lalr_stack_element_s &lse = _this.lalr_stack[_this.lalr_stack.used - 2];
-
-    //interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
-    //exception_s *new_exception = exception_s::throw_exception(it,c_error_JIT_PARSER_INCOMPATIBLE_VALUE_TYPES,0,(location_s *)it.blank_location);
-    //new_exception->params.push(lse.terminal_start);
+    interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_LIGHTNING_PARSER_INCOMPATIBLE_VALUE_TYPES,0,(location_s *)it.blank_location);
+    new_exception->params.push(lse.terminal_start);
 
     return false;
   }
@@ -652,280 +638,280 @@ bool ltg_pa_operator_binary_equal(ltg_parser_s &_this)
 
 bool ltg_pa_operator_binary_plus_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_plus_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_plus_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_minus_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_minus_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_minus_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_asterisk_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_asterisk_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_asterisk_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_slash_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_slash_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_slash_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_percent_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_percent_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_percent_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_double_ls_br_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_double_ls_br_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_double_ls_br_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_double_rs_br_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_double_rs_br_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_double_rs_br_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_ampersand_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_ampersand_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_ampersand_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_pipe_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_pipe_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_pipe_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_circumflex_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_circumflex_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_circumflex_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_double_ampersand(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_double_ampersand\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_double_ampersand\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_double_pipe(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_double_pipe\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_double_pipe\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_double_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_double_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_double_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_exclamation_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_exclamation_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_exclamation_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_rs_br(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_rs_br\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_rs_br\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_ls_br(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_ls_br\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_ls_br\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_rs_br_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_rs_br_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_rs_br_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_ls_br_equal(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_ls_br_equal\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_ls_br_equal\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_ampersand(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_ampersand\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_ampersand\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_pipe(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_pipe\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_pipe\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_circumflex(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_circumflex\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_circumflex\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_double_rs_br(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_double_rs_br\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_double_rs_br\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_double_ls_br(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_double_ls_br\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_double_ls_br\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_plus(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_plus\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_plus\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_minus(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_minus\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_minus\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_asterisk(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_asterisk\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_asterisk\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_slash(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_slash\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_slash\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_percent(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_percent\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_percent\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_post_double_plus(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_post_double_plus\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_post_double_plus\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_post_double_minus(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_post_double_minus\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_post_double_minus\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_pre_double_plus(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_pre_double_plus\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_pre_double_plus\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_pre_double_minus(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_pre_double_minus\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_pre_double_minus\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_pre_plus(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_pre_plus\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_pre_plus\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_pre_minus(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_pre_minus\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_pre_minus\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_pre_exclamation(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_pre_exclamation\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_pre_exclamation\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_pre_tilde(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_pre_tilde\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_pre_tilde\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_pre_asterisk(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_pre_asterisk\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_pre_asterisk\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_unary_pre_ampersand(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_unary_pre_ampersand\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_unary_pre_ampersand\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_operator_binary_le_br_re_br(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_operator_binary_le_br_re_br\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_operator_binary_le_br_re_br\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_cast(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_cast\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_cast\n"););
 
   return true;
 }/*}}}*/
@@ -949,12 +935,9 @@ bool ltg_pa_identifier(ltg_parser_s &_this)
   // - ERROR -
   if (val_idx == c_idx_not_exist)
   {
-    // FIXME TODO throw proper exception
-    cassert(0);
-
-    //interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
-    //exception_s *new_exception = exception_s::throw_exception(it,c_error_JIT_PARSER_UNDECLARED_VARIABLE,0,(location_s *)it.blank_location);
-    //new_exception->params.push(lse.terminal_start);
+    interpreter_thread_s &it = *((interpreter_thread_s *)_this.it_ptr);
+    exception_s *new_exception = exception_s::throw_exception(it,c_error_LIGHTNING_PARSER_UNDECLARED_VARIABLE,0,(location_s *)it.blank_location);
+    new_exception->params.push(lse.terminal_start);
 
     return false;
   }
@@ -967,42 +950,42 @@ bool ltg_pa_identifier(ltg_parser_s &_this)
 
 bool ltg_pa_conditional_expression(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_conditional_expression\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_conditional_expression\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_conditional_condition(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_conditional_condition\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_conditional_condition\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_conditional_true(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_conditional_true\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_conditional_true\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_function_call(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_function_call\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_function_call\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_parameters_begin(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_parameters_begin\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_parameters_begin\n"););
 
   return true;
 }/*}}}*/
 
 bool ltg_pa_parameter(ltg_parser_s &_this)
 {/*{{{*/
-  fprintf(stderr,"ltg_pa_parameter\n");
+  debug_message_2(fprintf(stderr,"ltg_pa_parameter\n"););
 
   return true;
 }/*}}}*/

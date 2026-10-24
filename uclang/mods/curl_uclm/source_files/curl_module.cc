@@ -1178,11 +1178,16 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
     nfds_t nfds = poll_fds.count;
 #endif
 
-#ifdef _MSC_VER
-    pollfd *fds = (pollfd *)cmalloc(nfds*sizeof(pollfd));
-#else
-    pollfd fds[nfds];
-#endif
+    // - ERROR -
+    if (nfds > UINT_MAX/sizeof(pollfd))
+    {
+      exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_POLL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+      return false;
+    }
+
+    CONT_CLEAR(bc_array_s,fds_buf);
+    fds_buf.init_size(nfds*sizeof(pollfd));
+    pollfd *fds = (pollfd *)fds_buf.data;
 
     unsigned stack[RB_TREE_STACK_SIZE(poll_fds)];
     unsigned *stack_ptr = stack;
@@ -1213,10 +1218,6 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
     if (res == -1)
 #endif
     {
-#ifdef _MSC_VER
-      cfree(fds);
-#endif
-
       exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_POLL_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
       return false;
     }
@@ -1244,9 +1245,6 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
           int running;
           if (curl_multi_socket_action(cm_ptr->curlm_ptr,fd_ptr->fd,events,&running) != CURLM_OK)
           {
-#ifdef _MSC_VER
-            cfree(fds);
-#endif
             exception_s::throw_exception(it,module.error_base + c_error_CURL_MULTI_SOCKET_ACTION_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
             return false;
           }
@@ -1254,9 +1252,6 @@ bool bic_curl_multi_method_process_0(interpreter_thread_s &it,unsigned stack_bas
       } while(++fd_ptr < fd_ptr_end);
     }
 
-#ifdef _MSC_VER
-    cfree(fds);
-#endif
   }
 
   int msg_cnt;

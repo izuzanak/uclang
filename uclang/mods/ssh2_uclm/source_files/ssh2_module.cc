@@ -1093,11 +1093,11 @@ method listdir
 
   // - create name buffer -
   const size_t c_buffer_size = 1024;
-  char *buffer = (char *)cmalloc(c_buffer_size*sizeof(char));
+  char *buffer = (char *)cmalloc_array(c_buffer_size,sizeof(char));
 
   // - create logentry buffer -
   const size_t c_logentry_size = 1024;
-  char *logentry = (char *)cmalloc(c_logentry_size*sizeof(char));
+  char *logentry = (char *)cmalloc_array(c_logentry_size,sizeof(char));
 
   // - sftp attributes storage -
   LIBSSH2_SFTP_ATTRIBUTES attrs;

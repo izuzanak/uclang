@@ -138,7 +138,7 @@ void string_array_s::join(string_s &a_string)
     string_s *s_ptr = data;
     string_s *s_ptr_end = s_ptr + used;
     do {
-      string_length += s_ptr->size - 1;
+      string_length = size_add(string_length,s_ptr->size - 1);
     } while(++s_ptr < s_ptr_end);
 
     // - create target string -

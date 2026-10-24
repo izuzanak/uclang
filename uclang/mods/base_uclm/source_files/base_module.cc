@@ -4474,6 +4474,9 @@ macro
   unsigned f_length = first_ptr->size - 1;\
   unsigned s_length = second_ptr->size - 1;\
 \
+  /* - ERROR - */\
+  cassert(f_length <= UINT_MAX - 1 - s_length);\
+\
   /* - create result string - */\
   string_s *result_ptr = it.get_new_string_ptr();\
   result_ptr->create(f_length + s_length);\

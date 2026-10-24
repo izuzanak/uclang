@@ -1361,11 +1361,11 @@ bool bic_dict_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,ul
   // - construct result string -
   {
     // - adjust result string size -
-    strings_size += 1 + (strings.used != 0 ? strings.used - 1 : 0) + 2;
+    strings_size = size_add(strings_size,size_add(strings.used != 0 ? strings.used - 1 : 0,3));
 
     // - create result string data -
     string_ptr->size = strings_size;
-    string_ptr->data = (char *)cmalloc(strings_size*sizeof(char));
+    string_ptr->data = (char *)cmalloc_array(strings_size,sizeof(char));
 
     char *rs_ptr = string_ptr->data;
     *rs_ptr++ = '[';
@@ -1459,11 +1459,11 @@ method to_string
     if (strings.used != 0)
     {
       // - adjust result string size -
-      strings_size += (del_string_ptr->size - 1)*((strings.used >> 1) - 1) + (strings.used >> 1) + 1;
+      strings_size = size_add(strings_size,size_add(size_add(size_mul(del_string_ptr->size - 1,(strings.used >> 1) - 1),strings.used >> 1),1));
 
       // - create result string data -
       string_ptr->size = strings_size;
-      string_ptr->data = (char *)cmalloc(strings_size*sizeof(char));
+      string_ptr->data = (char *)cmalloc_array(strings_size,sizeof(char));
 
       // - strings cocatenation -
       char *rs_ptr = string_ptr->data;

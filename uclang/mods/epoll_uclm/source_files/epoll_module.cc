@@ -644,7 +644,7 @@ method wait
 
   epoll_event stack_events[32];
   epoll_event *events = max_events <= 32 ? stack_events :
-    (epoll_event *)cmalloc(max_events*sizeof(epoll_event));
+    (epoll_event *)cmalloc_array(max_events,sizeof(epoll_event));
 
   int count = epoll_wait(ep_ptr->fd,events,max_events,timeout);
 

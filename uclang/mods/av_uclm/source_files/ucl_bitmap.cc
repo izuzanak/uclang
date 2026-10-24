@@ -30,18 +30,33 @@ bool bitmap_s::load_from_file(const char *a_file)
 
   clear();
 
-  int image_size = ih.width*ih.height*4;
+  if (ih.width <= 0 || ih.height <= 0)
+  {
+    fclose(f);
+    return false;
+  }
+
+  size_t pixel_cnt = (size_t)ih.width*(size_t)ih.height;
+
+  if (pixel_cnt > UINT_MAX)
+  {
+    fclose(f);
+    return false;
+  }
+
+  data = (unsigned char *)cmalloc_array(pixel_cnt,4);
+
+  size_t image_size = pixel_cnt*4;
 
   int headers_size = sizeof(bmp_file_header_s) + sizeof(bmp_image_header_s);
   if (fh.off_bits > headers_size) {
     fseek(f,fh.off_bits - headers_size,SEEK_CUR);
   }
 
-  data = (unsigned char *)cmalloc(image_size*sizeof(unsigned char));
-
   if (fread(data,image_size,1,f) != 1)
   {
     cfree(data);
+    data = nullptr;
     fclose(f);
     return false;
   }
@@ -71,8 +86,20 @@ bool bitmap_s::save_to_file(const char *a_file)
 {/*{{{*/\
   clear();\
 \
+  if (a_width == 0 || a_height == 0)\
+  {\
+    return false;\
+  }\
+\
+  size_t pixel_cnt = (size_t)a_width*(size_t)a_height;\
+\
+  if (pixel_cnt > (INT_MAX - sizeof(bmp_file_header_s) - sizeof(bmp_image_header_s))/4)\
+  {\
+    return false;\
+  }\
+\
   int b_line_size = a_width*4;\
-  int image_size = a_height*b_line_size;\
+  int image_size = (int)(pixel_cnt*4);\
 \
   fh.type = 0x4d42;\
   fh.size = image_size + sizeof(bmp_file_header_s) + sizeof(bmp_image_header_s);\
@@ -92,7 +119,7 @@ bool bitmap_s::save_to_file(const char *a_file)
   ih.clr_used = 0;\
   ih.clr_important = 0;\
 \
-  data = (unsigned char *)cmalloc(image_size*sizeof(unsigned char));\
+  data = (unsigned char *)cmalloc_array(pixel_cnt,4);\
   unsigned image_ls = a_width*BYTES;\
 \
   const unsigned char *ptr = a_data;\

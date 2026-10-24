@@ -52,20 +52,34 @@ bool image_s::create_header(unsigned a_width,unsigned a_height,unsigned a_pixel_
     return false;
   }
 
+  unsigned tmp_pixel_step = c_pixel_sizes[a_pixel_format];
+
+  // - ERROR -
+  if (a_width > (UINT_MAX - sizeof(int))/tmp_pixel_step)
+  {
+    return false;
+  }
+
+  // - compute line bytes count -
+  unsigned tmp_line_bytes = a_width*tmp_pixel_step;
+  if (tmp_line_bytes & (sizeof(int) - 1))
+  {
+    tmp_line_bytes = (tmp_line_bytes & ~(sizeof(int) - 1)) + sizeof(int);
+  }
+
+  // - ERROR -
+  if (a_height > UINT_MAX/tmp_line_bytes)
+  {
+    return false;
+  }
+
   root = true;
   pixel_format = a_pixel_format;
   width = a_width;
   height = a_height;
   x_pos = 0;
   y_pos = 0;
-  pixel_step = c_pixel_sizes[pixel_format];
-
-  // - compute line bytes count -
-  unsigned tmp_line_bytes = width*pixel_step;
-  if (tmp_line_bytes & (sizeof(int) - 1))
-  {
-    tmp_line_bytes = (tmp_line_bytes & ~(sizeof(int) - 1)) + sizeof(int);
-  }
+  pixel_step = tmp_pixel_step;
 
   // - creation of image data -
   image_data_ptr = (image_data_s *)cmalloc(sizeof(image_data_s));

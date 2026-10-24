@@ -1518,8 +1518,16 @@ static_method
 ; @end
 
   // - create target buffer -
-  int target_size = ((data_size/3 + 1) << 2) + 2;
-  char *target_data = (char *)cmalloc(target_size*sizeof(char));
+  size_t need = (((size_t)data_size/3 + 1) << 2) + 2;
+
+  if (need > INT_MAX)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_WS_BASE64_ENCODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  int target_size = (int)need;
+  char *target_data = (char *)cmalloc_array(target_size,sizeof(char));
 
   // - encode string to base64 -
   int target_length = lws_b64_encode_string((const char *)data_ptr,data_size,target_data,target_size);
@@ -1554,9 +1562,17 @@ method decode
 static_method
 ; @end
 
-  // - create target buffer -
-  int target_size = ((data_size >> 2) * 3) + 2;
-  char *target_data = (char *)cmalloc(target_size*sizeof(char));
+  // - create target buffer (size computed in size_t, bounded to int) -
+  size_t need = ((size_t)data_size >> 2)*3 + 2;
+
+  if (need > INT_MAX)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_WS_BASE64_DECODE_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  int target_size = (int)need;
+  char *target_data = (char *)cmalloc_array(target_size,sizeof(char));
 
   // - initialize decode state -
   base64_decodestate state;

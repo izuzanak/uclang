@@ -1,6 +1,6 @@
 
 @begin
-include "ucl_string.h"
+include "struct.h"
 @end
 
 /*
@@ -28,6 +28,9 @@ void string_s::mult_char_ptr(unsigned a_length,const char *a_data,unsigned a_mul
     clear();
     return;
   }
+
+  // - ERROR -
+  cassert(a_mult <= (UINT_MAX - 1)/a_length);
 
   create(a_length*a_mult);
 
@@ -255,18 +258,13 @@ unsigned string_s::get_print_size_between(unsigned f_idx,unsigned s_idx)
 
   unsigned char_cnt = s_idx - f_idx;
 
-#ifdef _MSC_VER
-  unsigned *utf32_data = (unsigned *)cmalloc(char_cnt*sizeof(unsigned));
-#else
-  unsigned utf32_data[char_cnt];
-#endif
+  CONT_CLEAR(ui_array_s,utf32_arr);
+  utf32_arr.init_size(char_cnt);
+  unsigned *utf32_data = utf32_arr.data;
 
   int utf32_cnt = utf8_to_utf32(data + f_idx,utf32_data,char_cnt);
   if (utf32_cnt < 0)
   {
-#ifdef _MSC_VER
-    cfree(utf32_data);
-#endif
     return 0;
   }
 
@@ -286,10 +284,6 @@ unsigned string_s::get_print_size_between(unsigned f_idx,unsigned s_idx)
     }
   }
   while(++c_ptr < c_ptr_end);
-
-#ifdef _MSC_VER
-  cfree(utf32_data);
-#endif
 
   return print_size;
 }/*}}}*/
