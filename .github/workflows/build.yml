@@ -13,12 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Update ubuntu
-        run: sudo apt-get update
-
       - name: Install libraries
         run: |
-          sudo apt-get -y install libunwind-dev
+          sudo apt-get update
           sudo apt-get -y install \
           liblua5.2-dev libpq-dev libao-dev libavutil-dev libavformat-dev \
           libavcodec-dev libswscale-dev libdatrie-dev libfann-dev fftw-dev \
@@ -32,7 +29,7 @@ jobs:
 
       - name: Build and install cont
         run: |
-          git clone --branch=master https://github.com/izuzanak/cont.git ${GITHUB_WORKSPACE}/../cont
+          git clone --depth=1 --branch=master https://github.com/izuzanak/cont.git ${GITHUB_WORKSPACE}/../cont
 
           cd ${GITHUB_WORKSPACE}/../cont/build
           cmake ..
@@ -42,8 +39,8 @@ jobs:
       - name: Build uclang
         run: |
           cd ${GITHUB_WORKSPACE}/build
-          cmake ..
-          make
+          cmake -DCMAKE_BUILD_TYPE="Debug" ..
+          make -j"$(nproc)"
           sudo make install
 
       - name: Test uclang
