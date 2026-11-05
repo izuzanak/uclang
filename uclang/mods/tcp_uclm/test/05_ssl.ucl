@@ -1,0 +1,334 @@
+
+import sys;
+import lang;
+import tcp;
+
+class Main
+{
+  // - server state -
+  static srv_accepted = 0;
+  static srv_dropped = 0;
+  static srv_messages = [];
+  static srv_error = "";
+
+  // - client state, filled by the client thread and read after join -
+  static cli_events = [];
+  static cli_messages = [];
+  static cli_error = "";
+
+  // - plain server used for the not-initialized check -
+  static plain_accepted = 0;
+  static plain_error = "";
+
+  public Main() {}
+
+  // - tls server callbacks -
+  public srv_event(a_server,a_idx,a_event)
+  {/*{{{*/
+    if (a_event == TcpServer.EVENT_ACCEPTED)
+    {
+      srv_accepted += 1;
+      a_server.connection(a_idx).init_ssl();
+
+      // - second init_ssl on the same connection must throw -
+      caught = 0;
+      try {
+        a_server.connection(a_idx).init_ssl();
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        srv_error = "conn init_ssl twice did not throw";
+      }
+    }
+    else if (a_event == TcpServer.EVENT_DROPPED)
+    {
+      srv_dropped += 1;
+    }
+  }/*}}}*/
+
+  public srv_message(a_server,a_idx,a_msg)
+  {/*{{{*/
+    srv_messages.push(a_msg);
+    a_server.message(a_idx,"ECHO:%s" % a_msg);
+  }/*}}}*/
+
+  // - plain server callbacks -
+  public plain_event(a_server,a_idx,a_event)
+  {/*{{{*/
+    if (a_event == TcpServer.EVENT_ACCEPTED)
+    {
+      plain_accepted += 1;
+
+      // - connection init_ssl without server init_ssl must throw -
+      caught = 0;
+      try {
+        a_server.connection(a_idx).init_ssl();
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        plain_error = "conn init_ssl on plain server did not throw";
+      }
+    }
+  }/*}}}*/
+
+  public plain_message(a_server,a_idx,a_msg)
+  {/*{{{*/
+  }/*}}}*/
+
+  // - client callbacks -
+  public cli_event(a_client,a_event)
+  {/*{{{*/
+    cli_events.push(a_event);
+
+    if (a_event == TcpClient.EVENT_CONNECTED)
+    {
+      a_client.init_ssl();
+
+      // - second init_ssl must throw -
+      caught = 0;
+      try {
+        a_client.init_ssl();
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        cli_error = "client init_ssl twice did not throw";
+      }
+
+      a_client.message("hello");
+    }
+  }/*}}}*/
+
+  public cli_message(a_client,a_msg)
+  {/*{{{*/
+    cli_messages.push(a_msg);
+  }/*}}}*/
+
+  // - client thread: connect over tls, send hello, leave after the echo -
+  static parallel run_client(a_obj,a_port)
+  {/*{{{*/
+    client = new TcpClient("127.0.0.1",a_port,
+      new Delegate(a_obj,"cli_event",2),
+      new Delegate(a_obj,"cli_message",2),new Blank());
+
+    rounds = 0;
+    while (rounds < 200 and cli_messages.length() < 1)
+    {
+      rounds += 1;
+
+      fds = client.get_fds();
+      if (fds.length() == 0)
+      {
+        // - no events requested: connection dropped or errored -
+        break;
+      }
+
+      poll = new Poll(fds);
+      res = poll.poll(50);
+      if (Blank == res)
+      {
+        continue;
+      }
+
+      if (res[0] != 0)
+      {
+        client.process(fds[0],res[0]);
+      }
+    }
+
+    if (cli_messages.length() < 1 and cli_error == "")
+    {
+      cli_error = "client did not receive echo";
+    }
+
+    // - client object is released here, its socket is closed -
+  }/*}}}*/
+
+  // - server loop in the main thread -
+  static pump_server(a_server,a_condition)
+  {/*{{{*/
+    rounds = 0;
+    while (rounds < 200 and a_condition.call([]) != 1)
+    {
+      rounds += 1;
+
+      fds = a_server.get_fds();
+      poll = new Poll(fds);
+      res = poll.poll(50);
+      if (Blank == res)
+      {
+        continue;
+      }
+
+      idx = 0;
+      for (evt <- res)
+      {
+        if (evt != 0)
+        {
+          a_server.process(fds[idx*2],evt);
+        }
+
+        idx += 1;
+      }
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - ssl methods exist only when built with openssl, other builds skip -
+    ssl_available = 1;
+    try { Lang.cls("TcpServer").method("init_ssl#2"); }
+    catch (e) { ssl_available = 0; }
+
+    if (ssl_available)
+    {
+      obj = new Main();
+      port = 20300 + (Sys.getpid() % 1000);
+
+      // - derive fixture paths from script path (argv[0]) -
+      parts = argv[0].split("/");
+      parts.last() = "test_localhost.cert";
+      cert_path = parts.to_string("/");
+      parts.last() = "test_localhost.key";
+      key_path = parts.to_string("/");
+
+      server = new TcpServer("127.0.0.1",port,
+        new Delegate(obj,"srv_event",3),
+        new Delegate(obj,"srv_message",3),new Blank());
+
+      // - certificate file error -
+      caught = 0;
+      try {
+        server.init_ssl("/nonexistent/test.cert",key_path);
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        new Exception("init_ssl with missing certificate did not throw").throw();
+      }
+
+      // - private key file error -
+      caught = 0;
+      try {
+        server.init_ssl(cert_path,"/nonexistent/test.key");
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        new Exception("init_ssl with missing private key did not throw").throw();
+      }
+
+      // - successful init returns the server -
+      if ($server.init_ssl(cert_path,key_path) != "TcpServer")
+      {
+        new Exception("init_ssl: expected TcpServer return").throw();
+      }
+
+      // - second init_ssl must throw -
+      caught = 0;
+      try {
+        server.init_ssl(cert_path,key_path);
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        new Exception("server init_ssl twice did not throw").throw();
+      }
+
+      // - tls echo round trip with the client in its own thread -
+      thr = run_client(obj,port);
+
+      pump_server(server,:(){ return srv_dropped >= 1 ? 1 : 0; });
+
+      thr.join();
+
+      if (srv_error != "")
+      {
+        new Exception("server side: %s" % srv_error).throw();
+      }
+
+      if (cli_error != "")
+      {
+        new Exception("client side: %s" % cli_error).throw();
+      }
+
+      if (srv_accepted != 1)
+      {
+        new Exception("srv_accepted: expected 1, got %d" % srv_accepted).throw();
+      }
+
+      if (srv_messages != ["hello"])
+      {
+        new Exception("srv_messages: expected [hello], got %s" % $srv_messages).throw();
+      }
+
+      if (cli_messages != ["ECHO:hello"])
+      {
+        new Exception("cli_messages: expected [ECHO:hello], got %s" % $cli_messages).throw();
+      }
+
+      if (cli_events != [TcpClient.EVENT_CONNECTED])
+      {
+        new Exception("cli_events: expected [EVENT_CONNECTED], got %s" % $cli_events).throw();
+      }
+
+      if (srv_dropped != 1)
+      {
+        new Exception("srv_dropped: expected 1, got %d" % srv_dropped).throw();
+      }
+
+      if (server.get_fds().length() != 2)
+      {
+        new Exception("server get_fds after drop: expected 2 elements, got %d" % server.get_fds().length()).throw();
+      }
+
+      server = 0;
+
+      // - connection init_ssl on a server without init_ssl -
+      plain = new TcpServer("127.0.0.1",port + 1,
+        new Delegate(obj,"plain_event",3),
+        new Delegate(obj,"plain_message",3),new Blank());
+
+      // - tcp handshake completes in the kernel, no client processing needed -
+      client = new TcpClient("127.0.0.1",port + 1,
+        new Delegate(obj,"cli_event",2),
+        new Delegate(obj,"cli_message",2),new Blank());
+
+      pump_server(plain,:(){ return plain_accepted >= 1 ? 1 : 0; });
+
+      if (plain_accepted != 1)
+      {
+        new Exception("plain_accepted: expected 1, got %d" % plain_accepted).throw();
+      }
+
+      if (plain_error != "")
+      {
+        new Exception(plain_error).throw();
+      }
+
+      client = 0;
+      plain = 0;
+    }
+  }/*}}}*/
+}

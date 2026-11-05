@@ -1,0 +1,311 @@
+
+import sys;
+import containers;
+import algorithms;
+import tcp;
+import epoll;
+
+class Main
+{
+  public Main()
+  {/*{{{*/
+    m_epoll = new Epoll(Epoll.CLOEXEC);
+    m_poll_callbacks = new Dict();
+    m_server_fd_set = new Set();
+  }/*}}}*/
+
+  // - shared state -
+  static client_connected = 0;
+  static client_dropped = 0;
+  static server_accepted = 0;
+  static server_dropped = 0;
+  static server_conn_idx = -1;
+  static server_dropped_idx = -1;
+  static server_conn = new Blank();
+  static received = [];
+  static messages_sent = 0;
+
+  public m_epoll;
+  public m_poll_callbacks;
+  public m_server_fd_set;
+  public m_server;
+  public m_client;
+
+  // - server callbacks -
+  public on_server_event(a_server,a_conn_idx,a_event)
+  {/*{{{*/
+    if (a_event == TcpServer.EVENT_ACCEPTED)
+    {
+      server_accepted += 1;
+      server_conn_idx = a_conn_idx;
+      server_conn = a_server.connection(a_conn_idx);
+    }
+    else if (a_event == TcpServer.EVENT_DROPPED)
+    {
+      server_dropped += 1;
+      server_dropped_idx = a_conn_idx;
+    }
+  }/*}}}*/
+
+  public on_server_message(a_server,a_conn_idx,a_message)
+  {/*{{{*/
+    a_server.message(a_conn_idx,"ECHO:%s" % a_message);
+
+    // - update server fd set after send -
+    this.poll_set_update();
+  }/*}}}*/
+
+  // - client callbacks -
+  public on_client_event(a_client,a_event)
+  {/*{{{*/
+    if (a_event == TcpClient.EVENT_CONNECTED)
+    {
+      client_connected = 1;
+    }
+    else if (a_event == TcpClient.EVENT_DROPPED)
+    {
+      client_dropped = 1;
+    }
+  }/*}}}*/
+
+  public on_client_message(a_client,a_message)
+  {/*{{{*/
+    received.push(a_message);
+  }/*}}}*/
+
+  // - fd event handlers -
+  public on_server_fd_event(a_fd,a_event)
+  {/*{{{*/
+    m_server.process(a_fd,a_event);
+
+    // - update fd sets -
+    this.poll_set_update();
+  }/*}}}*/
+
+  public on_client_fd_event(a_fd,a_event)
+  {/*{{{*/
+    m_client.process(a_fd,a_event);
+
+    // - update client fd -
+    this.poll_client_update();
+  }/*}}}*/
+
+  // - poll management -
+  public poll_fd_add(a_fd,a_events,a_callback)
+  {/*{{{*/
+    m_epoll.add(a_fd,a_events);
+    m_poll_callbacks[a_fd] = a_callback;
+  }/*}}}*/
+
+  public poll_fd_remove(a_fd)
+  {/*{{{*/
+    m_epoll.del(a_fd);
+    m_poll_callbacks.remove_key(a_fd);
+  }/*}}}*/
+
+  public poll_client_update()
+  {/*{{{*/
+    ev = m_client.events();
+    if (ev != 0)
+    {
+      this.poll_fd_add(m_client.get_fd(),ev,
+          new Delegate(this,"on_client_fd_event",2));
+    }
+    else
+    {
+      this.poll_fd_remove(m_client.get_fd());
+    }
+  }/*}}}*/
+
+  public poll_set_update()
+  {/*{{{*/
+    s_fds = m_server.get_fds();
+    new_set = new Set(Algo.tuple_zip([s_fds[::2],s_fds[1::2]]));
+
+    // - remove old or modified fds -
+    for (pollfd <- m_server_fd_set - new_set)
+    {
+      m_epoll.del(pollfd[0]);
+      m_poll_callbacks.remove_key(pollfd[0]);
+    }
+
+    // - add new or modified fds -
+    for (pollfd <- new_set - m_server_fd_set)
+    {
+      m_epoll.add(pollfd[0],pollfd[1]);
+      m_poll_callbacks[pollfd[0]] = new Delegate(this,"on_server_fd_event",2);
+    }
+
+    m_server_fd_set = new_set;
+  }/*}}}*/
+
+  // - event loop helper -
+  public run_loop(a_condition,a_max_iterations)
+  {/*{{{*/
+    iterations = 0;
+    while (iterations < a_max_iterations)
+    {
+      if (a_condition.call([]) == 1) { break; }
+
+      events = m_epoll.wait(1,50);
+
+      if (Blank != events)
+      {
+        m_poll_callbacks[events[0]].call(events);
+      }
+
+      iterations += 1;
+    }
+    return iterations;
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20100 + (Sys.getpid() % 1000);
+
+    obj.m_server = new TcpServer("127.0.0.1",port,
+      new Delegate(obj,"on_server_event",3),
+      new Delegate(obj,"on_server_message",3),
+      new Blank());
+
+    obj.m_client = new TcpClient("127.0.0.1",port,
+      new Delegate(obj,"on_client_event",2),
+      new Delegate(obj,"on_client_message",2),
+      new Blank());
+
+    // - register server fds -
+    obj.poll_set_update();
+
+    // - register client fd -
+    obj.poll_client_update();
+
+    // - wait for connection on both sides -
+    obj.run_loop(
+      :(){ return (client_connected == 1 and server_accepted == 1) ? 1 : 0; },500);
+
+    if (server_accepted != 1)
+    {
+      new Exception("server_accepted: expected 1, got %d" % server_accepted).throw();
+    }
+
+    if (client_connected != 1)
+    {
+      new Exception("client did not connect").throw();
+    }
+
+    // - connected client requests only input events -
+    if (obj.m_client.events() != (Poll.POLLIN | Poll.POLLPRI))
+    {
+      new Exception("connected client events: expected POLLIN|POLLPRI, got %d" % obj.m_client.events()).throw();
+    }
+
+    // - server lists listen fd and one connection -
+    s_fds = obj.m_server.get_fds();
+    if (s_fds.length() != 4)
+    {
+      new Exception("server get_fds: expected 4 elements, got %d" % s_fds.length()).throw();
+    }
+
+    // - TcpConn accessors -
+    if ($server_conn != "TcpConn")
+    {
+      new Exception("conn to_string: expected TcpConn, got %s" % $server_conn).throw();
+    }
+
+    if (server_conn.fd() != s_fds[2])
+    {
+      new Exception("conn fd: expected %d, got %d" % [s_fds[2],server_conn.fd()]).throw();
+    }
+
+    if (server_conn.ip() != "127.0.0.1")
+    {
+      new Exception("conn ip: expected 127.0.0.1, got %s" % $server_conn.ip()).throw();
+    }
+
+    if (server_conn.port() <= 0 or server_conn.port() > 65535)
+    {
+      new Exception("conn port: expected 1..65535, got %d" % server_conn.port()).throw();
+    }
+
+    // - connection#1 returns a fresh reference to the same connection -
+    if (obj.m_server.connection(server_conn_idx).fd() != server_conn.fd())
+    {
+      new Exception("connection: fd mismatch").throw();
+    }
+
+    // - send messages and wait for echoes -
+    test_messages = ["hello","world","test123"];
+
+    while (messages_sent < test_messages.length())
+    {
+      obj.m_client.message(test_messages[messages_sent]);
+      messages_sent += 1;
+
+      // - update client fd after send -
+      obj.poll_client_update();
+
+      obj.run_loop(
+        :(){ return received.length() >= messages_sent ? 1 : 0; },500);
+    }
+
+    // - verify all echo messages received -
+    if (received.length() != test_messages.length())
+    {
+      new Exception("received: expected %d messages, got %d" % [test_messages.length(),received.length()]).throw();
+    }
+
+    idx = 0;
+    while (idx < test_messages.length())
+    {
+      expected = "ECHO:%s" % test_messages[idx];
+      if (received[idx] != expected)
+      {
+        new Exception("message %d: expected '%s', got '%s'" % [idx,expected,received[idx]]).throw();
+      }
+      idx += 1;
+    }
+
+    // - close client: releasing the object closes its socket -
+    obj.poll_fd_remove(obj.m_client.get_fd());
+    free obj.m_client;
+
+    // - server must see EOF and drop the connection -
+    obj.run_loop(:(){ return server_dropped == 1 ? 1 : 0; },500);
+
+    if (server_dropped != 1)
+    {
+      new Exception("server_dropped: expected 1, got %d" % server_dropped).throw();
+    }
+
+    if (server_dropped_idx != server_conn_idx)
+    {
+      new Exception("dropped index: expected %d, got %d" % [server_conn_idx,server_dropped_idx]).throw();
+    }
+
+    // - only listen fd remains -
+    if (obj.m_server.get_fds().length() != 2)
+    {
+      new Exception("server get_fds after drop: expected 2 elements, got %d" % obj.m_server.get_fds().length()).throw();
+    }
+
+    // - stale TcpConn reference must throw -
+    caught = 0;
+    try {
+      server_conn.fd();
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("stale conn fd() did not throw").throw();
+    }
+
+    // - release reference cycles -
+    free server_conn;
+    free obj.m_poll_callbacks;
+    free obj.m_server;
+  }/*}}}*/
+}

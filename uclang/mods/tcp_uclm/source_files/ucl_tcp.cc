@@ -120,6 +120,13 @@ bool tcp_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,unsi
             ssl_events = POLLOUT;
             break;
           default:
+
+            // - deliver already received data, error is reported by next call -
+            if (in_msg.used != 0)
+            {
+              break;
+            }
+
             return false;
         }
 

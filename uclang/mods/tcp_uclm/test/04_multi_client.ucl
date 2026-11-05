@@ -1,0 +1,397 @@
+
+import sys;
+import containers;
+import algorithms;
+import tcp;
+import epoll;
+
+class Main
+{
+  public Main()
+  {/*{{{*/
+    m_epoll = new Epoll(Epoll.CLOEXEC);
+    m_poll_callbacks = new Dict();
+    m_server_fd_set = new Set();
+  }/*}}}*/
+
+  // - server state -
+  static server_conn_idxs = [];
+  static server_dropped_idxs = [];
+
+  // - client state (per-client arrays indexed by client_id) -
+  static client_connected = [0,0,0];
+  static client_dropped = [0,0,0];
+  static client_messages = [[],[],[]];
+
+  // - drop scenario state, static so the loop lambdas can see it -
+  static dropped_client = new Blank();
+  static before = [];
+
+  public m_epoll;
+  public m_poll_callbacks;
+  public m_server_fd_set;
+  public m_server;
+  public m_clients;
+
+  // - server callbacks -
+  public on_server_event(a_server,a_conn_idx,a_event)
+  {/*{{{*/
+    if (a_event == TcpServer.EVENT_ACCEPTED)
+    {
+      server_conn_idxs.push(a_conn_idx);
+    }
+    else if (a_event == TcpServer.EVENT_DROPPED)
+    {
+      server_dropped_idxs.push(a_conn_idx);
+    }
+  }/*}}}*/
+
+  public on_server_message(a_server,a_conn_idx,a_message)
+  {/*{{{*/
+  }/*}}}*/
+
+  // - client callbacks (unified, index bound via papply) -
+  public on_client_event(a_index,a_client,a_event)
+  {/*{{{*/
+    if (a_event == TcpClient.EVENT_CONNECTED) { client_connected[a_index] = 1; }
+    else if (a_event == TcpClient.EVENT_DROPPED) { client_dropped[a_index] = 1; }
+  }/*}}}*/
+
+  public on_client_message(a_index,a_client,a_message)
+  {/*{{{*/
+    client_messages[a_index].push(a_message);
+  }/*}}}*/
+
+  // - fd event handlers -
+  public on_server_fd_event(a_fd,a_event)
+  {/*{{{*/
+    m_server.process(a_fd,a_event);
+
+    // - update server fd set -
+    this.poll_set_update();
+  }/*}}}*/
+
+  public on_client_fd_event(a_index,a_fd,a_event)
+  {/*{{{*/
+    m_clients[a_index].process(a_fd,a_event);
+
+    // - update client fd -
+    this.poll_client_update(a_index);
+  }/*}}}*/
+
+  // - poll management -
+  public poll_fd_add(a_fd,a_events,a_callback)
+  {/*{{{*/
+    m_epoll.add(a_fd,a_events);
+    m_poll_callbacks[a_fd] = a_callback;
+  }/*}}}*/
+
+  public poll_fd_remove(a_fd)
+  {/*{{{*/
+    m_epoll.del(a_fd);
+    m_poll_callbacks.remove_key(a_fd);
+  }/*}}}*/
+
+  public poll_client_update(a_index)
+  {/*{{{*/
+    client = m_clients[a_index];
+    ev = client.events();
+    if (ev != 0)
+    {
+      this.poll_fd_add(client.get_fd(),ev,
+          new Delegate(this,"on_client_fd_event",3).papply([a_index]));
+    }
+    else
+    {
+      this.poll_fd_remove(client.get_fd());
+    }
+  }/*}}}*/
+
+  public poll_set_update()
+  {/*{{{*/
+    s_fds = m_server.get_fds();
+    new_set = new Set(Algo.tuple_zip([s_fds[::2],s_fds[1::2]]));
+
+    // - remove old or modified fds -
+    for (pollfd <- m_server_fd_set - new_set)
+    {
+      m_epoll.del(pollfd[0]);
+      m_poll_callbacks.remove_key(pollfd[0]);
+    }
+
+    // - add new or modified fds -
+    for (pollfd <- new_set - m_server_fd_set)
+    {
+      m_epoll.add(pollfd[0],pollfd[1]);
+      m_poll_callbacks[pollfd[0]] = new Delegate(this,"on_server_fd_event",2);
+    }
+
+    m_server_fd_set = new_set;
+  }/*}}}*/
+
+  // - event loop helper -
+  public run_loop(a_condition,a_max_iterations)
+  {/*{{{*/
+    iterations = 0;
+    while (iterations < a_max_iterations)
+    {
+      if (a_condition.call([]) == 1) { break; }
+
+      events = m_epoll.wait(1,50);
+
+      if (Blank != events)
+      {
+        m_poll_callbacks[events[0]].call(events);
+      }
+
+      iterations += 1;
+    }
+    return iterations;
+  }/*}}}*/
+
+  static private all_connected()
+  {/*{{{*/
+    return client_connected[0] == 1
+       and client_connected[1] == 1
+       and client_connected[2] == 1;
+  }/*}}}*/
+
+  static private check_message(a_index,a_msg_idx,a_expected)
+  {/*{{{*/
+    if (client_messages[a_index].length() <= a_msg_idx)
+    {
+      new Exception("client %d: message %d '%s' not received" % [a_index,a_msg_idx,a_expected]).throw();
+    }
+
+    if (client_messages[a_index][a_msg_idx] != a_expected)
+    {
+      new Exception("client %d: message %d expected '%s', got '%s'" %
+        [a_index,a_msg_idx,a_expected,client_messages[a_index][a_msg_idx]]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20200 + (Sys.getpid() % 1000);
+
+    obj.m_server = new TcpServer("127.0.0.1",port,
+      new Delegate(obj,"on_server_event",3),
+      new Delegate(obj,"on_server_message",3),
+      new Blank());
+
+    // - register server fds -
+    obj.poll_set_update();
+
+    // - create 3 clients -
+    obj.m_clients = [];
+    ci = 0;
+    while (ci < 3)
+    {
+      cl = new TcpClient("127.0.0.1",port,
+        new Delegate(obj,"on_client_event",3).papply([ci]),
+        new Delegate(obj,"on_client_message",3).papply([ci]),
+        ci);
+
+      obj.m_clients.push(cl);
+
+      // - register client fd -
+      obj.poll_client_update(ci);
+
+      ci += 1;
+    }
+
+    // - run event loop until all connected and server accepted all -
+    obj.run_loop(
+      :(){ return (all_connected() and server_conn_idxs.length() >= 3) ? 1 : 0; },500);
+
+    if (!all_connected())
+    {
+      new Exception("not all clients connected").throw();
+    }
+
+    if (server_conn_idxs.length() != 3)
+    {
+      new Exception("server accepted: expected 3, got %d" % server_conn_idxs.length()).throw();
+    }
+
+    if (obj.m_server.get_fds().length() != 8)
+    {
+      new Exception("server get_fds: expected 8 elements, got %d" % obj.m_server.get_fds().length()).throw();
+    }
+
+    // - broadcast to all clients -
+    obj.m_server.message(TcpServer.CONN_ALL,"broadcast");
+    obj.poll_set_update();
+
+    obj.run_loop(
+      :(){
+        return (client_messages[0].length() >= 1
+            and client_messages[1].length() >= 1
+            and client_messages[2].length() >= 1) ? 1 : 0;
+      },500);
+
+    check_message(0,0,"broadcast");
+    check_message(1,0,"broadcast");
+    check_message(2,0,"broadcast");
+
+    // - send to array of connection indexes -
+    obj.m_server.message([server_conn_idxs[0],server_conn_idxs[2]],"subset");
+    obj.poll_set_update();
+
+    obj.run_loop(
+      :(){
+        return (client_messages[0].length() >= 2
+            and client_messages[2].length() >= 2) ? 1 : 0;
+      },500);
+
+    check_message(0,1,"subset");
+    check_message(2,1,"subset");
+
+    if (client_messages[1].length() != 1)
+    {
+      new Exception("client 1: should not receive subset message, got %d msgs" % client_messages[1].length()).throw();
+    }
+
+    // - every accepted connection comes from localhost -
+    for (idx <- server_conn_idxs)
+    {
+      conn = obj.m_server.connection(idx);
+      if (conn.ip() != "127.0.0.1")
+      {
+        new Exception("conn %d ip: expected 127.0.0.1, got %s" % [idx,$conn.ip()]).throw();
+      }
+    }
+
+    // - drop the second accepted connection; queued output is discarded -
+    drop_idx = server_conn_idxs[1];
+    obj.m_server.message(drop_idx,"bye");
+    obj.m_server.drop(drop_idx);
+
+    // - repeated drop before process is a no-op -
+    obj.m_server.drop(drop_idx);
+
+    // - connection is still listed until the next process call tears it down -
+    if (obj.m_server.get_fds().length() != 8)
+    {
+      new Exception("server get_fds after drop request: expected 8 elements, got %d" % obj.m_server.get_fds().length()).throw();
+    }
+
+    obj.poll_set_update();
+
+    // - find which client is on the dropped connection -
+    obj.run_loop(
+      :(){
+        if (server_dropped_idxs.length() < 1) { return 0; }
+        ci = 0;
+        while (ci < 3)
+        {
+          if (client_dropped[ci] == 1) { return 1; }
+          ci += 1;
+        }
+        return 0;
+      },500);
+
+    if (server_dropped_idxs != [drop_idx])
+    {
+      new Exception("server dropped idxs: expected [%d], got %s" % [drop_idx,$server_dropped_idxs]).throw();
+    }
+
+    ci = 0;
+    while (ci < 3)
+    {
+      if (client_dropped[ci] == 1) { dropped_client = ci; }
+      ci += 1;
+    }
+
+    if (Blank == dropped_client)
+    {
+      new Exception("no client reported EVENT_DROPPED").throw();
+    }
+
+    // - dropped client got nothing beyond what it had, and requests no more events -
+    dc = obj.m_clients[dropped_client];
+    if (dc.events() != 0)
+    {
+      new Exception("dropped client events: expected 0, got %d" % dc.events()).throw();
+    }
+
+    if (dc.get_fds() != [])
+    {
+      new Exception("dropped client get_fds: expected [], got %s" % $dc.get_fds()).throw();
+    }
+
+    // - message on dropped client throws -
+    caught = 0;
+    try {
+      dc.message("late");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("message on dropped client did not throw").throw();
+    }
+
+    // - server lists listen fd and two connections -
+    if (obj.m_server.get_fds().length() != 6)
+    {
+      new Exception("server get_fds after drop: expected 6 elements, got %d" % obj.m_server.get_fds().length()).throw();
+    }
+
+    // - drop of a torn down connection throws -
+    caught = 0;
+    try {
+      obj.m_server.drop(drop_idx);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("drop of torn down connection did not throw").throw();
+    }
+
+    // - remaining clients still receive broadcasts -
+    before = [client_messages[0].length(),client_messages[1].length(),client_messages[2].length()];
+
+    obj.m_server.message(TcpServer.CONN_ALL,"again");
+    obj.poll_set_update();
+
+    obj.run_loop(
+      :(){
+        ci = 0;
+        while (ci < 3)
+        {
+          if (ci != dropped_client and client_messages[ci].length() < before[ci] + 1) { return 0; }
+          ci += 1;
+        }
+        return 1;
+      },500);
+
+    ci = 0;
+    while (ci < 3)
+    {
+      if (ci == dropped_client)
+      {
+        if (client_messages[ci].length() != before[ci])
+        {
+          new Exception("dropped client %d received message after drop" % ci).throw();
+        }
+      }
+      else
+      {
+        check_message(ci,before[ci],"again");
+      }
+      ci += 1;
+    }
+
+    // - release reference cycles -
+    free obj.m_poll_callbacks;
+    free obj.m_server;
+    free obj.m_clients;
+  }/*}}}*/
+}

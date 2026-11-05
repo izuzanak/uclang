@@ -232,7 +232,7 @@ built_in_class_s tcp_server_class =
 {/*{{{*/
   "TcpServer",
   c_modifier_public | c_modifier_final,
-  9
+  10
 #ifdef UCL_WITH_OPENSSL
   + 1
 #endif
@@ -287,6 +287,11 @@ built_in_method_s tcp_server_methods[] =
     "message#2",
     c_modifier_public | c_modifier_final,
     bic_tcp_server_method_message_2
+  },
+  {
+    "drop#1",
+    c_modifier_public | c_modifier_final,
+    bic_tcp_server_method_drop_1
   },
   {
     "connection#1",
@@ -867,6 +872,36 @@ method message
       conn.events = POLLIN | POLLPRI | POLLOUT;
     }
   }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+
+bool bic_tcp_server_method_drop_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+conn_index:retrieve_integer
+>
+method drop
+; @end
+
+  tcp_server_s *ts_ptr = (tcp_server_s *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (conn_index < 0 || conn_index >= ts_ptr->conn_list.used ||
+      !ts_ptr->conn_list.data[conn_index].valid)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_SERVER_INVALID_CONNECTION_INDEX,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  tcp_conn_s &conn = ts_ptr->conn_list[conn_index];
+
+  // - shut down socket, queued output is discarded -
+  shutdown(conn.conn_fd,SHUT_RDWR);
+  conn.events = POLLIN | POLLPRI;
 
   BIC_SET_RESULT_DESTINATION();
 
@@ -1480,6 +1515,14 @@ bool bic_tcp_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stack_ba
   if (tc_ptr->ssl != nullptr)
   {
     exception_s::throw_exception(it,module.error_base + c_error_TCP_CLIENT_SSL_ALREADY_INITIALIZED,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ERROR -
+  int nonblock_io = 1;
+  if (ioctl(tc_ptr->conn_fd,FIONBIO,&nonblock_io))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_TCP_CLIENT_SSL_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
   }
 

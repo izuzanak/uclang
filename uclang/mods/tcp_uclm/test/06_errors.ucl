@@ -1,0 +1,249 @@
+
+import sys;
+import tcp;
+
+class Main
+{
+  public Main() {}
+
+  // - valid delegate methods -
+  public on_server_event(a_server,a_conn_idx,a_event) {}
+  public on_server_message(a_server,a_conn_idx,a_message) {}
+  public on_client_event(a_client,a_event) {}
+  public on_client_message(a_client,a_message) {}
+
+  // - wrong param count delegates -
+  public bad_1(a) {}
+  public bad_2(a,b) {}
+  public bad_3(a,b,c) {}
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20400 + (Sys.getpid() % 1000);
+
+    // - server: wrong event delegate param count -
+    caught = 0;
+    try {
+      new TcpServer("127.0.0.1",port,
+        new Delegate(obj,"bad_2",2),
+        new Delegate(obj,"on_server_message",3),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server wrong event delegate did not throw").throw();
+    }
+
+    // - server: wrong message delegate param count -
+    caught = 0;
+    try {
+      new TcpServer("127.0.0.1",port,
+        new Delegate(obj,"on_server_event",3),
+        new Delegate(obj,"bad_1",1),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server wrong message delegate did not throw").throw();
+    }
+
+    // - server: invalid ip address -
+    caught = 0;
+    try {
+      new TcpServer("!!!invalid!!!",port,
+        new Delegate(obj,"on_server_event",3),
+        new Delegate(obj,"on_server_message",3),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server invalid ip did not throw").throw();
+    }
+
+    // - client: wrong event delegate param count -
+    caught = 0;
+    try {
+      new TcpClient("127.0.0.1",port,
+        new Delegate(obj,"bad_3",3),
+        new Delegate(obj,"on_client_message",2),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client wrong event delegate did not throw").throw();
+    }
+
+    // - client: wrong message delegate param count -
+    caught = 0;
+    try {
+      new TcpClient("127.0.0.1",port,
+        new Delegate(obj,"on_client_event",2),
+        new Delegate(obj,"bad_1",1),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client wrong message delegate did not throw").throw();
+    }
+
+    // - client: invalid ip address -
+    caught = 0;
+    try {
+      new TcpClient("!!!invalid!!!",port,
+        new Delegate(obj,"on_client_event",2),
+        new Delegate(obj,"on_client_message",2),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client invalid ip did not throw").throw();
+    }
+
+    // - create server for remaining tests -
+    server = new TcpServer("127.0.0.1",port,
+      new Delegate(obj,"on_server_event",3),
+      new Delegate(obj,"on_server_message",3),
+      new Blank());
+
+    // - server: second server on the same port (bind fails) -
+    caught = 0;
+    try {
+      new TcpServer("127.0.0.1",port,
+        new Delegate(obj,"on_server_event",3),
+        new Delegate(obj,"on_server_message",3),
+        new Blank());
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("second server on same port did not throw").throw();
+    }
+
+    // - client: message when not connected -
+    client = new TcpClient("127.0.0.1",port,
+      new Delegate(obj,"on_client_event",2),
+      new Delegate(obj,"on_client_message",2),
+      new Blank());
+
+    caught = 0;
+    try {
+      client.message("test");
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client message when not connected did not throw").throw();
+    }
+
+    // - client: process with invalid fd -
+    caught = 0;
+    try {
+      client.process(99999,1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("client process invalid fd did not throw").throw();
+    }
+
+    // - server: message with invalid connection indexes -
+    for (bad_idx <- [999,-5,[999],["bad"]])
+    {
+      caught = 0;
+      try {
+        server.message(bad_idx,"test");
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        new Exception("server message invalid conn_index %s did not throw" % $bad_idx).throw();
+      }
+    }
+
+    // - server: drop with invalid connection index -
+    for (bad_idx <- [999,-1])
+    {
+      caught = 0;
+      try {
+        server.drop(bad_idx);
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        new Exception("server drop invalid conn_index %d did not throw" % bad_idx).throw();
+      }
+    }
+
+    // - server: connection with invalid connection index -
+    caught = 0;
+    try {
+      server.connection(999);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server connection invalid conn_index did not throw").throw();
+    }
+
+    // - server: process with invalid fd -
+    caught = 0;
+    try {
+      server.process(99999,1);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("server process invalid fd did not throw").throw();
+    }
+
+    // - release client before server -
+    client = 0;
+    server = 0;
+  }/*}}}*/
+}

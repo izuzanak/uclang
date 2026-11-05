@@ -66,6 +66,7 @@ bool bic_tcp_server_method_init_ssl_2(interpreter_thread_s &it,unsigned stack_ba
 bool bic_tcp_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_process_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_message_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_tcp_server_method_drop_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_connection_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_user_data_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_tcp_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);

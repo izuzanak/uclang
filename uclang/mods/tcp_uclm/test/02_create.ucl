@@ -1,0 +1,121 @@
+
+import sys;
+import tcp;
+
+class Main
+{
+  public Main() {}
+
+  public on_server_event(a_server,a_conn_idx,a_event)
+  {/*{{{*/
+  }/*}}}*/
+
+  public on_server_message(a_server,a_conn_idx,a_message)
+  {/*{{{*/
+  }/*}}}*/
+
+  public on_client_event(a_client,a_event)
+  {/*{{{*/
+  }/*}}}*/
+
+  public on_client_message(a_client,a_message)
+  {/*{{{*/
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20000 + (Sys.getpid() % 1000);
+
+    // - server construction -
+    user = [1,2,3];
+    server = new TcpServer("127.0.0.1",port,
+      new Delegate(obj,"on_server_event",3),
+      new Delegate(obj,"on_server_message",3),
+      user);
+
+    // - server to_string -
+    if ($server != "TcpServer")
+    {
+      new Exception("server to_string: expected TcpServer, got %s" % $server).throw();
+    }
+
+    // - server get_fds returns listen fd and events -
+    fds = server.get_fds();
+    if (fds.length() != 2)
+    {
+      new Exception("server get_fds: expected 2 elements, got %d" % fds.length()).throw();
+    }
+
+    if (fds[0] <= 0)
+    {
+      new Exception("server get_fds: fd expected > 0, got %s" % $fds[0]).throw();
+    }
+
+    if (fds[1] != (Poll.POLLIN | Poll.POLLPRI))
+    {
+      new Exception("server get_fds: events expected POLLIN|POLLPRI, got %s" % $fds[1]).throw();
+    }
+
+    // - server user_data returns passed value -
+    if (server.user_data() != [1,2,3])
+    {
+      new Exception("server user_data: expected [1,2,3], got %s" % $server.user_data()).throw();
+    }
+
+    // - server user_data is a reference -
+    server.user_data() = "changed";
+    if (server.user_data() != "changed")
+    {
+      new Exception("server user_data assign: expected changed, got %s" % $server.user_data()).throw();
+    }
+
+    // - client construction (connect is in progress, no event loop needed) -
+    client = new TcpClient("127.0.0.1",port,
+      new Delegate(obj,"on_client_event",2),
+      new Delegate(obj,"on_client_message",2),
+      "client-data");
+
+    // - client to_string -
+    if ($client != "TcpClient")
+    {
+      new Exception("client to_string: expected TcpClient, got %s" % $client).throw();
+    }
+
+    // - client get_fd -
+    fd = client.get_fd();
+    if (fd <= 0)
+    {
+      new Exception("client get_fd: expected > 0, got %s" % $fd).throw();
+    }
+
+    // - client events while connecting -
+    ev = client.events();
+    if (ev != (Poll.POLLIN | Poll.POLLOUT | Poll.POLLPRI))
+    {
+      new Exception("client events: expected POLLIN|POLLOUT|POLLPRI, got %s" % $ev).throw();
+    }
+
+    // - client get_fds -
+    if (client.get_fds() != [fd,ev])
+    {
+      new Exception("client get_fds: expected [%d,%d], got %s" % [fd,ev,$client.get_fds()]).throw();
+    }
+
+    // - client user_data -
+    if (client.user_data() != "client-data")
+    {
+      new Exception("client user_data: expected client-data, got %s" % $client.user_data()).throw();
+    }
+
+    client.user_data() = 42;
+    if (client.user_data() != 42)
+    {
+      new Exception("client user_data assign: expected 42, got %s" % $client.user_data()).throw();
+    }
+
+    // - release client before server -
+    client = 0;
+    server = 0;
+  }/*}}}*/
+}
