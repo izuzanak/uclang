@@ -86,27 +86,22 @@ class Main
     output = new File(tmp,"r").read_close();
     Sys.remove(tmp);
 
-    // - determine result -
+    // - determine result: a non-zero exit code is a failure whatever the output -
     result = 0;
 
-    switch (1)
+    if (rc != 0)
     {
-      case rc != 0:
-      {
-        (" %sFAIL%s\n" % [COL_RED,COL_RESET]).print();
-      }
-
-      case Blank != output:
-      {
-        (" %sWARN%s\n" % [COL_YELLOW,COL_RESET]).print();
-        result = 2;
-      }
-
-      default:
-      {
-        (" %sPASS%s\n" % [COL_GREEN,COL_RESET]).print();
-        result = 1;
-      }
+      (" %sFAIL%s\n" % [COL_RED,COL_RESET]).print();
+    }
+    else if (Blank != output)
+    {
+      (" %sWARN%s\n" % [COL_YELLOW,COL_RESET]).print();
+      result = 2;
+    }
+    else
+    {
+      (" %sPASS%s\n" % [COL_GREEN,COL_RESET]).print();
+      result = 1;
     }
 
     if (Blank != output)
