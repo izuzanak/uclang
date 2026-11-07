@@ -1,0 +1,120 @@
+
+import sys;
+import mqtt;
+
+class Main
+{
+  public Main() {}
+
+  public on_event(a_client)
+  {/*{{{*/
+  }/*}}}*/
+
+  static check_props(a_name,a_input,a_expected)
+  {/*{{{*/
+    result = MqttClient.properties(a_input);
+
+    if (result != a_expected)
+    {
+      new Exception("properties(%s): expected %d bytes, got %d bytes" % [a_name,a_expected.length(),result.length()]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20600 + (Sys.getpid() % 1000);
+
+    // - no event loop is run: the client only connects in process#2 -
+    client = new MqttClient("127.0.0.1",port,"ucl-test",new Delegate(obj,"on_event",1),[1,2,3]);
+
+    if ($client != "MqttClient")
+    {
+      new Exception("$client: expected MqttClient, got %s" % $client).throw();
+    }
+
+    if (client.get_fd() <= 0)
+    {
+      new Exception("get_fd: expected positive fd, got %d" % client.get_fd()).throw();
+    }
+
+    // - fresh client waits for the connect result -
+    if (client.events() != (Poll.POLLIN | Poll.POLLOUT | Poll.POLLPRI))
+    {
+      new Exception("events: expected POLLIN|POLLOUT|POLLPRI, got %d" % client.events()).throw();
+    }
+
+    if (client.get_fds() != [client.get_fd(),client.events()])
+    {
+      new Exception("get_fds: expected [fd,events], got %s" % $client.get_fds()).throw();
+    }
+
+    // - user data is stored by reference -
+    if (client.user_data() != [1,2,3])
+    {
+      new Exception("user_data: expected [1,2,3], got %s" % $client.user_data()).throw();
+    }
+
+    client.user_data() = "changed";
+    if (client.user_data() != "changed")
+    {
+      new Exception("user_data after assignment: expected changed, got %s" % $client.user_data()).throw();
+    }
+
+    // - configuration methods return the client -
+    if ($client.connect_properties("") != "MqttClient")
+    {
+      new Exception("connect_properties: expected MqttClient return").throw();
+    }
+
+    if ($client.authentication("test","secret") != "MqttClient")
+    {
+      new Exception("authentication: expected MqttClient return").throw();
+    }
+
+    if ($client.will("will/topic","gone","",1,0) != "MqttClient")
+    {
+      new Exception("will: expected MqttClient return").throw();
+    }
+
+    // - disconnect and pingreq without a connection are no-ops -
+    if ($client.pingreq() != "MqttClient")
+    {
+      new Exception("pingreq: expected MqttClient return").throw();
+    }
+
+    // - qos 0 publish without a connection is dropped, packet id 0 -
+    if (client.publish("some/topic","payload","",0,0) != 0)
+    {
+      new Exception("publish qos 0 before connect: expected packet id 0").throw();
+    }
+
+    // - qos 1 publish without a connection is queued, packet id allocated -
+    if (client.publish("some/topic","payload","",1,0) < 1)
+    {
+      new Exception("publish qos 1 before connect: expected positive packet id").throw();
+    }
+
+    if ($client.disconnect() != "MqttClient")
+    {
+      new Exception("disconnect: expected MqttClient return").throw();
+    }
+
+    client = 0;
+
+    // - property encoding (mqtt v5 section 2.2.2) -
+    check_props("empty",[],"");
+    check_props("byte",[MqttClient.PROP_PAYLOAD_FORMAT_INDICATOR,1],"\x01\x01");
+    check_props("two byte",[MqttClient.PROP_TOPIC_ALIAS,258],"\x23\x01\x02");
+    check_props("four byte",[MqttClient.PROP_MESSAGE_EXPIRY_INTERVAL,0x01020304],"\x02\x01\x02\x03\x04");
+    check_props("variable byte",[MqttClient.PROP_SUBSCRIPTION_IDENTIFIER,300],"\x0b\xac\x02");
+    check_props("string",[MqttClient.PROP_CONTENT_TYPE,"ab"],"\x03\x00\x02ab");
+    check_props("binary",[MqttClient.PROP_CORRELATION_DATA,"xy"],"\x09\x00\x02xy");
+    check_props("pair",[MqttClient.PROP_USER_PROPERTY,["k","v"]],"\x26\x00\x01k\x00\x01v");
+    check_props("combined",
+      [MqttClient.PROP_PAYLOAD_FORMAT_INDICATOR,0,
+       MqttClient.PROP_CONTENT_TYPE,"",
+       MqttClient.PROP_USER_PROPERTY,["key","value"]],
+      "\x01\x00\x03\x00\x00\x26\x00\x03key\x00\x05value");
+  }/*}}}*/
+}

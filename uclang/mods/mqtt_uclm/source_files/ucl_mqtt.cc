@@ -207,6 +207,13 @@ int mqtt_conn_s::recv_msg(interpreter_thread_s &it)
             ssl_events = POLLOUT;
             break;
           default:
+
+            // - deliver already received data, error is reported by next call -
+            if (in_msg.used != msg_old_used)
+            {
+              break;
+            }
+
             return -1;
         }
 
@@ -706,6 +713,9 @@ int mqtt_conn_s::process_packet(interpreter_thread_s &it,uint8_t pkt_type,uint32
 
       // - release packet id -
       packet_ids.insert(packet_id);
+
+      // - release data locations -
+      publish->release_locations(it);
 
       // - reset publish data -
       publish->clear();

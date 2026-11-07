@@ -1,0 +1,566 @@
+
+// - stub mqtt v5 broker used by the mqtt module test components -
+// - usage: uclang 00_broker_helper.ucl <port> [<cert_file> <key_file>] -
+// - prints "ready" on stdout once it listens -
+// - accepts any client; a user name must be "test" with password "secret" -
+// - connack carries receive maximum 10 and user property ["broker","stub"] -
+// - exits after a publish to "$SYS/quit" once all connections are gone -
+
+import sys;
+import containers;
+import tcp;
+
+class Conn
+{
+  public m_buf;
+  public m_subs;
+  public m_will;
+  public m_next_pid;
+
+  public Conn()
+  {/*{{{*/
+    m_buf = "";
+    m_subs = new Dict();
+    m_will = new Blank();
+    m_next_pid = 1;
+  }/*}}}*/
+}
+
+class Main
+{
+  static server;
+  static conns = new Dict();
+  static retained = new Dict();
+  static use_tls = 0;
+  static quit = 0;
+
+  public Main() {}
+
+  // - byte helpers -
+  static byte_at(a_str,a_off)
+  {/*{{{*/
+    return new Integer(a_str[a_off]) & 0xff;
+  }/*}}}*/
+
+  static u8(a_value)
+  {/*{{{*/
+    return $new Char(a_value & 0xff);
+  }/*}}}*/
+
+  static u16(a_value)
+  {/*{{{*/
+    return u8(a_value >> 8) + u8(a_value);
+  }/*}}}*/
+
+  static dec_u16(a_str,a_off)
+  {/*{{{*/
+    return (byte_at(a_str,a_off) << 8) | byte_at(a_str,a_off + 1);
+  }/*}}}*/
+
+  static substr(a_str,a_off,a_len)
+  {/*{{{*/
+    if (a_len <= 0)
+    {
+      return "";
+    }
+
+    return a_str[a_off:a_off + a_len - 1:];
+  }/*}}}*/
+
+  static tail_from(a_str,a_off)
+  {/*{{{*/
+    return substr(a_str,a_off,a_str.length() - a_off);
+  }/*}}}*/
+
+  static mqtt_str(a_str)
+  {/*{{{*/
+    return u16(a_str.length()) + a_str;
+  }/*}}}*/
+
+  // - variable byte integer: returns [value,next_offset], Blank when incomplete -
+  static dec_vbi(a_str,a_off)
+  {/*{{{*/
+    value = 0;
+    mult = 1;
+    off = a_off;
+    cnt = 0;
+
+    while (cnt < 4)
+    {
+      if (off >= a_str.length())
+      {
+        return new Blank();
+      }
+
+      b = byte_at(a_str,off);
+      value += (b & 0x7f) * mult;
+      mult *= 128;
+      off += 1;
+      cnt += 1;
+
+      if ((b & 0x80) == 0)
+      {
+        return [value,off];
+      }
+    }
+
+    return new Blank();
+  }/*}}}*/
+
+  static enc_vbi(a_value)
+  {/*{{{*/
+    out = "";
+    value = a_value;
+    cont = 1;
+
+    while (cont)
+    {
+      b = value % 128;
+      value = value / 128;
+
+      if (value > 0)
+      {
+        b |= 0x80;
+      }
+      else
+      {
+        cont = 0;
+      }
+
+      out += u8(b);
+    }
+
+    return out;
+  }/*}}}*/
+
+  // - topic filter match with + and # wildcards -
+  static topic_match(a_filter,a_topic)
+  {/*{{{*/
+    if (a_filter == a_topic)
+    {
+      return 1;
+    }
+
+    fp = a_filter.split("/");
+    tp = a_topic.split("/");
+
+    i = 0;
+    while (i < fp.length())
+    {
+      if (fp[i] == "#")
+      {
+        return 1;
+      }
+
+      if (i >= tp.length())
+      {
+        return 0;
+      }
+
+      if (fp[i] != "+" and fp[i] != tp[i])
+      {
+        return 0;
+      }
+
+      i += 1;
+    }
+
+    return i == tp.length() ? 1 : 0;
+  }/*}}}*/
+
+  static send_packet(a_idx,a_header,a_body)
+  {/*{{{*/
+    server.message(a_idx,u8(a_header) + enc_vbi(a_body.length()) + a_body);
+  }/*}}}*/
+
+  static send_publish(a_idx,a_conn,a_topic,a_payload,a_props,a_qos,a_retain)
+  {/*{{{*/
+    body = mqtt_str(a_topic);
+
+    if (a_qos > 0)
+    {
+      body += u16(a_conn.m_next_pid);
+      a_conn.m_next_pid = (a_conn.m_next_pid % 65535) + 1;
+    }
+
+    body += enc_vbi(a_props.length()) + a_props + a_payload;
+
+    send_packet(a_idx,0x30 | (a_qos << 1) | a_retain,body);
+  }/*}}}*/
+
+  // - deliver a message to every matching subscription -
+  static deliver(a_topic,a_payload,a_props,a_qos)
+  {/*{{{*/
+    for (idx <- conns)
+    {
+      conn = conns[idx];
+
+      for (filter <- conn.m_subs)
+      {
+        if (topic_match(filter,a_topic))
+        {
+          sub_qos = conn.m_subs[filter];
+          send_publish(idx,conn,a_topic,a_payload,a_props,a_qos < sub_qos ? a_qos : sub_qos,0);
+        }
+      }
+    }
+  }/*}}}*/
+
+  // - process one control packet -
+  static handle(a_idx,a_conn,a_type,a_body)
+  {/*{{{*/
+    ptype = a_type >> 4;
+    flags = a_type & 0x0f;
+
+    if (ptype == 1)
+    {
+      // - CONNECT -
+      name_len = dec_u16(a_body,0);
+      name = substr(a_body,2,name_len);
+      off = 2 + name_len;
+      level = byte_at(a_body,off);
+      off += 1;
+      cflags = byte_at(a_body,off);
+      off += 1;
+
+      // - keep alive -
+      off += 2;
+
+      // - connect properties -
+      r = dec_vbi(a_body,off);
+      off = r[1] + r[0];
+
+      // - client identifier -
+      cid_len = dec_u16(a_body,off);
+      off += 2 + cid_len;
+
+      will = new Blank();
+      if (cflags & 0x04)
+      {
+        r = dec_vbi(a_body,off);
+        will_props = substr(a_body,r[1],r[0]);
+        off = r[1] + r[0];
+
+        wt_len = dec_u16(a_body,off);
+        will_topic = substr(a_body,off + 2,wt_len);
+        off += 2 + wt_len;
+
+        wp_len = dec_u16(a_body,off);
+        will_payload = substr(a_body,off + 2,wp_len);
+        off += 2 + wp_len;
+
+        will = [will_topic,will_payload,will_props,(cflags >> 3) & 3,(cflags >> 5) & 1];
+      }
+
+      user = new Blank();
+      pass = "";
+
+      if (cflags & 0x80)
+      {
+        u_len = dec_u16(a_body,off);
+        user = substr(a_body,off + 2,u_len);
+        off += 2 + u_len;
+      }
+
+      if (cflags & 0x40)
+      {
+        p_len = dec_u16(a_body,off);
+        pass = substr(a_body,off + 2,p_len);
+        off += 2 + p_len;
+      }
+
+      reason = 0x00;
+      if (name != "MQTT" or level != 5)
+      {
+        // - unsupported protocol version -
+        reason = 0x84;
+      }
+      else if (Blank != user and (user != "test" or pass != "secret"))
+      {
+        // - bad user name or password -
+        reason = 0x86;
+      }
+
+      if (reason == 0x00)
+      {
+        a_conn.m_will = will;
+
+        // - receive maximum 10, user property ["broker","stub"] -
+        props = u8(0x21) + u16(10) + u8(0x26) + mqtt_str("broker") + mqtt_str("stub");
+        send_packet(a_idx,0x20,u8(0x00) + u8(0x00) + enc_vbi(props.length()) + props);
+      }
+      else
+      {
+        // - the client closes the connection after a rejected connack -
+        send_packet(a_idx,0x20,u8(0x00) + u8(reason) + enc_vbi(0));
+      }
+    }
+    else if (ptype == 3)
+    {
+      // - PUBLISH -
+      qos = (flags >> 1) & 3;
+      retain = flags & 1;
+
+      t_len = dec_u16(a_body,0);
+      topic = substr(a_body,2,t_len);
+      off = 2 + t_len;
+
+      pid = 0;
+      if (qos > 0)
+      {
+        pid = dec_u16(a_body,off);
+        off += 2;
+      }
+
+      r = dec_vbi(a_body,off);
+      props = substr(a_body,r[1],r[0]);
+      off = r[1] + r[0];
+
+      payload = tail_from(a_body,off);
+
+      if (qos == 1)
+      {
+        // - PUBACK -
+        send_packet(a_idx,0x40,u16(pid));
+      }
+      else if (qos == 2)
+      {
+        // - PUBREC -
+        send_packet(a_idx,0x50,u16(pid));
+      }
+
+      if (topic == "$SYS/quit")
+      {
+        quit = 1;
+      }
+      else
+      {
+        if (retain)
+        {
+          if (payload.length() == 0)
+          {
+            retained.remove_if_key(topic);
+          }
+          else
+          {
+            retained[topic] = [payload,props,qos];
+          }
+        }
+
+        deliver(topic,payload,props,qos);
+      }
+    }
+    else if (ptype == 5)
+    {
+      // - PUBREC of a delivered qos 2 message: PUBREL -
+      send_packet(a_idx,0x62,u16(dec_u16(a_body,0)));
+    }
+    else if (ptype == 6)
+    {
+      // - PUBREL: PUBCOMP -
+      send_packet(a_idx,0x70,u16(dec_u16(a_body,0)));
+    }
+    else if (ptype == 8)
+    {
+      // - SUBSCRIBE -
+      pid = dec_u16(a_body,0);
+      r = dec_vbi(a_body,2);
+      off = r[1] + r[0];
+
+      codes = "";
+      filters = [];
+
+      while (off < a_body.length())
+      {
+        f_len = dec_u16(a_body,off);
+        filter = substr(a_body,off + 2,f_len);
+        off += 2 + f_len;
+
+        opts = byte_at(a_body,off);
+        off += 1;
+
+        a_conn.m_subs[filter] = opts & 3;
+        codes += u8(opts & 3);
+        filters.push(filter);
+      }
+
+      // - SUBACK with granted qos per filter -
+      send_packet(a_idx,0x90,u16(pid) + enc_vbi(0) + codes);
+
+      // - retained messages matching the new filters -
+      for (filter <- filters)
+      {
+        sub_qos = a_conn.m_subs[filter];
+
+        for (topic <- retained)
+        {
+          if (topic_match(filter,topic))
+          {
+            msg = retained[topic];
+            send_publish(a_idx,a_conn,topic,msg[0],msg[1],msg[2] < sub_qos ? msg[2] : sub_qos,1);
+          }
+        }
+      }
+    }
+    else if (ptype == 10)
+    {
+      // - UNSUBSCRIBE -
+      pid = dec_u16(a_body,0);
+      r = dec_vbi(a_body,2);
+      off = r[1] + r[0];
+
+      codes = "";
+
+      while (off < a_body.length())
+      {
+        f_len = dec_u16(a_body,off);
+        filter = substr(a_body,off + 2,f_len);
+        off += 2 + f_len;
+
+        a_conn.m_subs.remove_if_key(filter);
+        codes += u8(0x00);
+      }
+
+      // - UNSUBACK -
+      send_packet(a_idx,0xb0,u16(pid) + enc_vbi(0) + codes);
+    }
+    else if (ptype == 12)
+    {
+      // - PINGREQ: PINGRESP -
+      send_packet(a_idx,0xd0,"");
+    }
+    else if (ptype == 14)
+    {
+      // - DISCONNECT: graceful, no will -
+      a_conn.m_will = new Blank();
+      server.drop(a_idx);
+    }
+    else if (ptype == 4 or ptype == 7)
+    {
+      // - PUBACK, PUBCOMP of delivered messages -
+    }
+    else
+    {
+      new Exception("broker: unexpected packet type %d" % ptype).throw();
+    }
+  }/*}}}*/
+
+  // - server callbacks -
+  public on_event(a_server,a_idx,a_event)
+  {/*{{{*/
+    if (a_event == TcpServer.EVENT_ACCEPTED)
+    {
+      conns[a_idx] = new Conn();
+
+      if (use_tls)
+      {
+        a_server.connection(a_idx).init_ssl();
+      }
+    }
+    else if (a_event == TcpServer.EVENT_DROPPED)
+    {
+      conn = conns[a_idx];
+      conns.remove_key(a_idx);
+
+      // - will of a connection that was not closed by DISCONNECT -
+      if (Blank != conn.m_will)
+      {
+        w = conn.m_will;
+
+        if (w[4])
+        {
+          retained[w[0]] = [w[1],w[2],w[3]];
+        }
+
+        deliver(w[0],w[1],w[2],w[3]);
+      }
+    }
+  }/*}}}*/
+
+  public on_message(a_server,a_idx,a_msg)
+  {/*{{{*/
+    conn = conns[a_idx];
+    conn.m_buf += a_msg;
+
+    cont = 1;
+    while (cont)
+    {
+      cont = 0;
+      buf = conn.m_buf;
+
+      if (buf.length() >= 2)
+      {
+        r = dec_vbi(buf,1);
+
+        if (Blank != r and buf.length() >= r[1] + r[0])
+        {
+          body = substr(buf,r[1],r[0]);
+          conn.m_buf = tail_from(buf,r[1] + r[0]);
+
+          handle(a_idx,conn,byte_at(buf,0),body);
+          cont = 1;
+        }
+      }
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    port = new Integer(argv[1]);
+
+    obj = new Main();
+
+    server = new TcpServer("127.0.0.1",port,
+      new Delegate(obj,"on_event",3),
+      new Delegate(obj,"on_message",3),new Blank());
+
+    if (argv.length() >= 4)
+    {
+      use_tls = 1;
+      server.init_ssl(argv[2],argv[3]);
+    }
+
+    // - signal readiness through the pipe -
+    "ready\n".print();
+    File.stdout.flush();
+
+    // - serve for at most 60 seconds -
+    rounds = 0;
+    quit_rounds = 0;
+
+    while (rounds < 1200)
+    {
+      rounds += 1;
+
+      if (quit)
+      {
+        quit_rounds += 1;
+
+        if (conns.length() == 0 or quit_rounds > 40)
+        {
+          break;
+        }
+      }
+
+      fds = server.get_fds();
+      res = new Poll(fds).poll(50);
+      if (Blank == res)
+      {
+        continue;
+      }
+
+      idx = 0;
+      for (evt <- res)
+      {
+        if (evt != 0)
+        {
+          server.process(fds[idx*2],evt);
+        }
+
+        idx += 1;
+      }
+    }
+
+    server = 0;
+  }/*}}}*/
+}

@@ -1,0 +1,137 @@
+
+import sys;
+import mqtt;
+
+class Main
+{
+  static events = [];
+
+  // - lambdas passed to expect_throw see static members only -
+  static obj;
+  static port;
+  static client;
+
+  public Main() {}
+
+  public on_event(a_client)
+  {/*{{{*/
+    events.push(a_client.event());
+  }/*}}}*/
+
+  static expect_throw(a_name,a_call)
+  {/*{{{*/
+    caught = 0;
+    try {
+      a_call.call([]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+
+    if (caught != 1)
+    {
+      new Exception("%s did not throw" % a_name).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20600 + (Sys.getpid() % 1000);
+
+    // - a lambda must reach a static, not a local: sanity check of the pattern -
+    expect_throw("sanity",:(){ new Exception("expected").throw(); });
+
+    // - event delegate must take one parameter -
+    expect_throw("delegate with 2 parameters",:(){
+      new MqttClient("127.0.0.1",port,"ucl-test",new Delegate(obj,"on_event",2),new Blank());
+    });
+
+    // - invalid ip address -
+    expect_throw("invalid ip address",:(){
+      new MqttClient("!!!invalid!!!",port,"ucl-test",new Delegate(obj,"on_event",1),new Blank());
+    });
+
+    client = new MqttClient("127.0.0.1",port,"ucl-test",new Delegate(obj,"on_event",1),new Blank());
+
+    // - process with a foreign fd -
+    expect_throw("process with wrong fd",:(){ client.process(99999,1); });
+
+    // - event accessors before any event -
+    expect_throw("event before any event",:(){ client.event(); });
+    expect_throw("packet_id before any event",:(){ client.packet_id(); });
+    expect_throw("topic before any event",:(){ client.topic(); });
+    expect_throw("payload before any event",:(){ client.payload(); });
+    expect_throw("retained before any event",:(){ client.retained(); });
+    expect_throw("properties before any event",:(){ client.properties(); });
+
+    // - publish and will argument checks -
+    expect_throw("publish with empty topic",:(){ client.publish("","payload","",0,0); });
+    expect_throw("publish with qos 3",:(){ client.publish("topic","payload","",3,0); });
+    expect_throw("publish with qos -1",:(){ client.publish("topic","payload","",-1,0); });
+    expect_throw("will with empty topic",:(){ client.will("","payload","",0,0); });
+    expect_throw("will with qos 3",:(){ client.will("topic","payload","",3,0); });
+
+    // - subscribe and unsubscribe argument checks -
+    expect_throw("subscribe with no filters",:(){ client.subscribe([],"",0); });
+    expect_throw("subscribe with integer filter",:(){ client.subscribe([1],"",0); });
+    expect_throw("subscribe with empty filter",:(){ client.subscribe([""],"",0); });
+    expect_throw("subscribe with max qos 3",:(){ client.subscribe(["topic"],"",3); });
+    expect_throw("unsubscribe with no filters",:(){ client.unsubscribe([],""); });
+    expect_throw("unsubscribe with integer filter",:(){ client.unsubscribe([2],""); });
+    expect_throw("unsubscribe with empty filter",:(){ client.unsubscribe([""],""); });
+
+    // - property encoding checks -
+    expect_throw("properties with odd array",:(){ MqttClient.properties([1]); });
+    expect_throw("properties with unused code",:(){ MqttClient.properties([0x04,1]); });
+    expect_throw("properties with code out of range",:(){ MqttClient.properties([0xff,1]); });
+    expect_throw("properties with negative code",:(){ MqttClient.properties([-1,1]); });
+    expect_throw("properties with string for byte",:(){ MqttClient.properties([MqttClient.PROP_PAYLOAD_FORMAT_INDICATOR,"x"]); });
+    expect_throw("properties with integer for string",:(){ MqttClient.properties([MqttClient.PROP_CONTENT_TYPE,1]); });
+    expect_throw("properties with string for pair",:(){ MqttClient.properties([MqttClient.PROP_USER_PROPERTY,"x"]); });
+    expect_throw("properties with short pair",:(){ MqttClient.properties([MqttClient.PROP_USER_PROPERTY,["a"]]); });
+    expect_throw("properties with integer pair",:(){ MqttClient.properties([MqttClient.PROP_USER_PROPERTY,[1,2]]); });
+
+    // - connection refused: nothing listens on the port -
+    rounds = 0;
+    while (rounds < 200 and events.length() < 1)
+    {
+      rounds += 1;
+
+      fds = client.get_fds();
+      if (fds.length() == 0)
+      {
+        break;
+      }
+
+      res = new Poll(fds).poll(50);
+      if (Blank == res)
+      {
+        continue;
+      }
+
+      if (res[0] != 0)
+      {
+        client.process(fds[0],res[0]);
+      }
+    }
+
+    if (events != [MqttClient.EVENT_ERROR])
+    {
+      new Exception("refused connection: expected [EVENT_ERROR], got %s" % $events).throw();
+    }
+
+    if (client.events() != 0)
+    {
+      new Exception("events after error: expected 0, got %d" % client.events()).throw();
+    }
+
+    if (client.get_fds() != [])
+    {
+      new Exception("get_fds after error: expected [], got %s" % $client.get_fds()).throw();
+    }
+
+    client = 0;
+  }/*}}}*/
+}

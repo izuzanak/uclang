@@ -1,0 +1,247 @@
+
+import sys;
+import mqtt;
+
+class Main
+{
+  // - per client logs keyed by user data "A", "B", "C", "D" -
+  static events_a = [];
+  static events_b = [];
+  static events_c = [];
+  static events_d = [];
+  static received_b = [];
+  static received_c = [];
+  static published_a = [];
+  static subscribed_b = 0;
+  static subscribed_c = 0;
+  static disconnected_b = 0;
+  static disconnected_c = 0;
+
+  public Main() {}
+
+  public on_event(a_client)
+  {/*{{{*/
+    ev = a_client.event();
+    who = a_client.user_data();
+
+    if (who == "A")
+    {
+      events_a.push(ev);
+
+      if (ev == MqttClient.EVENT_PUBLISHED)
+      {
+        published_a.push(a_client.packet_id());
+      }
+    }
+    else if (who == "B")
+    {
+      events_b.push(ev);
+
+      if (ev == MqttClient.EVENT_RECEIVED)
+      {
+        received_b.push([a_client.topic(),a_client.payload(),a_client.retained()]);
+      }
+      else if (ev == MqttClient.EVENT_SUBSCRIBED)
+      {
+        subscribed_b = 1;
+      }
+      else if (ev == MqttClient.EVENT_DISCONNECTED)
+      {
+        disconnected_b = 1;
+      }
+    }
+    else if (who == "C")
+    {
+      events_c.push(ev);
+
+      if (ev == MqttClient.EVENT_RECEIVED)
+      {
+        received_c.push([a_client.topic(),a_client.payload(),a_client.retained()]);
+      }
+      else if (ev == MqttClient.EVENT_SUBSCRIBED)
+      {
+        subscribed_c = 1;
+      }
+      else if (ev == MqttClient.EVENT_DISCONNECTED)
+      {
+        disconnected_c = 1;
+      }
+    }
+    else
+    {
+      events_d.push(ev);
+    }
+  }/*}}}*/
+
+  // - start the stub broker, returns its pipe -
+  static start_broker(a_argv,a_port)
+  {/*{{{*/
+    parts = a_argv[0].split("/");
+    parts.last() = "00_broker_helper.ucl";
+    helper = parts.to_string("/");
+
+    pipe = new Pipe("uclang %s %d" % [helper,a_port],"r");
+
+    // - wait for the ready line, five seconds at most -
+    res = new Poll([pipe.get_fd(),Poll.POLLIN]).poll(5000);
+    if (Blank == res or pipe.readln() != "ready")
+    {
+      new Exception("broker did not start").throw();
+    }
+
+    return pipe;
+  }/*}}}*/
+
+  // - drive all clients until the condition holds -
+  static pump(a_clients,a_condition,a_name)
+  {/*{{{*/
+    rounds = 0;
+    while (rounds < 200 and a_condition.call([]) != 1)
+    {
+      rounds += 1;
+
+      fds = [];
+      active = [];
+      for (client <- a_clients)
+      {
+        c_fds = client.get_fds();
+        if (c_fds.length() != 0)
+        {
+          fds.push(c_fds[0]);
+          fds.push(c_fds[1]);
+          active.push(client);
+        }
+      }
+
+      if (active.length() == 0)
+      {
+        break;
+      }
+
+      res = new Poll(fds).poll(50);
+      if (Blank == res)
+      {
+        continue;
+      }
+
+      idx = 0;
+      for (evt <- res)
+      {
+        if (evt != 0)
+        {
+          active[idx].process(fds[idx*2],evt);
+        }
+
+        idx += 1;
+      }
+    }
+
+    if (a_condition.call([]) != 1)
+    {
+      new Exception("timeout waiting for %s" % a_name).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20800 + (Sys.getpid() % 1000);
+
+    broker = start_broker(argv,port);
+
+    // - client a has a will, client b uses credentials -
+    client_a = new MqttClient("127.0.0.1",port,"client-a",new Delegate(obj,"on_event",1),"A");
+    client_a.will("w/last","gone","",1,0);
+
+    client_b = new MqttClient("127.0.0.1",port,"client-b",new Delegate(obj,"on_event",1),"B");
+    client_b.authentication("test","secret");
+
+    pump([client_a,client_b],:(){ return (events_a.length() >= 1 and events_b.length() >= 1) ? 1 : 0; },"connect a and b");
+
+    if (events_a != [MqttClient.EVENT_CONNECTED] or events_b != [MqttClient.EVENT_CONNECTED])
+    {
+      new Exception("connect: events a %s, events b %s" % [$events_a,$events_b]).throw();
+    }
+
+    // - wildcard subscriptions -
+    client_b.subscribe(["w/+","r/#"],"",1);
+    pump([client_a,client_b],:(){ return subscribed_b; },"subscribe b");
+
+    // - retained message, delivered live to b with retained 0 -
+    client_a.publish("r/state","on","",1,1);
+    pump([client_a,client_b],:(){ return received_b.length() >= 1 ? 1 : 0; },"retained publish");
+
+    if (received_b[0] != ["r/state","on",0])
+    {
+      new Exception("live delivery of retained publish: got %s" % $received_b[0]).throw();
+    }
+
+    // - a late subscriber gets the retained message with retained 1 -
+    client_c = new MqttClient("127.0.0.1",port,"client-c",new Delegate(obj,"on_event",1),"C");
+    pump([client_a,client_b,client_c],:(){ return events_c.length() >= 1 ? 1 : 0; },"connect c");
+
+    client_c.subscribe(["r/#"],"",0);
+    pump([client_a,client_b,client_c],:(){ return (subscribed_c and received_c.length() >= 1) ? 1 : 0; },"retained delivery to c");
+
+    if (received_c != [["r/state","on",1]])
+    {
+      new Exception("retained delivery: got %s" % $received_c).throw();
+    }
+
+    // - non-matching topic is not delivered, matching one follows it -
+    pid_other = client_a.publish("other/x","nomatch","",1,0);
+    pid_match = client_a.publish("w/x","hello","",1,0);
+    pump([client_a,client_b,client_c],:(){ return (published_a.length() >= 3 and received_b.length() >= 2) ? 1 : 0; },"wildcard delivery");
+
+    if (received_b[1] != ["w/x","hello",0])
+    {
+      new Exception("wildcard delivery: got %s" % $received_b).throw();
+    }
+
+    if (published_a.length() != 3 or published_a[1] != pid_other or published_a[2] != pid_match)
+    {
+      new Exception("publish acks: expected ids [..,%d,%d], got %s" % [pid_other,pid_match,$published_a]).throw();
+    }
+
+    if (received_c.length() != 1)
+    {
+      new Exception("c must not receive w/ topics, got %s" % $received_c).throw();
+    }
+
+    // - wrong credentials: connack with a failure reason, the client drops -
+    client_d = new MqttClient("127.0.0.1",port,"client-d",new Delegate(obj,"on_event",1),"D");
+    client_d.authentication("test","wrong");
+    pump([client_d],:(){ return events_d.length() >= 1 ? 1 : 0; },"rejected connect");
+
+    if (events_d != [MqttClient.EVENT_DROPPED])
+    {
+      new Exception("rejected connect: expected [EVENT_DROPPED], got %s" % $events_d).throw();
+    }
+
+    if (client_d.events() != 0 or client_d.get_fds() != [])
+    {
+      new Exception("rejected client still polls: events %d" % client_d.events()).throw();
+    }
+
+    client_d = 0;
+
+    // - a leaves without disconnect: the broker publishes its will -
+    client_a = 0;
+    pump([client_b,client_c],:(){ return received_b.length() >= 3 ? 1 : 0; },"will delivery");
+
+    if (received_b[2] != ["w/last","gone",0])
+    {
+      new Exception("will delivery: got %s" % $received_b[2]).throw();
+    }
+
+    // - graceful disconnects, broker is told to quit first -
+    client_b.publish("$SYS/quit","","",0,0);
+    client_b.disconnect();
+    client_c.disconnect();
+    pump([client_b,client_c],:(){ return (disconnected_b and disconnected_c) ? 1 : 0; },"disconnect b and c");
+
+    client_b = 0;
+    client_c = 0;
+    broker.close();
+  }/*}}}*/
+}

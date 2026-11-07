@@ -656,6 +656,14 @@ bool bic_mqtt_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stack_b
     return false;
   }
 
+  // - ERROR -
+  int nonblock_io = 1;
+  if (ioctl(cc_ptr->conn_fd,FIONBIO,&nonblock_io))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_SSL_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
   const SSL_METHOD *method = TLS_client_method();
 #else
@@ -803,7 +811,7 @@ static_method
       const mqtt_prop_descr_s *prop_descr;
 
       // - ERROR -
-      if (code >= c_packet_prop_cnt || (prop_descr = &g_mqtt_packet_props[code])->code != code)
+      if (code < 0 || code >= c_packet_prop_cnt || (prop_descr = &g_mqtt_packet_props[code])->code != code)
       {
         exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_INVALID_PROPERTY_CODE_VALUE,operands[c_source_pos_idx],(location_s *)it.blank_location);
         return false;
@@ -1240,8 +1248,9 @@ bool bic_mqtt_client_method_packet_id_0(interpreter_thread_s &it,unsigned stack_
   mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (!(cc_ptr->callback_event & (
-          c_mqtt_EVENT_PUBLISHED | c_mqtt_EVENT_SUBSCRIBED | c_mqtt_EVENT_UNSUBSCRIBED)))
+  if (cc_ptr->callback_event != c_mqtt_EVENT_PUBLISHED &&
+      cc_ptr->callback_event != c_mqtt_EVENT_SUBSCRIBED &&
+      cc_ptr->callback_event != c_mqtt_EVENT_UNSUBSCRIBED)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1261,7 +1270,7 @@ bool bic_mqtt_client_method_topic_0(interpreter_thread_s &it,unsigned stack_base
   mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (!(cc_ptr->callback_event & c_mqtt_EVENT_RECEIVED))
+  if (cc_ptr->callback_event != c_mqtt_EVENT_RECEIVED)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1282,7 +1291,7 @@ bool bic_mqtt_client_method_payload_0(interpreter_thread_s &it,unsigned stack_ba
   mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (!(cc_ptr->callback_event & c_mqtt_EVENT_RECEIVED))
+  if (cc_ptr->callback_event != c_mqtt_EVENT_RECEIVED)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1303,9 +1312,11 @@ bool bic_mqtt_client_method_properties_0(interpreter_thread_s &it,unsigned stack
   mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (!(cc_ptr->callback_event & (
-          c_mqtt_EVENT_CONNECTED | c_mqtt_EVENT_PUBLISHED | c_mqtt_EVENT_SUBSCRIBED |
-          c_mqtt_EVENT_UNSUBSCRIBED | c_mqtt_EVENT_RECEIVED)))
+  if (cc_ptr->callback_event != c_mqtt_EVENT_CONNECTED &&
+      cc_ptr->callback_event != c_mqtt_EVENT_PUBLISHED &&
+      cc_ptr->callback_event != c_mqtt_EVENT_SUBSCRIBED &&
+      cc_ptr->callback_event != c_mqtt_EVENT_UNSUBSCRIBED &&
+      cc_ptr->callback_event != c_mqtt_EVENT_RECEIVED)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;
@@ -1420,7 +1431,7 @@ bool bic_mqtt_client_method_retained_0(interpreter_thread_s &it,unsigned stack_b
   mqtt_conn_s *cc_ptr = (mqtt_conn_s *)dst_location->v_data_ptr;
 
   // - ERROR -
-  if (!(cc_ptr->callback_event & c_mqtt_EVENT_RECEIVED))
+  if (cc_ptr->callback_event != c_mqtt_EVENT_RECEIVED)
   {
     exception_s::throw_exception(it,module.error_base + c_error_MQTT_CLIENT_EVENT_PROPERTY_ACCESS_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
     return false;

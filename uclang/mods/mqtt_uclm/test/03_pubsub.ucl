@@ -1,0 +1,311 @@
+
+import sys;
+import mqtt;
+
+class Main
+{
+  // - client state recorded by the event callback -
+  static events = [];
+  static received = [];
+  static published = [];
+  static subscribed = [];
+  static unsubscribed = [];
+  static pings = 0;
+  static disconnected = 0;
+  static connack_props = new Blank();
+  static cb_errors = [];
+
+  public Main() {}
+
+  public on_event(a_client)
+  {/*{{{*/
+    ev = a_client.event();
+    events.push(ev);
+
+    if (ev == MqttClient.EVENT_CONNECTED)
+    {
+      connack_props = a_client.properties();
+
+      // - accessors of other events must throw -
+      caught = 0;
+      try { a_client.packet_id(); }
+      catch (e) { caught = 1; }
+      if (caught != 1)
+      {
+        cb_errors.push("packet_id on EVENT_CONNECTED did not throw");
+      }
+      caught = 0;
+      try { a_client.topic(); }
+      catch (e) { caught = 1; }
+      if (caught != 1)
+      {
+        cb_errors.push("topic on EVENT_CONNECTED did not throw");
+      }
+    }
+    else if (ev == MqttClient.EVENT_RECEIVED)
+    {
+      received.push([a_client.topic(),a_client.payload(),a_client.retained(),a_client.properties()]);
+
+      caught = 0;
+      try { a_client.packet_id(); }
+      catch (e) { caught = 1; }
+      if (caught != 1)
+      {
+        cb_errors.push("packet_id on EVENT_RECEIVED did not throw");
+      }
+    }
+    else if (ev == MqttClient.EVENT_PUBLISHED)
+    {
+      published.push(a_client.packet_id());
+
+      caught = 0;
+      try { a_client.payload(); }
+      catch (e) { caught = 1; }
+      if (caught != 1)
+      {
+        cb_errors.push("payload on EVENT_PUBLISHED did not throw");
+      }
+    }
+    else if (ev == MqttClient.EVENT_SUBSCRIBED)
+    {
+      subscribed.push(a_client.packet_id());
+    }
+    else if (ev == MqttClient.EVENT_UNSUBSCRIBED)
+    {
+      unsubscribed.push(a_client.packet_id());
+    }
+    else if (ev == MqttClient.EVENT_PINGRESP)
+    {
+      pings += 1;
+
+      caught = 0;
+      try { a_client.topic(); }
+      catch (e) { caught = 1; }
+      if (caught != 1)
+      {
+        cb_errors.push("topic on EVENT_PINGRESP did not throw");
+      }
+      caught = 0;
+      try { a_client.properties(); }
+      catch (e) { caught = 1; }
+      if (caught != 1)
+      {
+        cb_errors.push("properties on EVENT_PINGRESP did not throw");
+      }
+    }
+    else if (ev == MqttClient.EVENT_DISCONNECTED)
+    {
+      disconnected = 1;
+    }
+  }/*}}}*/
+
+  // - start the stub broker, returns its pipe -
+  static start_broker(a_argv,a_port)
+  {/*{{{*/
+    parts = a_argv[0].split("/");
+    parts.last() = "00_broker_helper.ucl";
+    helper = parts.to_string("/");
+
+    pipe = new Pipe("uclang %s %d" % [helper,a_port],"r");
+
+    // - wait for the ready line, five seconds at most -
+    res = new Poll([pipe.get_fd(),Poll.POLLIN]).poll(5000);
+    if (Blank == res or pipe.readln() != "ready")
+    {
+      new Exception("broker did not start").throw();
+    }
+
+    return pipe;
+  }/*}}}*/
+
+  // - drive the client until the condition holds -
+  static pump(a_client,a_condition,a_name)
+  {/*{{{*/
+    rounds = 0;
+    while (rounds < 200 and a_condition.call([]) != 1)
+    {
+      rounds += 1;
+
+      fds = a_client.get_fds();
+      if (fds.length() == 0)
+      {
+        break;
+      }
+
+      res = new Poll(fds).poll(50);
+      if (Blank == res)
+      {
+        continue;
+      }
+
+      if (res[0] != 0)
+      {
+        a_client.process(fds[0],res[0]);
+      }
+    }
+
+    if (a_condition.call([]) != 1)
+    {
+      new Exception("timeout waiting for %s, events %s" % [a_name,$events]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20700 + (Sys.getpid() % 1000);
+
+    broker = start_broker(argv,port);
+
+    client = new MqttClient("127.0.0.1",port,"ucl-test",new Delegate(obj,"on_event",1),new Blank());
+
+    // - connect properties -
+    props = MqttClient.properties([
+      MqttClient.PROP_SESSION_EXPIRY_INTERVAL,0,
+      MqttClient.PROP_RECEIVE_MAXIMUM,20]);
+    client.connect_properties(props);
+
+    // - qos 1 publish before the connection is sent after connack -
+    early_pid = client.publish("test/early","early","",1,0);
+    if (early_pid < 1)
+    {
+      new Exception("early publish: expected positive packet id, got %d" % early_pid).throw();
+    }
+
+    pump(client,:(){ return events.length() >= 1 ? 1 : 0; },"connect");
+
+    if (events[0] != MqttClient.EVENT_CONNECTED)
+    {
+      new Exception("first event: expected EVENT_CONNECTED, got %d" % events[0]).throw();
+    }
+
+    // - connack properties sent by the broker -
+    if (connack_props != [MqttClient.PROP_RECEIVE_MAXIMUM,10,MqttClient.PROP_USER_PROPERTY,["broker","stub"]])
+    {
+      new Exception("connack properties: got %s" % $connack_props).throw();
+    }
+
+    pump(client,:(){ return published.length() >= 1 ? 1 : 0; },"early publish ack");
+
+    if (published != [early_pid])
+    {
+      new Exception("early publish ack: expected [%d], got %s" % [early_pid,$published]).throw();
+    }
+
+    // - subscribe -
+    sub_pid = client.subscribe(["test/topic"],"",2);
+    if (sub_pid < 1)
+    {
+      new Exception("subscribe: expected positive packet id, got %d" % sub_pid).throw();
+    }
+
+    pump(client,:(){ return subscribed.length() >= 1 ? 1 : 0; },"suback");
+
+    if (subscribed != [sub_pid])
+    {
+      new Exception("suback: expected [%d], got %s" % [sub_pid,$subscribed]).throw();
+    }
+
+    // - qos 0 round trip -
+    if (client.publish("test/topic","payload0","",0,0) != 0)
+    {
+      new Exception("publish qos 0: expected packet id 0").throw();
+    }
+
+    pump(client,:(){ return received.length() >= 1 ? 1 : 0; },"qos 0 delivery");
+
+    if (received[0] != ["test/topic","payload0",0,[]])
+    {
+      new Exception("qos 0 delivery: got %s" % $received[0]).throw();
+    }
+
+    // - qos 1 round trip with properties -
+    pub_props = MqttClient.properties([
+      MqttClient.PROP_CONTENT_TYPE,"text/plain",
+      MqttClient.PROP_USER_PROPERTY,["k","v"]]);
+
+    pid1 = client.publish("test/topic","payload1",pub_props,1,0);
+    if (pid1 < 1)
+    {
+      new Exception("publish qos 1: expected positive packet id, got %d" % pid1).throw();
+    }
+
+    pump(client,:(){ return (received.length() >= 2 and published.length() >= 2) ? 1 : 0; },"qos 1 round trip");
+
+    if (received[1] != ["test/topic","payload1",0,[MqttClient.PROP_CONTENT_TYPE,"text/plain",MqttClient.PROP_USER_PROPERTY,["k","v"]]])
+    {
+      new Exception("qos 1 delivery: got %s" % $received[1]).throw();
+    }
+
+    if (published[1] != pid1)
+    {
+      new Exception("qos 1 ack: expected packet id %d, got %d" % [pid1,published[1]]).throw();
+    }
+
+    // - qos 2 round trip -
+    pid2 = client.publish("test/topic","payload2","",2,0);
+    if (pid2 < 1)
+    {
+      new Exception("publish qos 2: expected positive packet id, got %d" % pid2).throw();
+    }
+
+    pump(client,:(){ return (received.length() >= 3 and published.length() >= 3) ? 1 : 0; },"qos 2 round trip");
+
+    if (received[2] != ["test/topic","payload2",0,[]])
+    {
+      new Exception("qos 2 delivery: got %s" % $received[2]).throw();
+    }
+
+    if (published[2] != pid2)
+    {
+      new Exception("qos 2 ack: expected packet id %d, got %d" % [pid2,published[2]]).throw();
+    }
+
+    // - unsubscribe -
+    unsub_pid = client.unsubscribe(["test/topic"],"");
+    pump(client,:(){ return unsubscribed.length() >= 1 ? 1 : 0; },"unsuback");
+
+    if (unsubscribed != [unsub_pid])
+    {
+      new Exception("unsuback: expected [%d], got %s" % [unsub_pid,$unsubscribed]).throw();
+    }
+
+    // - no delivery after unsubscribe; the ping response bounds the wait -
+    client.publish("test/topic","silent","",0,0);
+    client.pingreq();
+    pump(client,:(){ return pings >= 1 ? 1 : 0; },"pingresp");
+
+    if (received.length() != 3)
+    {
+      new Exception("delivery after unsubscribe: got %s" % $received).throw();
+    }
+
+    // - graceful disconnect, the broker is told to quit first -
+    client.publish("$SYS/quit","","",0,0);
+    client.disconnect();
+    pump(client,:(){ return disconnected; },"disconnect");
+
+    if (events.last() != MqttClient.EVENT_DISCONNECTED)
+    {
+      new Exception("last event: expected EVENT_DISCONNECTED, got %d" % events.last()).throw();
+    }
+
+    if (client.events() != 0)
+    {
+      new Exception("events after disconnect: expected 0, got %d" % client.events()).throw();
+    }
+
+    if (client.get_fds() != [])
+    {
+      new Exception("get_fds after disconnect: expected [], got %s" % $client.get_fds()).throw();
+    }
+
+    client = 0;
+    broker.close();
+
+    if (cb_errors.length() != 0)
+    {
+      new Exception("callback checks: %s" % cb_errors.to_string(", ")).throw();
+    }
+  }/*}}}*/
+}
