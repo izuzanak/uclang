@@ -1,0 +1,274 @@
+
+import sys;
+import lang;
+import channel;
+
+class Main
+{
+  // - server state -
+  static srv_accepted = 0;
+  static srv_dropped = 0;
+  static srv_messages = [];
+
+  // - client state, filled by the client thread and read after join -
+  static cli_events = [];
+  static cli_messages = [];
+  static cli_error = "";
+
+  // - messages sent by the client over tls -
+  static to_send = ["hello","world","test123"];
+
+  public Main() {}
+
+  // - tls server callbacks, accepted connections are wrapped in tls by the server -
+  public srv_event(a_server,a_idx,a_event)
+  {/*{{{*/
+    if (a_event == ChannelServer.EVENT_ACCEPTED)
+    {
+      srv_accepted += 1;
+    }
+    else if (a_event == ChannelServer.EVENT_DROPPED)
+    {
+      srv_dropped += 1;
+    }
+  }/*}}}*/
+
+  public srv_message(a_server,a_idx,a_msg)
+  {/*{{{*/
+    srv_messages.push(a_msg);
+    a_server.message(a_idx,"ECHO:%s" % a_msg);
+  }/*}}}*/
+
+  // - client callbacks -
+  public cli_event(a_client,a_event)
+  {/*{{{*/
+    cli_events.push(a_event);
+
+    if (a_event == ChannelClient.EVENT_CONNECTED)
+    {
+      // - init_ssl from the connected callback, result is the client -
+      if ($a_client.init_ssl() != "ChannelClient")
+      {
+        cli_error = "client init_ssl: expected ChannelClient return";
+      }
+
+      // - second init_ssl must throw -
+      caught = 0;
+      try {
+        a_client.init_ssl();
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        cli_error = "client init_ssl twice did not throw";
+      }
+
+      // - all messages are queued before the tls handshake completes -
+      for (msg <- to_send)
+      {
+        a_client.message(msg);
+      }
+    }
+  }/*}}}*/
+
+  public cli_message(a_client,a_msg)
+  {/*{{{*/
+    cli_messages.push(a_msg);
+  }/*}}}*/
+
+  // - client thread: connect over tls, send messages, leave after all echoes -
+  static parallel run_client(a_obj,a_port)
+  {/*{{{*/
+    client = new ChannelClient("127.0.0.1",a_port,
+      new Delegate(a_obj,"cli_event",2),
+      new Delegate(a_obj,"cli_message",2),new Blank());
+
+    rounds = 0;
+    while (rounds < 200 and cli_messages.length() < to_send.length())
+    {
+      rounds += 1;
+
+      fds = client.get_fds();
+      if (fds.length() == 0)
+      {
+        // - no events requested: connection dropped or errored -
+        break;
+      }
+
+      poll = new Poll(fds);
+      res = poll.poll(50);
+      if (Blank == res)
+      {
+        continue;
+      }
+
+      if (res[0] != 0)
+      {
+        client.process(fds[0],res[0]);
+      }
+    }
+
+    if (cli_messages.length() < to_send.length() and cli_error == "")
+    {
+      cli_error = "client did not receive all echoes";
+    }
+
+    // - client object is released here, its socket is closed -
+  }/*}}}*/
+
+  // - server loop in the main thread -
+  static pump_server(a_server,a_condition)
+  {/*{{{*/
+    rounds = 0;
+    while (rounds < 200 and a_condition.call([]) != 1)
+    {
+      rounds += 1;
+
+      fds = a_server.get_fds();
+      poll = new Poll(fds);
+      res = poll.poll(50);
+      if (Blank == res)
+      {
+        continue;
+      }
+
+      idx = 0;
+      for (evt <- res)
+      {
+        if (evt != 0)
+        {
+          a_server.process(fds[idx*2],evt);
+        }
+
+        idx += 1;
+      }
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - ssl methods exist only when built with openssl, other builds skip -
+    ssl_available = 1;
+    try { Lang.cls("ChannelServer").method("init_ssl#2"); }
+    catch (e) { ssl_available = 0; }
+
+    if (ssl_available)
+    {
+      obj = new Main();
+      port = 20500 + (Sys.getpid() % 1000);
+
+      // - derive fixture paths from script path (argv[0]) -
+      parts = argv[0].split("/");
+      parts.last() = "test_localhost.cert";
+      cert_path = parts.to_string("/");
+      parts.last() = "test_localhost.key";
+      key_path = parts.to_string("/");
+
+      server = new ChannelServer("127.0.0.1",port,
+        new Delegate(obj,"srv_event",3),
+        new Delegate(obj,"srv_message",3),new Blank());
+
+      // - certificate file error -
+      caught = 0;
+      try {
+        server.init_ssl("/nonexistent/test.cert",key_path);
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        new Exception("init_ssl with missing certificate did not throw").throw();
+      }
+
+      // - private key file error -
+      caught = 0;
+      try {
+        server.init_ssl(cert_path,"/nonexistent/test.key");
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        new Exception("init_ssl with missing private key did not throw").throw();
+      }
+
+      // - successful init returns the server -
+      if ($server.init_ssl(cert_path,key_path) != "ChannelServer")
+      {
+        new Exception("init_ssl: expected ChannelServer return").throw();
+      }
+
+      // - second init_ssl must throw -
+      caught = 0;
+      try {
+        server.init_ssl(cert_path,key_path);
+      }
+      catch (e)
+      {
+        caught = 1;
+      }
+      if (caught != 1)
+      {
+        new Exception("server init_ssl twice did not throw").throw();
+      }
+
+      // - tls echo round trip with the client in its own thread -
+      thr = run_client(obj,port);
+
+      pump_server(server,:(){ return srv_dropped >= 1 ? 1 : 0; });
+
+      thr.join();
+
+      if (cli_error != "")
+      {
+        new Exception("client side: %s" % cli_error).throw();
+      }
+
+      if (srv_accepted != 1)
+      {
+        new Exception("srv_accepted: expected 1, got %d" % srv_accepted).throw();
+      }
+
+      if (srv_messages != to_send)
+      {
+        new Exception("srv_messages: expected %s, got %s" % [$to_send,$srv_messages]).throw();
+      }
+
+      expected = [];
+      for (msg <- to_send)
+      {
+        expected.push("ECHO:%s" % msg);
+      }
+
+      if (cli_messages != expected)
+      {
+        new Exception("cli_messages: expected %s, got %s" % [$expected,$cli_messages]).throw();
+      }
+
+      if (cli_events != [ChannelClient.EVENT_CONNECTED])
+      {
+        new Exception("cli_events: expected [EVENT_CONNECTED], got %s" % $cli_events).throw();
+      }
+
+      if (srv_dropped != 1)
+      {
+        new Exception("srv_dropped: expected 1, got %d" % srv_dropped).throw();
+      }
+
+      if (server.get_fds().length() != 2)
+      {
+        new Exception("server get_fds after drop: expected 2 elements, got %d" % server.get_fds().length()).throw();
+      }
+
+      server = 0;
+    }
+  }/*}}}*/
+}

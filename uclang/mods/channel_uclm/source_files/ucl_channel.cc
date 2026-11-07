@@ -120,6 +120,13 @@ bool channel_conn_s::recv_msg(interpreter_thread_s &it,location_s *dst_location,
             ssl_events = POLLOUT;
             break;
           default:
+
+            // - deliver already received data, error is reported by next call -
+            if (in_msg.used != msg_old_used)
+            {
+              break;
+            }
+
             return false;
         }
 

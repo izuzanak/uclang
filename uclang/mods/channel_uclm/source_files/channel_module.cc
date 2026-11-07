@@ -1522,6 +1522,14 @@ bool bic_channel_client_method_init_ssl_0(interpreter_thread_s &it,unsigned stac
     return false;
   }
 
+  // - ERROR -
+  int nonblock_io = 1;
+  if (ioctl(cc_ptr->conn_fd,FIONBIO,&nonblock_io))
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_CHANNEL_CLIENT_SSL_INIT_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
   const SSL_METHOD *method = TLS_client_method();
 #else
