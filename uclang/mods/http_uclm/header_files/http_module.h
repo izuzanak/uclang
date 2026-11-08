@@ -33,10 +33,12 @@ enum
   c_error_HTTP_CONN_NOT_SUSPENDED,
   c_error_HTTP_CONN_CANNOT_QUEUE_RESPONSE,
   c_error_HTTP_CONN_CANNOT_RETRIEVE_CLIENT_IP,
+  c_error_HTTP_CONN_NOT_TLS_CONNECTION,
   c_error_HTTP_RESP_CREATE_ERROR,
   c_error_HTTP_RESP_UNKNOWN_DATA_SOURCE_IDENTIFIER,
   c_error_HTTP_RESP_CANNOT_READ_SOURCE_FILE,
   c_error_HTTP_RESP_CANNOT_ADD_HEADER_FOOTER,
+  c_error_HTTP_RESP_CANNOT_SET_OPTIONS,
   c_error_HTTP_POST_PROC_BUFFER_TOO_SMALL,
   c_error_HTTP_POST_PROC_WRONG_CALLBACK_DELEGATE,
   c_error_HTTP_POST_PROC_CREATE_ERROR,
@@ -68,6 +70,7 @@ bool bic_http_server_method_get_fds_0(interpreter_thread_s &it,unsigned stack_ba
 bool bic_http_server_method_timeout_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_process_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_process_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_http_server_method_is_feature_supported_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_server_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 
@@ -91,6 +94,9 @@ bool bic_http_conn_method_user_data_0(interpreter_thread_s &it,unsigned stack_ba
 bool bic_http_conn_method_values_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_value_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_client_ip_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#ifdef UCL_WITH_GNUTLS
+bool bic_http_conn_method_client_cert_verified_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
 bool bic_http_conn_method_suspend_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_resume_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_conn_method_queue_response_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
@@ -117,6 +123,9 @@ bool bic_http_resp_method_HttpResp_1(interpreter_thread_s &it,unsigned stack_bas
 bool bic_http_resp_method_HttpResp_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_resp_method_add_header_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_resp_method_add_footer_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#if MHD_VERSION >= 0x00093701
+bool bic_http_resp_method_set_options_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+#endif
 bool bic_http_resp_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_http_resp_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

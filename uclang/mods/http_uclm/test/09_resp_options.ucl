@@ -1,0 +1,154 @@
+
+import sys;
+import lang;
+import http;
+import curl;
+
+class Main
+{
+  // - shared state -
+  static server_ready = 0;
+  static stop_flag = 0;
+  static server_error = "";
+
+  // - HttpResp.RF_SEND_KEEP_ALIVE_HEADER, read by the server thread -
+  static keep_alive_flag = new Blank();
+
+  public Main() {}
+
+  // - HttpServer connection callback -
+  public on_conn(a_conn)
+  {/*{{{*/
+    if (a_conn.get_type() == HttpConn.TYPE_HEAD)
+    {
+      resp = new HttpResp(HttpResp.FROM_STRING,"body");
+      url = a_conn.url();
+
+      if (url == "/ka")
+      {
+        // - set_options returns the response, so calls can be chained -
+        ret = resp.set_options(keep_alive_flag);
+        if ($ret != "HttpResp")
+        {
+          server_error = "set_options return: expected HttpResp, got " + $ret;
+        }
+      }
+      else if (url == "/close")
+      {
+        resp.add_header("Connection","close");
+      }
+
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+  }/*}}}*/
+
+  static parallel run_server(a_obj,a_port)
+  {/*{{{*/
+    server = new HttpServer(0,a_port,
+      new Delegate(a_obj,"on_conn",1),[]);
+
+    server_ready = 1;
+
+    while (stop_flag == 0)
+    {
+      poll = new Poll(server.get_fds());
+      poll.ready(50);
+      server.process();
+    }
+
+    server.stop();
+  }/*}}}*/
+
+  // - stop the server thread before throwing, otherwise the process never exits -
+  static private fail(a_msg)
+  {/*{{{*/
+    stop_flag = 1;
+    new Exception(a_msg).throw();
+  }/*}}}*/
+
+  // - HEAD request: curl returns the raw response headers as data -
+  static private head(a_base,a_path)
+  {/*{{{*/
+    result = Curl.HEAD(a_base + a_path);
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      fail("%s: code expected CURLE_OK, got %d" % [a_path,result.code()]);
+    }
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 200)
+    {
+      fail("%s: INFO_RESPONSE_CODE expected 200, got %d" %
+        [a_path,result.info(CurlResult.INFO_RESPONSE_CODE)]);
+    }
+
+    return result.data();
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - set_options#1 and RF_SEND_KEEP_ALIVE_HEADER exist only for newer libmicrohttpd, older builds skip this test -
+    set_options_available = 1;
+    try { Lang.cls("HttpResp").method("set_options#1"); }
+    catch (e) { set_options_available = 0; }
+
+    try { keep_alive_flag = Lang.cls("HttpResp").variable("RF_SEND_KEEP_ALIVE_HEADER").value(); }
+    catch (e) {}
+
+    if (set_options_available and Blank != keep_alive_flag)
+    {
+      run(argv);
+    }
+  }/*}}}*/
+
+  static private run(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20200 + (Sys.getpid() % 1000);
+    base = "http://127.0.0.1:%d" % port;
+
+    thr = run_server(obj,port);
+
+    // - wait for server thread to bind -
+    attempts = 0;
+    while (server_ready == 0 and attempts < 1000)
+    {
+      Sys.sleep(10);
+      attempts += 1;
+    }
+    if (server_ready == 0)
+    {
+      new Exception("server did not become ready").throw();
+    }
+
+    // - 1. default response: libmicrohttpd sends no Connection header to HTTP/1.1 clients
+    //   (String.get_idx returns Blank when the substring is absent) -
+    headers = head(base,"/plain");
+    if (Blank != headers.get_idx("Connection:"))
+    {
+      fail("plain: unexpected Connection header in:\n%s" % headers);
+    }
+
+    // - 2. RF_SEND_KEEP_ALIVE_HEADER: explicit Connection: Keep-Alive header -
+    headers = head(base,"/ka");
+    if (Blank == headers.get_idx("Connection: Keep-Alive"))
+    {
+      fail("ka: expected \"Connection: Keep-Alive\" in:\n%s" % headers);
+    }
+
+    // - 3. add_header("Connection","close") still works -
+    headers = head(base,"/close");
+    if (Blank == headers.get_idx("Connection: close"))
+    {
+      fail("close: expected \"Connection: close\" in:\n%s" % headers);
+    }
+
+    // - signal server to stop and wait -
+    stop_flag = 1;
+    thr.join();
+
+    if (server_error != "")
+    {
+      new Exception(server_error).throw();
+    }
+  }/*}}}*/
+}

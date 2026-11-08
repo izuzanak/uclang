@@ -19,6 +19,10 @@ include "script_parser.h"
 #include <sys/stat.h>
 #endif
 
+#ifdef UCL_WITH_GNUTLS
+#include <gnutls/gnutls.h>
+#endif
+
 #include <microhttpd.h>
 
 #if MHD_VERSION >= 0x00097002

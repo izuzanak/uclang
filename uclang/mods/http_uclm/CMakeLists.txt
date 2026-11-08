@@ -25,6 +25,11 @@ if(NOT LIBMICROHTTPD_FOUND)
   endif()
 endif()
 
+# - gnutls is optional -
+if(PKG_CONFIG_FOUND)
+  pkg_search_module(GNUTLS "gnutls >= 3.0.0")
+endif()
+
 if(OS_WINDOWS)
   set(WSOCK32_LIBS
     wsock32
@@ -35,12 +40,25 @@ if(LIBMICROHTTPD_FOUND)
   set(CONF_DO_BUILD TRUE)
   set(CONF_HEADER_DIRS
     "${LIB_BASE}/header_files")
-  set(CONF_INCLUDE_DIRS
-    ${LIBMICROHTTPD_INCLUDE_DIRS})
-  set(CONF_COMP_DEFS)
-  set(CONF_LINK_LIBS
-    base_ucll
-    ${LIBMICROHTTPD_LIBRARIES}
-    ${WSOCK32_LIBS})
+  if(GNUTLS_FOUND)
+    set(CONF_INCLUDE_DIRS
+      ${LIBMICROHTTPD_INCLUDE_DIRS}
+      ${GNUTLS_INCLUDE_DIRS})
+    set(CONF_COMP_DEFS
+      "-DUCL_WITH_GNUTLS")
+    set(CONF_LINK_LIBS
+      base_ucll
+      ${LIBMICROHTTPD_LIBRARIES}
+      ${GNUTLS_LIBRARIES}
+      ${WSOCK32_LIBS})
+  else()
+    set(CONF_INCLUDE_DIRS
+      ${LIBMICROHTTPD_INCLUDE_DIRS})
+    set(CONF_COMP_DEFS)
+    set(CONF_LINK_LIBS
+      base_ucll
+      ${LIBMICROHTTPD_LIBRARIES}
+      ${WSOCK32_LIBS})
+  endif()
 endif()
 

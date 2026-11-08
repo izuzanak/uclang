@@ -1,5 +1,6 @@
 
 import sys;
+import lang;
 import http;
 
 class Main
@@ -29,7 +30,55 @@ class Main
       idx += 1;
     }
 
-    // - HttpServer OPTION_* constants (6) -
+    // - HttpServer FEATURE_* constants (13) -
+    feature_consts = [
+      HttpServer.FEATURE_MESSAGES,
+      HttpServer.FEATURE_TLS,
+      HttpServer.FEATURE_HTTPS_CERT_CALLBACK,
+      HttpServer.FEATURE_IPv6,
+      HttpServer.FEATURE_IPv6_ONLY,
+      HttpServer.FEATURE_POLL,
+      HttpServer.FEATURE_EPOLL,
+      HttpServer.FEATURE_SHUTDOWN_LISTEN_SOCKET,
+      HttpServer.FEATURE_SOCKETPAIR,
+      HttpServer.FEATURE_TCP_FASTOPEN,
+      HttpServer.FEATURE_BASIC_AUTH,
+      HttpServer.FEATURE_DIGEST_AUTH,
+      HttpServer.FEATURE_POSTPROCESSOR,
+    ];
+
+    if (feature_consts.length() != 13)
+    {
+      new Exception("FEATURE constants: expected 13, got %d" % feature_consts.length()).throw();
+    }
+
+    idx = 0;
+    while (idx < feature_consts.length())
+    {
+      if (type feature_consts[idx] != type Integer)
+      {
+        new Exception("FEATURE constant %d: expected Integer type" % idx).throw();
+      }
+      idx += 1;
+    }
+
+    if (HttpServer.FEATURE_TLS != 2)
+    {
+      new Exception("FEATURE_TLS: expected 2, got %d" % HttpServer.FEATURE_TLS).throw();
+    }
+
+    // - is_feature_supported returns Integer 0 or 1 -
+    tls = HttpServer.is_feature_supported(HttpServer.FEATURE_TLS);
+    if (tls != 0 and tls != 1)
+    {
+      new Exception("is_feature_supported(FEATURE_TLS): expected 0 or 1, got %s" % $tls).throw();
+    }
+    if (HttpServer.is_feature_supported(HttpServer.FEATURE_MESSAGES) != 1)
+    {
+      new Exception("is_feature_supported(FEATURE_MESSAGES): expected 1").throw();
+    }
+
+    // - HttpServer OPTION_* constants (8) -
     opt_consts = [
       HttpServer.OPTION_SOCK_ADDR,
       HttpServer.OPTION_HTTPS_MEM_KEY,
@@ -37,11 +86,13 @@ class Main
       HttpServer.OPTION_CONNECTION_LIMIT,
       HttpServer.OPTION_CONNECTION_TIMEOUT,
       HttpServer.OPTION_PER_IP_CONNECTION_LIMIT,
+      HttpServer.OPTION_HTTPS_MEM_TRUST,
+      HttpServer.OPTION_HTTPS_PRIORITIES,
     ];
 
-    if (opt_consts.length() != 6)
+    if (opt_consts.length() != 8)
     {
-      new Exception("OPTION constants: expected 6, got %d" % opt_consts.length()).throw();
+      new Exception("OPTION constants: expected 8, got %d" % opt_consts.length()).throw();
     }
 
     idx = 0;
@@ -235,6 +286,40 @@ class Main
     {
       new Exception("HTTP_NOT_FOUND: expected 404, got %d" % HttpResp.HTTP_NOT_FOUND).throw();
     }
+    // - HttpResp RF_* constants depend on the libmicrohttpd version, older builds skip their checks -
+    rf_names = [
+      "RF_NONE",
+      "RF_HTTP_1_0_COMPATIBLE_STRICT",
+      "RF_HTTP_1_0_SERVER",
+      "RF_INSANITY_HEADER_CONTENT_LENGTH",
+      "RF_SEND_KEEP_ALIVE_HEADER",
+      "RF_HEAD_ONLY_RESPONSE",
+    ];
+
+    resp_cls = Lang.cls("HttpResp");
+    for (rf_name <- rf_names)
+    {
+      rf_value = new Blank();
+      try { rf_value = resp_cls.variable(rf_name).value(); }
+      catch (e) {}
+
+      if (Blank != rf_value)
+      {
+        if (type rf_value != type Integer)
+        {
+          new Exception("%s: expected Integer type" % rf_name).throw();
+        }
+        if (rf_name == "RF_NONE" and rf_value != 0)
+        {
+          new Exception("RF_NONE: expected 0, got %d" % rf_value).throw();
+        }
+        if (rf_name == "RF_SEND_KEEP_ALIVE_HEADER" and rf_value != 8)
+        {
+          new Exception("RF_SEND_KEEP_ALIVE_HEADER: expected 8, got %d" % rf_value).throw();
+        }
+      }
+    }
+
     if (HttpResp.HTTP_INTERNAL_SERVER_ERROR != 500)
     {
       new Exception("HTTP_INTERNAL_SERVER_ERROR: expected 500, got %d" % HttpResp.HTTP_INTERNAL_SERVER_ERROR).throw();

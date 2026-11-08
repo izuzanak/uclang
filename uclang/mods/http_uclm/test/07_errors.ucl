@@ -1,5 +1,6 @@
 
 import sys;
+import lang;
 import http;
 
 class Main
@@ -81,6 +82,32 @@ class Main
       new Exception("HttpServer(HTTPS_MEM_KEY = Integer): expected throw").throw();
     }
 
+    // - HttpServer with non-String value for HTTPS_MEM_TRUST throws -
+    caught = 0;
+    try
+    {
+      new HttpServer(0,port,new Delegate(obj,"cb_one",1),
+        [HttpServer.OPTION_HTTPS_MEM_TRUST,42]);
+    }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("HttpServer(HTTPS_MEM_TRUST = Integer): expected throw").throw();
+    }
+
+    // - HttpServer with non-String value for HTTPS_PRIORITIES throws -
+    caught = 0;
+    try
+    {
+      new HttpServer(0,port,new Delegate(obj,"cb_one",1),
+        [HttpServer.OPTION_HTTPS_PRIORITIES,42]);
+    }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("HttpServer(HTTPS_PRIORITIES = Integer): expected throw").throw();
+    }
+
     // - operating on a stopped server throws HTTP_SERVER_WAS_STOPPED -
     server = new HttpServer(0,port,new Delegate(obj,"cb_one",1),[]);
     server.stop();
@@ -130,6 +157,49 @@ class Main
     if (caught != 1)
     {
       new Exception("HttpResp(FROM_FILE, missing): expected throw").throw();
+    }
+
+    // - set_options#1 and RF_HEAD_ONLY_RESPONSE exist only for newer libmicrohttpd, older builds skip their checks -
+    set_options_available = 1;
+    try { Lang.cls("HttpResp").method("set_options#1"); }
+    catch (e) { set_options_available = 0; }
+
+    head_only = new Blank();
+    try { head_only = Lang.cls("HttpResp").variable("RF_HEAD_ONLY_RESPONSE").value(); }
+    catch (e) {}
+
+    if (set_options_available)
+    {
+      // - HttpResp.set_options with String value throws -
+      resp = new HttpResp(HttpResp.FROM_STRING,"body");
+      caught = 0;
+      try { resp.set_options("keep-alive"); }
+      catch (e) { caught = 1; }
+      if (caught != 1)
+      {
+        new Exception("set_options(String): expected throw").throw();
+      }
+
+      // - RF_HEAD_ONLY_RESPONSE is refused on a response with a body -
+      if (Blank != head_only)
+      {
+        caught = 0;
+        try { resp.set_options(head_only); }
+        catch (e) { caught = 1; }
+        if (caught != 1)
+        {
+          new Exception("set_options(RF_HEAD_ONLY_RESPONSE) with body: expected throw").throw();
+        }
+      }
+    }
+
+    // - HttpServer.is_feature_supported with String value throws -
+    caught = 0;
+    try { HttpServer.is_feature_supported("tls"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("is_feature_supported(String): expected throw").throw();
     }
 
     // - HttpResp with unknown source identifier throws

@@ -20,7 +20,7 @@ EXPORT built_in_module_s module =
   http_classes,          // Classes
 
   0,                     // Error base index
-  21,                    // Error count
+  23,                    // Error count
   http_error_strings,    // Error strings
 
   http_initialize,       // Initialize function
@@ -52,10 +52,12 @@ const char *http_error_strings[] =
   "error_HTTP_CONN_NOT_SUSPENDED",
   "error_HTTP_CONN_CANNOT_QUEUE_RESPONSE",
   "error_HTTP_CONN_CANNOT_RETRIEVE_CLIENT_IP",
+  "error_HTTP_CONN_NOT_TLS_CONNECTION",
   "error_HTTP_RESP_CREATE_ERROR",
   "error_HTTP_RESP_UNKNOWN_DATA_SOURCE_IDENTIFIER",
   "error_HTTP_RESP_CANNOT_READ_SOURCE_FILE",
   "error_HTTP_RESP_CANNOT_ADD_HEADER_FOOTER",
+  "error_HTTP_RESP_CANNOT_SET_OPTIONS",
   "error_HTTP_POST_PROC_BUFFER_TOO_SMALL",
   "error_HTTP_POST_PROC_WRONG_CALLBACK_DELEGATE",
   "error_HTTP_POST_PROC_CREATE_ERROR",
@@ -196,6 +198,13 @@ bool http_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"\nCannot retrieve client IP of HTTP connection\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
+  case c_error_HTTP_CONN_NOT_TLS_CONNECTION:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nHTTP connection is not a TLS connection\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
   case c_error_HTTP_RESP_CREATE_ERROR:
     fprintf(stderr," ---------------------------------------- \n");
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
@@ -222,6 +231,13 @@ bool http_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot add header or footer to response\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_HTTP_RESP_CANNOT_SET_OPTIONS:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot set response options\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_HTTP_POST_PROC_BUFFER_TOO_SMALL:
@@ -264,12 +280,12 @@ built_in_class_s http_server_class =
 {/*{{{*/
   "HttpServer",
   c_modifier_public | c_modifier_final,
-  9, http_server_methods,
-  3 + 5
+  10, http_server_methods,
+  3 + 7
 #ifdef ENABLE_RM_CLASS_SOCKET
   + 1
 #endif
-  , http_server_variables,
+  + 13, http_server_variables,
   bic_http_server_consts,
   bic_http_server_init,
   bic_http_server_clear,
@@ -324,6 +340,11 @@ built_in_method_s http_server_methods[] =
     bic_http_server_method_process_1
   },
   {
+    "is_feature_supported#1",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_http_server_method_is_feature_supported_1
+  },
+  {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_http_server_method_to_string_0
@@ -352,6 +373,23 @@ built_in_variable_s http_server_variables[] =
   { "OPTION_CONNECTION_LIMIT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPTION_CONNECTION_TIMEOUT", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPTION_PER_IP_CONNECTION_LIMIT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPTION_HTTPS_MEM_TRUST", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPTION_HTTPS_PRIORITIES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - http server feature constants -
+  { "FEATURE_MESSAGES", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_TLS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_HTTPS_CERT_CALLBACK", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_IPv6", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_IPv6_ONLY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_POLL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_EPOLL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_SHUTDOWN_LISTEN_SOCKET", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_SOCKETPAIR", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_TCP_FASTOPEN", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_BASIC_AUTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_DIGEST_AUTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "FEATURE_POSTPROCESSOR", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
 };/*}}}*/
 
@@ -376,12 +414,12 @@ void bic_http_server_consts(location_array_s &const_locations)
 
   // - insert http server option constants -
   {
-    const_locations.push_blanks(5
+    const_locations.push_blanks(7
 #ifdef ENABLE_RM_CLASS_SOCKET
   + 1
 #endif
     );
-    location_s *cv_ptr = const_locations.data + (const_locations.used - (5
+    location_s *cv_ptr = const_locations.data + (const_locations.used - (7
 #ifdef ENABLE_RM_CLASS_SOCKET
   + 1
 #endif
@@ -401,6 +439,34 @@ void bic_http_server_consts(location_array_s &const_locations)
     CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_CONNECTION_LIMIT);
     CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_CONNECTION_TIMEOUT);
     CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_PER_IP_CONNECTION_LIMIT);
+    CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_HTTPS_MEM_TRUST);
+    CREATE_HTTP_SERVER_OPTION_BIC_STATIC(MHD_OPTION_HTTPS_PRIORITIES);
+  }
+
+  // - insert http server feature constants -
+  {
+    const_locations.push_blanks(13);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 13);
+
+#define CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_MESSAGES);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_TLS);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_HTTPS_CERT_CALLBACK);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_IPv6);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_IPv6_ONLY);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_POLL);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_EPOLL);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_SHUTDOWN_LISTEN_SOCKET);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_SOCKETPAIR);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_TCP_FASTOPEN);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_BASIC_AUTH);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_DIGEST_AUTH);
+    CREATE_HTTP_SERVER_FEATURE_BIC_STATIC(MHD_FEATURE_POSTPROCESSOR);
   }
 
 }/*}}}*/
@@ -499,6 +565,8 @@ method HttpServer
 #endif
       case MHD_OPTION_HTTPS_MEM_KEY:
       case MHD_OPTION_HTTPS_MEM_CERT:
+      case MHD_OPTION_HTTPS_MEM_TRUST:
+      case MHD_OPTION_HTTPS_PRIORITIES:
         {
           location_s *value_loc = it.get_location_value(ptr[1]);
 
@@ -854,6 +922,24 @@ method process
   return true;
 }/*}}}*/
 
+bool bic_http_server_method_is_feature_supported_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+feature:retrieve_integer
+>
+class c_bi_class_http_server
+method is_feature_supported
+static_method
+; @end
+
+  long long int result = MHD_is_feature_supported((MHD_FEATURE)feature) == MHD_YES ? 1 : 0;
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
 bool bic_http_server_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   BIC_TO_STRING_WITHOUT_DEST(
@@ -877,7 +963,11 @@ built_in_class_s http_conn_class =
 {/*{{{*/
   "HttpConn",
   c_modifier_public | c_modifier_final,
-  22, http_conn_methods,
+  22
+#ifdef UCL_WITH_GNUTLS
+  + 1
+#endif
+  , http_conn_methods,
   8 + 5 + 3, http_conn_variables,
   bic_http_conn_consts,
   bic_http_conn_init,
@@ -952,6 +1042,13 @@ built_in_method_s http_conn_methods[] =
     c_modifier_public | c_modifier_final,
     bic_http_conn_method_client_ip_0
   },
+#ifdef UCL_WITH_GNUTLS
+  {
+    "client_cert_verified#0",
+    c_modifier_public | c_modifier_final,
+    bic_http_conn_method_client_cert_verified_0
+  },
+#endif
   {
     "suspend#0",
     c_modifier_public | c_modifier_final,
@@ -1346,6 +1443,41 @@ bool bic_http_conn_method_client_ip_0(interpreter_thread_s &it,unsigned stack_ba
   return true;
 }/*}}}*/
 
+#ifdef UCL_WITH_GNUTLS
+bool bic_http_conn_method_client_cert_verified_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  // - retrieve connection pointer -
+  http_conn_s *conn_ptr = (http_conn_s *)dst_location->v_data_ptr;
+
+  const union MHD_ConnectionInfo *info;
+  info = MHD_get_connection_info(conn_ptr->connection_ptr,MHD_CONNECTION_INFO_GNUTLS_SESSION);
+
+  // - ERROR -
+  if (info == nullptr || info->tls_session == nullptr)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_CONN_NOT_TLS_CONNECTION,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  gnutls_session_t session = (gnutls_session_t)info->tls_session;
+
+  // - verify client certificate against trust store (OPTION_HTTPS_MEM_TRUST) -
+  long long int result = 0;
+
+  unsigned int status;
+  if (gnutls_certificate_verify_peers2(session,&status) == GNUTLS_E_SUCCESS && status == 0)
+  {
+    result = 1;
+  }
+
+  BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+#endif
+
 bool bic_http_conn_method_suspend_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/
   location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
@@ -1670,8 +1802,28 @@ built_in_class_s http_resp_class =
 {/*{{{*/
   "HttpResp",
   c_modifier_public | c_modifier_final,
-  7, http_resp_methods,
-  2 + 50, http_resp_variables,
+  7
+#if MHD_VERSION >= 0x00093701
+  + 1
+#endif
+  , http_resp_methods,
+  2 + 50
+#if MHD_VERSION >= 0x00093701
+  + 2
+#endif
+#if MHD_VERSION >= 0x00096000
+  + 1
+#endif
+#if MHD_VERSION >= 0x00096702
+  + 1
+#endif
+#if MHD_VERSION >= 0x00097310
+  + 1
+#endif
+#if MHD_VERSION >= 0x00097701
+  + 1
+#endif
+  , http_resp_variables,
   bic_http_resp_consts,
   bic_http_resp_init,
   bic_http_resp_clear,
@@ -1715,6 +1867,13 @@ built_in_method_s http_resp_methods[] =
     c_modifier_public | c_modifier_final,
     bic_http_resp_method_add_footer_2
   },
+#if MHD_VERSION >= 0x00093701
+  {
+    "set_options#1",
+    c_modifier_public | c_modifier_final,
+    bic_http_resp_method_set_options_1
+  },
+#endif
   {
     "to_string#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
@@ -1785,6 +1944,24 @@ built_in_variable_s http_resp_variables[] =
   { "HTTP_INSUFFICIENT_STORAGE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_BANDWIDTH_LIMIT_EXCEEDED", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "HTTP_NOT_EXTENDED", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+  // - response flag constants -
+#if MHD_VERSION >= 0x00093701
+  { "RF_NONE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "RF_HTTP_1_0_COMPATIBLE_STRICT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
+#if MHD_VERSION >= 0x00096000
+  { "RF_HTTP_1_0_SERVER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
+#if MHD_VERSION >= 0x00096702
+  { "RF_INSANITY_HEADER_CONTENT_LENGTH", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
+#if MHD_VERSION >= 0x00097310
+  { "RF_SEND_KEEP_ALIVE_HEADER", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
+#if MHD_VERSION >= 0x00097701
+  { "RF_HEAD_ONLY_RESPONSE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
 };/*}}}*/
 
 void bic_http_resp_consts(location_array_s &const_locations)
@@ -1872,6 +2049,69 @@ void bic_http_resp_consts(location_array_s &const_locations)
     CREATE_HTTP_RESP_RESPONSE_BIC_STATIC(MHD_HTTP_NOT_EXTENDED);
   }
 
+
+#if MHD_VERSION >= 0x00093701
+  // - insert http resp response flag constants -
+  {
+    const_locations.push_blanks(2
+#if MHD_VERSION >= 0x00096000
+  + 1
+#endif
+#if MHD_VERSION >= 0x00096702
+  + 1
+#endif
+#if MHD_VERSION >= 0x00097310
+  + 1
+#endif
+#if MHD_VERSION >= 0x00097701
+  + 1
+#endif
+    );
+    location_s *cv_ptr = const_locations.data + (const_locations.used - (2
+#if MHD_VERSION >= 0x00096000
+  + 1
+#endif
+#if MHD_VERSION >= 0x00096702
+  + 1
+#endif
+#if MHD_VERSION >= 0x00097310
+  + 1
+#endif
+#if MHD_VERSION >= 0x00097701
+  + 1
+#endif
+    ));
+
+#define CREATE_HTTP_RESP_FLAG_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_HTTP_RESP_FLAG_BIC_STATIC(MHD_RF_NONE);
+#if MHD_VERSION >= 0x00097308
+    CREATE_HTTP_RESP_FLAG_BIC_STATIC(MHD_RF_HTTP_1_0_COMPATIBLE_STRICT);
+#else
+    CREATE_HTTP_RESP_FLAG_BIC_STATIC(MHD_RF_HTTP_VERSION_1_0_ONLY);
+#endif
+#if MHD_VERSION >= 0x00096000
+#if MHD_VERSION >= 0x00097308
+    CREATE_HTTP_RESP_FLAG_BIC_STATIC(MHD_RF_HTTP_1_0_SERVER);
+#else
+    CREATE_HTTP_RESP_FLAG_BIC_STATIC(MHD_RF_HTTP_VERSION_1_0_RESPONSE);
+#endif
+#endif
+#if MHD_VERSION >= 0x00096702
+    CREATE_HTTP_RESP_FLAG_BIC_STATIC(MHD_RF_INSANITY_HEADER_CONTENT_LENGTH);
+#endif
+#if MHD_VERSION >= 0x00097310
+    CREATE_HTTP_RESP_FLAG_BIC_STATIC(MHD_RF_SEND_KEEP_ALIVE_HEADER);
+#endif
+#if MHD_VERSION >= 0x00097701
+    CREATE_HTTP_RESP_FLAG_BIC_STATIC(MHD_RF_HEAD_ONLY_RESPONSE);
+#endif
+  }
+#endif
 }/*}}}*/
 
 void bic_http_resp_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -2078,6 +2318,31 @@ method add_footer
 
   return true;
 }/*}}}*/
+
+#if MHD_VERSION >= 0x00093701
+bool bic_http_resp_method_set_options_1(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+@begin ucl_params
+<
+flags:retrieve_integer
+>
+method set_options
+; @end
+
+  MHD_Response *resp_ptr = (MHD_Response *)dst_location->v_data_ptr;
+
+  // - ERROR -
+  if (MHD_set_response_options(resp_ptr,(MHD_ResponseFlags)flags,MHD_RO_END) == MHD_NO)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_HTTP_RESP_CANNOT_SET_OPTIONS,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  BIC_SET_RESULT_DESTINATION();
+
+  return true;
+}/*}}}*/
+#endif
 
 bool bic_http_resp_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
 {/*{{{*/

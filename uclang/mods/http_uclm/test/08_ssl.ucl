@@ -1,0 +1,322 @@
+
+import sys;
+import lang;
+import containers;
+import http;
+import curl;
+
+class Main
+{
+  // - shared state -
+  static server_ready = 0;
+  static server_error = "";
+  static stop_flag = 0;
+
+  // - does HttpConn expose client_cert_verified#0 (module built with gnutls) -
+  static cert_check_available = 0;
+
+  // - Curl.SSLVERSION_TLSv1_3 exists only for newer libcurl, older builds skip the tls 1.3 pinning -
+  static tls13 = new Blank();
+
+  // - per request records collected by the server: [url,client_cert_verified] -
+  static requests = [];
+  static conn_error = "";
+
+  // - results recorded by the CurlMulti completion callback -
+  static results = new Dict();
+
+  // - fixture pem text for the https server -
+  static cert_pem = "";
+  static key_pem = "";
+
+  public Main() {}
+
+  // - HttpServer connection callback -
+  public on_conn(a_conn)
+  {/*{{{*/
+    if (a_conn.get_type() == HttpConn.TYPE_GET)
+    {
+      verified = -1;
+      if (cert_check_available)
+      {
+        verified = a_conn.client_cert_verified();
+      }
+
+      requests.push([a_conn.url(),verified]);
+
+      resp = new HttpResp(HttpResp.FROM_STRING,"TLS:" + a_conn.url());
+      resp.add_header("Content-Type","text/plain");
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+  }/*}}}*/
+
+  // - plain http connection callback: client_cert_verified must throw -
+  public on_plain_conn(a_conn)
+  {/*{{{*/
+    caught = 0;
+    try { a_conn.client_cert_verified(); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      conn_error = "client_cert_verified on plain connection did not throw";
+    }
+
+    resp = new HttpResp(HttpResp.FROM_STRING,"plain");
+    a_conn.queue_response(HttpResp.HTTP_OK,resp);
+  }/*}}}*/
+
+  // - CurlMulti completion callback -
+  public on_done(a_result)
+  {/*{{{*/
+    results[$a_result.user_data()] = a_result;
+  }/*}}}*/
+
+  static parallel run_server(a_obj,a_port,a_plain_port)
+  {/*{{{*/
+    server = new Blank();
+    plain = new Blank();
+
+    try
+    {
+      // - https server: trust store enables client certificate request,
+      //   priorities pin tls 1.3 when the client can request it -
+      priorities = Blank != tls13 ? "NORMAL:-VERS-TLS-ALL:+VERS-TLS1.3" : "NORMAL";
+
+      server = new HttpServer(HttpServer.USE_SSL,a_port,
+        new Delegate(a_obj,"on_conn",1),[
+          HttpServer.OPTION_HTTPS_MEM_KEY,key_pem,
+          HttpServer.OPTION_HTTPS_MEM_CERT,cert_pem,
+          HttpServer.OPTION_HTTPS_MEM_TRUST,cert_pem,
+          HttpServer.OPTION_HTTPS_PRIORITIES,priorities,
+          HttpServer.OPTION_CONNECTION_TIMEOUT,30,
+        ]);
+
+      plain = new HttpServer(0,a_plain_port,
+        new Delegate(a_obj,"on_plain_conn",1),[]);
+    }
+    catch (e)
+    {
+      err_type = e.get_type();
+      server_error = "cannot create http servers: %s" % $err_type;
+    }
+
+    server_ready = 1;
+
+    if (server_error == "")
+    {
+      while (stop_flag == 0)
+      {
+        poll = new Poll(server.get_fds() + plain.get_fds());
+        poll.ready(50);
+        server.process();
+        plain.process();
+      }
+
+      server.stop();
+      plain.stop();
+    }
+  }/*}}}*/
+
+  // - drive CurlMulti until result for a_key arrives -
+  static private wait_result(a_cm,a_key)
+  {/*{{{*/
+    iterations = 0;
+    while (!results.has_key(a_key) and iterations < 400)
+    {
+      a_cm.process();
+
+      fds = a_cm.get_fds();
+      if (fds.length() > 0)
+      {
+        poll = new Poll(fds);
+        poll.ready(50);
+      }
+      else
+      {
+        Sys.sleep(10);
+      }
+
+      iterations += 1;
+    }
+
+    if (!results.has_key(a_key))
+    {
+      new Exception("%s: no result received" % a_key).throw();
+    }
+
+    return results[a_key];
+  }/*}}}*/
+
+  // - enqueue verified https GET (ca file, tls 1.3), optionally with client certificate -
+  static private tls_get(a_cm,a_base,a_path,a_key,a_cert_path,a_key_path,a_with_client_cert)
+  {/*{{{*/
+    req = a_cm[a_cm.GET(a_base + a_path,a_key)];
+    req.setopt(Curl.OPT_CAINFO,a_cert_path);
+    if (Blank != tls13)
+    {
+      req.setopt(Curl.OPT_SSLVERSION,tls13);
+    }
+
+    if (a_with_client_cert)
+    {
+      req.setopt(Curl.OPT_SSLCERT,a_cert_path);
+      req.setopt(Curl.OPT_SSLKEY,a_key_path);
+    }
+
+    return wait_result(a_cm,a_key);
+  }/*}}}*/
+
+  static private check_ok(a_result,a_key,a_body)
+  {/*{{{*/
+    if (a_result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("%s: code expected CURLE_OK, got %d" % [a_key,a_result.code()]).throw();
+    }
+    if (a_result.info(CurlResult.INFO_RESPONSE_CODE) != 200)
+    {
+      new Exception("%s: INFO_RESPONSE_CODE expected 200, got %d" %
+        [a_key,a_result.info(CurlResult.INFO_RESPONSE_CODE)]).throw();
+    }
+    if (a_result.data() != a_body)
+    {
+      new Exception("%s: data expected \"%s\", got \"%s\"" % [a_key,a_body,a_result.data()]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - https server needs libmicrohttpd built with tls, other builds skip this test -
+    if (HttpServer.is_feature_supported(HttpServer.FEATURE_TLS))
+    {
+      run(argv);
+    }
+  }/*}}}*/
+
+  static private run(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 20100 + (Sys.getpid() % 1000);
+    plain_port = port + 1000;
+    base = "https://127.0.0.1:%d" % port;
+
+    try { Lang.cls("HttpConn").method("client_cert_verified#0"); cert_check_available = 1; }
+    catch (e) { cert_check_available = 0; }
+
+    try { tls13 = Lang.cls("Curl").variable("SSLVERSION_TLSv1_3").value(); }
+    catch (e) {}
+
+    // - derive fixture paths from script path (argv[0]) -
+    parts = argv[0].split("/");
+    parts.last() = "test_localhost.cert";
+    cert_path = parts.to_string("/");
+    parts.last() = "test_localhost.key";
+    key_path = parts.to_string("/");
+
+    cert_pem = new File(cert_path,"r").read_close();
+    key_pem = new File(key_path,"r").read_close();
+
+    thr = run_server(obj,port,plain_port);
+
+    // - wait for server thread to bind -
+    attempts = 0;
+    while (server_ready == 0 and attempts < 1000)
+    {
+      Sys.sleep(10);
+      attempts += 1;
+    }
+    if (server_ready == 0)
+    {
+      new Exception("server did not become ready").throw();
+    }
+    if (server_error != "")
+    {
+      stop_flag = 1;
+      thr.join();
+      new Exception(server_error).throw();
+    }
+
+    cm = new CurlMulti(new Delegate(obj,"on_done",1));
+
+    // - 1. two requests through one CurlMulti reuse the keep-alive connection:
+    //   no "Connection: close" from the server, second transfer opens no new connection -
+    r1 = tls_get(cm,base,"/first","first",cert_path,key_path,1);
+    check_ok(r1,"first","TLS:/first");
+    if (r1.info(CurlResult.INFO_NUM_CONNECTS) != 1)
+    {
+      new Exception("first: INFO_NUM_CONNECTS expected 1, got %d" %
+        r1.info(CurlResult.INFO_NUM_CONNECTS)).throw();
+    }
+
+    r2 = tls_get(cm,base,"/second","second",cert_path,key_path,1);
+    check_ok(r2,"second","TLS:/second");
+    if (r2.info(CurlResult.INFO_NUM_CONNECTS) != 0)
+    {
+      new Exception("second: INFO_NUM_CONNECTS expected 0 (reused connection), got %d" %
+        r2.info(CurlResult.INFO_NUM_CONNECTS)).throw();
+    }
+
+    // - 2. request without client certificate is still served (certificate is requested, not required) -
+    r3 = tls_get(cm,base,"/nocert","nocert",cert_path,key_path,0);
+    check_ok(r3,"nocert","TLS:/nocert");
+
+    // - 3. tls 1.3 pinned by priorities: a tls 1.2 only client is rejected -
+    //   (CURL_SSLVERSION_MAX_TLSv1_2 = 6 << 16 combined with TLSv1_2 = 6) -
+    if (Blank != tls13)
+    {
+      req = cm[cm.GET(base + "/tls12","tls12")];
+      req.setopt(Curl.OPT_CAINFO,cert_path);
+      req.setopt(Curl.OPT_SSLVERSION,6 | (6 << 16));
+      r4 = wait_result(cm,"tls12");
+      if (r4.code() == CurlResult.CURLE_OK)
+      {
+        new Exception("tls12: expected handshake failure against tls 1.3 only server").throw();
+      }
+    }
+
+    // - 4. plain http request exercises client_cert_verified error path in on_plain_conn -
+    if (cert_check_available)
+    {
+      req = cm[cm.GET("http://127.0.0.1:%d/plain" % plain_port,"plain")];
+      r5 = wait_result(cm,"plain");
+      check_ok(r5,"plain","plain");
+    }
+
+    // - signal server to stop and wait -
+    stop_flag = 1;
+    thr.join();
+
+    if (conn_error != "")
+    {
+      new Exception(conn_error).throw();
+    }
+
+    // - server side checks -
+    if (requests.length() != 3)
+    {
+      new Exception("server requests: expected 3, got %d" % requests.length()).throw();
+    }
+    if (requests[0][0] != "/first" or requests[1][0] != "/second" or requests[2][0] != "/nocert")
+    {
+      new Exception("server requests: unexpected urls %s" % $requests).throw();
+    }
+
+    if (cert_check_available)
+    {
+      // - client certificate presented and trusted -> 1, no certificate -> 0 -
+      if (requests[0][1] != 1 or requests[1][1] != 1)
+      {
+        new Exception("client_cert_verified: expected 1 for requests with client certificate, got %s" %
+          $requests).throw();
+      }
+      if (requests[2][1] != 0)
+      {
+        new Exception("client_cert_verified: expected 0 without client certificate, got %d" %
+          requests[2][1]).throw();
+      }
+    }
+
+    // - release delegate -> obj reference cycle -
+    free cm;
+  }/*}}}*/
+}
