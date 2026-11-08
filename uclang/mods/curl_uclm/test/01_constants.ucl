@@ -1,4 +1,5 @@
 
+import lang;
 import curl;
 
 class Main
@@ -6,7 +7,7 @@ class Main
   static public main(argv)
   {/*{{{*/
 
-    // - Curl OPT_* constants (17) -
+    // - Curl OPT_* constants (21) -
     opt_consts = [
       Curl.OPT_TIMEOUT,
       Curl.OPT_TIMEOUT_MS,
@@ -25,11 +26,15 @@ class Main
       Curl.OPT_QUOTE,
       Curl.OPT_PREQUOTE,
       Curl.OPT_POSTQUOTE,
+      Curl.OPT_CAINFO,
+      Curl.OPT_SSLCERT,
+      Curl.OPT_SSLKEY,
+      Curl.OPT_SSLVERSION,
     ];
 
-    if (opt_consts.length() != 17)
+    if (opt_consts.length() != 21)
     {
-      new Exception("OPT constants: expected 17, got %d" % opt_consts.length()).throw();
+      new Exception("OPT constants: expected 21, got %d" % opt_consts.length()).throw();
     }
 
     idx = 0;
@@ -115,6 +120,37 @@ class Main
         new Exception("SSH_AUTH constant %d: expected Integer type" % idx).throw();
       }
       idx += 1;
+    }
+
+    // - OPT_TLS13_CIPHERS exists only for newer libcurl, older builds skip its checks -
+    tls13_ciphers = new Blank();
+    try { tls13_ciphers = Lang.cls("Curl").variable("OPT_TLS13_CIPHERS").value(); }
+    catch (e) {}
+
+    if (Blank != tls13_ciphers)
+    {
+      if (type tls13_ciphers != type Integer)
+      {
+        new Exception("OPT_TLS13_CIPHERS: expected Integer type").throw();
+      }
+    }
+
+    // - SSLVERSION_TLSv1_3 exists only for newer libcurl, older builds skip its checks -
+    tls13 = new Blank();
+    try { tls13 = Lang.cls("Curl").variable("SSLVERSION_TLSv1_3").value(); }
+    catch (e) {}
+
+    if (Blank != tls13)
+    {
+      // - Integer 7 (CURL_SSLVERSION_TLSv1_3) -
+      if (type tls13 != type Integer)
+      {
+        new Exception("SSLVERSION_TLSv1_3: expected Integer type").throw();
+      }
+      if (tls13 != 7)
+      {
+        new Exception("SSLVERSION_TLSv1_3: expected 7, got %d" % tls13).throw();
+      }
     }
 
     // - CurlResult INFO_* constants (43) -

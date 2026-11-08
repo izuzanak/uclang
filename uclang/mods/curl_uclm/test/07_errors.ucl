@@ -87,6 +87,24 @@ class Main
       new Exception("setopt(OPT_USERNAME, Integer): expected throw").throw();
     }
 
+    // - setopt OPT_CAINFO with Integer value throws -
+    caught = 0;
+    try { req.setopt(Curl.OPT_CAINFO,42); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("setopt(OPT_CAINFO, Integer): expected throw").throw();
+    }
+
+    // - setopt OPT_SSLVERSION with String value throws -
+    caught = 0;
+    try { req.setopt(Curl.OPT_SSLVERSION,"TLSv1.3"); }
+    catch (e) { caught = 1; }
+    if (caught != 1)
+    {
+      new Exception("setopt(OPT_SSLVERSION, String): expected throw").throw();
+    }
+
     // - first cancel succeeds and removes the slot from the multi handle -
     req.cancel();
 

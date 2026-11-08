@@ -1,0 +1,255 @@
+
+import sys;
+import lang;
+import containers;
+import http;
+import curl;
+
+class Main
+{
+  // - shared state -
+  static server_ready = 0;
+  static server_error = "";
+  static stop_flag = 0;
+
+  // - results recorded by the CurlMulti completion callback -
+  static results = new Dict();
+
+  // - fixture pem text for the https server -
+  static cert_pem = "";
+  static key_pem = "";
+
+  public Main() {}
+
+  // - HttpServer connection callback -
+  public on_conn(a_conn)
+  {/*{{{*/
+    if (a_conn.get_type() == HttpConn.TYPE_GET)
+    {
+      resp = new HttpResp(HttpResp.FROM_STRING,"Hello TLS");
+      resp.add_header("Content-Type","text/plain");
+      a_conn.queue_response(HttpResp.HTTP_OK,resp);
+    }
+  }/*}}}*/
+
+  // - CurlMulti completion callback -
+  public on_done(a_result)
+  {/*{{{*/
+    results[$a_result.user_data()] = a_result;
+  }/*}}}*/
+
+  static parallel run_server(a_obj,a_port)
+  {/*{{{*/
+    server = new Blank();
+
+    try
+    {
+      server = new HttpServer(HttpServer.USE_SSL,a_port,
+        new Delegate(a_obj,"on_conn",1),[
+          HttpServer.OPTION_HTTPS_MEM_KEY,key_pem,
+          HttpServer.OPTION_HTTPS_MEM_CERT,cert_pem,
+        ]);
+    }
+    catch (e)
+    {
+      err_type = e.get_type();
+      server_error = "cannot create https server: %s" % $err_type;
+    }
+
+    server_ready = 1;
+
+    if (server_error == "")
+    {
+      while (stop_flag == 0)
+      {
+        poll = new Poll(server.get_fds());
+        poll.ready(50);
+        server.process();
+      }
+
+      server.stop();
+    }
+  }/*}}}*/
+
+  // - drive CurlMulti until result for a_key arrives -
+  static private wait_result(a_cm,a_key)
+  {/*{{{*/
+    iterations = 0;
+    while (!results.has_key(a_key) and iterations < 400)
+    {
+      a_cm.process();
+
+      fds = a_cm.get_fds();
+      if (fds.length() > 0)
+      {
+        poll = new Poll(fds);
+        poll.ready(50);
+      }
+      else
+      {
+        Sys.sleep(10);
+      }
+
+      iterations += 1;
+    }
+
+    if (!results.has_key(a_key))
+    {
+      new Exception("%s: no result received" % a_key).throw();
+    }
+
+    return results[a_key];
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - https server needs libmicrohttpd built with tls, other builds skip this test -
+    if (HttpServer.is_feature_supported(HttpServer.FEATURE_TLS))
+    {
+      run(argv);
+    }
+  }/*}}}*/
+
+  static private run(argv)
+  {/*{{{*/
+    obj = new Main();
+    port = 19600 + (Sys.getpid() % 1000);
+    url = "https://127.0.0.1:%d/" % port;
+
+    // - derive fixture paths from script path (argv[0]) -
+    parts = argv[0].split("/");
+    parts.last() = "test_localhost.cert";
+    cert_path = parts.to_string("/");
+    parts.last() = "test_localhost.key";
+    key_path = parts.to_string("/");
+
+    cert_pem = new File(cert_path,"r").read_close();
+    key_pem = new File(key_path,"r").read_close();
+
+    thr = run_server(obj,port);
+
+    // - wait for server thread to bind -
+    attempts = 0;
+    while (server_ready == 0 and attempts < 1000)
+    {
+      Sys.sleep(10);
+      attempts += 1;
+    }
+    if (server_ready == 0)
+    {
+      new Exception("server did not become ready").throw();
+    }
+    if (server_error != "")
+    {
+      stop_flag = 1;
+      thr.join();
+      new Exception(server_error).throw();
+    }
+
+    cm = new CurlMulti(new Delegate(obj,"on_done",1));
+
+    // - tls 1.3 constants exist only for newer libcurl, older builds skip the tls 1.3 checks -
+    tls13 = new Blank();
+    try { tls13 = Lang.cls("Curl").variable("SSLVERSION_TLSv1_3").value(); }
+    catch (e) {}
+
+    tls13_ciphers = new Blank();
+    try { tls13_ciphers = Lang.cls("Curl").variable("OPT_TLS13_CIPHERS").value(); }
+    catch (e) {}
+
+    // - 1. ca file + tls 1.3 + peer/host verification: succeeds -
+    req = cm[cm.GET(url,"verified")];
+    req.setopt(Curl.OPT_CAINFO,cert_path);
+    if (Blank != tls13)
+    {
+      req.setopt(Curl.OPT_SSLVERSION,tls13);
+    }
+    req.setopt(Curl.OPT_SSL_VERIFYPEER,1);
+    req.setopt(Curl.OPT_SSL_VERIFYHOST,2);
+
+    result = wait_result(cm,"verified");
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("verified: code expected CURLE_OK, got %d" % result.code()).throw();
+    }
+    if (result.info(CurlResult.INFO_RESPONSE_CODE) != 200)
+    {
+      new Exception("verified: INFO_RESPONSE_CODE expected 200, got %d" %
+        result.info(CurlResult.INFO_RESPONSE_CODE)).throw();
+    }
+    if (result.data() != "Hello TLS")
+    {
+      new Exception("verified: data expected \"Hello TLS\", got \"%s\"" % result.data()).throw();
+    }
+    if (result.info(CurlResult.INFO_SSL_VERIFYRESULT) != 0)
+    {
+      new Exception("verified: INFO_SSL_VERIFYRESULT expected 0, got %d" %
+        result.info(CurlResult.INFO_SSL_VERIFYRESULT)).throw();
+    }
+
+    // - 2. no ca file: self-signed server certificate fails peer verification (CURLE_PEER_FAILED_VERIFICATION = 60) -
+    req = cm[cm.GET(url,"unverified")];
+    req.setopt(Curl.OPT_SSL_VERIFYPEER,1);
+
+    result = wait_result(cm,"unverified");
+    if (result.code() != 60)
+    {
+      new Exception("unverified: code expected 60, got %d" % result.code()).throw();
+    }
+
+    // - 3. client certificate and key are loaded (server does not request them) -
+    req = cm[cm.GET(url,"client_cert")];
+    req.setopt(Curl.OPT_CAINFO,cert_path);
+    req.setopt(Curl.OPT_SSLCERT,cert_path);
+    req.setopt(Curl.OPT_SSLKEY,key_path);
+
+    result = wait_result(cm,"client_cert");
+    if (result.code() != CurlResult.CURLE_OK)
+    {
+      new Exception("client_cert: code expected CURLE_OK, got %d" % result.code()).throw();
+    }
+    if (result.data() != "Hello TLS")
+    {
+      new Exception("client_cert: data expected \"Hello TLS\", got \"%s\"" % result.data()).throw();
+    }
+
+    // - 4. missing client certificate file: transfer fails (CURLE_SSL_CERTPROBLEM = 58) -
+    req = cm[cm.GET(url,"bad_cert")];
+    req.setopt(Curl.OPT_CAINFO,cert_path);
+    req.setopt(Curl.OPT_SSLCERT,"/nonexistent/client.cert");
+    req.setopt(Curl.OPT_SSLKEY,key_path);
+
+    result = wait_result(cm,"bad_cert");
+    if (result.code() == CurlResult.CURLE_OK)
+    {
+      new Exception("bad_cert: expected failure, got CURLE_OK").throw();
+    }
+
+    // - 5. tls 1.3 cipher suite selection -
+    if (Blank != tls13 and Blank != tls13_ciphers)
+    {
+      req = cm[cm.GET(url,"tls13_ciphers")];
+      req.setopt(Curl.OPT_CAINFO,cert_path);
+      req.setopt(Curl.OPT_SSLVERSION,tls13);
+      req.setopt(tls13_ciphers,"TLS_AES_256_GCM_SHA384");
+
+      result = wait_result(cm,"tls13_ciphers");
+      if (result.code() != CurlResult.CURLE_OK)
+      {
+        new Exception("tls13_ciphers: code expected CURLE_OK, got %d" % result.code()).throw();
+      }
+      if (result.data() != "Hello TLS")
+      {
+        new Exception("tls13_ciphers: data expected \"Hello TLS\", got \"%s\"" % result.data()).throw();
+      }
+    }
+
+    // - signal server to stop and wait -
+    stop_flag = 1;
+    thr.join();
+
+    // - release delegate -> obj reference cycle -
+    free cm;
+  }/*}}}*/
+}

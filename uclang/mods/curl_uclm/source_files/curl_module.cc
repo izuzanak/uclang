@@ -222,7 +222,15 @@ built_in_class_s curl_class =
   "Curl",
   c_modifier_public | c_modifier_final,
   9, curl_methods,
-  17 + 10 + 3 + 5, curl_variables,
+  21
+#if LIBCURL_VERSION_NUM >= 0x073d00
+  + 1
+#endif
+  + 10 + 3 + 5
+#if LIBCURL_VERSION_NUM >= 0x073400
+  + 1
+#endif
+  , curl_variables,
   bic_curl_consts,
   bic_curl_init,
   bic_curl_clear,
@@ -309,6 +317,13 @@ built_in_variable_s curl_variables[] =
   { "OPT_QUOTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_PREQUOTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "OPT_POSTQUOTE", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_CAINFO", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_SSLCERT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_SSLKEY", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "OPT_SSLVERSION", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#if LIBCURL_VERSION_NUM >= 0x073d00
+  { "OPT_TLS13_CIPHERS", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
 
   // - curl authentication constants -
   { "AUTH_ANY", c_modifier_public | c_modifier_static | c_modifier_static_const },
@@ -333,6 +348,11 @@ built_in_variable_s curl_variables[] =
   { "SSH_AUTH_HOST", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SSH_AUTH_KEYBOARD", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "SSH_AUTH_AGENT", c_modifier_public | c_modifier_static | c_modifier_static_const },
+
+#if LIBCURL_VERSION_NUM >= 0x073400
+  // - curl ssl version constants -
+  { "SSLVERSION_TLSv1_3", c_modifier_public | c_modifier_static | c_modifier_static_const },
+#endif
 };/*}}}*/
 
 #define BIC_CURL_GET_DELETE_HEAD_METHODS(NAME,OPTIONS) \
@@ -487,8 +507,16 @@ void bic_curl_consts(location_array_s &const_locations)
 
   // - curl option constants -
   {
-    const_locations.push_blanks(17);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 17);
+    const_locations.push_blanks(21
+#if LIBCURL_VERSION_NUM >= 0x073d00
+  + 1
+#endif
+    );
+    location_s *cv_ptr = const_locations.data + (const_locations.used - (21
+#if LIBCURL_VERSION_NUM >= 0x073d00
+  + 1
+#endif
+    ));
 
 #define CREATE_CURL_OPTION_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -513,6 +541,13 @@ void bic_curl_consts(location_array_s &const_locations)
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_QUOTE);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_PREQUOTE);
     CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_POSTQUOTE);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_CAINFO);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSLCERT);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSLKEY);
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_SSLVERSION);
+#if LIBCURL_VERSION_NUM >= 0x073d00
+    CREATE_CURL_OPTION_BIC_STATIC(CURLOPT_TLS13_CIPHERS);
+#endif
   }
 
   // - curl authentication constants -
@@ -571,6 +606,22 @@ void bic_curl_consts(location_array_s &const_locations)
     CREATE_CURL_SSH_AUTHENTICATION_BIC_STATIC(CURLSSH_AUTH_KEYBOARD);
     CREATE_CURL_SSH_AUTHENTICATION_BIC_STATIC(CURLSSH_AUTH_AGENT);
   }
+
+#if LIBCURL_VERSION_NUM >= 0x073400
+  // - curl ssl version constants -
+  {
+    const_locations.push_blanks(1);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 1);
+
+#define CREATE_CURL_SSL_VERSION_BIC_STATIC(VALUE)\
+  cv_ptr->v_type = c_bi_class_integer;\
+  cv_ptr->v_reference_cnt.atomic_set(1);\
+  cv_ptr->v_data_ptr = (long long int)VALUE;\
+  cv_ptr++;
+
+    CREATE_CURL_SSL_VERSION_BIC_STATIC(CURL_SSLVERSION_TLSv1_3);
+  }
+#endif
 }/*}}}*/
 
 void bic_curl_init(interpreter_thread_s &it,location_s *location_ptr)
@@ -1551,6 +1602,7 @@ method setopt
   case CURLOPT_SSL_VERIFYPEER:
   case CURLOPT_SSL_VERIFYHOST:
   case CURLOPT_SSH_AUTH_TYPES:
+  case CURLOPT_SSLVERSION:
     {/*{{{*/
       long long int value;
 
@@ -1572,6 +1624,12 @@ method setopt
   case CURLOPT_KEYPASSWD:
   case CURLOPT_SSH_PRIVATE_KEYFILE:
   case CURLOPT_SSH_PUBLIC_KEYFILE:
+  case CURLOPT_CAINFO:
+  case CURLOPT_SSLCERT:
+  case CURLOPT_SSLKEY:
+#if LIBCURL_VERSION_NUM >= 0x073d00
+  case CURLOPT_TLS13_CIPHERS:
+#endif
     {/*{{{*/
 
       // - ERROR -
