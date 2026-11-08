@@ -30,6 +30,7 @@ enum
   c_error_CLASS_REF_METHOD_WAS_NOT_FOUND,
   c_error_CLASS_REF_VARIABLE_WAS_NOT_FOUND,
   c_error_METHOD_REF_PARAMETER_WAS_NOT_FOUND,
+  c_error_VAR_REF_NOT_STATIC_VARIABLE,
 };
 
 // - LANG error strings -
@@ -129,6 +130,7 @@ void bic_var_ref_clear(interpreter_thread_s &it,location_s *location_ptr);
 bool bic_var_ref_operator_binary_equal(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_var_ref_method_name_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_var_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_var_ref_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_var_ref_method_to_string_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_var_ref_method_print_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 

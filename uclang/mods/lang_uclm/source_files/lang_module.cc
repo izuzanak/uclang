@@ -18,7 +18,7 @@ EXPORT built_in_module_s module =
   lang_classes,         // Classes
 
   0,                    // Error base index
-  7,                    // Error count
+  8,                    // Error count
   lang_error_strings,   // Error strings
 
   lang_initialize,      // Initialize function
@@ -46,6 +46,7 @@ const char *lang_error_strings[] =
   "error_CLASS_REF_METHOD_WAS_NOT_FOUND",
   "error_CLASS_REF_VARIABLE_WAS_NOT_FOUND",
   "error_METHOD_REF_PARAMETER_WAS_NOT_FOUND",
+  "error_VAR_REF_NOT_STATIC_VARIABLE",
 };/*}}}*/
 
 // - LANG initialize -
@@ -164,6 +165,21 @@ bool lang_print_exception(interpreter_s &it,exception_s &exception)
     print_class_sequence(it.class_symbol_names,it.class_records,class_stack,class_record.parent_record);
     fprintf(stderr,"%s.%s does not contain parameter named \"%s\"\n",
       it.class_symbol_names[class_record.name_idx].data,it.method_symbol_names[method_record.name_idx].data,((string_s *)((location_s *)exception.obj_location)->v_data_ptr)->data);
+    fprintf(stderr," ---------------------------------------- \n");
+  }
+  break;
+  case c_error_VAR_REF_NOT_STATIC_VARIABLE:
+  {
+    variable_record_s &variable_record = it.variable_records[exception.params[0]];
+    class_record_s &class_record = it.class_records[variable_record.parent_record];
+
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nVariable ");
+    print_class_sequence(it.class_symbol_names,it.class_records,class_stack,class_record.parent_record);
+    fprintf(stderr,"%s.%s is not static, it has no class level value\n",
+      it.class_symbol_names[class_record.name_idx].data,it.variable_symbol_names[variable_record.name_idx].data);
     fprintf(stderr," ---------------------------------------- \n");
   }
   break;
@@ -1482,7 +1498,7 @@ built_in_class_s var_ref_class =
 {/*{{{*/
   "VarRef",
   c_modifier_public | c_modifier_final,
-  5, var_ref_methods,
+  6, var_ref_methods,
   0, var_ref_variables,
   bic_var_ref_consts,
   bic_var_ref_init,
@@ -1516,6 +1532,11 @@ built_in_method_s var_ref_methods[] =
     "parent#0",
     c_modifier_public | c_modifier_final,
     bic_var_ref_method_parent_0
+  },
+  {
+    "value#0",
+    c_modifier_public | c_modifier_final,
+    bic_var_ref_method_value_0
   },
   {
     "to_string#0",
@@ -1594,6 +1615,47 @@ bool bic_var_ref_method_parent_0(interpreter_thread_s &it,unsigned stack_base,ul
   {
     BIC_SET_RESULT_BLANK();
   }
+
+  return true;
+}/*}}}*/
+
+bool bic_var_ref_method_value_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+  location_s *dst_location = (location_s *)it.get_stack_value(stack_base + operands[c_dst_op_idx]);
+
+  interpreter_s &interpreter = *((interpreter_s *)it.interpreter_ptr);
+  class_records_s &class_records = interpreter.class_records;
+  variable_records_s &variable_records = interpreter.variable_records;
+
+  long long int vr_idx = (long long int)dst_location->v_data_ptr;
+  variable_record_s &variable_record = variable_records[vr_idx];
+
+  // - ERROR -
+  if (!(variable_record.modifiers & c_modifier_static))
+  {
+    exception_s *new_exception = exception_s::throw_exception(it,module.error_base + c_error_VAR_REF_NOT_STATIC_VARIABLE,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    new_exception->params.push(vr_idx);
+
+    return false;
+  }
+
+  // - retrieve variable element position in its class -
+  class_record_s &class_record = class_records[variable_record.parent_record];
+  ri_ep_s &ri_ep = class_record.vn_ri_ep_map[variable_record.name_idx];
+
+  // - static constant lives in constant locations, static variable in static locations -
+  location_s *location;
+  if (variable_record.modifiers & c_modifier_static_const)
+  {
+    location = interpreter.const_locations.data + ri_ep.element_position;
+  }
+  else
+  {
+    location = (location_s *)interpreter.static_location_ptrs[ri_ep.element_position];
+  }
+
+  location->v_reference_cnt.atomic_inc();
+  BIC_SET_RESULT(location);
 
   return true;
 }/*}}}*/

@@ -1,5 +1,6 @@
 
 import lang;
+import sys;
 
 class WithVars
 {
@@ -79,6 +80,23 @@ class Main
     if (vb.name() != "VAR_B")
     {
       new Exception("variable(\"VAR_B\"): expected VAR_B, got %s" % vb.name()).throw();
+    }
+
+    // - value of static variables -
+    if (v.value() != 10)
+    {
+      new Exception("VarRef.value() of VAR_A: expected 10, got %s" % $v.value()).throw();
+    }
+    if (vb.value() != "hello")
+    {
+      new Exception("VarRef.value() of VAR_B: expected \"hello\", got %s" % $vb.value()).throw();
+    }
+
+    // - value of built-in static constant -
+    cm = Lang.cls("Clock").variable("CLOCK_MONOTONIC").value();
+    if (cm != Clock.CLOCK_MONOTONIC)
+    {
+      new Exception("VarRef.value() of Clock.CLOCK_MONOTONIC: expected %d, got %s" % [Clock.CLOCK_MONOTONIC,$cm]).throw();
     }
 
     // - assignment operator -

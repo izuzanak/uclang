@@ -1,6 +1,13 @@
 
 import lang;
 
+class WithInstVar
+{
+  public x;
+
+  public WithInstVar() { x = 1; }
+}
+
 class Main
 {
   static public main(argv)
@@ -88,6 +95,20 @@ class Main
     if (caught != 1)
     {
       new Exception("ClassRef.variable(unknown) did not throw").throw();
+    }
+
+    // - VarRef.value on instance variable -
+    caught = 0;
+    try {
+      Lang.cls("WithInstVar").variable("x").value();
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+    if (caught != 1)
+    {
+      new Exception("VarRef.value(instance variable) did not throw").throw();
     }
 
     // - MethodRef.param with unknown parameter -
