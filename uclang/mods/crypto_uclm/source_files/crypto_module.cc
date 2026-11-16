@@ -548,7 +548,7 @@ static_method
 
   if (data_size != 0)
   {
-    target_ptr->create(((data_size/3 + 1) << 2) + 1);
+    target_ptr->create(((data_size + 2)/3) << 2);
 
     target_ptr->size = EVP_EncodeBlock(
         (unsigned char *)target_ptr->data,
@@ -586,7 +586,7 @@ static_method
 
   if (data_size != 0)
   {
-    target_ptr->create(((data_size >> 2) * 3) + 1);
+    target_ptr->create((data_size >> 2) * 3);
 
     int length = EVP_DecodeBlock(
         (unsigned char *)target_ptr->data,
@@ -615,6 +615,7 @@ static_method
       length -= 1;
     }
 
+    target_ptr->data[length] = '\0';
     target_ptr->size = length + 1;
   }
 

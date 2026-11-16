@@ -70,5 +70,51 @@ class Main
     {
       new Exception("base64 round-trip failed").throw();
     }
+
+    // - encode_base64 known vectors for every padding case -
+    vectors = [
+      ["", ""],
+      ["A", "QQ=="],
+      ["AB", "QUI="],
+      ["ABC", "QUJD"],
+      ["ABCD", "QUJDRA=="],
+      ["ABCDE", "QUJDREU="],
+      ["ABCDEF", "QUJDREVG"],
+    ];
+    for (v <- vectors)
+    {
+      if (Crypto.encode_base64(v[0]) != v[1])
+      {
+        new Exception("encode_base64(%s): expected %s, got %s" % [v[0],v[1],Crypto.encode_base64(v[0])]).throw();
+      }
+      if (Crypto.decode_base64(v[1]) != v[0])
+      {
+        new Exception("decode_base64(%s): expected %s, got %s" % [v[1],v[0],Crypto.decode_base64(v[1])]).throw();
+      }
+    }
+
+    // - decode_base64 unpadded input is usable as C string -
+    // - (decoded data is passed to a native name lookup) -
+    dn = Crypto.decode_base64("U0hBMjU2");
+    if (dn != "SHA256" || dn.length() != 6)
+    {
+      new Exception("decode_base64(U0hBMjU2): expected SHA256, got %s" % dn).throw();
+    }
+    if ((new CryptoDigestInfo(dn)).name() != "SHA256")
+    {
+      new Exception("decode_base64 unpadded result not usable as digest name").throw();
+    }
+
+    // - decode_base64 non-canonical padding (nonzero trailing bits) -
+    nc = Crypto.decode_base64("QR==");
+    if (nc != "A" || nc.length() != 1)
+    {
+      new Exception("decode_base64(QR==): expected A, got %s" % nc).throw();
+    }
+    nc2 = Crypto.decode_base64("QUJ=");
+    if (nc2 != "AB" || nc2.length() != 2)
+    {
+      new Exception("decode_base64(QUJ=): expected AB, got %s" % nc2).throw();
+    }
   }/*}}}*/
 }
