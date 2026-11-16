@@ -1,0 +1,106 @@
+
+import oath;
+
+class Main
+{
+  static SECRET = "12345678901234567890";
+  static SECRET256 = "12345678901234567890123456789012";
+  static SECRET512 = "1234567890123456789012345678901234567890123456789012345678901234";
+
+  // - rfc 6238 appendix b, 8 digits, time step 30, start 0: [time,sha1,sha256,sha512] -
+  static TOTP = [
+    [59,"94287082","46119246","90693936"],
+    [1111111109,"07081804","68084774","25091201"],
+    [1111111111,"14050471","67062674","99943326"],
+    [1234567890,"89005924","91819424","93441116"],
+    [2000000000,"69279037","90698825","38618901"],
+    [20000000000,"65353130","77737706","47863826"],
+  ];
+
+  static expect_eq(a_name,a_got,a_exp)
+  {/*{{{*/
+    if (a_got != a_exp)
+    {
+      new Exception("%s: expected %s, got %s" % [a_name,$a_exp,$a_got]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - two argument constructor uses defaults -
+    totp = new OathTotp(SECRET,8);
+    expect_eq("digits()",totp.digits(),8);
+    expect_eq("time_step()",totp.time_step(),30);
+    expect_eq("start_offset()",totp.start_offset(),0);
+    expect_eq("flags()",totp.flags(),0);
+    expect_eq("secret()",totp.secret(),SECRET);
+    expect_eq("to_string",$totp,"OathTotp(digits=8,time_step=30,start_offset=0,flags=0)");
+
+    // - five argument constructor -
+    totp_sha1 = new OathTotp(SECRET,8,Oath.TOTP_DEFAULT_TIME_STEP_SIZE,Oath.TOTP_DEFAULT_START_TIME,Oath.TOTP_HMAC_SHA1);
+    totp256 = new OathTotp(SECRET256,8,30,0,Oath.TOTP_HMAC_SHA256);
+    totp512 = new OathTotp(SECRET512,8,30,0,Oath.TOTP_HMAC_SHA512);
+    expect_eq("sha1 to_string",$totp_sha1,$totp);
+    expect_eq("sha256 flags()",totp256.flags(),1);
+    expect_eq("sha512 flags()",totp512.flags(),2);
+    expect_eq("sha512 secret()",totp512.secret(),SECRET512);
+    expect_eq("sha512 to_string",$totp512,"OathTotp(digits=8,time_step=30,start_offset=0,flags=2)");
+
+    // - rfc 6238 vectors -
+    for (vector <- TOTP)
+    {
+      time = vector[0];
+      expect_eq("sha1 default generate(%d)" % time,totp.generate(time),vector[1]);
+      expect_eq("sha1 generate(%d)" % time,totp_sha1.generate(time),vector[1]);
+      expect_eq("sha256 generate(%d)" % time,totp256.generate(time),vector[2]);
+      expect_eq("sha512 generate(%d)" % time,totp512.generate(time),vector[3]);
+    }
+
+    // - 6 digit value is the suffix of the 8 digit value -
+    totp6 = new OathTotp(SECRET,6);
+    expect_eq("6 digits generate(59)",totp6.generate(59),"287082");
+
+    // - start offset shifts the time counter -
+    totp_off = new OathTotp(SECRET,8,30,30,Oath.TOTP_HMAC_SHA1);
+    expect_eq("start_offset generate(89)",totp_off.generate(89),"94287082");
+    expect_eq("start_offset start_offset()",totp_off.start_offset(),30);
+
+    // - time step changes the counter -
+    totp_step = new OathTotp(SECRET,8,60,0,Oath.TOTP_HMAC_SHA1);
+    expect_eq("step 60 generate(119)",totp_step.generate(119),"94287082");
+    expect_eq("step 60 time_step()",totp_step.time_step(),60);
+
+    // - validate returns [otp_pos,otp_counter] -
+    expect_eq("validate(59,0)",totp.validate(59,0,"94287082"),[0,1]);
+    expect_eq("validate(89,1) previous step",totp.validate(89,1,"94287082"),[-1,1]);
+    expect_eq("validate(29,1) next step",totp.validate(29,1,"94287082"),[1,1]);
+    expect_eq("validate counter",totp.validate(1111111109,0,"07081804"),[0,37037036]);
+    expect_eq("sha256 validate(59,0)",totp256.validate(59,0,"46119246"),[0,1]);
+    expect_eq("sha512 validate(89,1)",totp512.validate(89,1,"90693936"),[-1,1]);
+    expect_eq("start_offset validate(89,0)",totp_off.validate(89,0,"94287082"),[0,1]);
+
+    // - validate returns blank when otp is not in window -
+    if (Blank != totp.validate(59,0,"00000000"))
+    {
+      new Exception("validate(wrong otp): expected Blank").throw();
+    }
+    if (Blank != totp.validate(1111111109,0,"94287082"))
+    {
+      new Exception("validate(otp outside window): expected Blank").throw();
+    }
+    if (Blank != totp256.validate(59,0,"94287082"))
+    {
+      new Exception("validate(sha1 otp on sha256 object): expected Blank").throw();
+    }
+
+    // - assignment shares the object -
+    totp2 = totp;
+    expect_eq("shared generate(59)",totp2.generate(59),totp.generate(59));
+    expect_eq("shared to_string",$totp2,$totp);
+
+    // - independent object with the same parameters -
+    totp3 = new OathTotp(SECRET,8);
+    expect_eq("independent generate(59)",totp3.generate(59),totp.generate(59));
+  }/*}}}*/
+}

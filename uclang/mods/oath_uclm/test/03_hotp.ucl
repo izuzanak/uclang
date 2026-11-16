@@ -1,0 +1,123 @@
+
+import oath;
+
+class Main
+{
+  static SECRET = "12345678901234567890";
+  static SECRET_HEX = "3132333435363738393031323334353637383930";
+  static SECRET_B32 = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ";
+
+  // - rfc 4226 appendix d, 6 digits, counters 0..9 -
+  static HOTP = ["755224","287082","359152","969429","338314","254676","287922","162583","399871","520489"];
+
+  static expect_eq(a_name,a_got,a_exp)
+  {/*{{{*/
+    if (a_got != a_exp)
+    {
+      new Exception("%s: expected %s, got %s" % [a_name,$a_exp,$a_got]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - rfc 4226 vectors -
+    hotp = new OathHotp(SECRET,6);
+
+    counter = 0;
+    while (counter < 10)
+    {
+      expect_eq("generate(%d)" % counter,hotp.generate(counter),HOTP[counter]);
+      counter++;
+    }
+
+    // - accessors -
+    expect_eq("digits()",hotp.digits(),6);
+    expect_eq("add_checksum()",hotp.add_checksum(),0);
+    expect_eq("truncation_offset()",hotp.truncation_offset(),-1);
+    expect_eq("secret()",hotp.secret(),SECRET);
+    expect_eq("to_string",$hotp,"OathHotp(digits=6)");
+
+    // - four argument constructor with defaults equals the two argument constructor -
+    hotp4 = new OathHotp(SECRET,6,0,Oath.HOTP_DYNAMIC_TRUNCATION);
+    expect_eq("4 args generate(0)",hotp4.generate(0),HOTP[0]);
+    expect_eq("4 args generate(9)",hotp4.generate(9),HOTP[9]);
+    expect_eq("4 args add_checksum()",hotp4.add_checksum(),0);
+    expect_eq("4 args truncation_offset()",hotp4.truncation_offset(),-1);
+
+    // - checksum flag yields a digit string of 6 or 7 characters, liboath may ignore it -
+    hotp_chk = new OathHotp(SECRET,6,1,Oath.HOTP_DYNAMIC_TRUNCATION);
+    expect_eq("checksum add_checksum()",hotp_chk.add_checksum(),1);
+    chk = hotp_chk.generate(0);
+    if (chk.length() != 6 and chk.length() != 7)
+    {
+      new Exception("checksum generate(0): unexpected length %d" % chk.length()).throw();
+    }
+    expect_eq("checksum generate(0) prefix",chk[0:5:],HOTP[0]);
+
+    // - fixed truncation offset is stored -
+    hotp_off = new OathHotp(SECRET,8,1,5);
+    expect_eq("offset add_checksum()",hotp_off.add_checksum(),1);
+    expect_eq("offset truncation_offset()",hotp_off.truncation_offset(),5);
+    expect_eq("offset digits()",hotp_off.digits(),8);
+    off = hotp_off.generate(0);
+    if (off.length() != 8 and off.length() != 9)
+    {
+      new Exception("offset generate(0): unexpected length %d" % off.length()).throw();
+    }
+
+    // - 7 and 8 digits extend the 6 digit value -
+    hotp8 = new OathHotp(SECRET,8);
+    otp8 = hotp8.generate(0);
+    expect_eq("8 digits generate(0).length()",otp8.length(),8);
+    expect_eq("8 digits generate(0) suffix",otp8[2::],HOTP[0]);
+    expect_eq("8 digits to_string",$hotp8,"OathHotp(digits=8)");
+    if ($hotp8 == $hotp)
+    {
+      new Exception("different digits: expected different to_string").throw();
+    }
+
+    hotp7 = new OathHotp(SECRET,7);
+    otp7 = hotp7.generate(0);
+    expect_eq("7 digits generate(0).length()",otp7.length(),7);
+    expect_eq("7 digits generate(0) suffix",otp7[1::],HOTP[0]);
+
+    // - secret decoded from hex and base32 gives the same values -
+    hotp_hex = new OathHotp(Oath.hex2bin(SECRET_HEX),6);
+    expect_eq("hex secret generate(3)",hotp_hex.generate(3),HOTP[3]);
+    expect_eq("hex secret secret()",hotp_hex.secret(),SECRET);
+    hotp_b32 = new OathHotp(Oath.base32_decode(SECRET_B32),6);
+    expect_eq("base32 secret generate(3)",hotp_b32.generate(3),HOTP[3]);
+    expect_eq("base32 secret secret()",hotp_b32.secret(),SECRET);
+
+    // - validate returns position in window -
+    expect_eq("validate(0,10,HOTP[9])",hotp.validate(0,10,HOTP[9]),9);
+    expect_eq("validate(0,0,HOTP[0])",hotp.validate(0,0,HOTP[0]),0);
+    expect_eq("validate(5,10,HOTP[6])",hotp.validate(5,10,HOTP[6]),1);
+    expect_eq("validate(0,9,HOTP[9])",hotp.validate(0,9,HOTP[9]),9);
+    expect_eq("8 digits validate(0,2)",hotp8.validate(0,2,otp8),0);
+
+    // - validate returns blank when otp is not in window -
+    if (Blank != hotp.validate(0,10,"000000"))
+    {
+      new Exception("validate(wrong otp): expected Blank").throw();
+    }
+    if (Blank != hotp.validate(0,3,HOTP[9]))
+    {
+      new Exception("validate(otp outside window): expected Blank").throw();
+    }
+    if (Blank != hotp.validate(1,10,HOTP[0]))
+    {
+      new Exception("validate(otp before start): expected Blank").throw();
+    }
+
+    // - assignment shares the object -
+    hotp2 = hotp;
+    expect_eq("shared generate(4)",hotp2.generate(4),hotp.generate(4));
+    expect_eq("shared to_string",$hotp2,$hotp);
+
+    // - independent object with the same parameters -
+    hotp3 = new OathHotp(SECRET,6);
+    expect_eq("independent generate(7)",hotp3.generate(7),hotp.generate(7));
+  }/*}}}*/
+}

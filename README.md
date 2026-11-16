@@ -28,7 +28,7 @@ Short introduction to language syntax and features can be found in
 
 ## Language modules
 
-A set of 114 modules was created in order to use uclang in production.
+A set of 115 modules was created in order to use uclang in production.
 Implementation of these modules is located in
 [`uclang/mods`](https://github.com/izuzanak/uclang/tree/master/uclang/mods).
 
@@ -36,7 +36,7 @@ Implementation of these modules is located in
 * **Data Formats**: json, xml, protobuf, xlsxwriter
 * **Databases**: sqlite, psql, ddb
 * **Networking**: http, websocket, curl, ftp, ssh2, tcp, mqtt, nanomsg, snmp, avahi, dlms
-* **Cryptography**: crypto, cipher, gcrypt, openssl, nacl, checksum, xxhash
+* **Cryptography**: crypto, cipher, gcrypt, openssl, nacl, checksum, xxhash, oath
 * **Compression**: zlib, zip, snappy, isal
 * **Graphics/UI**: gl, glew, glut, ftgl, gtk, image, vg, shivavg, amanithvg, imxegl, opencv, freetype2, gif, qrencode, quirc, shape
 * **Audio/Video**: av, ao, mpg, portaudio, gstreamer, vlc, va

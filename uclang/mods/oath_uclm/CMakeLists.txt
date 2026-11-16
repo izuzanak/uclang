@@ -1,0 +1,27 @@
+
+if(PKG_CONFIG_FOUND)
+  pkg_search_module(LIBOATH "liboath")
+endif()
+
+if(NOT LIBOATH_FOUND)
+  find_path(LIBOATH_INCLUDE_DIR oath.h PATH_SUFFIXES liboath)
+  find_library(LIBOATH_LIBRARY NAMES oath)
+  if(LIBOATH_INCLUDE_DIR AND LIBOATH_LIBRARY)
+    set(LIBOATH_FOUND TRUE)
+    set(LIBOATH_INCLUDE_DIRS ${LIBOATH_INCLUDE_DIR})
+    set(LIBOATH_LIBRARIES ${LIBOATH_LIBRARY})
+  endif()
+endif()
+
+if(LIBOATH_FOUND)
+  set(CONF_DO_BUILD TRUE)
+  set(CONF_HEADER_DIRS
+    "${LIB_BASE}/header_files")
+  set(CONF_INCLUDE_DIRS
+    ${LIBOATH_INCLUDE_DIRS})
+  set(CONF_COMP_DEFS)
+  set(CONF_LINK_LIBS
+    base_ucll
+    ${LIBOATH_LIBRARIES})
+endif()
+

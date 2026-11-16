@@ -1,0 +1,49 @@
+
+import oath;
+
+class Main
+{
+  static SECRET = "12345678901234567890";
+
+  static expect_eq(a_name,a_got,a_exp)
+  {/*{{{*/
+    if (a_got != a_exp)
+    {
+      new Exception("%s: expected %s, got %s" % [a_name,$a_exp,$a_got]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - version is a non empty string containing a dot -
+    version = Oath.version();
+    if (version.length() == 0)
+    {
+      new Exception("version: empty string").throw();
+    }
+    if (Blank == version.get_idx("."))
+    {
+      new Exception("version: expected dotted version, got %s" % version).throw();
+    }
+
+    // - check_version accepts own version and an old one, rejects a future one -
+    expect_eq("check_version(own)",Oath.check_version(version),1);
+    expect_eq("check_version(1.0.0)",Oath.check_version("1.0.0"),1);
+    expect_eq("check_version(99.0.0)",Oath.check_version("99.0.0"),0);
+
+    // - constants -
+    expect_eq("TOTP_DEFAULT_TIME_STEP_SIZE",Oath.TOTP_DEFAULT_TIME_STEP_SIZE,30);
+    expect_eq("TOTP_DEFAULT_START_TIME",Oath.TOTP_DEFAULT_START_TIME,0);
+    expect_eq("TOTP_HMAC_SHA1",Oath.TOTP_HMAC_SHA1,0);
+    expect_eq("TOTP_HMAC_SHA256",Oath.TOTP_HMAC_SHA256,1);
+    expect_eq("TOTP_HMAC_SHA512",Oath.TOTP_HMAC_SHA512,2);
+    expect_eq("HOTP_DYNAMIC_TRUNCATION",Oath.HOTP_DYNAMIC_TRUNCATION,-1);
+
+    // - to_string of the static class and of objects -
+    expect_eq("$Oath",$Oath,"Oath");
+    expect_eq("$OathHotp",$(new OathHotp(SECRET,6)),"OathHotp(digits=6)");
+    expect_eq("$OathTotp",$(new OathTotp(SECRET,8)),"OathTotp(digits=8,time_step=30,start_offset=0,flags=0)");
+    expect_eq("$OathTotp(5 args)",$(new OathTotp(SECRET,6,60,10,Oath.TOTP_HMAC_SHA512)),"OathTotp(digits=6,time_step=60,start_offset=10,flags=2)");
+  }/*}}}*/
+}

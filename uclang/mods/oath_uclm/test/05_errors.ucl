@@ -1,0 +1,105 @@
+
+import oath;
+
+class Main
+{
+  static SECRET = "12345678901234567890";
+
+  // - lambdas passed to the helpers see static members only -
+  static hotp;
+  static totp;
+
+  static expect_throw(a_name,a_call)
+  {/*{{{*/
+    caught = 0;
+    try {
+      a_call.call([]);
+    }
+    catch (e)
+    {
+      caught = 1;
+    }
+
+    if (caught != 1)
+    {
+      new Exception("%s did not throw" % a_name).throw();
+    }
+  }/*}}}*/
+
+  static expect_error(a_name,a_call,a_error)
+  {/*{{{*/
+    caught = "";
+    try {
+      a_call.call([]);
+    }
+    catch (e)
+    {
+      caught = $e.get_type();
+    }
+
+    if (caught != a_error)
+    {
+      new Exception("%s: expected %s, got \"%s\"" % [a_name,a_error,caught]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+    hotp = new OathHotp(SECRET,6);
+    totp = new OathTotp(SECRET,8);
+
+    // - a lambda must reach a static, not a local: sanity check of the pattern -
+    expect_throw("sanity",:(){ new Exception("expected").throw(); });
+    expect_error("sanity error type",:(){ new OathHotp(Main.SECRET,5); },"error_OATH_INVALID_DIGITS");
+
+    // - invalid digits are reported by liboath -
+    expect_error("OathHotp 5 digits",:(){ new OathHotp(Main.SECRET,5); },"error_OATH_INVALID_DIGITS");
+    expect_error("OathHotp 4 args 9 digits",:(){ new OathHotp(Main.SECRET,9,0,-1); },"error_OATH_INVALID_DIGITS");
+    expect_error("OathTotp 9 digits",:(){ new OathTotp(Main.SECRET,9); },"error_OATH_INVALID_DIGITS");
+    expect_error("OathTotp 5 args 5 digits",:(){ new OathTotp(Main.SECRET,5,30,0,0); },"error_OATH_INVALID_DIGITS");
+    expect_error("OathHotp 0 digits",:(){ new OathHotp(Main.SECRET,0); },"error_OATH_INVALID_DIGITS");
+    expect_error("OathHotp.validate empty otp",:(){ Main.hotp.validate(0,10,""); },"error_OATH_INVALID_DIGITS");
+
+    // - invalid hex -
+    expect_error("hex2bin odd length",:(){ Oath.hex2bin("abc"); },"error_OATH_INVALID_HEX");
+    expect_error("hex2bin invalid characters",:(){ Oath.hex2bin("zz"); },"error_OATH_INVALID_HEX");
+
+    // - invalid base32 -
+    expect_error("base32_decode invalid characters",:(){ Oath.base32_decode("0189"); },"error_OATH_INVALID_BASE32");
+
+    // - argument range checks done by the module -
+    expect_error("OathTotp zero step",:(){ new OathTotp(Main.SECRET,8,0,0,0); },"error_OATH_INVALID_ARGUMENT");
+    expect_error("OathTotp negative step",:(){ new OathTotp(Main.SECRET,8,-30,0,0); },"error_OATH_INVALID_ARGUMENT");
+    expect_error("OathTotp flags 7",:(){ new OathTotp(Main.SECRET,8,30,0,7); },"error_OATH_INVALID_ARGUMENT");
+    expect_error("OathTotp flags -1",:(){ new OathTotp(Main.SECRET,8,30,0,-1); },"error_OATH_INVALID_ARGUMENT");
+    expect_error("OathHotp.generate negative counter",:(){ Main.hotp.generate(-1); },"error_OATH_INVALID_ARGUMENT");
+    expect_error("OathHotp.validate negative window",:(){ Main.hotp.validate(0,-1,"755224"); },"error_OATH_INVALID_ARGUMENT");
+    expect_error("OathHotp.validate negative counter",:(){ Main.hotp.validate(-1,10,"755224"); },"error_OATH_INVALID_ARGUMENT");
+    expect_error("OathTotp.validate negative window",:(){ Main.totp.validate(59,-1,"94287082"); },"error_OATH_INVALID_ARGUMENT");
+
+    // - wrong argument types -
+    expect_throw("hex2bin integer",:(){ Oath.hex2bin(12); });
+    expect_throw("base32_decode integer",:(){ Oath.base32_decode(12); });
+    expect_throw("check_version integer",:(){ Oath.check_version(1); });
+    expect_throw("OathHotp integer secret",:(){ new OathHotp(1,6); });
+    expect_throw("OathTotp string digits",:(){ new OathTotp(Main.SECRET,"8"); });
+    expect_throw("OathHotp.validate integer otp",:(){ Main.hotp.validate(0,10,755224); });
+    expect_throw("OathTotp.validate integer otp",:(){ Main.totp.validate(59,0,94287082); });
+    expect_throw("OathHotp.generate string counter",:(){ Main.hotp.generate("0"); });
+    expect_throw("OathTotp.generate string time",:(){ Main.totp.generate("59"); });
+
+    // - module still works after the failures -
+    if (new OathHotp(SECRET,6).generate(0) != "755224")
+    {
+      new Exception("OathHotp after errors: unexpected value").throw();
+    }
+    if (hotp.generate(1) != "287082")
+    {
+      new Exception("OathHotp.generate after errors: unexpected value").throw();
+    }
+    if (totp.generate(59) != "94287082")
+    {
+      new Exception("OathTotp.generate after errors: unexpected value").throw();
+    }
+  }/*}}}*/
+}

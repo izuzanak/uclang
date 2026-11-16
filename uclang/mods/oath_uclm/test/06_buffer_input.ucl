@@ -1,0 +1,52 @@
+
+import binbits;
+import oath;
+
+class Main
+{
+  static expect_eq(a_name,a_got,a_exp)
+  {/*{{{*/
+    if (a_got != a_exp)
+    {
+      new Exception("%s: expected %s, got %s" % [a_name,$a_exp,$a_got]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - buffer of 20 bytes 0x41, each word is byte palindromic so the layout is endian independent -
+    word = 1094795585;
+    buffer = new BinArray(BinArray.TYPE_UINT32,[word,word,word,word,word]).buffer();
+    secret = "AAAAAAAAAAAAAAAAAAAA";
+
+    expect_eq("buffer.size()",buffer.size(),20);
+
+    // - encoding methods accept a buffer -
+    expect_eq("bin2hex(buffer)",Oath.bin2hex(buffer),"4141414141414141414141414141414141414141");
+    expect_eq("base32_encode(buffer)",Oath.base32_encode(buffer),Oath.base32_encode(secret));
+    expect_eq("base32_decode(buffer)",Oath.base32_decode(buffer),Oath.base32_decode(secret));
+
+    // - hotp object with a buffer secret agrees with the string secret -
+    hotp = new OathHotp(buffer,6);
+    hotp_str = new OathHotp(secret,6);
+    expect_eq("OathHotp(buffer).secret()",hotp.secret(),secret);
+    expect_eq("OathHotp(buffer).generate(1)",hotp.generate(1),hotp_str.generate(1));
+    expect_eq("OathHotp(buffer).validate",hotp.validate(0,10,hotp_str.generate(9)),9);
+
+    hotp4 = new OathHotp(buffer,8,0,Oath.HOTP_DYNAMIC_TRUNCATION);
+    hotp4_str = new OathHotp(secret,8,0,Oath.HOTP_DYNAMIC_TRUNCATION);
+    expect_eq("OathHotp(buffer,4 args).generate(7)",hotp4.generate(7),hotp4_str.generate(7));
+
+    // - totp object with a buffer secret agrees with the string secret -
+    totp = new OathTotp(buffer,8);
+    totp_str = new OathTotp(secret,8);
+    expect_eq("OathTotp(buffer).secret()",totp.secret(),secret);
+    expect_eq("OathTotp(buffer).generate(59)",totp.generate(59),totp_str.generate(59));
+    expect_eq("OathTotp(buffer).validate",totp.validate(59,0,totp_str.generate(59)),[0,1]);
+
+    totp512 = new OathTotp(buffer,8,30,0,Oath.TOTP_HMAC_SHA512);
+    totp512_str = new OathTotp(secret,8,30,0,Oath.TOTP_HMAC_SHA512);
+    expect_eq("OathTotp(buffer,sha512).generate(59)",totp512.generate(59),totp512_str.generate(59));
+  }/*}}}*/
+}

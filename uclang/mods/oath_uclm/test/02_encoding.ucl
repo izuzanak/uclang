@@ -1,0 +1,58 @@
+
+import oath;
+
+class Main
+{
+  static SECRET = "12345678901234567890";
+  static SECRET_HEX = "3132333435363738393031323334353637383930";
+  static SECRET_B32 = "GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ";
+
+  static expect_eq(a_name,a_got,a_exp)
+  {/*{{{*/
+    if (a_got != a_exp)
+    {
+      new Exception("%s: expected \"%s\", got \"%s\"" % [a_name,$a_exp,$a_got]).throw();
+    }
+  }/*}}}*/
+
+  static public main(argv)
+  {/*{{{*/
+
+    // - base32 rfc 4648 test vectors, encode and decode -
+    vectors = [
+      ["","",],
+      ["f","MY======"],
+      ["fo","MZXQ===="],
+      ["foo","MZXW6==="],
+      ["foob","MZXW6YQ="],
+      ["fooba","MZXW6YTB"],
+      ["foobar","MZXW6YTBOI======"],
+    ];
+
+    for (vector <- vectors)
+    {
+      expect_eq("base32_encode(%s)" % vector[0],Oath.base32_encode(vector[0]),vector[1]);
+      expect_eq("base32_decode(%s)" % vector[1],Oath.base32_decode(vector[1]),vector[0]);
+    }
+
+    // - base32 of the rfc 4226 secret -
+    expect_eq("base32_encode(secret)",Oath.base32_encode(SECRET),SECRET_B32);
+    expect_eq("base32_decode(secret)",Oath.base32_decode(SECRET_B32),SECRET);
+
+    // - hex conversions -
+    expect_eq("bin2hex(secret)",Oath.bin2hex(SECRET),SECRET_HEX);
+    expect_eq("hex2bin(secret)",Oath.hex2bin(SECRET_HEX),SECRET);
+    expect_eq("bin2hex(empty)",Oath.bin2hex(""),"");
+    expect_eq("hex2bin(empty)",Oath.hex2bin(""),"");
+
+    // - binary data with zero and high bytes -
+    bin = Oath.hex2bin("00ff10");
+    expect_eq("hex2bin(00ff10).length()",bin.length(),3);
+    expect_eq("bin2hex(hex2bin(00ff10))",Oath.bin2hex(bin),"00ff10");
+    expect_eq("base32 round trip of binary",Oath.base32_decode(Oath.base32_encode(bin)),bin);
+
+    // - base32 decoder is lenient about case and padding -
+    expect_eq("base32_decode(lowercase)",Oath.base32_decode("my======"),"f");
+    expect_eq("base32_decode(unpadded)",Oath.base32_decode("MZXW6YTBOI"),"foobar");
+  }/*}}}*/
+}
