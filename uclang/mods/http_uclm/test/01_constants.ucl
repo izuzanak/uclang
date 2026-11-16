@@ -8,16 +8,17 @@ class Main
   static public main(argv)
   {/*{{{*/
 
-    // - HttpServer USE_* constants (3) -
+    // - HttpServer USE_* constants (4) -
     use_consts = [
       HttpServer.USE_SSL,
       HttpServer.USE_POLL,
       HttpServer.USE_EPOLL,
+      HttpServer.USE_ERROR_LOG,
     ];
 
-    if (use_consts.length() != 3)
+    if (use_consts.length() != 4)
     {
-      new Exception("USE constants: expected 3, got %d" % use_consts.length()).throw();
+      new Exception("USE constants: expected 4, got %d" % use_consts.length()).throw();
     }
 
     idx = 0;
@@ -28,6 +29,12 @@ class Main
         new Exception("USE constant %d: expected Integer type" % idx).throw();
       }
       idx += 1;
+    }
+
+    // - USE_ERROR_LOG maps to MHD_USE_ERROR_LOG / MHD_USE_DEBUG, value 1 in every libmicrohttpd version -
+    if (HttpServer.USE_ERROR_LOG != 1)
+    {
+      new Exception("USE_ERROR_LOG: expected 1, got %d" % HttpServer.USE_ERROR_LOG).throw();
     }
 
     // - HttpServer FEATURE_* constants (13) -

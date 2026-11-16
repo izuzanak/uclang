@@ -51,8 +51,8 @@ class Main
     // - stop the first server before constructing another bound to the same host -
     server.stop();
 
-    // - second construction using OPTION_SOCK_ADDR + USE_EPOLL (production form) -
-    server2 = new HttpServer(HttpServer.USE_EPOLL,0,
+    // - second construction using OPTION_SOCK_ADDR + USE_EPOLL | USE_ERROR_LOG (production form) -
+    server2 = new HttpServer(HttpServer.USE_EPOLL | HttpServer.USE_ERROR_LOG,0,
       new Delegate(obj,"on_conn",1),
       [HttpServer.OPTION_SOCK_ADDR,new SocketAddr("127.0.0.1",port + 1)]);
 

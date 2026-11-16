@@ -281,7 +281,7 @@ built_in_class_s http_server_class =
   "HttpServer",
   c_modifier_public | c_modifier_final,
   10, http_server_methods,
-  3 + 7
+  4 + 7
 #ifdef ENABLE_RM_CLASS_SOCKET
   + 1
 #endif
@@ -363,6 +363,7 @@ built_in_variable_s http_server_variables[] =
   { "USE_SSL", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "USE_POLL", c_modifier_public | c_modifier_static | c_modifier_static_const },
   { "USE_EPOLL", c_modifier_public | c_modifier_static | c_modifier_static_const },
+  { "USE_ERROR_LOG", c_modifier_public | c_modifier_static | c_modifier_static_const },
 
   // - http server option constants -
 #ifdef ENABLE_RM_CLASS_SOCKET
@@ -398,8 +399,8 @@ void bic_http_server_consts(location_array_s &const_locations)
 
   // - insert http server use constants -
   {
-    const_locations.push_blanks(3);
-    location_s *cv_ptr = const_locations.data + (const_locations.used - 3);
+    const_locations.push_blanks(4);
+    location_s *cv_ptr = const_locations.data + (const_locations.used - 4);
 
 #define CREATE_HTTP_SERVER_USE_BIC_STATIC(VALUE)\
   cv_ptr->v_type = c_bi_class_integer;\
@@ -410,6 +411,7 @@ void bic_http_server_consts(location_array_s &const_locations)
     CREATE_HTTP_SERVER_USE_BIC_STATIC(MHD_USE_SSL);
     CREATE_HTTP_SERVER_USE_BIC_STATIC(MHD_USE_POLL);
     CREATE_HTTP_SERVER_USE_BIC_STATIC(MHD_USE_EPOLL);
+    CREATE_HTTP_SERVER_USE_BIC_STATIC(MHD_USE_DEBUG);
   }
 
   // - insert http server option constants -
