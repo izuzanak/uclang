@@ -45,6 +45,13 @@ class Main
       new Exception("getgid: expected non-negative, got %s" % $gid).throw();
     }
 
+    // - Sys.gethostname -
+    hostname = Sys.gethostname();
+    if (type hostname != type String or hostname.length() == 0)
+    {
+      new Exception("gethostname: expected non-empty String, got %s" % $hostname).throw();
+    }
+
     // - Sys.time -
     t = Sys.time();
     if (t <= 0)

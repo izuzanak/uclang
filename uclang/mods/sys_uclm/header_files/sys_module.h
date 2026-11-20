@@ -46,6 +46,7 @@ enum
   c_error_SYS_FILE_DOES_NOT_EXIST,
   c_error_SYS_SETENV_ERROR,
   c_error_SYS_GET_TIME_ERROR,
+  c_error_SYS_GET_HOSTNAME_ERROR,
 
   c_error_PIPE_CREATE_ERROR,
   c_error_PIPE_OPEN_ERROR,
@@ -136,6 +137,7 @@ bool bic_sys_method_rand_0(interpreter_thread_s &it,unsigned stack_base,uli *ope
 bool bic_sys_method_getpid_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_getuid_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_getgid_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
+bool bic_sys_method_gethostname_0(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_system_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_exit_1(interpreter_thread_s &it,unsigned stack_base,uli *operands);
 bool bic_sys_method_open_2(interpreter_thread_s &it,unsigned stack_base,uli *operands);

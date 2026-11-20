@@ -102,7 +102,7 @@ obj = "New value";
 ("obj: %s\n" % $obj).print();
 ```
 ```
-obj: 2026/10/24 11:20:59
+obj: 2026/11/20 05:09:52
 obj: New value
 ```
 
@@ -360,7 +360,7 @@ obj = new Time();
 ("obj.to_string(): %s\n" % obj.to_string()).print();
 ```
 ```
-obj.to_string(): 2026/10/24 11:20:59
+obj.to_string(): 2026/11/20 05:09:52
 ```
 
 <a name="print#0" />
@@ -381,5 +381,5 @@ obj.print();
 "\n".print();
 ```
 ```
-2026/10/24 11:20:59
+2026/11/20 05:09:52
 ```

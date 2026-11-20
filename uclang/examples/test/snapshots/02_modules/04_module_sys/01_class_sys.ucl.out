@@ -31,6 +31,10 @@ Sys.getuid() -> Integer
 
 Sys.getgid() -> Integer
 
+=== Sys method gethostname#0 ===================================================
+
+Sys.gethostname() -> String
+
 === Sys method system#1 ========================================================
 
 Sys.system("ls") -> 0

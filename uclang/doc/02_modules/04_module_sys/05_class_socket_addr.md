@@ -27,7 +27,7 @@ Class describing network socket addresses.
 
 <a name="SocketAddr#2" />
 
-### Constructor [`SocketAddr#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2664)
+### Constructor [`SocketAddr#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2706)
 
 Creates object of class `SocketAddr` from hostname or IP address string and port number.
 
@@ -52,7 +52,7 @@ obj: SocketAddr
 
 <a name="operator_binary_equal#1" />
 
-### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2652)
+### Operator [`operator_binary_equal#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2694)
 
 Assignment operator `=`. Object of class `SocketAddr` is replaced by method parameter.
 
@@ -83,7 +83,7 @@ obj: New value
 
 <a name="name#0" />
 
-### Method [`name#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2703)
+### Method [`name#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2745)
 
 Returns hostname or IP address of socket address.
 
@@ -103,7 +103,7 @@ name: 127.0.0.1
 
 <a name="port#0" />
 
-### Method [`port#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2731)
+### Method [`port#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2773)
 
 Returns port number of socket address.
 
@@ -123,7 +123,7 @@ port: 8080
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2744)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2786)
 
 Convert object of class `SocketAddr` to object of class `String`.
 This method returns name of class `SocketAddr`.
@@ -143,7 +143,7 @@ SocketAddr.to_string(): SocketAddr
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2753)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L2795)
 
 Print string representation of object of class `SocketAddr` to standard output.
 This method prints name of class `SocketAddr`.

@@ -38,7 +38,7 @@ EXPORT built_in_module_s module =
   sys_classes,          // Classes
 
   0,                    // Error base index
-  37                    // Error count
+  38                    // Error count
 #ifdef ENABLE_CLASS_SOCKET
   + 18
 #endif
@@ -89,6 +89,7 @@ const char *sys_error_strings[] =
   "error_SYS_FILE_DOES_NOT_EXIST",
   "error_SYS_SETENV_ERROR",
   "error_SYS_GET_TIME_ERROR",
+  "error_SYS_GET_HOSTNAME_ERROR",
   "error_PIPE_CREATE_ERROR",
   "error_PIPE_OPEN_ERROR",
   "error_PIPE_CLOSE_ERROR",
@@ -295,6 +296,13 @@ bool sys_print_exception(interpreter_s &it,exception_s &exception)
     fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
     print_error_line(source.source_string,source_pos);
     fprintf(stderr,"\nCannot retrieve system time\n");
+    fprintf(stderr," ---------------------------------------- \n");
+    break;
+  case c_error_SYS_GET_HOSTNAME_ERROR:
+    fprintf(stderr," ---------------------------------------- \n");
+    fprintf(stderr,"Exception: ERROR: in file: \"%s\" on line: %u\n",source.file_name.data,source.source_string.get_character_line(source_pos));
+    print_error_line(source.source_string,source_pos);
+    fprintf(stderr,"\nCannot retrieve host name\n");
     fprintf(stderr," ---------------------------------------- \n");
     break;
   case c_error_PIPE_CREATE_ERROR:
@@ -666,7 +674,7 @@ built_in_class_s sys_class =
 {/*{{{*/
   "Sys",
   c_modifier_public | c_modifier_final,
-  29, sys_methods,
+  30, sys_methods,
   3, sys_variables,
   bic_sys_consts,
   bic_sys_init,
@@ -715,6 +723,11 @@ built_in_method_s sys_methods[] =
     "getgid#0",
     c_modifier_public | c_modifier_final | c_modifier_static,
     bic_sys_method_getgid_0
+  },
+  {
+    "gethostname#0",
+    c_modifier_public | c_modifier_final | c_modifier_static,
+    bic_sys_method_gethostname_0
   },
   {
     "system#1",
@@ -1057,6 +1070,35 @@ bool bic_sys_method_getgid_0(interpreter_thread_s &it,unsigned stack_base,uli *o
 #endif
 
   BIC_SIMPLE_SET_RES(c_bi_class_integer,result);
+
+  return true;
+}/*}}}*/
+
+bool bic_sys_method_gethostname_0(interpreter_thread_s &it,unsigned stack_base,uli *operands)
+{/*{{{*/
+#if SYSTEM_TYPE == SYSTEM_TYPE_UNIX
+  char buffer[256];
+
+  // - ERROR -
+  if (gethostname(buffer,sizeof(buffer)) != 0)
+  {
+    exception_s::throw_exception(it,module.error_base + c_error_SYS_GET_HOSTNAME_ERROR,operands[c_source_pos_idx],(location_s *)it.blank_location);
+    return false;
+  }
+
+  // - ensure termination on truncation -
+  buffer[sizeof(buffer) - 1] = '\0';
+
+  string_s *string_ptr = it.get_new_string_ptr();
+  string_ptr->set(strlen(buffer),buffer);
+
+  BIC_SET_RESULT_STRING(string_ptr);
+#else
+  exception_s *new_exception = exception_s::throw_exception(it,c_error_BUILT_IN_NOT_IMPLEMENTED_METHOD,operands[c_source_pos_idx],(location_s *)it.blank_location);
+  BIC_EXCEPTION_PUSH_METHOD_RI_CLASS_IDX(it,c_bi_class_sys,"gethostname#0");
+
+  return false;
+#endif
 
   return true;
 }/*}}}*/

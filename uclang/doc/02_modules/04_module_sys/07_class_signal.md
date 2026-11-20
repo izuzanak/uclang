@@ -63,7 +63,7 @@ Class providing access to Unix signal handling.
 
 <a name="bind#2" />
 
-### Method `static` [`bind#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4514)
+### Method `static` [`bind#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4556)
 
 Binds signal handler delegate to given signal number. Handler delegate must
 accept one parameter. Can only be called from main thread.
@@ -85,7 +85,7 @@ Signal class
 
 <a name="unbind#1" />
 
-### Method `static` [`unbind#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4588)
+### Method `static` [`unbind#1`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4630)
 
 Removes signal handler for given signal number. Can only be called from main thread.
 
@@ -105,7 +105,7 @@ Signal class
 
 <a name="send#2" />
 
-### Method `static` [`send#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4638)
+### Method `static` [`send#2`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4680)
 
 Sends signal to process identified by process ID.
 
@@ -120,12 +120,12 @@ Sends signal to process identified by process ID.
 ("pid: %d\n" % Sys.getpid()).print();
 ```
 ```
-pid: 12916
+pid: 27205
 ```
 
 <a name="to_string#0" />
 
-### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4682)
+### Method `spec` `static` [`to_string#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4724)
 
 Convert object of class `Signal` to object of class `String`.
 This method returns name of class `Signal`.
@@ -145,7 +145,7 @@ Signal.to_string(): Signal
 
 <a name="print#0" />
 
-### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4691)
+### Method `spec` `static` [`print#0`](https://github.com/izuzanak/uclang/blob/master/uclang/../uclang/mods/sys_uclm/source_files/sys_module.cc#L4733)
 
 Print string representation of object of class `Signal` to standard output.
 This method prints name of class `Signal`.
